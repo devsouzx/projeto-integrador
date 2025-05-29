@@ -11,6 +11,7 @@ func main() {
 	router := gin.Default()
 
 	router.LoadHTMLGlob("src/static/*.html")
+	router.Static("/static", "./src/static")
 	
 	routes.InitRoutes(&router.RouterGroup)
 
