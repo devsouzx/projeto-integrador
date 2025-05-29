@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Visita - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #27ae60;
+      --secondary: #2ecc71;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --light-gray: #f5f7fa;
+      --dark-gray: #333333;
+      --medium-gray: #e0e0e0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+    
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-left: 1rem;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+    
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+    
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .form-section {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primary);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    
+    .patient-list {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    
+    .patient-item {
+      padding: 1rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .patient-item:hover {
+      background-color: #f5f7fa;
+    }
+    
+    .patient-item.selected {
+      border-color: var(--primary);
+      background-color: #f0f7ff;
+    }
+    
+    .patient-name {
+      font-weight: 500;
+    }
+    
+    .patient-details {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .calendar-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+    }
+    
+    .calendar-day-header {
+      text-align: center;
+      font-weight: 600;
+      padding: 0.5rem;
+      color: var(--primary);
+    }
+    
+    .calendar-day {
+      aspect-ratio: 1;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .calendar-day:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .calendar-day-number {
+      font-weight: 500;
+    }
+    
+    .calendar-day.today {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .calendar-day.has-visits::after {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--warning);
+      border-radius: 50%;
+      margin: 0.25rem auto 0;
+    }
+    
+    .calendar-day.selected {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .time-slot {
+      padding: 0.75rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+    }
+    
+    .time-slot.selected {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #219653;
+    }
+    
+    .btn-secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      
+      .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .nav-item {
+        margin-left: 0;
+      }
+      
+      .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+        font-size: 0.8rem;
+      }
+      
+      .time-slots {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .form-actions {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área do Agente Comunitário</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-users"></i> Pacientes</a></li>
+        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-calendar-check"></i> Visitas</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-bell"></i> Alertas</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Foto do agente" class="user-avatar">
+        <span>Ana Oliveira</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    <div class="header">
+      <h1 class="page-title">Agendar Visita Domiciliar</h1>
+      <a href="visitas.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+
+    <div class="form-section">
+      <h2 class="form-header"><i class="fas fa-user"></i> Selecionar Paciente</h2>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Digite o nome ou cartão SUS">
+      </div>
+      
+      <ul class="patient-list">
+        <li class="patient-item selected">
+          <div class="patient-name">Maria da Silva</div>
+          <div class="patient-details">38 anos | Rua das Flores, 123</div>
+        </li>
+        <li class="patient-item">
+          <div class="patient-name">Joana Pereira</div>
+          <div class="patient-details">42 anos | Av. Central, 456</div>
+        </li>
+        <li class="patient-item">
+          <div class="patient-name">Carla Santos</div>
+          <div class="patient-details">35 anos | Rua B, 789</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <button class="btn btn-secondary btn-small">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <h3>Junho 2025</h3>
+        <button class="btn btn-secondary btn-small">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      
+      <div class="calendar-grid">
+        <div class="calendar-day-header">Dom</div>
+        <div class="calendar-day-header">Seg</div>
+        <div class="calendar-day-header">Ter</div>
+        <div class="calendar-day-header">Qua</div>
+        <div class="calendar-day-header">Qui</div>
+        <div class="calendar-day-header">Sex</div>
+        <div class="calendar-day-header">Sáb</div>
+        
+        <!-- Dias do mês -->
+        <div class="calendar-day"><div class="calendar-day-number">1</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">2</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">3</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">4</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">5</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">6</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">7</div></div>
+        
+        <div class="calendar-day"><div class="calendar-day-number">8</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">9</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">10</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">11</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">12</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">13</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">14</div></div>
+        
+        <div class="calendar-day today has-visits"><div class="calendar-day-number">15</div></div>
+        <div class="calendar-day has-visits"><div class="calendar-day-number">16</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">17</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">18</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">19</div></div>
+        <div class="calendar-day selected"><div class="calendar-day-number">20</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">21</div></div>
+        
+        <div class="calendar-day"><div class="calendar-day-number">22</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">23</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">24</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">25</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">26</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">27</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">28</div></div>
+        
+        <div class="calendar-day"><div class="calendar-day-number">29</div></div>
+        <div class="calendar-day"><div class="calendar-day-number">30</div></div>
+        <div class="calendar-day disabled"><div class="calendar-day-number">1</div></div>
+        <div class="calendar-day disabled"><div class="calendar-day-number">2</div></div>
+        <div class="calendar-day disabled"><div class="calendar-day-number">3</div></div>
+        <div class="calendar-day disabled"><div class="calendar-day-number">4</div></div>
+        <div class="calendar-day disabled"><div class="calendar-day-number">5</div></div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2 class="form-header"><i class="fas fa-clock"></i> Horário</h2>
+      <div class="time-slots">
+        <div class="time-slot">08:00 - 09:00</div>
+        <div class="time-slot">09:00 - 10:00</div>
+        <div class="time-slot selected">10:00 - 11:00</div>
+        <div class="time-slot">11:00 - 12:00</div>
+        <div class="time-slot">14:00 - 15:00</div>
+        <div class="time-slot">15:00 - 16:00</div>
+        <div class="time-slot">16:00 - 17:00</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2 class="form-header"><i class="fas fa-edit"></i> Motivo da Visita</h2>
+      <div class="form-group">
+        <select class="form-control">
+          <option>Lembrete de exame preventivo</option>
+          <option selected>Acompanhamento de resultado anormal</option>
+          <option>Orientações de saúde</option>
+          <option>Cadastro inicial</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observações</label>
+        <textarea class="form-control" rows="3" placeholder="Detalhes sobre a visita..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-secondary">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+      <button class="btn btn-primary">
+        <i class="fas fa-calendar-check"></i> Agendar Visita
+      </button>
+    </div>
+  </main>
+</body>
+</html>

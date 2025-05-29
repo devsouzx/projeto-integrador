@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Território - Agente Comunitário</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #27ae60;
+      --secondary: #2ecc71;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --light-gray: #f5f7fa;
+      --dark-gray: #333333;
+      --medium-gray: #e0e0e0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+    
+    /* Top Navigation */
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-left: 1rem;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+    
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #219653;
+    }
+    
+    .btn-secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #f0f7ff;
+    }
+    
+    /* Mapa */
+    .map-container {
+      height: 500px;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .map-overlay {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      z-index: 100;
+      background-color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .map-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    /* Filtros */
+    .map-filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .filter-select {
+      padding: 0.75rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      font-size: 1rem;
+      flex: 1;
+    }
+    
+    /* Estatísticas */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .stat-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .stat-card h3 {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .stat-trend {
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+    
+    .trend-up {
+      color: var(--primary);
+    }
+    
+    .trend-down {
+      color: var(--danger);
+    }
+    
+    /* Lista de Pacientes */
+    .patients-section {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-top: 1.5rem;
+    }
+    
+    .patients-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .patients-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .patients-table th {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 500;
+      color: #666;
+    }
+    
+    .patients-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+    
+    .patient-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    
+    .status-good {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .status-warning {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .status-bad {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      margin: 0 0.25rem;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .top-nav {
+        position: relative;
+      }
+      
+      .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .nav-item {
+        margin-left: 0;
+      }
+      
+      .user-info {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      
+      .map-filters {
+        flex-direction: column;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .patients-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área do Agente Comunitário</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-users"></i> Pacientes</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-calendar-check"></i> Visitas</a></li>
+        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-map-marked-alt"></i> Território</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-bell"></i> Alertas</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Foto do agente" class="user-avatar">
+        <span>Ana Oliveira</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    <div class="header">
+      <h1 class="page-title">Visão do Território</h1>
+      <div>
+        <button class="btn btn-primary">
+          <i class="fas fa-sync-alt"></i> Atualizar
+        </button>
+      </div>
+    </div>
+
+    <div class="map-filters">
+      <select class="filter-select">
+        <option>Todas as áreas</option>
+        <option>Área 1 - Centro</option>
+        <option>Área 2 - Vila Nova</option>
+        <option>Área 3 - Jardim São Paulo</option>
+      </select>
+      <select class="filter-select">
+        <option>Todos os status</option>
+        <option>Em dia com exames</option>
+        <option>Exames atrasados</option>
+        <option>Nunca realizaram</option>
+        <option>Casos prioritários</option>
+      </select>
+    </div>
+
+    <div class="map-container">
+      <!-- Mapa integrado (imagem estática como placeholder) -->
+      <img src="https://maps.googleapis.com/maps/api/staticmap?center=-23.5505,-46.6333&zoom=14&size=800x500&maptype=roadmap&markers=color:red%7C-23.5505,-46.6333&key=YOUR_API_KEY" 
+           alt="Mapa do território" 
+           style="width: 100%; height: 100%; object-fit: cover;">
+      
+      <div class="map-overlay">
+        <div class="map-legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--primary);"></div>
+            <span>Em dia com exames</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--warning);"></div>
+            <span>Exames atrasados</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: var(--danger);"></div>
+            <span>Nunca realizaram</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #8e44ad;"></div>
+            <span>Casos prioritários</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3><i class="fas fa-users"></i> Total de Pacientes</h3>
+        <div class="stat-value">128</div>
+      </div>
+      <div class="stat-card">
+        <h3><i class="fas fa-check-circle"></i> Em dia</h3>
+        <div class="stat-value">85</div>
+        <div class="stat-trend trend-up">66%</div>
+      </div>
+      <div class="stat-card">
+        <h3><i class="fas fa-exclamation-triangle"></i> Atrasados</h3>
+        <div class="stat-value">12</div>
+      </div>
+      <div class="stat-card">
+        <h3><i class="fas fa-times-circle"></i> Nunca realizaram</h3>
+        <div class="stat-value">5</div>
+      </div>
+    </div>
+
+    <div class="patients-section">
+      <div class="patients-header">
+        <h2><i class="fas fa-list"></i> Pacientes na Área Selecionada</h2>
+        <button class="btn btn-secondary">
+          <i class="fas fa-download"></i> Exportar
+        </button>
+      </div>
+      
+      <table class="patients-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Idade</th>
+            <th>Endereço</th>
+            <th>Status</th>
+            <th>Último Exame</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Maria da Silva</td>
+            <td>38</td>
+            <td>Rua das Flores, 123</td>
+            <td><span class="patient-status status-warning">Atrasado</span></td>
+            <td>15/12/2024</td>
+            <td>
+              <button class="action-btn" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
+              <button class="action-btn" title="Detalhes"><i class="fas fa-eye"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>Joana Pereira</td>
+            <td>42</td>
+            <td>Av. Central, 456</td>
+            <td><span class="patient-status status-warning">Atrasado</span></td>
+            <td>10/01/2025</td>
+            <td>
+              <button class="action-btn" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
+              <button class="action-btn" title="Detalhes"><i class="fas fa-eye"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>Carla Santos</td>
+            <td>35</td>
+            <td>Rua B, 789</td>
+            <td><span class="patient-status status-bad">Nunca realizou</span></td>
+            <td>-</td>
+            <td>
+              <button class="action-btn" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
+              <button class="action-btn" title="Detalhes"><i class="fas fa-eye"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>Fernanda Costa</td>
+            <td>45</td>
+            <td>Rua C, 101</td>
+            <td><span class="patient-status status-good">Em dia</span></td>
+            <td>20/03/2025</td>
+            <td>
+              <button class="action-btn" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
+              <button class="action-btn" title="Detalhes"><i class="fas fa-eye"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    // Simulação de interação com o mapa
+    document.addEventListener('DOMContentLoaded', function() {
+      // Filtros
+      const areaFilter = document.querySelector('.filter-select:first-of-type');
+      const statusFilter = document.querySelector('.filter-select:last-of-type');
+      
+      areaFilter.addEventListener('change', function() {
+        console.log('Área selecionada:', this.value);
+        // Aqui iria a lógica para filtrar o mapa
+      });
+      
+      statusFilter.addEventListener('change', function() {
+        console.log('Status selecionado:', this.value);
+        // Aqui iria a lógica para filtrar os pacientes
+      });
+      
+      // Botão de atualizar
+      const refreshBtn = document.querySelector('.btn-primary');
+      refreshBtn.addEventListener('click', function() {
+        alert('Mapa e dados atualizados com sucesso!');
+      });
+      
+      // Botões de ação
+      document.querySelectorAll('.action-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const action = this.getAttribute('title');
+          const patientName = this.closest('tr').querySelector('td:first-child').textContent;
+          
+          if (action === 'Agendar visita') {
+            alert(`Agendando visita para ${patientName}`);
+          } else if (action === 'Detalhes') {
+            alert(`Abrindo detalhes de ${patientName}`);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

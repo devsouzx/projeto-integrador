@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alertas - Área do Agente Comunitário</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #27ae60;
+      --secondary: #2ecc71;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --light-gray: #f5f7fa;
+      --dark-gray: #333333;
+      --medium-gray: #e0e0e0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+    
+    /* Top Navigation */
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-left: 1rem;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+    
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+    
+    .notification-badge {
+      background-color: var(--danger);
+      color: white;
+      border-radius: 20px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    /* Alertas */
+    .alert-section {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+    }
+    
+    .alert-item {
+      padding: 1rem;
+      border-left: 4px solid;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .alert-high {
+      border-left-color: var(--danger);
+      background-color: #fef2f2;
+    }
+    
+    .alert-medium {
+      border-left-color: var(--warning);
+      background-color: #fffbeb;
+    }
+    
+    .alert-low {
+      border-left-color: var(--primary);
+      background-color: #f0fdf4;
+    }
+    
+    .alert-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .alert-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-left: 0.5rem;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #219653;
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      
+      .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .nav-item {
+        margin-left: 0;
+      }
+      
+      .user-info {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      
+      .alert-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .alert-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área do Agente Comunitário</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-users"></i> Pacientes</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-calendar-check"></i> Visitas</a></li>
+        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-bell"></i> Alertas</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-map-marked-alt"></i> Território</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Foto do agente" class="user-avatar">
+        <span>Ana Oliveira</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    <div class="header">
+      <h1 class="page-title">Alertas e Notificações</h1>
+      <div class="notification-badge">3 novos</div>
+    </div>
+
+    <div class="alert-section">
+      <h2><i class="fas fa-exclamation-triangle"></i> Prioridades</h2>
+      
+      <div class="alert-item alert-high">
+        <div>
+          <strong>Maria da Silva</strong>
+          <span class="alert-badge" style="background-color: var(--danger); color: white;">Alta Prioridade</span>
+          <p>Exame preventivo atrasado há 6 meses</p>
+          <small>Último exame: 15/12/2024 | Rua das Flores, 123</small>
+        </div>
+        <div class="alert-actions">
+          <button class="btn btn-secondary btn-small">Adiar</button>
+          <button class="btn btn-primary btn-small">Agendar Visita</button>
+        </div>
+      </div>
+      
+      <div class="alert-item alert-medium">
+        <div>
+          <strong>Joana Pereira</strong>
+          <span class="alert-badge" style="background-color: var(--warning); color: #856404;">Média Prioridade</span>
+          <p>Não compareceu à última visita agendada</p>
+          <small>Visita em: 20/06/2025 | Av. Principal, 456</small>
+        </div>
+        <div class="alert-actions">
+          <button class="btn btn-secondary btn-small">Lembrar</button>
+          <button class="btn btn-primary btn-small">Reagendar</button>
+        </div>
+      </div>
+      
+      <div class="alert-item alert-high">
+        <div>
+          <strong>Carla Santos</strong>
+          <span class="alert-badge" style="background-color: var(--danger); color: white;">Alta Prioridade</span>
+          <p>Nunca realizou exame preventivo</p>
+          <small>Cadastrada em: 10/01/2025 | Rua B, 789</small>
+        </div>
+        <div class="alert-actions">
+          <button class="btn btn-secondary btn-small">Adiar</button>
+          <button class="btn btn-primary btn-small">Agendar Visita</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert-section">
+      <h2><i class="fas fa-calendar-exclamation"></i> Exames Pendentes</h2>
+      
+      <div class="alert-item">
+        <div>
+          <strong>5 pacientes</strong>
+          <p>Nunca realizaram exame preventivo</p>
+          <small>Última atualização: 18/06/2025</small>
+        </div>
+        <button class="btn btn-primary">Ver Lista Completa</button>
+      </div>
+      
+      <div class="alert-item">
+        <div>
+          <strong>12 pacientes</strong>
+          <p>Com exames atrasados (mais de 1 ano)</p>
+          <small>Última atualização: 18/06/2025</small>
+        </div>
+        <button class="btn btn-primary">Ver Lista Completa</button>
+      </div>
+      
+      <div class="alert-item">
+        <div>
+          <strong>8 pacientes</strong>
+          <p>Com exames próximos do vencimento</p>
+          <small>Última atualização: 18/06/2025</small>
+        </div>
+        <button class="btn btn-primary">Ver Lista Completa</button>
+      </div>
+    </div>
+
+    <div class="alert-section">
+      <h2><i class="fas fa-clock"></i> Lembretes</h2>
+      
+      <div class="alert-item alert-low">
+        <div>
+          <strong>Reunião mensal</strong>
+          <p>Dia 25/06 às 14h na UBS Centro</p>
+          <small>Participação obrigatória</small>
+        </div>
+        <button class="btn btn-secondary">Confirmar Presença</button>
+      </div>
+      
+      <div class="alert-item alert-low">
+        <div>
+          <strong>Entrega de relatórios</strong>
+          <p>Prazo final: 30/06/2025</p>
+          <small>Relatório mensal de atividades</small>
+        </div>
+        <button class="btn btn-secondary">Iniciar Relatório</button>
+      </div>
+      
+      <div class="alert-item alert-low">
+        <div>
+          <strong>Atualização cadastral</strong>
+          <p>Verificar dados de 23 pacientes desatualizados</p>
+          <small>Última atualização: 15/05/2025</small>
+        </div>
+        <button class="btn btn-primary">Verificar Cadastros</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

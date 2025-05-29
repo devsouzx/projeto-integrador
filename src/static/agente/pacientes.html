@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Paciente - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #27ae60;
+      --secondary: #2ecc71;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --light-gray: #f5f7fa;
+      --dark-gray: #333333;
+      --medium-gray: #e0e0e0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+    
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-left: 1rem;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+    
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+    
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .form-section {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primary);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    
+    .document-upload {
+      border: 2px dashed var(--medium-gray);
+      padding: 1.5rem;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .document-upload:hover {
+      border-color: var(--primary);
+      background-color: #f0f7ff;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #219653;
+    }
+    
+    .btn-secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      
+      .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .nav-item {
+        margin-left: 0;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-actions {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área do Agente Comunitário</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-users"></i> Pacientes</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-calendar-check"></i> Visitas</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-bell"></i> Alertas</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Foto do agente" class="user-avatar">
+        <span>Ana Oliveira</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    <div class="header">
+      <h1 class="page-title">Cadastro de Paciente</h1>
+      <a href="pacientes.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+
+    <div class="form-section">
+      <h2 class="form-header"><i class="fas fa-user"></i> Dados Pessoais</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Nome Completo*</label>
+          <input type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nome da Mãe*</label>
+          <input type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Data de Nascimento*</label>
+          <input type="date" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CPF</label>
+          <input type="text" class="form-control" placeholder="000.000.000-00">
+        </div>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Cartão SUS*</label>
+          <input type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Raça/Cor</label>
+          <select class="form-control">
+            <option>Branca</option>
+            <option>Preta</option>
+            <option>Parda</option>
+            <option>Amarela</option>
+            <option>Indígena</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Escolaridade</label>
+          <select class="form-control">
+            <option>Analfabeta</option>
+            <option>Fundamental Incompleto</option>
+            <option>Fundamental Completo</option>
+            <option>Médio Completo</option>
+            <option>Superior Completo</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2 class="form-header"><i class="fas fa-home"></i> Endereço</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">CEP*</label>
+          <input type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Logradouro*</label>
+          <input type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Número*</label>
+          <input type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Complemento</label>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Bairro*</label>
+          <input type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Município*</label>
+          <input type="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">UF*</label>
+          <select class="form-control" required>
+            <option>SP</option>
+            <option>RJ</option>
+            <option>MG</option>
+            <!-- Outras UFs -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ponto de Referência</label>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2 class="form-header"><i class="fas fa-phone"></i> Contato</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Telefone*</label>
+          <input type="tel" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">WhatsApp</label>
+          <input type="tel" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2 class="form-header"><i class="fas fa-file-upload"></i> Documentos</h2>
+      <div class="document-upload">
+        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+        <p>Arraste documentos aqui ou clique para selecionar</p>
+        <p style="color: #666; font-size: 0.9rem;">Cartão SUS, RG, CPF ou comprovante de residência</p>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-secondary">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+      <button class="btn btn-primary">
+        <i class="fas fa-save"></i> Salvar Paciente
+      </button>
+    </div>
+  </main>
+</body>
+</html>
