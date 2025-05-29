@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orientações - Sistema de Diagnóstico</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #185a9d;
+      --secondary: #43cea2;
+      --light-gray: #f5f7fa;
+      --medium-gray: #e0e0e0;
+      --dark-gray: #333333;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+    }
+    
+    /* Top Navigation */
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-left: 1rem;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+    
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .page-header {
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+    
+    /* Conteúdo de Orientações */
+    .guidance-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 2rem;
+    }
+    
+    .guidance-menu {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      height: fit-content;
+    }
+    
+    .menu-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+    
+    .menu-list {
+      list-style: none;
+    }
+    
+    .menu-item {
+      margin-bottom: 0.75rem;
+    }
+    
+    .menu-link {
+      color: var(--dark-gray);
+      text-decoration: none;
+      display: block;
+      padding: 0.5rem;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+    
+    .menu-link:hover, .menu-link.active {
+      background-color: #f0f7ff;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    .guidance-content {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .content-title {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .content-section {
+      margin-bottom: 2rem;
+    }
+    
+    .section-title {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .section-content {
+      line-height: 1.6;
+    }
+    
+    .section-content p {
+      margin-bottom: 1rem;
+    }
+    
+    .section-content ul {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+    
+    .video-container {
+      margin: 1.5rem 0;
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+    }
+    
+    .info-card {
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--secondary);
+      padding: 1rem;
+      border-radius: 0 6px 6px 0;
+      margin: 1.5rem 0;
+    }
+    
+    .info-card-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .top-nav {
+        position: relative;
+      }
+
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      
+      .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .nav-item {
+        margin-left: 0;
+      }
+      
+      .user-info {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+
+      .guidance-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .guidance-menu {
+        order: -1;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área do Paciente</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-calendar-check"></i> Agendar</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-map-marker-alt"></i> UBS</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-file-medical"></i> Exames</a></li>
+        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-comment-medical"></i> Orientações</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-bell"></i> Notificações</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Foto do paciente" class="user-avatar">
+        <span>Maria da Silva</span>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">Orientações sobre Saúde Preventiva</h1>
+    </div>
+    
+    <div class="guidance-container">
+      <div class="guidance-menu">
+        <h2 class="menu-title">Tópicos</h2>
+        <ul class="menu-list">
+          <li class="menu-item"><a href="#" class="menu-link active"><i class="fas fa-chevron-right"></i> Exame Preventivo</a></li>
+          <li class="menu-item"><a href="#" class="menu-link"><i class="fas fa-chevron-right"></i> Vacina HPV</a></li>
+          <li class="menu-item"><a href="#" class="menu-link"><i class="fas fa-chevron-right"></i> Sinais de Alerta</a></li>
+          <li class="menu-item"><a href="#" class="menu-link"><i class="fas fa-chevron-right"></i> Pós-Exame</a></li>
+          <li class="menu-item"><a href="#" class="menu-link"><i class="fas fa-chevron-right"></i> Perguntas Frequentes</a></li>
+          <li class="menu-item"><a href="#" class="menu-link"><i class="fas fa-chevron-right"></i> Material Educativo</a></li>
+        </ul>
+      </div>
+      
+      <div class="guidance-content">
+        <h2 class="content-title">Exame Preventivo (Papanicolau)</h2>
+        
+        <div class="content-section">
+          <h3 class="section-title"><i class="fas fa-info-circle"></i> O que é?</h3>
+          <div class="section-content">
+            <p>O exame preventivo, também conhecido como Papanicolau, é um procedimento simples que coleta células do colo do útero para análise. É o principal método para detectar alterações pré-cancerosas e câncer de colo do útero em estágio inicial.</p>
+            
+            <div class="video-container">
+              <!-- Vídeo incorporado - substitua pelo código real do YouTube/Vimeo -->
+              <div style="background-color: #ddd; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #666;">
+                Vídeo explicativo sobre o exame preventivo
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="content-section">
+          <h3 class="section-title"><i class="fas fa-calendar-check"></i> Quando fazer?</h3>
+          <div class="section-content">
+            <p>O Ministério da Saúde recomenda:</p>
+            <ul>
+              <li>Primeiro exame: aos 25 anos para mulheres que já tiveram relação sexual</li>
+              <li>Exames anuais até dois resultados normais consecutivos</li>
+              <li>Após dois resultados normais: a cada 3 anos</li>
+              <li>Mulheres com HIV ou imunossuprimidas: anual</li>
+            </ul>
+            
+            <div class="info-card">
+              <div class="info-card-title">Importante</div>
+              <p>Mesmo vacinada contra o HPV, você deve continuar fazendo o exame preventivo regularmente, pois a vacina não protege contra todos os tipos de vírus que podem causar câncer.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="content-section">
+          <h3 class="section-title"><i class="fas fa-question-circle"></i> Preparação</h3>
+          <div class="section-content">
+            <p>Para garantir um exame adequado:</p>
+            <ul>
+              <li>Não estar menstruada</li>
+              <li>Evitar relações sexuais 48 horas antes</li>
+              <li>Não usar duchas, medicamentos ou cremes vaginais 48 horas antes</li>
+              <li>Não fazer o exame durante tratamento de infecção vaginal</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="content-section">
+          <h3 class="section-title"><i class="fas fa-comments"></i> Tire suas dúvidas</h3>
+          <div class="section-content">
+            <p>Se você tem dúvidas sobre o exame ou seus resultados, entre em contato com sua UBS ou utilize nosso canal de comunicação:</p>
+            <button style="background-color: var(--secondary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 500; margin-top: 1rem; cursor: pointer;">
+              <i class="fas fa-comment-dots"></i> Falar com profissional
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
