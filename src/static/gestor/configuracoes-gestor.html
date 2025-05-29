@@ -257,23 +257,32 @@
     
     /* Responsividade */
     @media (max-width: 768px) {
+      .top-nav {
+      padding: 0.5rem 0.5rem;
+      }
+
+      .logo {
+      font-size: 1rem; /* diminui o tamanho da logo */
+      white-space: nowrap;
+      margin-right: 0.5rem;
+      }
       .nav-container {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
-
-      .top-nav {
-        position: relative;
-      }
-      
       .nav-menu {
-        flex-direction: column;
-        gap: 0.5rem;
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin; /* Firefox */
       }
-      
+
       .nav-item {
         margin-left: 0;
+        flex: 0 0 auto;
       }
       
       .user-info {
