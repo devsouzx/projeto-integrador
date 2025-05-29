@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar Senha - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #185a9d;
+      --secondary: #43cea2;
+      --light-gray: #f5f7fa;
+      --medium-gray: #e0e0e0;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .recovery-container {
+      width: 100%;
+      max-width: 450px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .recovery-header {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .recovery-header h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .recovery-body {
+      padding: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    
+    .recovery-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    
+    .recovery-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .recovery-options {
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .option-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 0 5px;
+      background-color: white;
+      border: 1px solid var(--primary);
+      border-radius: 6px;
+      color: var(--primary);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="recovery-container">
+    <div class="recovery-header">
+      <h1>Recuperar Senha</h1>
+      <p>Informe seu CPF ou e-mail cadastrado</p>
+    </div>
+    
+    <div class="recovery-body">
+      <form id="recoveryForm">
+        <div class="form-group">
+          <label for="username" class="form-label">CPF ou E-mail</label>
+          <input type="text" id="username" class="form-control" placeholder="Digite seu CPF ou e-mail cadastrado" required>
+        </div>
+        
+        <div class="recovery-options">
+          <p>Como deseja receber o link de recuperação?</p>
+          <button type="button" class="option-btn">E-mail</button>
+          <button type="button" class="option-btn">SMS</button>
+        </div>
+        
+        <button type="submit" class="btn">Enviar Link de Recuperação</button>
+        
+        <div class="recovery-footer">
+          <p>Lembrou sua senha? <a href="login.html">Voltar para o login</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
