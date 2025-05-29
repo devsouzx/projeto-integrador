@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encaminhamentos - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #185a9d;
+      --secondary: #43cea2;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --success: #2ecc71;
+      --light-gray: #f5f7fa;
+      --medium-gray: #e0e0e0;
+      --dark-gray: #333333;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+
+    /* Top Navigation (igual ao anterior) */
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-item {
+      margin-left: 1.5rem;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #2c3e50;
+    }
+
+    .btn-secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: #f0f7ff;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Referral Form */
+    .referral-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+
+    .patient-info {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(58, 80, 107, 0.1);
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* Specialty Cards */
+    .specialty-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .specialty-card {
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .specialty-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .specialty-card.selected {
+      border-color: var(--primary);
+      background-color: #f0f7ff;
+    }
+
+    .specialty-card h3 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .specialty-card p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* Urgency Levels */
+    .urgency-levels {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .urgency-option {
+      padding: 1.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid var(--medium-gray);
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .urgency-option:hover {
+      border-color: var(--primary);
+    }
+
+    .urgency-option.selected {
+      border-color: var(--primary);
+      background-color: #f0f7ff;
+    }
+
+    .urgency-option h3 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .urgency-option p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* File Upload */
+    .file-upload {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .file-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: #f8f9fa;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+    }
+
+    /* Previous Referrals */
+    .previous-referrals {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .data-table th {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .data-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .badge-completed {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .badge-pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .badge-canceled {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .action-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .action-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .nav-item {
+        margin-left: 0;
+      }
+
+      .specialty-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .urgency-levels {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área do Médico</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-chart-line"></i> Estatísticas</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Foto do médico" class="user-avatar">
+        <span>Dr. Carlos Silva</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="header">
+      <h1 class="page-title">Novo Encaminhamento</h1>
+      <a href="patient-record.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Voltar ao Prontuário
+      </a>
+    </div>
+
+    <div class="referral-container">
+      <div class="patient-info">
+        <strong>Paciente:</strong> Maria da Silva (38 anos) | <strong>Cartão SUS:</strong> 123 4567 8901 2345 | <strong>CID-10:</strong> R87.61 (ASC-H)
+      </div>
+
+      <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-stethoscope"></i> Tipo de Encaminhamento</h2>
+
+      <div class="specialty-grid">
+        <div class="specialty-card selected">
+          <h3><i class="fas fa-microscope"></i> Colposcopia com Biópsia</h3>
+          <p>Exame detalhado do colo uterino com possibilidade de coleta de fragmentos para análise histopatológica</p>
+        </div>
+
+        <div class="specialty-card">
+          <h3><i class="fas fa-user-md"></i> Oncologia Ginecológica</h3>
+          <p>Avaliação especializada para casos suspeitos de neoplasia maligna</p>
+        </div>
+
+        <div class="specialty-card">
+          <h3><i class="fas fa-procedures"></i> Cirurgia Ginecológica</h3>
+          <p>Para casos que necessitem de intervenção cirúrgica (conização, LEEP, etc.)</p>
+        </div>
+      </div>
+
+      <h2 style="margin: 2rem 0 1rem;"><i class="fas fa-clock"></i> Nível de Urgência</h2>
+
+      <div class="urgency-levels">
+        <div class="urgency-option">
+          <h3>Rotina</h3>
+          <p>Agendamento em até 60 dias</p>
+          <p style="margin-top: 0.5rem; color: var(--primary); font-weight: 500;">Para acompanhamento</p>
+        </div>
+
+        <div class="urgency-option selected">
+          <h3>Prioritário</h3>
+          <p>Agendamento em até 15 dias</p>
+          <p style="margin-top: 0.5rem; color: var(--primary); font-weight: 500;">Para casos como ASC-H, LSIL</p>
+        </div>
+
+        <div class="urgency-option">
+          <h3>Urgente</h3>
+          <p>Agendamento em até 72h</p>
+          <p style="margin-top: 0.5rem; color: var(--primary); font-weight: 500;">Para HSIL ou suspeita de câncer</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Justificativa Clínica</label>
+        <textarea class="form-control" rows="5">Paciente com resultado ASC-H em dois exames consecutivos (03/2025 e 06/2025), necessitando avaliação com colposcopia para descartar lesão de alto grau. Relata sangramento pós-coito ocasional. Exame físico: colo uterino com ectopia, sem lesões visíveis.</textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Exames Anexos</label>
+        <div class="file-upload">
+          <button type="button" class="btn btn-secondary">
+            <i class="fas fa-paperclip"></i> Anexar Arquivos
+          </button>
+          <div class="file-preview">
+            <i class="fas fa-file-pdf" style="color: var(--danger);"></i>
+            <span>preventivo_062025.pdf</span>
+            <button type="button" style="background: none; border: none; color: var(--danger); cursor: pointer;">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Unidade de Referência</label>
+        <select class="form-control">
+          <option>Hospital Central - Ambulatório de Colposcopia</option>
+          <option>Hospital da Mulher - Setor de Ginecologia</option>
+          <option>Centro de Oncologia Municipal</option>
+        </select>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+        <button class="btn btn-secondary">
+          <i class="fas fa-save"></i> Salvar Rascunho
+        </button>
+        <button class="btn btn-primary">
+          <i class="fas fa-paper-plane"></i> Enviar Encaminhamento
+        </button>
+      </div>
+    </div>
+
+    <div class="previous-referrals">
+      <h2><i class="fas fa-history"></i> Encaminhamentos Anteriores</h2>
+      
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Especialidade</th>
+            <th>Unidade</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>15/03/2025</td>
+            <td>Colposcopia</td>
+            <td>Hospital Central</td>
+            <td><span class="badge badge-completed">Realizado</span></td>
+            <td><a href="#" class="action-link">Ver Detalhes</a></td>
+          </tr>
+          <tr>
+            <td>10/12/2024</td>
+            <td>Ginecologia</td>
+            <td>UBS Centro</td>
+            <td><span class="badge badge-completed">Realizado</span></td>
+            <td><a href="#" class="action-link">Ver Detalhes</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+</body>
+</html>

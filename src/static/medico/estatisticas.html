@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estatísticas - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #185a9d;
+      --secondary: #43cea2;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --success: #2ecc71;
+      --light-gray: #f5f7fa;
+      --medium-gray: #e0e0e0;
+      --dark-gray: #333333;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+
+    /* Top Navigation - Mantido igual às outras telas */
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-item {
+      margin-left: 1.5rem;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* Filtros */
+    .filters-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-group {
+      flex: 1;
+    }
+
+    .filter-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    .filter-select, .filter-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      background-color: white;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #2c3e50;
+    }
+
+    /* Dashboard de Estatísticas */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .stat-card h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-description {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .stat-trend {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .trend-up {
+      color: var(--danger);
+    }
+
+    .trend-down {
+      color: var(--success);
+    }
+
+    /* Gráficos */
+    .chart-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-title {
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    /* Tabela de Dados */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .data-table th, .data-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .data-table th {
+      background-color: #f8f9fa;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .data-table tr:hover {
+      background-color: #f5f7fa;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .badge-primary {
+      background-color: #e0f7ff;
+      color: var(--primary);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .nav-item {
+        margin-left: 0;
+      }
+
+      .filter-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Placeholder para gráficos (serão substituídos por bibliotecas como Chart.js) */
+    .chart-placeholder {
+      height: 300px;
+      background-color: #f8f9fa;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área do Médico</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
+        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-chart-line"></i> Estatísticas</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Foto do médico" class="user-avatar">
+        <span>Dr. Carlos Silva</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="header">
+      <h1 class="page-title">Estatísticas e Relatórios</h1>
+      <div>
+        <button class="btn btn-primary">
+          <i class="fas fa-download"></i> Exportar Dados
+        </button>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-container">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label class="filter-label">Período</label>
+          <select class="filter-select">
+            <option>Últimos 3 meses</option>
+            <option selected>Últimos 6 meses</option>
+            <option>Últimos 12 meses</option>
+            <option>Personalizado</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">UBS</label>
+          <select class="filter-select">
+            <option selected>Todas as unidades</option>
+            <option>UBS Centro</option>
+            <option>UBS Vila Nova</option>
+            <option>UBS Jardim das Flores</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Faixa Etária</label>
+          <select class="filter-select">
+            <option selected>Todas as idades</option>
+            <option>25-29 anos</option>
+            <option>30-39 anos</option>
+            <option>40-49 anos</option>
+            <option>50-59 anos</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label class="filter-label">Resultado do Exame</label>
+          <select class="filter-select">
+            <option selected>Todos os resultados</option>
+            <option>Normal</option>
+            <option>ASC-US</option>
+            <option>ASC-H</option>
+            <option>LSIL</option>
+            <option>HSIL</option>
+            <option>Carcinoma</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Fator de Risco</label>
+          <select class="filter-select">
+            <option selected>Todos</option>
+            <option>Tabagismo</option>
+            <option>HPV+</option>
+            <option>Multiparidade</option>
+            <option>Imunodepressão</option>
+          </select>
+        </div>
+        <div class="filter-group" style="align-self: flex-end;">
+          <button class="btn btn-primary">
+            <i class="fas fa-filter"></i> Aplicar Filtros
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards de Estatísticas -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3><i class="fas fa-user-injured"></i> Pacientes Atendidos</h3>
+        <div class="stat-value">1.248</div>
+        <div class="stat-description">No período selecionado</div>
+        <div class="stat-trend trend-up">
+          <i class="fas fa-arrow-up"></i> 12% em relação ao último período
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <h3><i class="fas fa-flask"></i> Exames Realizados</h3>
+        <div class="stat-value">1.093</div>
+        <div class="stat-description">Preventivos de colo uterino</div>
+        <div class="stat-trend trend-up">
+          <i class="fas fa-arrow-up"></i> 8% em relação ao último período
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <h3><i class="fas fa-exclamation-triangle"></i> Casos Anormais</h3>
+        <div class="stat-value">87</div>
+        <div class="stat-description">(8% do total)</div>
+        <div class="stat-trend trend-down">
+          <i class="fas fa-arrow-down"></i> 5% em relação ao último período
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <h3><i class="fas fa-calendar-check"></i> Taxa de Retorno</h3>
+        <div class="stat-value">76%</div>
+        <div class="stat-description">Pacientes que retornaram para acompanhamento</div>
+        <div class="stat-trend trend-up">
+          <i class="fas fa-arrow-up"></i> 10% em relação ao último período
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico 1: Distribuição de Resultados -->
+    <div class="chart-container">
+      <div class="chart-header">
+        <h2 class="chart-title">Distribuição de Resultados</h2>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #2ecc71;"></div>
+            <span>Normal</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #f39c12;"></div>
+            <span>ASC-US/ASC-H</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #e74c3c;"></div>
+            <span>LSIL/HSIL</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-placeholder">
+        [Gráfico de Pizza - Distribuição de Resultados]
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Resultado</th>
+            <th>Quantidade</th>
+            <th>Percentual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Normal</td>
+            <td>1.006</td>
+            <td>92%</td>
+          </tr>
+          <tr>
+            <td>ASC-US</td>
+            <td>45</td>
+            <td>4.1%</td>
+          </tr>
+          <tr>
+            <td>ASC-H</td>
+            <td>22</td>
+            <td>2%</td>
+          </tr>
+          <tr>
+            <td>LSIL</td>
+            <td>15</td>
+            <td>1.4%</td>
+          </tr>
+          <tr>
+            <td>HSIL</td>
+            <td>5</td>
+            <td>0.5%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Gráfico 2: Tendência Temporal -->
+    <div class="chart-container">
+      <div class="chart-header">
+        <h2 class="chart-title">Tendência Mensal de Casos Anormais</h2>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #3498db;"></div>
+            <span>Casos Anormais</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #e74c3c;"></div>
+            <span>Média Móvel (3 meses)</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-placeholder">
+        [Gráfico de Linhas - Tendência Temporal]
+      </div>
+    </div>
+
+    <!-- Gráfico 3: Distribuição por Fatores de Risco -->
+    <div class="chart-container">
+      <div class="chart-header">
+        <h2 class="chart-title">Distribuição por Fatores de Risco</h2>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #9b59b6;"></div>
+            <span>Tabagismo</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #1abc9c;"></div>
+            <span>HPV+</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background-color: #f1c40f;"></div>
+            <span>Multiparidade</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-placeholder">
+        [Gráfico de Barras - Fatores de Risco]
+      </div>
+    </div>
+
+    <!-- Tabela Detalhada -->
+    <div class="chart-container">
+      <div class="chart-header">
+        <h2 class="chart-title">Detalhamento por Unidade de Saúde</h2>
+        <button class="btn btn-primary">
+          <i class="fas fa-table"></i> Exportar Tabela
+        </button>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>UBS</th>
+            <th>Exames</th>
+            <th>Normais</th>
+            <th>Anormais</th>
+            <th>% Anormais</th>
+            <th>Taxa Retorno</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>UBS Centro</td>
+            <td>420</td>
+            <td>385</td>
+            <td>35</td>
+            <td>8.3%</td>
+            <td>78%</td>
+          </tr>
+          <tr>
+            <td>UBS Vila Nova</td>
+            <td>312</td>
+            <td>290</td>
+            <td>22</td>
+            <td>7.1%</td>
+            <td>72%</td>
+          </tr>
+          <tr>
+            <td>UBS Jardim das Flores</td>
+            <td>361</td>
+            <td>331</td>
+            <td>30</td>
+            <td>8.3%</td>
+            <td>79%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    // Aqui você pode adicionar a implementação real dos gráficos com Chart.js ou outra biblioteca
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Página de estatísticas carregada');
+      // Implementação dos gráficos seria feita aqui
+    });
+
+    // Exemplo de interação com os botões
+    document.querySelectorAll('.btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const action = this.textContent.trim();
+        console.log(`Ação: ${action}`);
+        
+        if (action.includes('Exportar')) {
+          // Lógica para exportar dados
+          alert('Funcionalidade de exportação será implementada aqui');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
