@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatórios - Sistema de Diagnóstico</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #185a9d;
+      --secondary: #43cea2;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --light-gray: #f5f7fa;
+      --medium-gray: #e0e0e0;
+      --dark-gray: #333333;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+    
+    /* Top Navigation */
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-left: 1rem;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+    
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+    
+    .notification-bell {
+      position: relative;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: var(--danger);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Filtros de Relatório */
+    .report-filters {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .filter-row {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .filter-group {
+      flex: 1;
+    }
+    
+    .filter-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .filter-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #134a80;
+    }
+    
+    /* Conteúdo do Relatório */
+    .report-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .report-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--medium-gray);
+      margin-bottom: 1.5rem;
+    }
+    
+    .report-tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    
+    .report-tab.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
+    .report-content {
+      min-height: 400px;
+    }
+    
+    .chart-container {
+      height: 350px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      color: #666;
+    }
+    
+    .table-container {
+      overflow-x: auto;
+    }
+    
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .data-table th {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      text-align: left;
+    }
+    
+    .data-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+    
+    .export-options {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .export-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: white;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .export-btn:hover {
+      background-color: #f8f9fa;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .top-nav {
+        position: relative;
+      }
+      
+      .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .nav-item {
+        margin-left: 0;
+      }
+      
+      .user-info {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      
+      .filter-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .report-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área do Gestor</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-users"></i> Usuários</a></li>
+        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-file-medical"></i> Exames</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-cog"></i> Configurações</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Foto do gestor" class="user-avatar">
+        <span>Carlos Oliveira</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    <div class="header">
+      <h1 class="page-title">Relatórios Epidemiológicos</h1>
+      <div class="notification-bell">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge">3</span>
+      </div>
+    </div>
+    
+    <div class="report-filters">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label class="filter-label">Período</label>
+          <select class="filter-control">
+            <option>Últimos 30 dias</option>
+            <option>Últimos 3 meses</option>
+            <option>Últimos 6 meses</option>
+            <option>Últimos 12 meses</option>
+            <option>Personalizado</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Unidade de Saúde</label>
+          <select class="filter-control">
+            <option>Todas as unidades</option>
+            <option>UBS Centro</option>
+            <option>UBS Norte</option>
+            <option>UBS Sul</option>
+            <option>UBS Leste</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label class="filter-label">Faixa Etária</label>
+          <select class="filter-control">
+            <option>Todas as idades</option>
+            <option>15-24 anos</option>
+            <option>25-34 anos</option>
+            <option>35-44 anos</option>
+            <option>45-59 anos</option>
+            <option>60+ anos</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Resultado do Exame</label>
+          <select class="filter-control">
+            <option>Todos os resultados</option>
+            <option>Normal</option>
+            <option>Alterações benignas</option>
+            <option>Alterações sugestivas de NIC</option>
+            <option>Carcinoma</option>
+            <option>Amostra insatisfatória</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary">
+        <i class="fas fa-filter"></i> Aplicar Filtros
+      </button>
+    </div>
+    
+    <div class="report-container">
+      <div class="report-tabs">
+        <div class="report-tab active">Visão Geral</div>
+        <div class="report-tab">Taxa de Retorno</div>
+        <div class="report-tab">Casos Suspeitos</div>
+        <div class="report-tab">Detalhado</div>
+      </div>
+      
+      <div class="report-content">
+        <div class="chart-container">
+          <div style="text-align: center;">
+            <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <p>Gráfico de exames realizados por mês</p>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <div style="text-align: center;">
+            <i class="fas fa-chart-pie" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <p>Distribuição por resultado de exame</p>
+          </div>
+        </div>
+        
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Unidade</th>
+                <th>Exames Realizados</th>
+                <th>% Retorno</th>
+                <th>Casos Suspeitos</th>
+                <th>% Suspeitos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>UBS Centro</td>
+                <td>342</td>
+                <td>82%</td>
+                <td>12</td>
+                <td>3.5%</td>
+              </tr>
+              <tr>
+                <td>UBS Norte</td>
+                <td>278</td>
+                <td>76%</td>
+                <td>8</td>
+                <td>2.9%</td>
+              </tr>
+              <tr>
+                <td>UBS Sul</td>
+                <td>195</td>
+                <td>71%</td>
+                <td>5</td>
+                <td>2.6%</td>
+              </tr>
+              <tr>
+                <td>UBS Leste</td>
+                <td>156</td>
+                <td>68%</td>
+                <td>4</td>
+                <td>2.6%</td>
+              </tr>
+              <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>971</strong></td>
+                <td><strong>76%</strong></td>
+                <td><strong>29</strong></td>
+                <td><strong>3.0%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="export-options">
+          <button class="export-btn">
+            <i class="fas fa-file-pdf"></i> Exportar PDF
+          </button>
+          <button class="export-btn">
+            <i class="fas fa-file-excel"></i> Exportar Excel
+          </button>
+          <button class="export-btn">
+            <i class="fas fa-chart-bar"></i> Exportar para Power BI
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

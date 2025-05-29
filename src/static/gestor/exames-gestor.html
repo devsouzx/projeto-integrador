@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão de Exames - Sistema de Diagnóstico</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #185a9d;
+      --secondary: #43cea2;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --light-gray: #f5f7fa;
+      --medium-gray: #e0e0e0;
+      --dark-gray: #333333;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+    
+    /* Top Navigation */
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-left: 1rem;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+    
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+    
+    .notification-bell {
+      position: relative;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: var(--danger);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Filtros e Busca */
+    .search-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #134a80;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #38b48b;
+    }
+    
+    /* Tabela de Exames */
+    .exams-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .exams-table th {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+    }
+    
+    .exams-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+    
+    .exams-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .exam-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    
+    .status-pending {
+      background-color: #fff3cd;
+      color: var(--warning);
+    }
+    
+    .status-completed {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .status-rejected {
+      background-color: #f8d7da;
+      color: var(--danger);
+    }
+    
+    .status-urgent {
+      background-color: #fce4ec;
+      color: #c2185b;
+    }
+    
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      margin: 0 0.25rem;
+    }
+    
+    /* Paginação */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+      gap: 0.5rem;
+    }
+    
+    .page-link {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      text-decoration: none;
+      color: var(--dark-gray);
+    }
+    
+    .page-link.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .top-nav {
+        position: relative;
+      }
+      
+      .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .nav-item {
+        margin-left: 0;
+      }
+      
+      .user-info {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      
+      .search-bar {
+        flex-direction: column;
+      }
+      
+      .exams-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área do Gestor</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-users"></i> Usuários</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-file-medical"></i> Exames</a></li>
+        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-cog"></i> Configurações</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Foto do gestor" class="user-avatar">
+        <span>Carlos Oliveira</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    <div class="header">
+      <h1 class="page-title">Gestão de Exames</h1>
+      <div class="notification-bell">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge">7</span>
+      </div>
+    </div>
+    
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Buscar por nome, CPF ou número do exame">
+      <select class="search-input" style="max-width: 200px;">
+        <option>Todos os status</option>
+        <option>Pendentes</option>
+        <option>Concluídos</option>
+        <option>Rejeitados</option>
+        <option>Urgentes</option>
+      </select>
+      <select class="search-input" style="max-width: 200px;">
+        <option>Todas as unidades</option>
+        <option>UBS Centro</option>
+        <option>UBS Norte</option>
+        <option>UBS Sul</option>
+        <option>UBS Leste</option>
+      </select>
+      <button class="btn btn-primary">
+        <i class="fas fa-search"></i> Buscar
+      </button>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+      <button class="btn btn-primary">
+        <i class="fas fa-plus"></i> Novo Exame
+      </button>
+      <button class="btn btn-secondary">
+        <i class="fas fa-file-import"></i> Importar Lote
+      </button>
+    </div>
+    
+    <table class="exams-table">
+      <thead>
+        <tr>
+          <th>Nº Exame</th>
+          <th>Paciente</th>
+          <th>CPF</th>
+          <th>Data Coleta</th>
+          <th>Unidade</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2023-04521</td>
+          <td>Ana Silva</td>
+          <td>123.456.789-00</td>
+          <td>15/05/2023</td>
+          <td>UBS Centro</td>
+          <td><span class="exam-status status-urgent">Urgente</span></td>
+          <td>
+            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>2023-04520</td>
+          <td>Carlos Mendes</td>
+          <td>987.654.321-00</td>
+          <td>14/05/2023</td>
+          <td>UBS Norte</td>
+          <td><span class="exam-status status-completed">Concluído</span></td>
+          <td>
+            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>2023-04519</td>
+          <td>Mariana Costa</td>
+          <td>456.789.123-00</td>
+          <td>13/05/2023</td>
+          <td>UBS Sul</td>
+          <td><span class="exam-status status-pending">Pendente</span></td>
+          <td>
+            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>2023-04518</td>
+          <td>Roberto Alves</td>
+          <td>321.654.987-00</td>
+          <td>12/05/2023</td>
+          <td>UBS Leste</td>
+          <td><span class="exam-status status-rejected">Rejeitado</span></td>
+          <td>
+            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>2023-04517</td>
+          <td>Juliana Pereira</td>
+          <td>654.321.987-00</td>
+          <td>11/05/2023</td>
+          <td>UBS Centro</td>
+          <td><span class="exam-status status-completed">Concluído</span></td>
+          <td>
+            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="pagination">
+      <a href="#" class="page-link"><i class="fas fa-angle-left"></i></a>
+      <a href="#" class="page-link active">1</a>
+      <a href="#" class="page-link">2</a>
+      <a href="#" class="page-link">3</a>
+      <a href="#" class="page-link"><i class="fas fa-angle-right"></i></a>
+    </div>
+  </main>
+</body>
+</html>
