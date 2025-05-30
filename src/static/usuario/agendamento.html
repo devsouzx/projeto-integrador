@@ -1,444 +1,478 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agendar Exame - Sistema de Diagnóstico</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #185a9d;
-      --secondary: #43cea2;
-      --danger: #e74c3c;
-      --warning: #f39c12;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e0e0e0;
-      --dark-gray: #333333;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-    
-    body {
-      background-color: var(--light-gray);
-      color: var(--dark-gray);
-    }
-    
-    .container {
-      display: grid;
-      grid-template-columns: 250px 1fr;
-      min-height: 100vh;
-    }
-    
-    /* Top Navigation */
-    .top-nav {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 0.75rem 1.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    
-    .nav-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .logo {
-      font-weight: 600;
-      font-size: 1.25rem;
-    }
-    
-    .nav-menu {
-      display: flex;
-      list-style: none;
-    }
-    
-    .nav-item {
-      margin-left: 1rem;
-    }
-    
-    .nav-link {
-      color: white;
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: background-color 0.3s;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .nav-link:hover, .nav-link.active {
-      background-color: rgba(255,255,255,0.2);
-    }
-    
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid white;
-    }
-    
-    /* Main Content */
-    .main-content {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
-    }
-    
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    
-    .page-title {
-      font-size: 1.75rem;
-      color: var(--primary);
-    }
-    
-    .back-button {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    
-    /* Formulário de Agendamento */
-    .booking-container {
-      background-color: white;
-      border-radius: 10px;
-      padding: 2rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    .booking-steps {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-      position: relative;
-    }
-    
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 1;
-    }
-    
-    .step-number {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: var(--medium-gray);
-      color: #666;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    
-    .step.active .step-number {
-      background-color: var(--primary);
-      color: white;
-    }
-    
-    .step.completed .step-number {
-      background-color: var(--secondary);
-      color: white;
-    }
-    
-    .step-title {
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-align: center;
-    }
-    
-    .progress-line {
-      position: absolute;
-      height: 4px;
-      background-color: var(--medium-gray);
-      top: 20px;
-      left: 0;
-      right: 0;
-      z-index: 0;
-    }
-    
-    .progress {
-      height: 100%;
-      background-color: var(--secondary);
-      width: 33%;
-      transition: width 0.3s;
-    }
-    
-    .booking-form {
-      display: none;
-    }
-    
-    .booking-form.active {
-      display: block;
-    }
-    
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--medium-gray);
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(24, 90, 157, 0.1);
-    }
-    
-    .ubs-list {
-      list-style: none;
-      margin-top: 1rem;
-      border: 1px solid var(--medium-gray);
-      border-radius: 6px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    
-    .ubs-item {
-      padding: 1rem;
-      border-bottom: 1px solid var(--medium-gray);
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    
-    .ubs-item:last-child {
-      border-bottom: none;
-    }
-    
-    .ubs-item:hover {
-      background-color: var(--light-gray);
-    }
-    
-    .ubs-item.selected {
-      background-color: #e3f2fd;
-      border-left: 3px solid var(--primary);
-    }
-    
-    .ubs-name {
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-    
-    .ubs-address {
-      font-size: 0.9rem;
-      color: #666;
-    }
-    
-    .ubs-distance {
-      font-size: 0.8rem;
-      color: var(--primary);
-      margin-top: 0.25rem;
-    }
-    
-    .time-slots {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-    
-    .time-slot {
-      padding: 0.75rem;
-      text-align: center;
-      border: 1px solid var(--medium-gray);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .time-slot:hover {
-      border-color: var(--primary);
-    }
-    
-    .time-slot.selected {
-      background-color: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-    
-    .time-slot.unavailable {
-      background-color: var(--light-gray);
-      color: #999;
-      cursor: not-allowed;
-      text-decoration: line-through;
-    }
-    
-    .booking-summary {
-      background-color: #f8f9fa;
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-top: 2rem;
-    }
-    
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
-    
-    .summary-label {
-      font-weight: 500;
-    }
-    
-    .summary-value {
-      font-weight: 600;
-    }
-    
-    .btn {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 500;
-      cursor: pointer;
-      border: none;
-      transition: all 0.3s;
-    }
-    
-    .btn-primary {
-      background-color: var(--primary);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background-color: #134a80;
-      transform: translateY(-2px);
-    }
-    
-    .btn-secondary {
-      background-color: white;
-      color: var(--primary);
-      border: 1px solid var(--primary);
-    }
-    
-    .btn-secondary:hover {
-      background-color: #f0f7ff;
-    }
-    
-    .btn-block {
-      display: block;
-      width: 100%;
-      text-align: center;
-    }
-    
-    .buttons-container {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 2rem;
-    }
-    
-    /* Responsividade */
-    @media (max-width: 768px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agendar Exame - Sistema de Diagnóstico</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #185a9d;
+        --secondary: #43cea2;
+        --danger: #e74c3c;
+        --warning: #f39c12;
+        --light-gray: #f5f7fa;
+        --medium-gray: #e0e0e0;
+        --dark-gray: #333333;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background-color: var(--light-gray);
+        color: var(--dark-gray);
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        min-height: 100vh;
+      }
+
+      /* Top Navigation */
       .top-nav {
-      padding: 0.5rem 0.5rem;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 0.75rem 1.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
       }
 
       .logo {
-      font-size: 1rem; /* diminui o tamanho da logo */
-      white-space: nowrap;
-      margin-right: 0.5rem;
+        font-weight: 600;
+        font-size: 1.25rem;
       }
-      .nav-container {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-      }
+
       .nav-menu {
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 0.25rem;
-        width: 100%;
-        scrollbar-width: thin; /* Firefox */
+        display: flex;
+        list-style: none;
       }
 
       .nav-item {
-        margin-left: 0;
-        flex: 0 0 auto;
+        margin-left: 1rem;
       }
-      
-      .container {
-        grid-template-columns: 1fr;
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        transition: background-color 0.3s;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
-      
-      .sidebar {
-        height: auto;
+
+      .nav-link:hover,
+      .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+      }
+
+      /* Main Content */
+      .main-content {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+        color: var(--primary);
+      }
+
+      .back-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      /* Formulário de Agendamento */
+      .booking-container {
+        background-color: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .booking-steps {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
         position: relative;
       }
-      
-      .main-content {
-        padding: 1.5rem;
+
+      .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1;
       }
-      
+
+      .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--medium-gray);
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .step.active .step-number {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .step.completed .step-number {
+        background-color: var(--secondary);
+        color: white;
+      }
+
+      .step-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-align: center;
+      }
+
+      .progress-line {
+        position: absolute;
+        height: 4px;
+        background-color: var(--medium-gray);
+        top: 20px;
+        left: 0;
+        right: 0;
+        z-index: 0;
+      }
+
+      .progress {
+        height: 100%;
+        background-color: var(--secondary);
+        width: 33%;
+        transition: width 0.3s;
+      }
+
+      .booking-form {
+        display: none;
+      }
+
+      .booking-form.active {
+        display: block;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--medium-gray);
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(24, 90, 157, 0.1);
+      }
+
+      .ubs-list {
+        list-style: none;
+        margin-top: 1rem;
+        border: 1px solid var(--medium-gray);
+        border-radius: 6px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .ubs-item {
+        padding: 1rem;
+        border-bottom: 1px solid var(--medium-gray);
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .ubs-item:last-child {
+        border-bottom: none;
+      }
+
+      .ubs-item:hover {
+        background-color: var(--light-gray);
+      }
+
+      .ubs-item.selected {
+        background-color: #e3f2fd;
+        border-left: 3px solid var(--primary);
+      }
+
+      .ubs-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .ubs-address {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .ubs-distance {
+        font-size: 0.8rem;
+        color: var(--primary);
+        margin-top: 0.25rem;
+      }
+
       .time-slots {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.75rem;
+        margin-top: 1rem;
       }
-    }
-  </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    
-  <nav class="top-nav">
-    <div class="nav-container">
-      <div class="logo">Área do Paciente</div>
-      
-      <ul class="nav-menu">
-        <li class="nav-item"><a href="#" class="nav-link "><i class="fas fa-home"></i> Início</a></li>
-        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-calendar-check"></i> Agendar</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-map-marker-alt"></i> UBS</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-file-medical"></i> Exames</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-comment-medical"></i> Orientações</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-bell"></i> Notificações</a></li>
-      </ul>
-      
-      <div class="user-info">
-        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Foto do paciente" class="user-avatar">
-        <span>Maria da Silva</span>
+
+      .time-slot {
+        padding: 0.75rem;
+        text-align: center;
+        border: 1px solid var(--medium-gray);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .time-slot:hover {
+        border-color: var(--primary);
+      }
+
+      .time-slot.selected {
+        background-color: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .time-slot.unavailable {
+        background-color: var(--light-gray);
+        color: #999;
+        cursor: not-allowed;
+        text-decoration: line-through;
+      }
+
+      .booking-summary {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+      }
+
+      .summary-label {
+        font-weight: 500;
+      }
+
+      .summary-value {
+        font-weight: 600;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #134a80;
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background-color: white;
+        color: var(--primary);
+        border: 1px solid var(--primary);
+      }
+
+      .btn-secondary:hover {
+        background-color: #f0f7ff;
+      }
+
+      .btn-block {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+
+      .buttons-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+      }
+
+      /* Responsividade */
+      @media (max-width: 768px) {
+        .top-nav {
+          padding: 0.5rem 0.5rem;
+        }
+
+        .logo {
+          font-size: 1rem; /* diminui o tamanho da logo */
+          white-space: nowrap;
+          margin-right: 0.5rem;
+        }
+        .nav-container {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 1rem;
+        }
+        .nav-menu {
+          flex-direction: row;
+          overflow-x: auto;
+          white-space: nowrap;
+          gap: 0.25rem;
+          width: 100%;
+          scrollbar-width: thin; /* Firefox */
+        }
+
+        .nav-item {
+          margin-left: 0;
+          flex: 0 0 auto;
+        }
+
+        .container {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          height: auto;
+          position: relative;
+        }
+
+        .main-content {
+          padding: 1.5rem;
+        }
+
+        .time-slots {
+          grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        }
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <nav class="top-nav">
+      <div class="nav-container">
+        <div class="logo">Área do Paciente</div>
+
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="dashboard.html" class="nav-link"
+              ><i class="fas fa-home"></i> Início</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="agendamento.html" class="nav-link active"
+              ><i class="fas fa-calendar-check"></i> Agendar</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="localizar_ubs.html" class="nav-link"
+              ><i class="fas fa-map-marker-alt"></i> UBS</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="historico_exames.html" class="nav-link"
+              ><i class="fas fa-file-medical"></i> Exames</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="orientacoes.html" class="nav-link"
+              ><i class="fas fa-comment-medical"></i> Orientações</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="notificacoes.html" class="nav-link"
+              ><i class="fas fa-bell"></i> Notificações</a
+            >
+          </li>
+        </ul>
+
+        <div class="user-info">
+          <img
+            src="https://randomuser.me/api/portraits/women/65.jpg"
+            alt="Foto do paciente"
+            class="user-avatar"
+          />
+          <span>Maria da Silva</span>
+        </div>
       </div>
-    </div>
-  </nav>
-    
+    </nav>
+
     <!-- Main Content -->
     <main class="main-content">
       <div class="header">
@@ -447,9 +481,8 @@
           <i class="fas fa-arrow-left"></i> Voltar
         </a>
       </div>
-      
+
       <div class="booking-container">
-        <!-- Passos do Agendamento -->
         <div class="booking-steps">
           <div class="step active" data-step="1">
             <div class="step-number">1</div>
@@ -467,24 +500,39 @@
             <div class="progress"></div>
           </div>
         </div>
-        
+
         <!-- Formulário Passo 1 - Tipo de Exame -->
         <div class="booking-form active" id="step1">
-          <input type="hidden" id="exam-type" value="preventivo">
-  
-  <div class="form-group">
-    <label class="form-label">Exame disponível:</label>
-    <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 6px;">
-      <p><strong>Preventivo - Exame Papanicolau</strong></p>
-      <p>Recomendado para rastreamento do câncer do colo do útero em mulheres de 25 a 64 anos.</p>
-    </div>
-  </div>
-          
+          <input type="hidden" id="exam-type" value="preventivo" />
+
+          <div class="form-group">
+            <label class="form-label">Exame disponível:</label>
+            <div
+              style="
+                background-color: #f8f9fa;
+                padding: 1rem;
+                border-radius: 6px;
+              "
+            >
+              <p><strong>Preventivo</strong></p>
+              <p>
+                Recomendado para rastreamento do câncer do colo do útero em
+                mulheres de 25 a 64 anos.
+              </p>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="form-label">Orientações para este exame:</label>
-            <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 6px;">
+            <div
+              style="
+                background-color: #f8f9fa;
+                padding: 1rem;
+                border-radius: 6px;
+              "
+            >
               <p>Para realizar o exame preventivo:</p>
-              <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+              <ul style="margin-top: 0.5rem; padding-left: 1.5rem">
                 <li>Não estar menstruada</li>
                 <li>Evitar relações sexuais 48h antes</li>
                 <li>Não usar duchas ou medicamentos vaginais</li>
@@ -492,19 +540,28 @@
               </ul>
             </div>
           </div>
-          
+
           <div class="buttons-container">
             <button class="btn btn-secondary" disabled>Voltar</button>
-            <button class="btn btn-primary" onclick="nextStep(1)">Próximo</button>
+            <button class="btn btn-primary" onclick="nextStep(1)">
+              Próximo
+            </button>
           </div>
         </div>
-        
+
         <!-- Formulário Passo 2 - Local e Data -->
         <div class="booking-form" id="step2">
           <div class="form-group">
-            <label for="ubs-search" class="form-label">Localize a UBS mais próxima:</label>
-            <input type="text" id="ubs-search" class="form-control" placeholder="Digite seu CEP ou endereço">
-            
+            <label for="ubs-search" class="form-label"
+              >Localize a UBS mais próxima:</label
+            >
+            <input
+              type="text"
+              id="ubs-search"
+              class="form-control"
+              placeholder="Digite seu CEP ou endereço"
+            />
+
             <ul class="ubs-list">
               <li class="ubs-item selected">
                 <div class="ubs-name">UBS Centro de Saúde</div>
@@ -523,12 +580,17 @@
               </li>
             </ul>
           </div>
-          
+
           <div class="form-group">
             <label for="exam-date" class="form-label">Selecione a data:</label>
-            <input type="date" id="exam-date" class="form-control" min="2023-11-01">
+            <input
+              type="date"
+              id="exam-date"
+              class="form-control"
+              min="2023-11-01"
+            />
           </div>
-          
+
           <div class="form-group">
             <label class="form-label">Horários disponíveis:</label>
             <div class="time-slots">
@@ -549,17 +611,23 @@
               <div class="time-slot">16:00</div>
             </div>
           </div>
-          
+
           <div class="buttons-container">
-            <button class="btn btn-secondary" onclick="prevStep(2)">Voltar</button>
-            <button class="btn btn-primary" onclick="nextStep(2)">Próximo</button>
+            <button class="btn btn-secondary" onclick="prevStep(2)">
+              Voltar
+            </button>
+            <button class="btn btn-primary" onclick="nextStep(2)">
+              Próximo
+            </button>
           </div>
         </div>
-        
+
         <!-- Formulário Passo 3 - Confirmação -->
         <div class="booking-form" id="step3">
-          <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Confirme seu agendamento</h2>
-          
+          <h2 style="margin-bottom: 1.5rem; color: var(--primary)">
+            Confirme seu agendamento
+          </h2>
+
           <div class="booking-summary">
             <div class="summary-item">
               <span class="summary-label">Tipo de Exame:</span>
@@ -578,70 +646,95 @@
               <span class="summary-value">15/11/2023 às 14:30</span>
             </div>
           </div>
-          
-          <div class="form-group" style="margin-top: 1.5rem;">
+
+          <div class="form-group" style="margin-top: 1.5rem">
             <label class="form-label">Deseja receber lembretes?</label>
-            <div style="display: flex; gap: 1rem;">
-              <label style="display: flex; align-items: center; gap: 0.5rem;">
-                <input type="checkbox" checked> WhatsApp
+            <div style="display: flex; gap: 1rem">
+              <label style="display: flex; align-items: center; gap: 0.5rem">
+                <input type="checkbox" /> E-mail
               </label>
-              <label style="display: flex; align-items: center; gap: 0.5rem;">
-                <input type="checkbox"> E-mail
-              </label>
-              <label style="display: flex; align-items: center; gap: 0.5rem;">
-                <input type="checkbox"> SMS
+              <label style="display: flex; align-items: center; gap: 0.5rem">
+                <input type="checkbox" checked /> SMS
               </label>
             </div>
           </div>
-          
+
           <div class="buttons-container">
-            <button class="btn btn-secondary" onclick="prevStep(3)">Voltar</button>
+            <button class="btn btn-secondary" onclick="prevStep(3)">
+              Voltar
+            </button>
             <button class="btn btn-primary">Confirmar Agendamento</button>
           </div>
         </div>
       </div>
     </main>
 
-  <script>
-    function nextStep(currentStep) {
-      document.getElementById(`step${currentStep}`).classList.remove('active');
-      document.getElementById(`step${currentStep + 1}`).classList.add('active');
-      
-      document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
-      document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('completed');
-      document.querySelector(`.step[data-step="${currentStep + 1}"]`).classList.add('active');
-      
-      document.querySelector('.progress').style.width = `${(currentStep / 3) * 100}%`;
-    }
-    
-    function prevStep(currentStep) {
-      document.getElementById(`step${currentStep}`).classList.remove('active');
-      document.getElementById(`step${currentStep - 1}`).classList.add('active');
-      
-      document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
-      document.querySelector(`.step[data-step="${currentStep - 1}"]`).classList.add('active');
-      document.querySelector(`.step[data-step="${currentStep - 1}"]`).classList.remove('completed');
-      
-      document.querySelector('.progress').style.width = `${((currentStep - 2) / 3) * 100}%`;
-    }
-    
-    // Selecionar UBS
-    const ubsItems = document.querySelectorAll('.ubs-item');
-    ubsItems.forEach(item => {
-      item.addEventListener('click', () => {
-        ubsItems.forEach(i => i.classList.remove('selected'));
-        item.classList.add('selected');
+    <script>
+      function nextStep(currentStep) {
+        document
+          .getElementById(`step${currentStep}`)
+          .classList.remove("active");
+        document
+          .getElementById(`step${currentStep + 1}`)
+          .classList.add("active");
+
+        document
+          .querySelector(`.step[data-step="${currentStep}"]`)
+          .classList.remove("active");
+        document
+          .querySelector(`.step[data-step="${currentStep}"]`)
+          .classList.add("completed");
+        document
+          .querySelector(`.step[data-step="${currentStep + 1}"]`)
+          .classList.add("active");
+
+        document.querySelector(".progress").style.width = `${
+          (currentStep / 3) * 100
+        }%`;
+      }
+
+      function prevStep(currentStep) {
+        document
+          .getElementById(`step${currentStep}`)
+          .classList.remove("active");
+        document
+          .getElementById(`step${currentStep - 1}`)
+          .classList.add("active");
+
+        document
+          .querySelector(`.step[data-step="${currentStep}"]`)
+          .classList.remove("active");
+        document
+          .querySelector(`.step[data-step="${currentStep - 1}"]`)
+          .classList.add("active");
+        document
+          .querySelector(`.step[data-step="${currentStep - 1}"]`)
+          .classList.remove("completed");
+
+        document.querySelector(".progress").style.width = `${
+          ((currentStep - 2) / 3) * 100
+        }%`;
+      }
+
+      // Selecionar UBS
+      const ubsItems = document.querySelectorAll(".ubs-item");
+      ubsItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          ubsItems.forEach((i) => i.classList.remove("selected"));
+          item.classList.add("selected");
+        });
       });
-    });
-    
-    // Selecionar horário
-    const timeSlots = document.querySelectorAll('.time-slot:not(.unavailable)');
-    timeSlots.forEach(slot => {
-      slot.addEventListener('click', () => {
-        timeSlots.forEach(s => s.classList.remove('selected'));
-        slot.classList.add('selected');
+
+      // Selecionar horário
+      const timeSlots = document.querySelectorAll(
+        ".time-slot:not(.unavailable)"
+      );
+      timeSlots.forEach((slot) => {
+        slot.addEventListener("click", () => {
+          timeSlots.forEach((s) => s.classList.remove("selected"));
+          slot.classList.add("selected");
+        });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
