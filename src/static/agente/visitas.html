@@ -212,6 +212,7 @@
       padding: 0.5rem;
       cursor: pointer;
       transition: all 0.3s;
+      position: relative;
     }
     
     .calendar-day:hover {
@@ -242,6 +243,12 @@
       color: white;
     }
     
+    .calendar-day.disabled {
+      color: #ccc;
+      background-color: #f9f9f9;
+      cursor: not-allowed;
+    }
+    
     .time-slots {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -255,12 +262,24 @@
       border-radius: 6px;
       text-align: center;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .time-slot:hover {
+      background-color: #f0f7ff;
     }
     
     .time-slot.selected {
       background-color: var(--primary);
       color: white;
       border-color: var(--primary);
+    }
+    
+    .time-slot.unavailable {
+      background-color: #f9f9f9;
+      color: #ccc;
+      cursor: not-allowed;
+      text-decoration: line-through;
     }
     
     .btn {
@@ -280,7 +299,7 @@
     }
     
     .btn-primary:hover {
-      background-color: #219653;
+      background-color: #134980;
     }
     
     .btn-secondary {
@@ -305,28 +324,38 @@
       margin-top: 2rem;
     }
     
+    .error-message {
+      color: var(--danger);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    
     @media (max-width: 768px) {
       .top-nav {
-      padding: 0.5rem 0.5rem;
+        padding: 0.5rem 0.5rem;
       }
 
       .logo {
-      font-size: 1rem; /* diminui o tamanho da logo */
-      white-space: nowrap;
-      margin-right: 0.5rem;
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
       }
+      
       .nav-container {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
+      
       .nav-menu {
         flex-direction: row;
         overflow-x: auto;
         white-space: nowrap;
         gap: 0.25rem;
         width: 100%;
-        scrollbar-width: thin; /* Firefox */
+        scrollbar-width: thin;
+        padding-bottom: 0.5rem;
       }
 
       .nav-item {
@@ -349,6 +378,10 @@
       
       .btn {
         width: 100%;
+      }
+      
+      .form-section {
+        padding: 1rem;
       }
     }
   </style>
@@ -384,126 +417,336 @@
     <div class="form-section">
       <h2 class="form-header"><i class="fas fa-user"></i> Selecionar Paciente</h2>
       <div class="form-group">
-        <input type="text" class="form-control" placeholder="Digite o nome ou cartão SUS">
+        <input type="text" id="patient-search" class="form-control" placeholder="Digite o nome ou cartão SUS">
+        <div id="search-error" class="error-message">Nenhum paciente encontrado</div>
       </div>
       
-      <ul class="patient-list">
-        <li class="patient-item selected">
+      <ul class="patient-list" id="patient-list">
+        <li class="patient-item selected" data-patient-id="1">
           <div class="patient-name">Maria da Silva</div>
           <div class="patient-details">38 anos | Rua das Flores, 123</div>
         </li>
-        <li class="patient-item">
+        <li class="patient-item" data-patient-id="2">
           <div class="patient-name">Joana Pereira</div>
           <div class="patient-details">42 anos | Av. Central, 456</div>
         </li>
-        <li class="patient-item">
+        <li class="patient-item" data-patient-id="3">
           <div class="patient-name">Carla Santos</div>
           <div class="patient-details">35 anos | Rua B, 789</div>
         </li>
       </ul>
+      <div id="patient-error" class="error-message">Selecione um paciente</div>
     </div>
 
     <div class="calendar-container">
       <div class="calendar-header">
-        <button class="btn btn-secondary btn-small">
+        <button id="prev-month" class="btn btn-secondary btn-small">
           <i class="fas fa-chevron-left"></i>
         </button>
-        <h3>Junho 2025</h3>
-        <button class="btn btn-secondary btn-small">
+        <h3 id="current-month">Junho 2025</h3>
+        <button id="next-month" class="btn btn-secondary btn-small">
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
       
-      <div class="calendar-grid">
-        <div class="calendar-day-header">Dom</div>
-        <div class="calendar-day-header">Seg</div>
-        <div class="calendar-day-header">Ter</div>
-        <div class="calendar-day-header">Qua</div>
-        <div class="calendar-day-header">Qui</div>
-        <div class="calendar-day-header">Sex</div>
-        <div class="calendar-day-header">Sáb</div>
-        
-        <!-- Dias do mês -->
-        <div class="calendar-day"><div class="calendar-day-number">1</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">2</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">3</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">4</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">5</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">6</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">7</div></div>
-        
-        <div class="calendar-day"><div class="calendar-day-number">8</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">9</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">10</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">11</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">12</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">13</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">14</div></div>
-        
-        <div class="calendar-day today has-visits"><div class="calendar-day-number">15</div></div>
-        <div class="calendar-day has-visits"><div class="calendar-day-number">16</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">17</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">18</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">19</div></div>
-        <div class="calendar-day selected"><div class="calendar-day-number">20</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">21</div></div>
-        
-        <div class="calendar-day"><div class="calendar-day-number">22</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">23</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">24</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">25</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">26</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">27</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">28</div></div>
-        
-        <div class="calendar-day"><div class="calendar-day-number">29</div></div>
-        <div class="calendar-day"><div class="calendar-day-number">30</div></div>
-        <div class="calendar-day disabled"><div class="calendar-day-number">1</div></div>
-        <div class="calendar-day disabled"><div class="calendar-day-number">2</div></div>
-        <div class="calendar-day disabled"><div class="calendar-day-number">3</div></div>
-        <div class="calendar-day disabled"><div class="calendar-day-number">4</div></div>
-        <div class="calendar-day disabled"><div class="calendar-day-number">5</div></div>
+      <div class="calendar-grid" id="calendar-grid">
+        <!-- Dias serão gerados dinamicamente via JavaScript -->
       </div>
     </div>
 
     <div class="form-section">
       <h2 class="form-header"><i class="fas fa-clock"></i> Horário</h2>
-      <div class="time-slots">
-        <div class="time-slot">08:00 - 09:00</div>
-        <div class="time-slot">09:00 - 10:00</div>
-        <div class="time-slot selected">10:00 - 11:00</div>
-        <div class="time-slot">11:00 - 12:00</div>
-        <div class="time-slot">14:00 - 15:00</div>
-        <div class="time-slot">15:00 - 16:00</div>
-        <div class="time-slot">16:00 - 17:00</div>
+      <div class="time-slots" id="time-slots">
+        <div class="time-slot" data-time="08:00">08:00 - 09:00</div>
+        <div class="time-slot" data-time="09:00">09:00 - 10:00</div>
+        <div class="time-slot selected" data-time="10:00">10:00 - 11:00</div>
+        <div class="time-slot" data-time="11:00">11:00 - 12:00</div>
+        <div class="time-slot unavailable" data-time="14:00">14:00 - 15:00</div>
+        <div class="time-slot" data-time="15:00">15:00 - 16:00</div>
+        <div class="time-slot" data-time="16:00">16:00 - 17:00</div>
       </div>
+      <div id="time-error" class="error-message">Selecione um horário disponível</div>
     </div>
 
     <div class="form-section">
       <h2 class="form-header"><i class="fas fa-edit"></i> Motivo da Visita</h2>
       <div class="form-group">
-        <select class="form-control">
-          <option>Lembrete de exame preventivo</option>
-          <option selected>Acompanhamento de resultado anormal</option>
-          <option>Orientações de saúde</option>
-          <option>Cadastro inicial</option>
-          <option>Outro</option>
+        <select id="visit-reason" class="form-control">
+          <option value="">Selecione um motivo</option>
+          <option value="preventivo">Lembrete de exame preventivo</option>
+          <option value="acompanhamento" selected>Acompanhamento de resultado anormal</option>
+          <option value="orientacoes">Orientações de saúde</option>
+          <option value="cadastro">Cadastro inicial</option>
+          <option value="outro">Outro</option>
         </select>
+        <div id="reason-error" class="error-message">Selecione um motivo para a visita</div>
       </div>
       <div class="form-group">
         <label class="form-label">Observações</label>
-        <textarea class="form-control" rows="3" placeholder="Detalhes sobre a visita..."></textarea>
+        <textarea id="visit-notes" class="form-control" rows="3" placeholder="Detalhes sobre a visita..."></textarea>
       </div>
     </div>
 
     <div class="form-actions">
-      <button class="btn btn-secondary">
+      <button id="cancel-btn" class="btn btn-secondary">
         <i class="fas fa-times"></i> Cancelar
       </button>
-      <button class="btn btn-primary">
+      <button id="submit-btn" class="btn btn-primary">
         <i class="fas fa-calendar-check"></i> Agendar Visita
       </button>
     </div>
   </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Variáveis globais
+      let currentDate = new Date(2025, 5, 1); // Junho 2025 (mês é 0-indexed)
+      let selectedPatient = 1;
+      let selectedDate = null;
+      let selectedTime = "10:00";
+      
+      // Elementos do DOM
+      const patientItems = document.querySelectorAll('.patient-item');
+      const patientSearch = document.getElementById('patient-search');
+      const calendarGrid = document.getElementById('calendar-grid');
+      const currentMonthElement = document.getElementById('current-month');
+      const prevMonthBtn = document.getElementById('prev-month');
+      const nextMonthBtn = document.getElementById('next-month');
+      const timeSlots = document.querySelectorAll('.time-slot');
+      const visitReason = document.getElementById('visit-reason');
+      const submitBtn = document.getElementById('submit-btn');
+      const cancelBtn = document.getElementById('cancel-btn');
+      
+      // Erros
+      const patientError = document.getElementById('patient-error');
+      const timeError = document.getElementById('time-error');
+      const reasonError = document.getElementById('reason-error');
+      const searchError = document.getElementById('search-error');
+      
+      // Inicializar calendário
+      function renderCalendar() {
+        calendarGrid.innerHTML = '';
+        
+        // Cabeçalhos dos dias da semana
+        const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        dayNames.forEach(day => {
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day-header';
+          dayElement.textContent = day;
+          calendarGrid.appendChild(dayElement);
+        });
+        
+        // Primeiro dia do mês
+        const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        // Último dia do mês
+        const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        // Dia da semana do primeiro dia (0-6)
+        const startDay = firstDay.getDay();
+        
+        // Dias do mês anterior (se necessário)
+        const prevMonthLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+        for (let i = startDay - 1; i >= 0; i--) {
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day disabled';
+          dayElement.innerHTML = `<div class="calendar-day-number">${prevMonthLastDay - i}</div>`;
+          calendarGrid.appendChild(dayElement);
+        }
+        
+        // Dias do mês atual
+        const today = new Date();
+        for (let i = 1; i <= lastDay.getDate(); i++) {
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day';
+          
+          // Verificar se é hoje
+          if (currentDate.getFullYear() === today.getFullYear() && 
+              currentDate.getMonth() === today.getMonth() && 
+              i === today.getDate()) {
+            dayElement.classList.add('today');
+          }
+          
+          // Verificar se tem visitas (simulação)
+          if (i % 5 === 0) {
+            dayElement.classList.add('has-visits');
+          }
+          
+          // Verificar se é o dia selecionado (20 de junho como exemplo)
+          if (i === 20 && currentDate.getMonth() === 5 && currentDate.getFullYear() === 2025) {
+            dayElement.classList.add('selected');
+            selectedDate = new Date(2025, 5, 20);
+          }
+          
+          dayElement.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+          
+          // Adicionar evento de clique
+          dayElement.addEventListener('click', function() {
+            if (!this.classList.contains('disabled')) {
+              // Remover seleção anterior
+              document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                el.classList.remove('selected');
+              });
+              
+              // Adicionar seleção atual
+              this.classList.add('selected');
+              
+              // Atualizar data selecionada
+              selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+              
+              // Simular verificação de disponibilidade
+              updateTimeSlots();
+            }
+          });
+          
+          calendarGrid.appendChild(dayElement);
+        }
+        
+        // Dias do próximo mês (se necessário)
+        const totalCells = startDay + lastDay.getDate() > 35 ? 42 : 35;
+        const remainingCells = totalCells - (startDay + lastDay.getDate());
+        for (let i = 1; i <= remainingCells; i++) {
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day disabled';
+          dayElement.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+          calendarGrid.appendChild(dayElement);
+        }
+        
+        // Atualizar cabeçalho do mês
+        const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        currentMonthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+      }
+      
+      // Atualizar horários disponíveis
+      function updateTimeSlots() {
+        timeSlots.forEach(slot => {
+          // Simular alguns horários indisponíveis
+          if (Math.random() < 0.3 && !slot.classList.contains('selected')) {
+            slot.classList.add('unavailable');
+          } else if (!slot.classList.contains('selected')) {
+            slot.classList.remove('unavailable');
+          }
+        });
+      }
+      
+      // Selecionar paciente
+      patientItems.forEach(item => {
+        item.addEventListener('click', function() {
+          // Remover seleção anterior
+          patientItems.forEach(i => i.classList.remove('selected'));
+          
+          // Adicionar seleção atual
+          this.classList.add('selected');
+          
+          // Atualizar paciente selecionado
+          selectedPatient = parseInt(this.getAttribute('data-patient-id'));
+          
+          // Esconder mensagem de erro
+          patientError.style.display = 'none';
+        });
+      });
+      
+      // Buscar paciente
+      patientSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        let found = false;
+        
+        patientItems.forEach(item => {
+          const name = item.querySelector('.patient-name').textContent.toLowerCase();
+          const details = item.querySelector('.patient-details').textContent.toLowerCase();
+          
+          if (name.includes(searchTerm) || details.includes(searchTerm)) {
+            item.style.display = 'block';
+            found = true;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+        
+        searchError.style.display = found ? 'none' : 'block';
+      });
+      
+      // Selecionar horário
+      timeSlots.forEach(slot => {
+        slot.addEventListener('click', function() {
+          if (!this.classList.contains('unavailable')) {
+            // Remover seleção anterior
+            timeSlots.forEach(s => s.classList.remove('selected'));
+            
+            // Adicionar seleção atual
+            this.classList.add('selected');
+            
+            // Atualizar horário selecionado
+            selectedTime = this.getAttribute('data-time');
+            
+            // Esconder mensagem de erro
+            timeError.style.display = 'none';
+          }
+        });
+      });
+      
+      // Navegação do calendário
+      prevMonthBtn.addEventListener('click', function() {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+      });
+      
+      nextMonthBtn.addEventListener('click', function() {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+      });
+      
+      // Validar e enviar formulário
+      submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        
+        // Validar paciente
+        if (!selectedPatient) {
+          patientError.style.display = 'block';
+          isValid = false;
+        }
+        
+        // Validar data (simplificado)
+        if (!selectedDate) {
+          alert('Selecione uma data no calendário');
+          isValid = false;
+        }
+        
+        // Validar horário
+        if (!selectedTime) {
+          timeError.style.display = 'block';
+          isValid = false;
+        }
+        
+        // Validar motivo
+        if (!visitReason.value) {
+          reasonError.style.display = 'block';
+          isValid = false;
+        }
+        
+        if (isValid) {
+          // Simular envio do formulário
+          const patientName = document.querySelector('.patient-item.selected .patient-name').textContent;
+          const formattedDate = selectedDate.toLocaleDateString('pt-BR');
+          
+          alert(`Visita agendada com sucesso!\n\nPaciente: ${patientName}\nData: ${formattedDate}\nHorário: ${selectedTime}\nMotivo: ${visitReason.options[visitReason.selectedIndex].text}`);
+          
+          // Redirecionar (simulado)
+          setTimeout(() => {
+            window.location.href = 'visitas.html';
+          }, 1500);
+        }
+      });
+      
+      // Cancelar
+      cancelBtn.addEventListener('click', function() {
+        if (confirm('Deseja cancelar o agendamento? Todos os dados serão perdidos.')) {
+          window.location.href = 'visitas.html';
+        }
+      });
+      
+      renderCalendar();
+    });
+  </script>
 </body>
 </html>
