@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Ficha - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #185a9d;
+      --secondary: #43cea2;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --light-gray: #f5f7fa;
+      --medium-gray: #e0e0e0;
+      --dark-gray: #333333;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+    
+    /* Top Navigation */
+    .top-nav {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-left: 1rem;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+    
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+    
+    .back-button {
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Form Sections */
+    .form-section {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    
+    .section-title {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--medium-gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .section-info {
+      font-size: 0.85rem;
+      color: #666;
+      font-weight: normal;
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .form-group {
+      flex: 1;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .form-control[disabled] {
+      background-color: #f0f0f0;
+    }
+    
+    .read-only-field {
+      background-color: #f9f9f9;
+      color: #666;
+    }
+    
+    .required-field::after {
+      content: " *";
+      color: var(--danger);
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--medium-gray);
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #245c58;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .btn-secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+    
+    /* Auto-save indicator */
+    .auto-save {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--secondary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      display: none;
+      z-index: 100;
+    }
+    
+    /* Audit info */
+    .audit-info {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #ddd;
+    }
+    
+    .audit-info span {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    
+    /* Change history */
+    .history-toggle {
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .history-container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+    }
+    
+    .history-container.active {
+      max-height: 300px;
+      padding: 1rem;
+      border: 1px solid #eee;
+    }
+    
+    .history-item {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .history-item:last-child {
+      border-bottom: none;
+    }
+    
+    .history-date {
+      font-weight: 500;
+      color: var(--primary);
+    }
+    
+    .history-user {
+      font-style: italic;
+    }
+    
+    /* Field permissions */
+    .permission-restricted {
+      position: relative;
+    }
+    
+    .permission-restricted::after {
+      content: "🔒";
+      position: absolute;
+      right: 10px;
+      top: 35px;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    
+    /* Error styles */
+    .error-message {
+      color: var(--danger);
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    
+    .has-error .form-control {
+      border-color: var(--danger);
+    }
+    
+    .has-error .error-message {
+      display: block;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .top-nav {
+      padding: 0.5rem 0.5rem;
+      }
+      
+      .logo {
+      font-size: 1rem;
+      white-space: nowrap;
+      margin-right: 0.5rem;
+      }
+      
+      .nav-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      
+      .nav-menu {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin;
+      }
+      
+      .nav-item {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .user-info {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      
+      .form-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .main-content {
+        padding: 0 1rem;
+      }
+      
+      .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+    }
+
+    /* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--dark-gray);
+}
+
+.modal-body {
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <div class="logo">Área da Enfermeira</div>
+      
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="ficha.html" class="nav-link active"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="nav-item"><a href="historico.html" class="nav-link"><i class="fas fa-search"></i> Consultar</a></li>
+        <li class="nav-item"><a href="agendamentos.html" class="nav-link"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
+        <li class="nav-item"><a href="relatorios.html" class="nav-link"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+      </ul>
+      
+      <div class="user-info">
+        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Foto da enfermeira" class="user-avatar">
+        <span>Enf. Ana Oliveira</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="main-content">
+    <div class="header">
+      <h1 class="page-title">Editar Ficha Citopatológica <span style="font-size: 1rem; color: #666; font-weight: normal;">#F-2023-0042</span></h1>
+      <a href="historico.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+    
+    <form id="citopatologicaForm">
+      <!-- Seção de Identificação da Unidade -->
+      <div class="form-section">
+        <h2 class="section-title">
+          Identificação da Unidade
+          <span class="section-info">Última atualização: 15/03/2023 por Enf. Carlos Silva</span>
+        </h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cnes" class="form-label required-field">CNES</label>
+            <input type="text" id="cnes" class="form-control" value="1234567" required>
+            <span class="error-message">Por favor, informe o CNES da unidade</span>
+          </div>
+          <div class="form-group">
+            <label for="unidade" class="form-label required-field">Nome da Unidade</label>
+            <input type="text" id="unidade" class="form-control" value="UBS Jardim das Flores" required>
+            <span class="error-message">Por favor, informe o nome da unidade</span>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="municipio" class="form-label required-field">Município</label>
+            <input type="text" id="municipio" class="form-control" value="São Paulo" required>
+            <span class="error-message">Por favor, informe o município</span>
+          </div>
+          <div class="form-group">
+            <label for="uf" class="form-label required-field">UF</label>
+            <select id="uf" class="form-control" required>
+              <option value="">Selecione</option>
+              <option value="SP" selected>São Paulo</option>
+              <!-- Outros estados... -->
+            </select>
+            <span class="error-message">Por favor, selecione a UF</span>
+          </div>
+        </div>
+        
+        <div class="audit-info">
+          <span><strong>Criado em:</strong> 10/03/2023 14:30 por Enf. Ana Oliveira</span>
+          <span><strong>Última atualização:</strong> 15/03/2023 09:15 por Enf. Carlos Silva</span>
+        </div>
+      </div>
+      
+      <!-- Seção de Dados da Paciente -->
+      <div class="form-section">
+        <h2 class="section-title">
+          Dados da Paciente
+          <span class="section-info">Dados cadastrais - somente administradores podem editar</span>
+        </h2>
+        
+        <div class="form-row">
+          <div class="form-group permission-restricted">
+            <label for="nome" class="form-label required-field">Nome Completo</label>
+            <input type="text" id="nome" class="form-control read-only-field" value="Maria da Silva" required readonly>
+            <span class="error-message">Por favor, informe o nome completo</span>
+          </div>
+          <div class="form-group permission-restricted">
+            <label for="mae" class="form-label">Nome da Mãe</label>
+            <input type="text" id="mae" class="form-control read-only-field" value="Joana da Silva" readonly>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group permission-restricted">
+            <label for="nascimento" class="form-label required-field">Data de Nascimento</label>
+            <input type="date" id="nascimento" class="form-control read-only-field" value="1985-05-15" required readonly>
+            <span class="error-message">Por favor, informe a data de nascimento</span>
+          </div>
+          <div class="form-group permission-restricted">
+            <label for="idade" class="form-label required-field">Idade</label>
+            <input type="number" id="idade" class="form-control read-only-field" min="0" max="120" value="38" required readonly>
+            <span class="error-message">Por favor, informe a idade</span>
+          </div>
+          <div class="form-group permission-restricted">
+            <label for="cor" class="form-label required-field">Raça/Cor</label>
+            <select id="cor" class="form-control read-only-field" required disabled>
+              <option value="">Selecione</option>
+              <option value="branca" selected>Branca</option>
+              <option value="preta">Preta</option>
+              <option value="parda">Parda</option>
+              <option value="amarela">Amarela</option>
+              <option value="indigena">Indígena</option>
+            </select>
+            <span class="error-message">Por favor, selecione a raça/cor</span>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group permission-restricted">
+            <label for="cns" class="form-label required-field">Cartão SUS (CNS)</label>
+            <input type="text" id="cns" class="form-control read-only-field" value="123 4567 8901 2345" required readonly>
+            <span class="error-message">Por favor, informe o número do Cartão SUS</span>
+          </div>
+          <div class="form-group permission-restricted">
+            <label for="cpf" class="form-label">CPF</label>
+            <input type="text" id="cpf" class="form-control read-only-field" value="123.456.789-00" readonly>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Seção de Anamnese -->
+      <div class="form-section">
+        <h2 class="section-title">Anamnese</h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="menarca" class="form-label">Idade da Menarca</label>
+            <input type="number" id="menarca" class="form-control" min="0" max="30" value="12">
+          </div>
+          <div class="form-group">
+            <label for="menopausa" class="form-label">Menopausa</label>
+            <select id="menopausa" class="form-control">
+              <option value="nao" selected>Não</option>
+              <option value="sim">Sim</option>
+              <option value="cirurgica">Menopausa Cirúrgica</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="idade_menopausa" class="form-label">Idade da Menopausa</label>
+            <input type="number" id="idade_menopausa" class="form-control" min="0" max="70" disabled>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="gestacoes" class="form-label">Nº de Gestações</label>
+            <input type="number" id="gestacoes" class="form-control" min="0" max="20" value="2">
+          </div>
+          <div class="form-group">
+            <label for="partos" class="form-label">Nº de Partos</label>
+            <input type="number" id="partos" class="form-control" min="0" max="20" value="2">
+          </div>
+          <div class="form-group">
+            <label for="abortos" class="form-label">Nº de Abortos</label>
+            <input type="number" id="abortos" class="form-control" min="0" max="20" value="0">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="hormonais" class="form-label">Uso de Hormonais</label>
+            <select id="hormonais" class="form-control">
+              <option value="nao" selected>Não</option>
+              <option value="sim">Sim</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tempo_hormonais" class="form-label">Tempo de Uso (anos)</label>
+            <input type="number" id="tempo_hormonais" class="form-control" min="0" max="50" disabled>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dum" class="form-label">Data da Última Menstruação</label>
+            <input type="date" id="dum" class="form-control" value="2023-03-01">
+          </div>
+          <div class="form-group">
+            <label for="ciclo" class="form-label">Ciclo Menstrual</label>
+            <select id="ciclo" class="form-control">
+              <option value="regular" selected>Regular</option>
+              <option value="irregular">Irregular</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="history-toggle" onclick="toggleHistory('historyAnamnese')">
+          <i class="fas fa-history"></i> Ver histórico de alterações
+        </div>
+        <div class="history-container" id="historyAnamnese">
+          <div class="history-item">
+            <span class="history-date">15/03/2023 09:15</span>
+            <span class="history-user">Enf. Carlos Silva</span>
+            <div>Alterou número de gestações de 3 para 2</div>
+          </div>
+          <div class="history-item">
+            <span class="history-date">10/03/2023 14:30</span>
+            <span class="history-user">Enf. Ana Oliveira</span>
+            <div>Cadastro inicial</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Seção de Exame Clínico -->
+      <div class="form-section">
+        <h2 class="section-title">Exame Clínico</h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="data_exame" class="form-label required-field">Data do Exame</label>
+            <input type="date" id="data_exame" class="form-control" value="2023-03-15" required>
+            <span class="error-message">Por favor, informe a data do exame</span>
+          </div>
+          <div class="form-group">
+            <label for="responsavel" class="form-label required-field">Responsável pela Coleta</label>
+            <input type="text" id="responsavel" class="form-control" value="Enf. Ana Oliveira" readonly required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="adequabilidade" class="form-label required-field">Adequabilidade do Material</label>
+            <select id="adequabilidade" class="form-control" required>
+              <option value="">Selecione</option>
+              <option value="satisfatorio" selected>Satisfatório</option>
+              <option value="insatisfatorio">Insatisfatório</option>
+            </select>
+            <span class="error-message">Por favor, selecione a adequabilidade</span>
+          </div>
+          <div class="form-group">
+            <label for="aspecto" class="form-label required-field">Aspecto do Colo</label>
+            <select id="aspecto" class="form-control" required>
+              <option value="">Selecione</option>
+              <option value="normal" selected>Normal</option>
+              <option value="alterado">Alterado</option>
+            </select>
+            <span class="error-message">Por favor, selecione o aspecto do colo</span>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea id="observacoes" class="form-control" rows="3">Paciente relatou desconforto mínimo durante o exame. Material coletado sem intercorrências.</textarea>
+          </div>
+        </div>
+        
+        <div class="history-toggle" onclick="toggleHistory('historyExame')">
+          <i class="fas fa-history"></i> Ver histórico de alterações
+        </div>
+        <div class="history-container" id="historyExame">
+          <div class="history-item">
+            <span class="history-date">15/03/2023 14:30</span>
+            <span class="history-user">Enf. Ana Oliveira</span>
+            <div>Registro inicial do exame</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <div>
+          <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+            <i class="fas fa-trash-alt"></i> Excluir Ficha
+          </button>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="button" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <div class="auto-save" id="autoSaveIndicator">
+    <i class="fas fa-save"></i> Salvando automaticamente...
+  </div>
+
+  <!-- Modal de confirmação -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirmar Exclusão</h3>
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que deseja excluir esta ficha permanentemente? Esta ação não pode ser desfeita.</p>
+        <p><strong>Ficha #F-2023-0042</strong> - Maria da Silva</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button class="btn btn-danger" onclick="deleteRecord()">
+          <i class="fas fa-trash-alt"></i> Confirmar Exclusão
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Habilitar/desabilitar campos condicionais
+    document.getElementById('menopausa').addEventListener('change', function() {
+      const idadeMenopausa = document.getElementById('idade_menopausa');
+      idadeMenopausa.disabled = this.value !== 'sim';
+      if (idadeMenopausa.disabled) {
+        idadeMenopausa.value = '';
+      }
+    });
+    
+    document.getElementById('hormonais').addEventListener('change', function() {
+      const tempoHormonais = document.getElementById('tempo_hormonais');
+      tempoHormonais.disabled = this.value !== 'sim';
+      if (tempoHormonais.disabled) {
+        tempoHormonais.value = '';
+      }
+    });
+    
+    // Mostrar/ocultar histórico
+    function toggleHistory(id) {
+      const history = document.getElementById(id);
+      history.classList.toggle('active');
+      
+      const icon = history.previousElementSibling.querySelector('i');
+      if (history.classList.contains('active')) {
+        icon.classList.remove('fa-history');
+        icon.classList.add('fa-chevron-up');
+      } else {
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-history');
+      }
+    }
+    
+    // Modal de confirmação
+    function confirmDelete() {
+      document.getElementById('confirmModal').classList.add('active');
+    }
+    
+    function closeModal() {
+      document.getElementById('confirmModal').classList.remove('active');
+    }
+    
+    function deleteRecord() {
+      alert('Ficha excluída com sucesso!');
+      closeModal();
+      window.location.href = 'historico.html';
+    }
+    
+    // Validação do formulário
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      let isValid = true;
+      const requiredFields = this.querySelectorAll('[required]');
+      
+      requiredFields.forEach(field => {
+        const formGroup = field.closest('.form-group');
+        
+        if (!field.value) {
+          formGroup.classList.add('has-error');
+          isValid = false;
+        } else {
+          formGroup.classList.remove('has-error');
+        }
+      });
+      
+      if (!isValid) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+      }
+      
+      // Simular envio do formulário
+      autoSaveIndicator.style.display = 'flex';
+      setTimeout(function() {
+        autoSaveIndicator.style.display = 'none';
+        alert('Alterações salvas com sucesso!');
+      }, 1000);
+    });
+    
+    // Mostrar que alguns campos são restritos
+    document.querySelectorAll('.permission-restricted').forEach(el => {
+      el.addEventListener('mouseenter', function() {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.textContent = 'Somente administradores podem editar este campo';
+        tooltip.style.position = 'absolute';
+        tooltip.style.backgroundColor = '#333';
+        tooltip.style.color = 'white';
+        tooltip.style.padding = '5px 10px';
+        tooltip.style.borderRadius = '4px';
+        tooltip.style.zIndex = '100';
+        tooltip.style.bottom = '100%';
+        tooltip.style.left = '50%';
+        tooltip.style.transform = 'translateX(-50%)';
+        tooltip.style.whiteSpace = 'nowrap';
+        
+        this.appendChild(tooltip);
+        
+        setTimeout(() => {
+          tooltip.style.opacity = '0';
+          setTimeout(() => tooltip.remove(), 300);
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
