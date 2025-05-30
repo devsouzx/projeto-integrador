@@ -5,21 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Sistema de Saúde</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
       --primary: #185a9d;
       --secondary: #43cea2;
       --light-gray: #f5f7fa;
       --medium-gray: #e0e0e0;
+      --error: #e74c3c;
     }
-    
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Inter', sans-serif;
     }
-    
+
     body {
       background-color: var(--light-gray);
       display: flex;
@@ -27,51 +29,95 @@
       align-items: center;
       min-height: 100vh;
       padding: 20px;
+      background-image: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: overlay;
+      background-color: rgba(245, 247, 250, 0.9);
     }
-    
+
     .login-container {
       width: 100%;
       max-width: 450px;
       background-color: white;
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
       overflow: hidden;
+      animation: fadeIn 0.5s ease-out;
     }
-    
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .login-header {
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       color: white;
       padding: 30px;
       text-align: center;
+      position: relative;
     }
-    
+
     .login-header h1 {
       font-size: 24px;
       margin-bottom: 10px;
     }
-    
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      background-color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .logo i {
+      color: var(--primary);
+      font-size: 36px;
+    }
+
     .login-body {
       padding: 30px;
     }
-    
+
     .form-group {
       margin-bottom: 20px;
+      position: relative;
     }
-    
+
     .form-label {
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
     }
-    
+
     .form-control {
       width: 100%;
-      padding: 14px;
+      padding: 14px 14px 14px 40px;
       border: 1px solid var(--medium-gray);
       border-radius: 8px;
       font-size: 16px;
+      transition: all 0.3s;
     }
-    
+
+    .form-control:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 40px;
+      color: var(--medium-gray);
+    }
+
     .btn {
       width: 100%;
       padding: 14px;
@@ -83,57 +129,145 @@
       font-weight: 500;
       cursor: pointer;
       margin-top: 10px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
     }
-    
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(24,90,157,0.2);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-loading::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      border: 3px solid transparent;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: button-loading-spinner 1s ease infinite;
+    }
+
+    @keyframes button-loading-spinner {
+      from { transform: rotate(0turn); }
+      to { transform: rotate(1turn); }
+    }
+
     .login-footer {
       text-align: center;
       margin-top: 20px;
       font-size: 14px;
     }
-    
+
     .login-footer a {
       color: var(--primary);
       text-decoration: none;
       font-weight: 500;
+      transition: color 0.3s;
     }
-    
+
+    .login-footer a:hover {
+      color: var(--secondary);
+      text-decoration: underline;
+    }
+
     .login-options {
       display: flex;
       justify-content: space-between;
       margin-top: 10px;
+      font-size: 13px;
+    }
+
+    .login-options a {
+      color: #666;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .login-options a:hover {
+      color: var(--primary);
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 12px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .form-group.error .form-control {
+      border-color: var(--error);
+    }
+
+    .form-group.error .error-message {
+      display: block;
+    }
+
+    .password-container {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 40px;
+      color: var(--medium-gray);
+      cursor: pointer;
     }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
   <div class="login-container">
     <div class="login-header">
+      <div class="logo">
+        <i class="fas fa-heartbeat"></i>
+      </div>
       <h1>Acesso ao Sistema de Saúde</h1>
       <p>Informe seus dados para acessar o sistema</p>
     </div>
     
     <div class="login-body">
       <form id="loginForm">
-        
         <div class="form-group">
           <label for="username" class="form-label">CPF ou E-mail</label>
+          <i class="fas fa-user input-icon"></i>
           <input type="text" id="username" class="form-control" placeholder="Digite seu CPF ou e-mail" required>
+          <div class="error-message">Por favor, insira seu CPF ou e-mail</div>
         </div>
         
         <div class="form-group">
           <label for="password" class="form-label">Senha</label>
+          <i class="fas fa-lock input-icon"></i>
           <input type="password" id="password" class="form-control" placeholder="Digite sua senha" required>
+          <i class="fas fa-eye toggle-password"></i>
+          <div class="error-message">Por favor, insira sua senha</div>
         </div>
         
         <div class="login-options">
-          <a href="recuperar-senha.html">Esqueci minha senha</a>
-          <a href="ajuda.html">Ajuda</a>
+          <div>
+            <input type="checkbox" id="remember">
+            <label for="remember">Lembrar-me</label>
+          </div>
+          <a href="recuperar.html">Esqueci minha senha</a>
         </div>
         
-        <button type="submit" class="btn">Entrar</button>
+        <button type="submit" class="btn" id="loginButton">Entrar</button>
         
         <div class="login-footer">
           <p>Primeiro acesso? <a href="cadastro.html">Cadastre-se aqui</a> (apenas pacientes)</p>
+          <p>Profissional de saúde? <a href="login-profissional.html">Acesse aqui</a></p>
         </div>
       </form>
     </div>
@@ -141,16 +275,47 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Seleção de perfil
-      const profileOptions = document.querySelectorAll('.profile-option');
-      const profileType = document.getElementById('profileType');
-      
-      profileOptions.forEach(option => {
-        option.addEventListener('click', function() {
-          profileOptions.forEach(opt => opt.classList.remove('selected'));
-          this.classList.add('selected');
-          profileType.value = this.getAttribute('data-profile');
-        });
+      const togglePassword = document.querySelector('.toggle-password');
+      const passwordInput = document.getElementById('password');
+
+      togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
+
+      const form = document.getElementById('loginForm');
+      const loginButton = document.getElementById('loginButton');
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        loginButton.classList.add('btn-loading');
+        loginButton.disabled = true;
+
+        setTimeout(function() {
+          loginButton.classList.remove('btn-loading');
+          loginButton.disabled = false;
+
+          if (document.getElementById('username').value.trim() === '' || 
+              document.getElementById('password').value.trim() === '') {
+            alert('Por favor, preencha todos os campos');
+          } else {
+            alert('Login realizado com sucesso! Redirecionando...');
+            // window.location.href = 'dashboard.html';
+          }
+        }, 1500);
+      });
+
+      const usernameInput = document.getElementById('username');
+      usernameInput.addEventListener('input', function() {
+        if (this.value.replace(/\D/g, '').length === 11) {
+          this.value = this.value.replace(/\D/g, '')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        }
       });
     });
   </script>
