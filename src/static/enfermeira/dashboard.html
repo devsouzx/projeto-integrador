@@ -289,7 +289,7 @@
       }
 
       .logo {
-      font-size: 1rem; /* diminui o tamanho da logo */
+      font-size: 1rem;
       white-space: nowrap;
       margin-right: 0.5rem;
       }
@@ -304,7 +304,7 @@
         white-space: nowrap;
         gap: 0.25rem;
         width: 100%;
-        scrollbar-width: thin; /* Firefox */
+        scrollbar-width: thin;
       }
 
       .nav-item {
@@ -430,6 +430,93 @@
       border-radius: 6px;
       border: 1px solid var(--medium-gray);
     }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      transform: translateY(-20px);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 6px;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -439,11 +526,11 @@
       <div class="logo">Área da Enfermeira</div>
       
       <ul class="nav-menu">
-        <li class="nav-item"><a href="#" class="nav-link active"><i class="fas fa-home"></i> Início</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-file-medical"></i> Fichas</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-search"></i> Consultar</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+        <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="ficha.html" class="nav-link"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="nav-item"><a href="historico.html" class="nav-link"><i class="fas fa-search"></i> Consultar</a></li>
+        <li class="nav-item"><a href="agendamentos.html" class="nav-link"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
+        <li class="nav-item"><a href="relatorios.html" class="nav-link"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
       </ul>
       
       <div class="user-info">
@@ -463,21 +550,17 @@
     </div>
     
     <div class="quick-actions">
-      <div class="quick-action" onclick="location.href='nova-ficha.html'">
+      <div class="quick-action" onclick="location.href='ficha.html'">
         <div class="action-icon"><i class="fas fa-file-medical"></i></div>
         <div>Nova Ficha</div>
       </div>
-      <div class="quick-action" onclick="location.href='consultar-paciente.html'">
+      <div class="quick-action" onclick="location.href='historico.html'">
         <div class="action-icon"><i class="fas fa-search"></i></div>
         <div>Consultar Paciente</div>
       </div>
       <div class="quick-action" onclick="location.href='agendamentos.html'">
         <div class="action-icon"><i class="fas fa-calendar-check"></i></div>
         <div>Agendamentos</div>
-      </div>
-      <div class="quick-action" onclick="location.href='exames-pendentes.html'">
-        <div class="action-icon"><i class="fas fa-clipboard-list"></i></div>
-        <div>Exames Pendentes</div>
       </div>
     </div>
     
@@ -540,7 +623,7 @@
           <strong>Maria da Silva</strong>
           <div>Preventivo - 15/06/2025 14:30</div>
         </div>
-        <button style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
+        <button onclick="openColetaModal('123')" style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
           Registrar Coleta
         </button>
       </div>
@@ -550,11 +633,69 @@
           <strong>Joana Pereira</strong>
           <div>Preventivo - 16/06/2025 09:00</div>
         </div>
-        <button style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
+        <button onclick="openColetaModal('123')" style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;" >
           Registrar Coleta
         </button>
       </div>
     </div>
   </main>
+
+  <!-- Modal de Registro de Coleta -->
+  <div class="modal-overlay" id="coletaModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Registrar Coleta Realizada</h3>
+        <button class="close-modal" onclick="closeColetaModal()">&times;</button>
+      </div>
+      <form id="coletaForm">
+        <input type="hidden" id="pacienteId">
+        
+        <div class="form-group">
+          <label for="dataColeta">Data e Hora da Coleta</label>
+          <input type="datetime-local" id="dataColeta" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="observacoes">Observações</label>
+          <textarea id="observacoes" placeholder="Ex.: Material coletado com sangramento mínimo"></textarea>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn" onclick="closeColetaModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Confirmar Coleta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Funções para o modal de coleta
+    function openColetaModal(pacienteId) {
+      document.getElementById('pacienteId').value = pacienteId;
+      document.getElementById('coletaModal').classList.add('active');
+      
+      const now = new Date();
+      const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      document.getElementById('dataColeta').value = localDateTime;
+    }
+
+    function closeColetaModal() {
+      document.getElementById('coletaModal').classList.remove('active');
+    }
+
+    // Submissão do formulário de coleta
+    document.getElementById('coletaForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const pacienteId = document.getElementById('pacienteId').value;
+      const dataColeta = document.getElementById('dataColeta').value;
+      const observacoes = document.getElementById('observacoes').value;
+      
+      console.log('Coleta registrada:', { pacienteId, dataColeta, observacoes });
+      
+      alert('Coleta registrada com sucesso!');
+      closeColetaModal();
+    });
+  </script>
 </body>
 </html>
