@@ -8,11 +8,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
-      --primary: #185a9d;
-      --secondary: #43cea2;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e0e0e0;
-      --error: #e74c3c;
+      --primaria: #185a9d;
+      --secundaria: #43cea2;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --erro: #e74c3c;
     }
 
     * {
@@ -23,7 +23,7 @@
     }
 
     body {
-      background-color: var(--light-gray);
+      background-color: var(--cinza-claro);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -36,30 +36,30 @@
       background-color: rgba(245, 247, 250, 0.9);
     }
 
-    .login-container {
+    .container-login {
       width: 100%;
       max-width: 450px;
       background-color: white;
       border-radius: 12px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.15);
       overflow: hidden;
-      animation: fadeIn 0.5s ease-out;
+      animation: aparecer 0.5s ease-out;
     }
 
-    @keyframes fadeIn {
+    @keyframes aparecer {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .login-header {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    .cabecalho-login {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 30px;
       text-align: center;
       position: relative;
     }
 
-    .login-header h1 {
+    .cabecalho-login h1 {
       font-size: 24px;
       margin-bottom: 10px;
     }
@@ -77,51 +77,56 @@
     }
 
     .logo i {
-      color: var(--primary);
+      color: var(--primaria);
       font-size: 36px;
     }
 
-    .login-body {
+    .corpo-login {
       padding: 30px;
     }
 
-    .form-group {
+    .grupo-formulario {
       margin-bottom: 20px;
       position: relative;
     }
 
-    .form-label {
+    .rotulo-formulario {
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
+      font-size: 14px;
+      color: #555;
     }
 
-    .form-control {
+    .controle-formulario {
       width: 100%;
-      padding: 14px 14px 14px 40px;
-      border: 1px solid var(--medium-gray);
+      padding: 12px 15px 12px 40px;
+      border: 1px solid var(--cinza-medio);
       border-radius: 8px;
       font-size: 16px;
       transition: all 0.3s;
+      height: 46px;
+      box-sizing: border-box;
     }
 
-    .form-control:focus {
-      border-color: var(--primary);
+    .controle-formulario:focus {
+      border-color: var(--primaria);
       outline: none;
       box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
     }
 
-    .input-icon {
+    .icone-input {
       position: absolute;
       left: 15px;
-      top: 40px;
-      color: var(--medium-gray);
+      top: 37px;
+      color: var(--cinza-medio);
+      font-size: 16px;
     }
 
-    .btn {
+    .botao {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       border: none;
       border-radius: 8px;
@@ -134,17 +139,17 @@
       overflow: hidden;
     }
 
-    .btn:hover {
+    .botao:hover {
       opacity: 0.9;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(24,90,157,0.2);
     }
 
-    .btn:active {
+    .botao:active {
       transform: translateY(0);
     }
 
-    .btn-loading::after {
+    .botao-carregando::after {
       content: "";
       position: absolute;
       width: 16px;
@@ -157,80 +162,88 @@
       border: 3px solid transparent;
       border-top-color: white;
       border-radius: 50%;
-      animation: button-loading-spinner 1s ease infinite;
+      animation: girar-carregamento 1s ease infinite;
     }
 
-    @keyframes button-loading-spinner {
+    @keyframes girar-carregamento {
       from { transform: rotate(0turn); }
       to { transform: rotate(1turn); }
     }
 
-    .login-footer {
+    .rodape-login {
       text-align: center;
       margin-top: 20px;
       font-size: 14px;
     }
 
-    .login-footer a {
-      color: var(--primary);
+    .rodape-login a {
+      color: var(--primaria);
       text-decoration: none;
       font-weight: 500;
       transition: color 0.3s;
     }
 
-    .login-footer a:hover {
-      color: var(--secondary);
+    .rodape-login a:hover {
+      color: var(--secundaria);
       text-decoration: underline;
     }
 
-    .login-options {
+    .opcoes-login {
       display: flex;
       justify-content: space-between;
       margin-top: 10px;
       font-size: 13px;
+      align-items: center;
     }
 
-    .login-options a {
+    .opcoes-login a {
       color: #666;
       text-decoration: none;
       transition: color 0.3s;
     }
 
-    .login-options a:hover {
-      color: var(--primary);
+    .opcoes-login a:hover {
+      color: var(--primaria);
     }
 
-    .error-message {
-      color: var(--error);
+    .mensagem-erro {
+      color: var(--erro);
       font-size: 12px;
       margin-top: 5px;
       display: none;
     }
 
-    .form-group.error .form-control {
-      border-color: var(--error);
+    .grupo-formulario.erro .controle-formulario {
+      border-color: var(--erro);
     }
 
-    .form-group.error .error-message {
+    .grupo-formulario.erro .mensagem-erro {
       display: block;
     }
 
-    .password-container {
-      position: relative;
-    }
-
-    .toggle-password {
+    .alternar-senha {
       position: absolute;
       right: 15px;
-      top: 40px;
-      color: var(--medium-gray);
+      top: 37px;
+      color: var(--cinza-medio);
       cursor: pointer;
+      font-size: 16px;
+    }
+
+    .checkbox-lembrar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox-lembrar input {
+      margin: 0;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <div class="login-header">
+  <div class="container-login">
+    <div class="cabecalho-login">
       <div class="logo">
         <i class="fas fa-heartbeat"></i>
       </div>
@@ -238,36 +251,36 @@
       <p>Informe seus dados para acessar o sistema</p>
     </div>
     
-    <div class="login-body">
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="username" class="form-label">CPF ou E-mail</label>
-          <i class="fas fa-user input-icon"></i>
-          <input type="text" id="username" class="form-control" placeholder="Digite seu CPF ou e-mail" required>
-          <div class="error-message">Por favor, insira seu CPF ou e-mail</div>
+    <div class="corpo-login">
+      <form id="formularioLogin">
+        <div class="grupo-formulario">
+          <label for="usuario" class="rotulo-formulario">CPF ou E-mail</label>
+          <i class="fas fa-user icone-input"></i>
+          <input type="text" id="usuario" class="controle-formulario" placeholder="Digite seu CPF ou e-mail" required>
+          <div class="mensagem-erro">Por favor, insira seu CPF ou e-mail</div>
         </div>
         
-        <div class="form-group">
-          <label for="password" class="form-label">Senha</label>
-          <i class="fas fa-lock input-icon"></i>
-          <input type="password" id="password" class="form-control" placeholder="Digite sua senha" required>
-          <i class="fas fa-eye toggle-password"></i>
-          <div class="error-message">Por favor, insira sua senha</div>
+        <div class="grupo-formulario">
+          <label for="senha" class="rotulo-formulario">Senha</label>
+          <i class="fas fa-lock icone-input"></i>
+          <input type="password" id="senha" class="controle-formulario" placeholder="Digite sua senha" required>
+          <i class="fas fa-eye alternar-senha"></i>
+          <div class="mensagem-erro">Por favor, insira sua senha</div>
         </div>
         
-        <div class="login-options">
-          <div>
-            <input type="checkbox" id="remember">
-            <label for="remember">Lembrar-me</label>
+        <div class="opcoes-login">
+          <div class="checkbox-lembrar">
+            <input type="checkbox" id="lembrar">
+            <label for="lembrar">Lembrar-me</label>
           </div>
-          <a href="recuperar.html">Esqueci minha senha</a>
+          <a href="/recuperar-senha">Esqueci minha senha</a>
         </div>
         
-        <button type="submit" class="btn" id="loginButton">Entrar</button>
+        <button type="submit" class="botao" id="botaoLogin">Entrar</button>
         
-        <div class="login-footer">
-          <p>Primeiro acesso? <a href="cadastro.html">Cadastre-se aqui</a> (apenas pacientes)</p>
-          <p>Profissional de saúde? <a href="login-profissional.html">Acesse aqui</a></p>
+        <div class="rodape-login">
+          <p>Primeiro acesso? <a href="/cadastro">Cadastre-se aqui</a> (apenas pacientes)</p>
+          <p>Profissional de saúde? <a href="/login-profissionais">Acesse aqui</a></p>
         </div>
       </form>
     </div>
@@ -275,41 +288,18 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const togglePassword = document.querySelector('.toggle-password');
-      const passwordInput = document.getElementById('password');
+      const alternarSenha = document.querySelector('.alternar-senha');
+      const inputSenha = document.getElementById('senha');
 
-      togglePassword.addEventListener('click', function() {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
+      alternarSenha.addEventListener('click', function() {
+        const tipo = inputSenha.getAttribute('type') === 'password' ? 'text' : 'password';
+        inputSenha.setAttribute('type', tipo);
         this.classList.toggle('fa-eye');
         this.classList.toggle('fa-eye-slash');
       });
 
-      const form = document.getElementById('loginForm');
-      const loginButton = document.getElementById('loginButton');
-
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        loginButton.classList.add('btn-loading');
-        loginButton.disabled = true;
-
-        setTimeout(function() {
-          loginButton.classList.remove('btn-loading');
-          loginButton.disabled = false;
-
-          if (document.getElementById('username').value.trim() === '' || 
-              document.getElementById('password').value.trim() === '') {
-            alert('Por favor, preencha todos os campos');
-          } else {
-            alert('Login realizado com sucesso! Redirecionando...');
-            // window.location.href = 'dashboard.html';
-          }
-        }, 1500);
-      });
-
-      const usernameInput = document.getElementById('username');
-      usernameInput.addEventListener('input', function() {
+      const inputUsuario = document.getElementById('usuario');
+      inputUsuario.addEventListener('input', function() {
         if (this.value.replace(/\D/g, '').length === 11) {
           this.value = this.value.replace(/\D/g, '')
             .replace(/(\d{3})(\d)/, '$1.$2')

@@ -8,12 +8,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
-      --primary: #185a9d;
-      --secondary: #43cea2;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e0e0e0;
-      --error: #e74c3c;
-      --success: #2ecc71;
+      --primaria: #185a9d;
+      --secundaria: #43cea2;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --erro: #e74c3c;
+      --sucesso: #2ecc71;
     }
     
     * {
@@ -24,7 +24,7 @@
     }
     
     body {
-      background-color: var(--light-gray);
+      background-color: var(--cinza-claro);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -32,7 +32,7 @@
       padding: 20px;
     }
     
-    .register-container {
+    .container-cadastro {
       width: 100%;
       max-width: 700px;
       background-color: white;
@@ -41,34 +41,48 @@
       overflow: hidden;
     }
     
-    .register-header {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    .cabecalho-cadastro {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 30px;
       text-align: center;
       position: relative;
     }
     
-    .register-header h1 {
+    .cabecalho-cadastro h1 {
       font-size: 24px;
       margin-bottom: 10px;
     }
     
-    .progress-steps {
+    .passos-progresso {
       display: flex;
       justify-content: center;
       margin-top: 20px;
       gap: 30px;
     }
     
-    .step {
+    .passo {
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
     }
     
-    .step-number {
+    .passo::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      background-color: rgba(255,255,255,0.3);
+      right: -30px;
+      top: 15px;
+    }
+    
+    .passo:last-child::after {
+      display: none;
+    }
+    
+    .numero-passo {
       width: 30px;
       height: 30px;
       background-color: rgba(255,255,255,0.3);
@@ -80,338 +94,548 @@
       margin-bottom: 5px;
     }
     
-    .step.active .step-number {
+    .passo.ativo .numero-passo {
       background-color: white;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .step-label {
+    .passo.completo .numero-passo {
+      background-color: white;
+      color: var(--primaria);
+    }
+    
+    .passo.completo .numero-passo::before {
+      content: '\f00c';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+    }
+    
+    .rotulo-passo {
       font-size: 12px;
       opacity: 0.8;
     }
     
-    .register-body {
+    .corpo-cadastro {
       padding: 30px;
     }
     
-    .form-row {
+    .passo-formulario {
+      display: none;
+    }
+    
+    .passo-formulario.ativo {
+      display: block;
+    }
+    
+    .linha-formulario {
       display: flex;
       gap: 20px;
       margin-bottom: 20px;
     }
     
-    .form-group {
+    .grupo-formulario {
       flex: 1;
       margin-bottom: 0;
       position: relative;
     }
     
-    .form-label {
+    .grupo-formulario.cep {
+      max-width: 150px;
+    }
+    
+    .grupo-formulario.numero {
+      max-width: 100px;
+    }
+    
+    .grupo-formulario.uf {
+      max-width: 80px;
+    }
+    
+    .rotulo-formulario {
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
     }
     
-    .form-control {
+    .controle-formulario {
       width: 100%;
       padding: 14px;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid var(--cinza-medio);
       border-radius: 8px;
       font-size: 16px;
       transition: border 0.3s;
     }
     
-    .form-control:focus {
-      border-color: var(--primary);
+    .controle-formulario:focus {
+      border-color: var(--primaria);
       outline: none;
       box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
     }
     
-    .input-icon {
+    .icone-input {
       position: absolute;
       right: 15px;
-      top: 40px;
-      color: var(--medium-gray);
+      top: 43px;
+      color: var(--cinza-medio);
     }
     
-    .btn {
-      width: 100%;
+    .botoes-navegacao {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .botao {
       padding: 14px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
       color: white;
       border: none;
       border-radius: 8px;
       font-size: 16px;
       font-weight: 500;
       cursor: pointer;
-      margin-top: 20px;
       transition: opacity 0.3s;
+      flex: 1;
     }
     
-    .btn:hover {
+    .botao-primario {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+    }
+    
+    .botao-secundario {
+      background: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+    
+    .botao:hover {
       opacity: 0.9;
     }
     
-    .btn-secondary {
-      background: white;
-      color: var(--primary);
-      border: 1px solid var(--primary);
-      margin-top: 10px;
-    }
-    
-    .register-footer {
+    .rodape-cadastro {
       text-align: center;
       margin-top: 20px;
       font-size: 14px;
     }
     
-    .register-footer a {
-      color: var(--primary);
+    .rodape-cadastro a {
+      color: var(--primaria);
       text-decoration: none;
       font-weight: 500;
     }
     
-    .error-message {
-      color: var(--error);
+    .mensagem-erro {
+      color: var(--erro);
       font-size: 12px;
       margin-top: 5px;
       display: none;
     }
     
-    .form-group.error .form-control {
-      border-color: var(--error);
+    .grupo-formulario.erro .controle-formulario {
+      border-color: var(--erro);
     }
     
-    .form-group.error .error-message {
+    .grupo-formulario.erro .mensagem-erro {
       display: block;
     }
     
-    .form-group.success .form-control {
-      border-color: var(--success);
+    .grupo-formulario.sucesso .controle-formulario {
+      border-color: var(--sucesso);
     }
     
-    .password-strength {
-      margin-top: 5px;
-      height: 4px;
-      background-color: #eee;
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    
-    .strength-bar {
-      height: 100%;
-      width: 0;
-      background-color: var(--error);
-      transition: width 0.3s, background-color 0.3s;
-    }
-    
-    .password-hints {
+    .dicas-senha {
       font-size: 12px;
       color: #666;
       margin-top: 5px;
     }
     
+    .resumo-dados {
+      margin-bottom: 20px;
+    }
+    
+    .grupo-resumo {
+      margin-bottom: 15px;
+    }
+    
+    .titulo-resumo {
+      font-weight: 600;
+      color: var(--primaria);
+      margin-bottom: 5px;
+    }
+    
+    .dado-resumo {
+      display: flex;
+      margin-bottom: 3px;
+    }
+    
+    .rotulo-resumo {
+      font-weight: 500;
+      min-width: 150px;
+    }
+    
+    .valor-resumo {
+      color: #555;
+    }
+    
     @media (max-width: 768px) {
-      .form-row {
+      .linha-formulario {
         flex-direction: column;
         gap: 15px;
       }
       
-      .register-container {
+      .container-cadastro {
         max-width: 100%;
+      }
+      
+      .grupo-formulario.cep,
+      .grupo-formulario.numero,
+      .grupo-formulario.uf {
+        max-width: 100%;
+      }
+      
+      .botoes-navegacao {
+        flex-direction: column;
       }
     }
   </style>
 </head>
 <body>
-  <div class="register-container">
-    <div class="register-header">
+  <div class="container-cadastro">
+    <div class="cabecalho-cadastro">
       <h1>Cadastro de Paciente</h1>
       <p>Preencha seus dados para criar uma conta</p>
       
-      <div class="progress-steps">
-        <div class="step active">
-          <div class="step-number">1</div>
-          <div class="step-label">Dados Pessoais</div>
+      <div class="passos-progresso">
+        <div class="passo ativo" id="passo1">
+          <div class="numero-passo">1</div>
+          <div class="rotulo-passo">Dados Pessoais</div>
         </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <div class="step-label">Endereço</div>
+        <div class="passo" id="passo2">
+          <div class="numero-passo">2</div>
+          <div class="rotulo-passo">Endereço</div>
         </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <div class="step-label">Confirmação</div>
+        <div class="passo" id="passo3">
+          <div class="numero-passo">3</div>
+          <div class="rotulo-passo">Confirmação</div>
         </div>
       </div>
     </div>
     
-    <div class="register-body">
-      <form id="registerForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name" class="form-label">Nome Completo</label>
-            <input type="text" id="name" class="form-control" placeholder="Digite seu nome completo" required>
-            <div class="error-message">Por favor, insira seu nome completo</div>
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="cpf" class="form-label">CPF</label>
-            <input type="text" id="cpf" class="form-control" placeholder="000.000.000-00" required>
-            <i class="fas fa-id-card input-icon"></i>
-            <div class="error-message">CPF inválido</div>
-          </div>
-          <div class="form-group">
-            <label for="sus" class="form-label">Cartão SUS</label>
-            <input type="text" id="sus" class="form-control" placeholder="Digite seu Cartão SUS" required>
-            <i class="fas fa-address-card input-icon"></i>
-            <div class="error-message">Número do SUS inválido</div>
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="birthdate" class="form-label">Data de Nascimento</label>
-            <input type="date" id="birthdate" class="form-control" required>
-            <div class="error-message">Data inválida</div>
-          </div>
-          <div class="form-group">
-            <label for="motherName" class="form-label">Nome da Mãe</label>
-            <input type="text" id="motherName" class="form-control" placeholder="Nome completo da mãe" required>
-            <div class="error-message">Por favor, insira o nome da mãe</div>
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="email" class="form-label">E-mail</label>
-            <input type="email" id="email" class="form-control" placeholder="Digite seu e-mail" required>
-            <i class="fas fa-envelope input-icon"></i>
-            <div class="error-message">E-mail inválido</div>
-          </div>
-          <div class="form-group">
-            <label for="phone" class="form-label">Telefone</label>
-            <input type="tel" id="phone" class="form-control" placeholder="(00) 00000-0000" required>
-            <i class="fas fa-phone input-icon"></i>
-            <div class="error-message">Telefone inválido</div>
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="password" class="form-label">Senha</label>
-            <input type="password" id="password" class="form-control" placeholder="Crie uma senha" required>
-            <i class="fas fa-eye input-icon toggle-password"></i>
-            <div class="password-strength">
-              <div class="strength-bar" id="strengthBar"></div>
+    <div class="corpo-cadastro">
+      <form id="formularioCadastro" onsubmit="return validarFormulario()">
+        <!-- PASSO 1 - DADOS PESSOAIS -->
+        <div class="passo-formulario ativo" id="form-passo1">
+          <div class="linha-formulario">
+            <div class="grupo-formulario">
+              <label for="nome" class="rotulo-formulario">Nome Completo</label>
+              <input type="text" id="nome" class="controle-formulario" placeholder="Digite seu nome completo" required>
+              <div class="mensagem-erro">Por favor, insira seu nome completo</div>
             </div>
-            <div class="password-hints">
-              A senha deve conter pelo menos 8 caracteres, incluindo números e letras maiúsculas
+          </div>
+          
+          <div class="linha-formulario">
+            <div class="grupo-formulario">
+              <label for="cpf" class="rotulo-formulario">CPF</label>
+              <input type="text" id="cpf" class="controle-formulario" placeholder="000.000.000-00" required>
+              <i class="fas fa-id-card icone-input"></i>
+              <div class="mensagem-erro">CPF inválido</div>
             </div>
-            <div class="error-message">Senha muito fraca</div>
+            <div class="grupo-formulario">
+              <label for="sus" class="rotulo-formulario">Cartão SUS</label>
+              <input type="text" id="sus" class="controle-formulario" placeholder="Digite seu Cartão SUS" required>
+              <i class="fas fa-address-card icone-input"></i>
+              <div class="mensagem-erro">Número do SUS inválido</div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="confirmPassword" class="form-label">Confirmar Senha</label>
-            <input type="password" id="confirmPassword" class="form-control" placeholder="Repita a senha" required>
-            <i class="fas fa-eye input-icon toggle-password"></i>
-            <div class="error-message">As senhas não coincidem</div>
+          
+          <div class="linha-formulario">
+            <div class="grupo-formulario">
+              <label for="dataNascimento" class="rotulo-formulario">Data de Nascimento</label>
+              <input type="date" id="dataNascimento" class="controle-formulario" required>
+              <div class="mensagem-erro">Data inválida</div>
+            </div>
+            <div class="grupo-formulario">
+              <label for="nomeMae" class="rotulo-formulario">Nome da Mãe</label>
+              <input type="text" id="nomeMae" class="controle-formulario" placeholder="Nome completo da mãe" required>
+              <div class="mensagem-erro">Por favor, insira o nome da mãe</div>
+            </div>
+          </div>
+          
+          <div class="linha-formulario">
+            <div class="grupo-formulario">
+              <label for="email" class="rotulo-formulario">E-mail</label>
+              <input type="email" id="email" class="controle-formulario" placeholder="Digite seu e-mail" required>
+              <i class="fas fa-envelope icone-input"></i>
+              <div class="mensagem-erro">E-mail inválido</div>
+            </div>
+            <div class="grupo-formulario">
+              <label for="telefone" class="rotulo-formulario">Telefone</label>
+              <input type="tel" id="telefone" class="controle-formulario" placeholder="(00) 00000-0000" required>
+              <i class="fas fa-phone icone-input"></i>
+              <div class="mensagem-erro">Telefone inválido</div>
+            </div>
+          </div>
+          
+          <div class="linha-formulario">
+            <div class="grupo-formulario">
+              <label for="senha" class="rotulo-formulario">Senha</label>
+              <input type="password" id="senha" class="controle-formulario" placeholder="Crie uma senha" required>
+              <i class="fas fa-eye icone-input alternar-senha" onclick="alternarSenha('senha', this)"></i>
+              <div class="dicas-senha">
+                A senha deve conter: mínimo 8 caracteres, 1 número, 1 letra maiúscula e 1 caractere especial (!@#$%^&*)
+              </div>
+              <div class="mensagem-erro">Senha muito fraca</div>
+            </div>
+            <div class="grupo-formulario">
+              <label for="confirmarSenha" class="rotulo-formulario">Confirmar Senha</label>
+              <input type="password" id="confirmarSenha" class="controle-formulario" placeholder="Repita a senha" required>
+              <i class="fas fa-eye icone-input alternar-senha" onclick="alternarSenha('confirmarSenha', this)"></i>
+              <div class="mensagem-erro">As senhas não coincidem</div>
+            </div>
+          </div>
+          
+          <div class="grupo-formulario">
+            <input type="checkbox" id="termos" required>
+            <label for="termos">Li e aceito os <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a></label>
+            <div class="mensagem-erro">Você deve aceitar os termos</div>
+          </div>
+          
+          <div class="botoes-navegacao">
+            <button type="button" class="botao botao-primario" onclick="avancarParaPasso(2)">Próximo</button>
           </div>
         </div>
         
-        <div class="form-group">
-          <input type="checkbox" id="terms" required>
-          <label for="terms">Li e aceito os <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a></label>
-          <div class="error-message">Você deve aceitar os termos</div>
+        <!-- PASSO 2 - ENDEREÇO -->
+        <div class="passo-formulario" id="form-passo2">
+          <div class="linha-formulario">
+            <div class="grupo-formulario cep">
+              <label for="cep" class="rotulo-formulario">CEP</label>
+              <input type="text" id="cep" class="controle-formulario" placeholder="00000-000" required oninput="formatarCEP(this)">
+              <i class="fas fa-map-marker-alt icone-input"></i>
+              <div class="mensagem-erro">CEP inválido</div>
+            </div>
+          </div>
+          
+          <div class="linha-formulario">
+            <div class="grupo-formulario">
+              <label for="logradouro" class="rotulo-formulario">Logradouro</label>
+              <input type="text" id="logradouro" class="controle-formulario" placeholder="Rua, Avenida, etc." required>
+              <div class="mensagem-erro">Por favor, informe o logradouro</div>
+            </div>
+            <div class="grupo-formulario numero">
+              <label for="numero" class="rotulo-formulario">Número</label>
+              <input type="text" id="numero" class="controle-formulario" placeholder="Nº" required>
+              <div class="mensagem-erro">Por favor, informe o número</div>
+            </div>
+          </div>
+          
+          <div class="linha-formulario">
+            <div class="grupo-formulario">
+              <label for="complemento" class="rotulo-formulario">Complemento</label>
+              <input type="text" id="complemento" class="controle-formulario" placeholder="Apto, Bloco, etc.">
+            </div>
+            <div class="grupo-formulario">
+              <label for="bairro" class="rotulo-formulario">Bairro</label>
+              <input type="text" id="bairro" class="controle-formulario" placeholder="Seu bairro" required>
+              <div class="mensagem-erro">Por favor, informe o bairro</div>
+            </div>
+          </div>
+          
+          <div class="linha-formulario">
+            <div class="grupo-formulario">
+              <label for="cidade" class="rotulo-formulario">Cidade</label>
+              <input type="text" id="cidade" class="controle-formulario" placeholder="Sua cidade" required>
+              <div class="mensagem-erro">Por favor, informe a cidade</div>
+            </div>
+            <div class="grupo-formulario uf">
+              <label for="uf" class="rotulo-formulario">UF</label>
+              <select id="uf" class="controle-formulario" required>
+                <option value="">Selecione</option>
+                <option value="AC">AC</option>
+                <option value="AL">AL</option>
+                <option value="AP">AP</option>
+                <option value="AM">AM</option>
+                <option value="BA">BA</option>
+                <option value="CE">CE</option>
+                <option value="DF">DF</option>
+                <option value="ES">ES</option>
+                <option value="GO">GO</option>
+                <option value="MA">MA</option>
+                <option value="MT">MT</option>
+                <option value="MS">MS</option>
+                <option value="MG">MG</option>
+                <option value="PA">PA</option>
+                <option value="PB">PB</option>
+                <option value="PR">PR</option>
+                <option value="PE">PE</option>
+                <option value="PI">PI</option>
+                <option value="RJ">RJ</option>
+                <option value="RN">RN</option>
+                <option value="RS">RS</option>
+                <option value="RO">RO</option>
+                <option value="RR">RR</option>
+                <option value="SC">SC</option>
+                <option value="SP">SP</option>
+                <option value="SE">SE</option>
+                <option value="TO">TO</option>
+              </select>
+              <div class="mensagem-erro">Por favor, selecione o estado</div>
+            </div>
+          </div>
+          
+          <div class="botoes-navegacao">
+            <button type="button" class="botao botao-secundario" onclick="avancarParaPasso(1)">Voltar</button>
+            <button type="button" class="botao botao-primario" onclick="avancarParaPasso(3)">Próximo</button>
+          </div>
         </div>
         
-        <button type="submit" class="btn">Continuar Cadastro</button>
-        <button type="button" class="btn btn-secondary">Voltar</button>
-        
-        <div class="register-footer">
-          <p>Já possui uma conta? <a href="login.html">Faça login aqui</a></p>
+        <!-- PASSO 3 - CONFIRMAÇÃO -->
+        <div class="passo-formulario" id="form-passo3">
+          <div class="resumo-dados">
+            <div class="grupo-resumo">
+              <div class="titulo-resumo">Dados Pessoais</div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Nome Completo:</div>
+                <div class="valor-resumo" id="resumo-nome"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">CPF:</div>
+                <div class="valor-resumo" id="resumo-cpf"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Cartão SUS:</div>
+                <div class="valor-resumo" id="resumo-sus"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Data Nascimento:</div>
+                <div class="valor-resumo" id="resumo-nascimento"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Nome da Mãe:</div>
+                <div class="valor-resumo" id="resumo-mae"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">E-mail:</div>
+                <div class="valor-resumo" id="resumo-email"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Telefone:</div>
+                <div class="valor-resumo" id="resumo-telefone"></div>
+              </div>
+            </div>
+            
+            <div class="grupo-resumo">
+              <div class="titulo-resumo">Endereço</div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">CEP:</div>
+                <div class="valor-resumo" id="resumo-cep"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Endereço:</div>
+                <div class="valor-resumo" id="resumo-endereco"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Número:</div>
+                <div class="valor-resumo" id="resumo-numero"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Complemento:</div>
+                <div class="valor-resumo" id="resumo-complemento"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Bairro:</div>
+                <div class="valor-resumo" id="resumo-bairro"></div>
+              </div>
+              <div class="dado-resumo">
+                <div class="rotulo-resumo">Cidade/UF:</div>
+                <div class="valor-resumo" id="resumo-cidade-uf"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grupo-formulario">
+            <input type="checkbox" id="confirmacao" required>
+            <label for="confirmacao">Confirmo que todas as informações estão corretas</label>
+            <div class="mensagem-erro">Você deve confirmar os dados</div>
+          </div>
+          
+          <div class="botoes-navegacao">
+            <button type="button" class="botao botao-secundario" onclick="avancarParaPasso(2)">Voltar</button>
+            <button type="submit" class="botao botao-primario">Confirmar Cadastro</button>
+          </div>
+          
+          <div class="rodape-cadastro">
+            <p>Já possui uma conta? <a href="/login">Faça login aqui</a></p>
+          </div>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Máscaras para os campos
-      const cpfInput = document.getElementById('cpf');
-      const susInput = document.getElementById('sus');
-      const phoneInput = document.getElementById('phone');
-      
-      // Toggle password visibility
-      const togglePasswordIcons = document.querySelectorAll('.toggle-password');
-      togglePasswordIcons.forEach(icon => {
-        icon.addEventListener('click', function() {
-          const input = this.parentElement.querySelector('input');
-          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-          input.setAttribute('type', type);
-          this.classList.toggle('fa-eye');
-          this.classList.toggle('fa-eye-slash');
-        });
+    function avancarParaPasso(passo) {
+      // Esconder todos os passos
+      document.querySelectorAll('.passo-formulario').forEach(el => {
+        el.classList.remove('ativo');
       });
       
-      // Password strength meter
-      const passwordInput = document.getElementById('password');
-      const strengthBar = document.getElementById('strengthBar');
+      // Mostrar o passo atual
+      document.getElementById(`form-passo${passo}`).classList.add('ativo');
       
-      passwordInput.addEventListener('input', function() {
-        const strength = calculatePasswordStrength(this.value);
-        strengthBar.style.width = strength.percentage + '%';
-        strengthBar.style.backgroundColor = strength.color;
+      // Atualizar a barra de progresso
+      document.querySelectorAll('.passo').forEach((el, index) => {
+        el.classList.remove('ativo');
+        if (index + 1 < passo) {
+          el.classList.add('completo');
+        } else {
+          el.classList.remove('completo');
+        }
       });
       
-      function calculatePasswordStrength(password) {
-        let strength = 0;
-        
-        // Length
-        if (password.length > 0) strength += 10;
-        if (password.length >= 4) strength += 10;
-        if (password.length >= 8) strength += 20;
-        if (password.length >= 12) strength += 20;
-        
-        // Complexity
-        if (password.match(/[a-z]/)) strength += 10;
-        if (password.match(/[A-Z]/)) strength += 10;
-        if (password.match(/[0-9]/)) strength += 10;
-        if (password.match(/[^a-zA-Z0-9]/)) strength += 10;
-        
-        // Determine color
-        let color;
-        if (strength < 30) color = '#e74c3c'; // Red
-        else if (strength < 70) color = '#f39c12'; // Orange
-        else color = '#2ecc71'; // Green
-        
-        return {
-          percentage: strength,
-          color: color
-        };
+      document.getElementById(`passo${passo}`).classList.add('ativo');
+      
+      if (passo === 3) {
+        preencherResumo();
+      }
+    }
+    
+    // Função para preencher o resumo no passo 3
+    function preencherResumo() {
+      document.getElementById('resumo-nome').textContent = document.getElementById('nome').value;
+      document.getElementById('resumo-cpf').textContent = document.getElementById('cpf').value;
+      document.getElementById('resumo-sus').textContent = document.getElementById('sus').value;
+      document.getElementById('resumo-nascimento').textContent = document.getElementById('dataNascimento').value;
+      document.getElementById('resumo-mae').textContent = document.getElementById('nomeMae').value;
+      document.getElementById('resumo-email').textContent = document.getElementById('email').value;
+      document.getElementById('resumo-telefone').textContent = document.getElementById('telefone').value;
+      
+      document.getElementById('resumo-cep').textContent = document.getElementById('cep').value;
+      document.getElementById('resumo-endereco').textContent = document.getElementById('logradouro').value;
+      document.getElementById('resumo-numero').textContent = document.getElementById('numero').value;
+      document.getElementById('resumo-complemento').textContent = document.getElementById('complemento').value || '-';
+      document.getElementById('resumo-bairro').textContent = document.getElementById('bairro').value;
+      document.getElementById('resumo-cidade-uf').textContent = `${document.getElementById('cidade').value}/${document.getElementById('uf').value}`;
+    }
+    
+    // Função para alternar visibilidade da senha
+    function alternarSenha(id, icone) {
+      const input = document.getElementById(id);
+      const tipo = input.getAttribute('type') === 'password' ? 'text' : 'password';
+      input.setAttribute('type', tipo);
+      icone.classList.toggle('fa-eye');
+      icone.classList.toggle('fa-eye-slash');
+    }
+    
+    // Função para formatar CEP
+    function formatarCEP(input) {
+      let valor = input.value.replace(/\D/g, '');
+      if (valor.length > 8) valor = valor.substring(0, 8);
+      
+      if (valor.length > 5) {
+        valor = valor.replace(/(\d{5})(\d{3})/, '$1-$2');
       }
       
-      // Form validation
-      const form = document.getElementById('registerForm');
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validate fields here
-        let isValid = true;
-        
-        // Simple validation example
-        if (document.getElementById('name').value.trim() === '') {
-          document.querySelector('#name').parentElement.classList.add('error');
-          isValid = false;
-        } else {
-          document.querySelector('#name').parentElement.classList.remove('error');
-        }
-        
-        if (isValid) {
-          alert('Formulário válido! Em uma implementação real, os dados seriam enviados.');
-        }
-      });
-    });
+      input.value = valor;
+    }
   </script>
 </body>
 </html>

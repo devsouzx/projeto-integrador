@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar Senha - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #185a9d;
+      --secundaria: #43cea2;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --erro: #e74c3c;
+      --sucesso: #2ecc71;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--cinza-claro);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container-recuperacao {
+      width: 100%;
+      max-width: 450px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      overflow: hidden;
+      animation: subir 0.5s ease-out;
+    }
+    
+    @keyframes subir {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .cabecalho-recuperacao {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .cabecalho-recuperacao h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .icone-recuperacao {
+      font-size: 50px;
+      margin-bottom: 15px;
+      color: white;
+      opacity: 0.8;
+    }
+    
+    .corpo-recuperacao {
+      padding: 30px;
+    }
+    
+    .passos-recuperacao {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .passo {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: var(--cinza-medio);
+      color: #666;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
+      margin: 0 10px;
+      position: relative;
+    }
+    
+    .passo.ativo {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .passo.concluido {
+      background-color: var(--sucesso);
+      color: white;
+    }
+    
+    .passo::before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 2px;
+      background-color: var(--cinza-medio);
+      right: -20px;
+    }
+    
+    .passo:last-child::before {
+      display: none;
+    }
+    
+    .grupo-formulario {
+      margin-bottom: 25px;
+      position: relative;
+    }
+    
+    .rotulo-formulario {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .controle-formulario {
+      width: 100%;
+      padding: 14px 14px 14px 40px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .controle-formulario:focus {
+      border-color: var(--primaria);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
+    }
+    
+    .icone-entrada {
+      position: absolute;
+      left: 15px;
+      top: 40px;
+      color: var(--cinza-medio);
+    }
+    
+    .botao {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s;
+    }
+    
+    .botao:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(24,90,157,0.2);
+    }
+    
+    .botao:active {
+      transform: translateY(0);
+    }
+    
+    .botao-secundario {
+      background: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+      margin-top: 10px;
+    }
+    
+    .rodape-recuperacao {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    
+    .rodape-recuperacao a {
+      color: var(--primaria);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    .rodape-recuperacao a:hover {
+      color: var(--secundaria);
+      text-decoration: underline;
+    }
+    
+    .mensagem-sucesso {
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+    
+    .mensagem-sucesso i {
+      font-size: 50px;
+      color: var(--sucesso);
+      margin-bottom: 15px;
+    }
+    
+    .mensagem-sucesso h3 {
+      margin-bottom: 10px;
+      color: var(--primaria);
+    }
+    
+    .codigo-verificacao {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .codigo-verificacao input {
+      width: 40px;
+      height: 50px;
+      text-align: center;
+      font-size: 20px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 8px;
+    }
+    
+    .codigo-verificacao input:focus {
+      border-color: var(--primaria);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
+    }
+    
+    .reenviar-codigo {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+    
+    .reenviar-codigo a {
+      color: var(--primaria);
+      text-decoration: none;
+    }
+    
+    .reenviar-codigo a:hover {
+      text-decoration: underline;
+    }
+    
+    .redefinir-senha {
+      display: none;
+    }
+    
+    .dicas-senha {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .mensagem-erro {
+      color: var(--erro);
+      font-size: 12px;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .grupo-formulario.erro .controle-formulario {
+      border-color: var(--erro);
+    }
+    
+    .grupo-formulario.erro .mensagem-erro {
+      display: block;
+    }
+    
+    .container-senha {
+      position: relative;
+    }
+    
+    .alternar-senha {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--cinza-medio);
+      cursor: pointer;
+      z-index: 2;
+    }
+  
+    .container-senha .controle-formulario {
+      padding-right: 40px;
+    }
+    
+    @media (max-width: 480px) {
+      .corpo-recuperacao {
+        padding: 20px;
+      }
+      
+      .codigo-verificacao input {
+        width: 35px;
+        height: 45px;
+        font-size: 18px;
+      }
+      
+      .cabecalho-recuperacao {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container-recuperacao">
+    <div class="cabecalho-recuperacao">
+      <div class="icone-recuperacao">
+        <i class="fas fa-key"></i>
+      </div>
+      <h1>Recuperar Senha</h1>
+      <p id="subtitulo-recuperacao">Informe seu CPF ou e-mail cadastrado</p>
+    </div>
+    
+    <div class="corpo-recuperacao">
+      <div class="passos-recuperacao">
+        <div class="passo ativo" id="passo1">1</div>
+        <div class="passo" id="passo2">2</div>
+        <div class="passo" id="passo3">3</div>
+      </div>
+      
+      <form id="formulario-recuperacao" class="etapa-recuperacao">
+        <div class="grupo-formulario">
+          <label for="email" class="rotulo-formulario">CPF ou E-mail</label>
+          <i class="fas fa-user icone-entrada"></i>
+          <input type="text" id="email" class="controle-formulario" placeholder="Digite seu CPF ou e-mail cadastrado" required>
+          <div class="mensagem-erro" id="erro-email">Por favor, insira um CPF ou e-mail válido</div>
+        </div>
+        
+        <button type="submit" class="botao" id="botao-continuar">Continuar</button>
+        <button type="button" class="botao botao-secundario" id="botao-cancelar1">Cancelar</button>
+      </form>
+      
+      <div id="etapa-verificacao" class="etapa-recuperacao" style="display: none;">
+        <div class="mensagem-sucesso">
+          <i class="fas fa-paper-plane"></i>
+          <h3>Código enviado com sucesso!</h3>
+          <p id="mensagem-verificacao">Enviamos um código de verificação para o e-mail cadastrado. Por favor, verifique sua caixa de entrada.</p>
+        </div>
+        
+        <div class="grupo-formulario">
+          <label for="codigoVerificacao" class="rotulo-formulario">Código de Verificação</label>
+          <div class="codigo-verificacao">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric">
+          </div>
+          <div class="mensagem-erro" id="erro-codigo" style="text-align: center;">Código inválido. Por favor, insira os 6 dígitos.</div>
+        </div>
+        
+        <div class="reenviar-codigo">
+          Não recebeu o código? <a href="#" id="link-reenviar">Reenviar código</a>
+          <div id="contador" style="display: none;">(Aguarde <span id="tempo-contador">60</span> segundos)</div>
+        </div>
+        
+        <button type="button" class="botao" id="botao-verificar">Verificar Código</button>
+        <button type="button" class="botao botao-secundario" id="botao-cancelar2">Cancelar</button>
+      </div>
+      
+      <div id="etapa-redefinir" class="etapa-recuperacao redefinir-senha">
+        <h3>Redefinir Senha</h3>
+        <p>Por favor, crie uma nova senha para sua conta.</p>
+        
+        <div class="grupo-formulario">
+          <label for="nova-senha" class="rotulo-formulario">Nova Senha</label>
+          <div class="container-senha">
+            <input type="password" id="nova-senha" class="controle-formulario" placeholder="Digite sua nova senha" required>
+            <i class="fas fa-eye alternar-senha"></i>
+          </div>
+          <div class="mensagem-erro" id="erro-senha"></div>
+        </div>
+        
+        <div class="grupo-formulario">
+          <label for="confirmar-senha" class="rotulo-formulario">Confirmar Nova Senha</label>
+          <div class="container-senha">
+            <input type="password" id="confirmar-senha" class="controle-formulario" placeholder="Digite novamente sua nova senha" required>
+            <i class="fas fa-eye alternar-senha"></i>
+          </div>
+        </div>
+        
+        <button type="button" class="botao" id="botao-redefinir">Redefinir Senha</button>
+        <button type="button" class="botao botao-secundario" id="botao-cancelar3">Cancelar</button>
+      </div>
+      
+      <div class="rodape-recuperacao"> 
+        <p>Lembrou sua senha? <a href="/login">Voltar para o login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const formularioRecuperacao = document.getElementById('formulario-recuperacao');
+      const etapaVerificacao = document.getElementById('etapa-verificacao');
+      const etapaRedefinir = document.getElementById('etapa-redefinir');
+      const botaoContinuar = document.getElementById('botao-continuar');
+      const botaoVerificar = document.getElementById('botao-verificar');
+      const botaoRedefinir = document.getElementById('botao-redefinir');
+      const linkReenviar = document.getElementById('link-reenviar');
+      const contador = document.getElementById('contador');
+      const tempoContador = document.getElementById('tempo-contador');
+      const mensagemVerificacao = document.getElementById('mensagem-verificacao');
+      const subtituloRecuperacao = document.getElementById('subtitulo-recuperacao');
+      const entradaEmail = document.getElementById('email');
+      const entradasCodigo = document.querySelectorAll('.codigo-verificacao input');
+      const entradaNovaSenha = document.getElementById('nova-senha');
+      const entradaConfirmarSenha = document.getElementById('confirmar-senha');
+      const botoesCancelar = document.querySelectorAll('[id^="botao-cancelar"]');
+      
+      let passoAtual = 1;
+      let podeReenviarCodigo = false;
+      let intervaloContador;
+      const emailTeste = 'sousamarinho@discente.ufg.br';
+      
+      // Botão continuar (Passo 1)
+      botaoContinuar.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Validar CPF ou e-mail
+        const valor = entradaEmail.value.trim();
+        let valido = false;
+        
+        // Verificar se é e-mail válido
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(valor)) {
+          valido = true;
+        }
+        
+        // Verificar se é CPF válido (apenas formato básico)
+        const cpfRegex = /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/;
+        if (cpfRegex.test(valor)) {
+          valido = true;
+        }
+        
+        if (!valido) {
+          document.getElementById('erro-email').style.display = 'block';
+          entradaEmail.parentElement.classList.add('erro');
+          return;
+        }
+        
+        // Esconder mensagem de erro se existir
+        document.getElementById('erro-email').style.display = 'none';
+        entradaEmail.parentElement.classList.remove('erro');
+        
+        // Atualizar UI para passo 2
+        formularioRecuperacao.style.display = 'none';
+        etapaVerificacao.style.display = 'block';
+        atualizarPassos(2);
+        
+        const emailOculto = ocultarEmail(emailTeste);
+        subtituloRecuperacao.textContent = `Enviamos um código de verificação para ${emailOculto}. Por favor, verifique sua caixa de entrada.`;
+        
+        // Auto-focus no primeiro campo do código
+        if (entradasCodigo.length > 0) {
+          entradasCodigo[0].focus();
+        }
+      });
+
+      // Botão verificar código (Passo 2)
+      botaoVerificar.addEventListener('click', function() {
+        const codigo = Array.from(entradasCodigo).map(input => input.value).join('');
+        
+        if (codigo.length !== 6 || !/^\d+$/.test(codigo)) {
+          document.getElementById('erro-codigo').style.display = 'block';
+          return;
+        }
+        
+        // Esconder mensagem de erro se existir
+        document.getElementById('erro-codigo').style.display = 'none';
+        
+        // Simular verificação de código
+        setTimeout(() => {
+          etapaVerificacao.style.display = 'none';
+          etapaRedefinir.style.display = 'block';
+          atualizarPassos(3);
+          subtituloRecuperacao.textContent = 'Crie uma nova senha para sua conta';
+          
+          entradaNovaSenha.focus();
+        }, 500);
+      });
+      
+      // Botão redefinir senha (Passo 3)
+      botaoRedefinir.addEventListener('click', function() {
+        const novaSenha = entradaNovaSenha.value;
+        const confirmarSenha = entradaConfirmarSenha.value;
+        
+        // Verificar apenas se as senhas coincidem
+        if (novaSenha !== confirmarSenha) {
+          document.getElementById('erro-confirmacao').textContent = 'As senhas não coincidem';
+          document.getElementById('erro-confirmacao').style.display = 'block';
+          return;
+        }
+        
+        // Simular redefinição de senha
+        setTimeout(() => {
+          const container = document.querySelector('.container-recuperacao');
+          container.style.animation = 'none';
+          void container.offsetWidth;
+          container.style.animation = 'subir 0.5s ease-out';
+          
+          // Mostrar mensagem de sucesso
+          etapaRedefinir.innerHTML = `
+            <div class="mensagem-sucesso" style="display: block;">
+              <i class="fas fa-check-circle"></i>
+              <h3>Senha redefinida com sucesso!</h3>
+              <p>Sua senha foi atualizada com sucesso. Você será redirecionado para a página de login.</p>
+            </div>
+          `;
+        }, 500);
+      });
+      
+      // Botões cancelar
+      botoesCancelar.forEach(botao => {
+        botao.addEventListener('click', function() {
+          window.location.href = '/login';
+        });
+      });
+      
+      // Alternar visibilidade da senha
+      document.querySelectorAll('.alternar-senha').forEach(icone => {
+        icone.addEventListener('click', function() {
+          const entrada = this.parentElement.querySelector('input');
+          const tipo = entrada.getAttribute('type') === 'password' ? 'text' : 'password';
+          entrada.setAttribute('type', tipo);
+          this.classList.toggle('fa-eye');
+          this.classList.toggle('fa-eye-slash');
+        });
+      });
+      
+      // Avanço automático entre campos de código
+      entradasCodigo.forEach((entrada, indice) => {
+        entrada.addEventListener('input', function() {
+          if (this.value.length === 1 && indice < entradasCodigo.length - 1) {
+            entradasCodigo[indice + 1].focus();
+          }
+          
+          const todosPreenchidos = Array.from(entradasCodigo).every(input => input.value.length === 1);
+          if (todosPreenchidos) {
+            botaoVerificar.focus();
+          }
+        });
+        
+        entrada.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && this.value.length === 0 && indice > 0) {
+            entradasCodigo[indice - 1].focus();
+          }
+        });
+      });
+      
+      // Permitir submit do formulário com Enter
+      formularioRecuperacao.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          botaoContinuar.click();
+        }
+      });
+      
+      // Funções auxiliares
+      function atualizarPassos(passoAtivo) {
+        passoAtual = passoAtivo;
+        document.querySelectorAll('.passo').forEach((passo, indice) => {
+          passo.classList.remove('ativo', 'concluido');
+          if (indice + 1 < passoAtivo) {
+            passo.classList.add('concluido');
+          } else if (indice + 1 === passoAtivo) {
+            passo.classList.add('ativo');
+          }
+        });
+      }
+      
+      function ocultarEmail(email) {
+        if (!email.includes('@')) return email;
+        const [nome, dominio] = email.split('@');
+        return `${nome.charAt(0)}****${nome.slice(-1)}@${dominio}`;
+      }
+    });
+  </script>
+</body>
+</html>
