@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laudo Médico - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --sucesso: #2ecc71;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
+      --lilas-claro: #f0e5f5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: var(--cinza-escuro);
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: var(--lilas-claro);
+    }
+    
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+    
+    .botao-voltar {
+      color: var(--primaria);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .container-laudo {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .info-paciente {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--cinza-medio);
+    }
+    
+    .secao-resultado {
+      margin-bottom: 2rem;
+    }
+    
+    .opcoes-diagnostico {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .opcao-diagnostico {
+      padding: 1rem;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .opcao-diagnostico:hover {
+      border-color: var(--primaria);
+      background-color: var(--lilas-claro);
+    }
+    
+    .opcao-diagnostico.selecionado {
+      border-color: var(--primaria);
+      background-color: var(--lilas-claro);
+    }
+    
+    .grupo-formulario {
+      margin-bottom: 1.5rem;
+    }
+    
+    .rotulo-formulario {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .controle-formulario {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    
+    textarea.controle-formulario {
+      min-height: 120px;
+    }
+    
+    .acoes-formulario {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .botao-primario:hover {
+      background-color: var(--secundaria);
+    }
+    
+    .botao-secundario {
+      background-color: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+    
+    .botao-secundario:hover {
+      background-color: #f0f0f0;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .navegacao-superior {
+      padding: 0.5rem 0.5rem;
+      }
+
+      .logo {
+      font-size: 1rem;
+      white-space: nowrap;
+      margin-right: 0.5rem;
+      }
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .info-usuario {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      
+      .opcoes-diagnostico {
+        grid-template-columns: 1fr;
+      }
+      
+      .conteudo-principal {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área do Médico</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/medico/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/medico/nova-ficha" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="/medico/laudos" class="link-navegacao ativo"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
+        <li class="item-navegacao"><a href="/medico/pacientes" class="link-navegacao"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="/medico/encaminhamentos" class="link-navegacao"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
+        <li class="item-navegacao"><a href="/medico/estatisticas" class="link-navegacao"><i class="fas fa-chart-line"></i> Estatísticas</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" >
+        <span>Dr. Carlos Silva</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Emitir Laudo</h1>
+      <a href="/medicos/pacientes/123456" class="botao-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar ao Prontuário
+      </a>
+    </div>
+    
+    <div class="container-laudo">
+      <div class="info-paciente">
+        <div>
+          <strong>Paciente:</strong> Maria da Silva
+        </div>
+        <div>
+          <strong>Idade:</strong> 38 anos
+        </div>
+        <div>
+          <strong>Data do Exame:</strong> 15/06/2025
+        </div>
+        <div>
+          <strong>Médico Solicitante:</strong> Dr. Ana Oliveira
+        </div>
+        <div>
+          <strong>Cartão SUS:</strong> 123 4567 8901 2345
+        </div>
+        <div>
+          <strong>Unidade:</strong> UBS Centro
+        </div>
+      </div>
+      
+      <div class="secao-resultado">
+        <h2>Resultado do Exame Citopatológico</h2>
+        <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 6px;">
+          <p><strong>Adequabilidade:</strong> Satisfatória</p>
+          <p><strong>Resultado Preliminar:</strong> ASC-H (Atipia em células escamosas, não pode excluir HSIL)</p>
+          <p><strong>Microbiologia:</strong> Flora bacteriana mista</p>
+          <p><strong>Células endometriais:</strong> Ausentes</p>
+        </div>
+      </div>
+      
+      <div class="secao-resultado">
+        <h2>Diagnóstico Médico</h2>
+        
+        <div class="opcoes-diagnostico">
+          <div class="opcao-diagnostico selecionado">
+            <strong>ASC-H</strong>
+            <p>Atipia em células escamosas</p>
+          </div>
+          <div class="opcao-diagnostico">
+            <strong>LSIL</strong>
+            <p>Lesão intraepitelial de baixo grau</p>
+          </div>
+          <div class="opcao-diagnostico">
+            <strong>HSIL</strong>
+            <p>Lesão intraepitelial de alto grau</p>
+          </div>
+          <div class="opcao-diagnostico">
+            <strong>Carcinoma</strong>
+            <p>Carcinoma de células escamosas</p>
+          </div>
+          <div class="opcao-diagnostico">
+            <strong>Normal</strong>
+            <p>Sem alterações significativas</p>
+          </div>
+        </div>
+        
+        <div class="grupo-formulario">
+          <label for="comentarios" class="rotulo-formulario">Comentários Adicionais</label>
+          <textarea id="comentarios" class="controle-formulario" rows="4">Paciente com resultado ASC-H em dois exames consecutivos (03/2025 e 06/2025), necessitando avaliação com colposcopia para descartar lesão de alto grau. Relata sangramento pós-coito ocasional. Teste HPV positivo para tipos 16/18.</textarea>
+        </div>
+        
+        <div class="grupo-formulario">
+          <label for="recomendacoes" class="rotulo-formulario">Recomendações</label>
+          <textarea id="recomendacoes" class="controle-formulario" rows="4">Encaminhar para colposcopia com biópsia. Realizar teste de HPV genotipagem se não realizado anteriormente. Retorno em 3 meses independente do resultado.</textarea>
+        </div>
+      </div>
+      
+      <div class="acoes-formulario">
+        <button class="botao botao-secundario">Salvar Rascunho</button>
+        <button class="botao botao-primario">Emitir Laudo</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('.opcao-diagnostico').forEach(opcao => {
+      opcao.addEventListener('click', function() {
+        document.querySelectorAll('.opcao-diagnostico').forEach(opt => {
+          opt.classList.remove('selecionado');
+        });
+        this.classList.add('selecionado');
+      });
+    });
+  </script>
+</body>
+</html>

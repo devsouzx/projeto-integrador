@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estatísticas - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --sucesso: #2ecc71;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
+      --lilas-claro: #f0e5f5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: var(--cinza-escuro);
+      line-height: 1.5;
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+      white-space: nowrap;
+    }
+
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: var(--lilas-claro);
+    }
+
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+    }
+
+    .cabecalho {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .cabecalho {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .titulo-pagina {
+      font-size: 1.5rem;
+      color: var(--primaria);
+    }
+
+    .container-filtros {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .linha-filtro {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .linha-filtro {
+        flex-direction: row;
+      }
+    }
+
+    .grupo-filtro {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .rotulo-filtro {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primaria);
+      font-size: 0.9rem;
+    }
+
+    .seletor-filtro, .entrada-filtro {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 6px;
+      background-color: white;
+      font-size: 0.95rem;
+    }
+
+    .botao {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+
+    .botao-primario:hover {
+      background-color: var(--secundaria);
+    }
+
+    .grade-estatisticas {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 600px) {
+      .grade-estatisticas {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 992px) {
+      .grade-estatisticas {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .cartao-estatistica {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .cartao-estatistica h3 {
+      color: var(--primaria);
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .valor-estatistica {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .descricao-estatistica {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tendencia-estatistica {
+      display: flex;
+      align-items: center;
+      font-size: 0.85rem;
+      gap: 0.25rem;
+    }
+
+    .tendencia-alta {
+      color: var(--perigo);
+    }
+
+    .tendencia-baixa {
+      color: var(--sucesso);
+    }
+    
+    .container-grafico {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .cabecalho-grafico {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .navegacao-superior {
+        padding: 0.5rem 0.5rem;
+      }
+
+      .logo {
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
+      }
+
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin;
+      }
+
+      .item-navegacao  {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .info-usuario {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+
+      .cabecalho, .cabecalho-grafico {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .linha-filtro {
+        flex-direction: column;
+      }
+
+      .grupo-filtro {
+        width: 100%;
+      }
+
+      .tabela-dados {
+        font-size: 0.85rem;
+      }
+    }
+
+    .titulo-grafico {
+      font-size: 1.1rem;
+      color: var(--primaria);
+    }
+
+    .legenda-grafico {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .item-legenda {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .cor-legenda {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    
+    .tabela-dados {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .tabela-dados th, .tabela-dados td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--cinza-medio);
+    }
+
+    .tabela-dados th {
+      background-color: #f8f9fa;
+      color: var(--primaria);
+      font-weight: 500;
+    }
+
+    .tabela-dados tr:hover {
+      background-color: #f5f7fa;
+    }
+
+    .placeholder-grafico {
+      height: 250px;
+      background-color: #f8f9fa;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área do Médico</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/medico/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/medico/nova-ficha" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="/medico/laudos" class="link-navegacao"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
+        <li class="item-navegacao"><a href="/medico/pacientes" class="link-navegacao"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="/medico/encaminhamentos" class="link-navegacao"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
+        <li class="item-navegacao"><a href="/medico/estatisticas" class="link-navegacao ativo"><i class="fas fa-chart-line"></i> Estatísticas</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" >
+        <span>Dr. Carlos Silva</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Estatísticas e Relatórios</h1>
+      <button class="botao botao-primario">
+        <i class="fas fa-download"></i> Exportar Dados
+      </button>
+    </div>
+    
+    <div class="container-filtros">
+      <div class="linha-filtro">
+        <div class="grupo-filtro">
+          <label class="rotulo-filtro">Período</label>
+          <select class="seletor-filtro">
+            <option>Últimos 3 meses</option>
+            <option selected>Últimos 6 meses</option>
+            <option>Últimos 12 meses</option>
+            <option>Personalizado</option>
+          </select>
+        </div>
+        <div class="grupo-filtro">
+          <label class="rotulo-filtro">UBS</label>
+          <select class="seletor-filtro">
+            <option selected>Todas as unidades</option>
+            <option>UBS Centro</option>
+            <option>UBS Vila Nova</option>
+            <option>UBS Jardim das Flores</option>
+          </select>
+        </div>
+        <div class="grupo-filtro">
+          <label class="rotulo-filtro">Faixa Etária</label>
+          <select class="seletor-filtro">
+            <option selected>Todas as idades</option>
+            <option>25-29 anos</option>
+            <option>30-39 anos</option>
+            <option>40-49 anos</option>
+            <option>50-59 anos</option>
+          </select>
+        </div>
+      </div>
+      <div class="linha-filtro">
+        <div class="grupo-filtro">
+          <label class="rotulo-filtro">Resultado do Exame</label>
+          <select class="seletor-filtro">
+            <option selected>Todos os resultados</option>
+            <option>Normal</option>
+            <option>ASC-US</option>
+            <option>ASC-H</option>
+            <option>LSIL</option>
+            <option>HSIL</option>
+            <option>Carcinoma</option>
+          </select>
+        </div>
+        <div class="grupo-filtro">
+          <label class="rotulo-filtro">Fator de Risco</label>
+          <select class="seletor-filtro">
+            <option selected>Todos</option>
+            <option>Tabagismo</option>
+            <option>HPV+</option>
+            <option>Multiparidade</option>
+            <option>Imunodepressão</option>
+          </select>
+        </div>
+        <div class="grupo-filtro" style="align-self: flex-end;">
+          <button class="botao botao-primario">
+            <i class="fas fa-filter"></i> Aplicar Filtros
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grade-estatisticas">
+      <div class="cartao-estatistica">
+        <h3><i class="fas fa-user-injured"></i> Pacientes Atendidos</h3>
+        <div class="valor-estatistica">1.248</div>
+        <div class="descricao-estatistica">No período selecionado</div>
+        <div class="tendencia-estatistica tendencia-alta">
+          <i class="fas fa-arrow-up"></i> 12% em relação ao último período
+        </div>
+      </div>
+      
+      <div class="cartao-estatistica">
+        <h3><i class="fas fa-flask"></i> Exames Realizados</h3>
+        <div class="valor-estatistica">1.093</div>
+        <div class="descricao-estatistica">Preventivos de colo uterino</div>
+        <div class="tendencia-estatistica tendencia-alta">
+          <i class="fas fa-arrow-up"></i> 8% em relação ao último período
+        </div>
+      </div>
+      
+      <div class="cartao-estatistica">
+        <h3><i class="fas fa-exclamation-triangle"></i> Casos Anormais</h3>
+        <div class="valor-estatistica">87</div>
+        <div class="descricao-estatistica">(8% do total)</div>
+        <div class="tendencia-estatistica tendencia-baixa">
+          <i class="fas fa-arrow-down"></i> 5% em relação ao último período
+        </div>
+      </div>
+      
+      <div class="cartao-estatistica">
+        <h3><i class="fas fa-calendar-check"></i> Taxa de Retorno</h3>
+        <div class="valor-estatistica">76%</div>
+        <div class="descricao-estatistica">Pacientes que retornaram para acompanhamento</div>
+        <div class="tendencia-estatistica tendencia-alta">
+          <i class="fas fa-arrow-up"></i> 10% em relação ao último período
+        </div>
+      </div>
+    </div>
+
+    <div class="container-grafico">
+      <div class="cabecalho-grafico">
+        <h2 class="titulo-grafico">Detalhamento por Unidade de Saúde</h2>
+        <button class="botao botao-primario">
+          <i class="fas fa-table"></i> Exportar Tabela
+        </button>
+      </div>
+      
+      <div style="overflow-x: auto;">
+        <table class="tabela-dados">
+          <thead>
+            <tr>
+              <th>UBS</th>
+              <th>Exames</th>
+              <th>Normais</th>
+              <th>Anormais</th>
+              <th>% Anormais</th>
+              <th>Taxa Retorno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>UBS Centro</td>
+              <td>420</td>
+              <td>385</td>
+              <td>35</td>
+              <td>8.3%</td>
+              <td>78%</td>
+            </tr>
+            <tr>
+              <td>UBS Vila Nova</td>
+              <td>312</td>
+              <td>290</td>
+              <td>22</td>
+              <td>7.1%</td>
+              <td>72%</td>
+            </tr>
+            <tr>
+              <td>UBS Jardim das Flores</td>
+              <td>361</td>
+              <td>331</td>
+              <td>30</td>
+              <td>8.3%</td>
+              <td>79%</td>
+            </tr>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td><strong>1,093</strong></td>
+              <td><strong>1,006</strong></td>
+              <td><strong>87</strong></td>
+              <td><strong>8.0%</strong></td>
+              <td><strong>76%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encaminhamentos - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --sucesso: #2ecc71;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
+      --lilas-claro: #f0e5f5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: var(--cinza-escuro);
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: var(--lilas-claro);
+    }
+    
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--secundaria);
+    }
+
+    .botao {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .botao-primario {
+      background-color: var(--secundaria);
+      color: white;
+    }
+
+    .botao-primario:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .botao-pequeno {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .botao-secundario {
+      background-color: white;
+      color: var(--secundaria);
+      border: 1px solid var(--secundaria);
+    }
+
+    .botao-secundario:hover {
+      background-color: var(--lilas-claro);
+    }
+    
+    .filtros-busca {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .container-busca {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .campo-busca {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .botoes-filtro {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .botao-filtro {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      border: 1px solid var(--cinza-medio);
+      background-color: white;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+
+    .botao-filtro.ativo {
+      background-color: var(--secundaria);
+      color: white;
+      border-color: var(--secundaria);
+    }
+    
+    .lista-encaminhamentos {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .cabecalho-lista {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr auto;
+      padding: 1rem 1.5rem;
+      background-color: #f8f9fa;
+      font-weight: 600;
+      border-bottom: 1px solid var(--cinza-claro);
+    }
+
+    .item-encaminhamento {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr auto;
+      padding: 1rem 1.5rem;
+      align-items: center;
+      border-bottom: 1px solid var(--cinza-claro);
+      transition: background-color 0.2s;
+      cursor: pointer;
+    }
+
+    .item-encaminhamento:last-child {
+      border-bottom: none;
+    }
+
+    .item-encaminhamento:hover {
+      background-color: var(--lilas-claro);
+    }
+
+    .info-encaminhamento {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .icone-encaminhamento {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--cinza-claro);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primaria);
+    }
+
+    .nome-paciente {
+      font-weight: 500;
+    }
+
+    .acoes-encaminhamento {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    .etiqueta {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .pendente {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .concluido {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .urgente {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .prioritario {
+      background-color: #fff7e6;
+      color: #d46b08;
+    }
+    
+    .rotina {
+      background-color: #f6ffed;
+      color: #389e0d;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .navegacao-superior {
+        padding: 0.5rem;
+      }
+
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+
+      .container-busca {
+        flex-direction: column;
+      }
+
+      .cabecalho-lista {
+        display: none;
+      }
+
+      .item-encaminhamento {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 1rem;
+      }
+
+      .acoes-encaminhamento {
+        justify-content: flex-start;
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área do Médico</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/medico/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/medico/nova-ficha" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="/medico/laudos" class="link-navegacao"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
+        <li class="item-navegacao"><a href="/medico/pacientes" class="link-navegacao"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="/medico/encaminhamentos" class="link-navegacao ativo"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
+        <li class="item-navegacao"><a href="/medico/estatisticas" class="link-navegacao"><i class="fas fa-chart-line"></i> Estatísticas</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" >
+        <span>Dr. Carlos Silva</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Encaminhamentos Ginecológicos</h1>
+      <div>
+        <button class="botao botao-primario" onclick="location.href='/medico/encaminhamentos/novo'">
+          <i class="fas fa-plus"></i> Novo Encaminhamento
+        </button>
+      </div>
+    </div>
+
+    <div class="filtros-busca">
+      <div class="container-busca">
+        <input type="text" placeholder="Buscar por paciente, especialidade ou CID..." class="campo-busca" id="campoBusca">
+        <button class="botao botao-primario">
+          <i class="fas fa-search"></i> Buscar
+        </button>
+      </div>
+
+      <div class="botoes-filtro">
+        <button class="botao-filtro ativo">Todos</button>
+        <button class="botao-filtro">Colposcopia</button>
+        <button class="botao-filtro">Oncologia</button>
+        <button class="botao-filtro">Cirurgia</button>
+        <button class="botao-filtro">Urgentes</button>
+      </div>
+    </div>
+
+    <div class="lista-encaminhamentos">
+      <div class="cabecalho-lista">
+        <div>Paciente</div>
+        <div>Especialidade</div>
+        <div>Data</div>
+        <div>Prioridade</div>
+        <div>Ações</div>
+      </div>
+      
+      <div class="item-encaminhamento">
+        <div class="info-encaminhamento">
+          <div class="icone-encaminhamento">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div>
+            <div class="nome-paciente">Maria da Silva</div>
+            <div class="text-sm">CID: R87.61 (ASC-H)</div>
+          </div>
+        </div>
+        <div>Colposcopia</div>
+        <div>15/06/2025</div>
+        <div><span class="etiqueta prioritario">Prioritário</span></div>
+        <div class="acoes-encaminhamento">
+          <button class="botao botao-pequeno botao-primario">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-download"></i>
+          </button>
+          <button class="botao botao-pequeno botao-perigo">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="item-encaminhamento">
+        <div class="info-encaminhamento">
+          <div class="icone-encaminhamento">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div>
+            <div class="nome-paciente">Ana Oliveira</div>
+            <div class="text-sm">CID: R87.61 (LSIL)</div>
+          </div>
+        </div>
+        <div>Oncologia</div>
+        <div>10/06/2025</div>
+        <div><span class="etiqueta rotina">Rotina</span></div>
+        <div class="acoes-encaminhamento">
+          <button class="botao botao-pequeno botao-primario">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-download"></i>
+          </button>
+          <button class="botao botao-pequeno botao-perigo">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="item-encaminhamento">
+        <div class="info-encaminhamento">
+          <div class="icone-encaminhamento">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div>
+            <div class="nome-paciente">Fernanda Costa</div>
+            <div class="text-sm">CID: D06.9 (HSIL)</div>
+          </div>
+        </div>
+        <div>Cirurgia</div>
+        <div>05/06/2025</div>
+        <div><span class="etiqueta urgente">Urgente</span></div>
+        <div class="acoes-encaminhamento">
+          <button class="botao botao-pequeno botao-primario">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-download"></i>
+          </button>
+          <button class="botao botao-pequeno botao-perigo">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

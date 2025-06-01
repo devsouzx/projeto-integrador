@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Médico - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --sucesso: #2ecc71;
+      --cinza-claro: #f5f7fa;
+      --cinza-escuro: #333333;
+      --lilas-claro: #f0e5f5;
+      --lilas-escuro: #6a3d77;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: var(--cinza-escuro);
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: var(--lilas-claro);
+    }
+    
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+    
+    .sino-notificacao {
+      position: relative;
+      font-size: 1.25rem;
+      color: var(--primaria);
+    }
+    
+    .badge-notificacao {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: var(--perigo);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .grade-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-top: 4px solid var(--lilas-claro);
+    }
+    
+    .cabecalho-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .titulo-card {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primaria);
+    }
+    
+    .icone-card {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      background-color: var(--primaria);
+    }
+    
+    .icone-primaria {
+      background-color: var(--primaria);
+    }
+    
+    .icone-secundaria {
+      background-color: var(--secundaria);
+    }
+    
+    .icone-aviso {
+      background-color: var(--aviso);
+    }
+    
+    .lista-exames {
+      list-style: none;
+    }
+    
+    .item-exame {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--lilas-claro);
+    }
+    
+    .item-exame:ultimo {
+      border-bottom: none;
+    }
+    
+    .data-exame {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    
+    .status-exame {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .status-pendente {
+      background-color: #ffebf3;
+      color: var(--perigo);
+    }
+    
+    .status-concluido {
+      background-color: #e6f7ed;
+      color: #155724;
+    }
+    
+    .status-perigo {
+      background-color: #ffebf3;
+      color: var(--perigo);
+      border: 1px solid var(--perigo);
+    }
+    
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .botao-primario:hover {
+      background-color: var(--lilas-escuro);
+      transform: translateY(-2px);
+    }
+    
+    .botao-secundario {
+      background-color: var(--secundaria);
+      color: white;
+    }
+    
+    .botao-bloco {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+
+    .secao-informacoes {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-top: 4px solid var(--lilas-claro);
+    }
+    
+    .grade-informacoes {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .card-informacao {
+      background-color: var(--lilas-claro);
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--primaria);
+    }
+    
+    .card-informacao h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--primaria);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .card-informacao p {
+      font-size: 0.9rem;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .navegacao-superior {
+        padding: 0.5rem 0.5rem;
+      }
+
+      .logo {
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
+      }
+      
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .info-usuario {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      
+      .grade-cards {
+        grid-template-columns: 1fr;
+      }
+      
+      .conteudo-principal {
+        padding: 0 1rem;
+      }
+    }
+    
+    .lista-prioridades {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-top: 4px solid var(--lilas-claro);
+      margin-bottom: 2rem;
+    }
+
+    .item-prioridade {
+      padding: 1rem;
+      border-bottom: 1px solid var(--lilas-claro);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      border-radius: 6px;
+      background-color: #faf5fc;
+    }
+
+    .prioridade-alta {
+      border-left: 4px solid var(--perigo);
+    }
+
+    .prioridade-media {
+      border-left: 4px solid var(--aviso);
+    }
+
+    .prioridade-baixa {
+      border-left: 4px solid var(--sucesso);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .conteudo-modal {
+      background-color: white;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .cabecalho-modal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .titulo-modal {
+      font-size: 1.5rem;
+      color: var(--primaria);
+    }
+
+    .fechar-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--perigo);
+    }
+
+    .historico-paciente {
+      margin-top: 1.5rem;
+    }
+
+    .item-historico {
+      padding: 1rem;
+      border-bottom: 1px solid var(--lilas-claro);
+    }
+
+    .item-historico:ultimo {
+      border-bottom: none;
+    }
+    
+    .botao-pequeno {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área do Médico</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/medico/dashboard" class="link-navegacao ativo"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/medico/nova-ficha" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="/medico/laudos" class="link-navegacao"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
+        <li class="item-navegacao"><a href="/medico/pacientes" class="link-navegacao"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="/medico/encaminhamentos" class="link-navegacao"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
+        <li class="item-navegacao"><a href="/medico/estatisticas" class="link-navegacao"><i class="fas fa-chart-line"></i> Estatísticas</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" >
+        <span>Dr. Carlos Silva</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Bem-vindo, Dr. Carlos</h1>
+      <div class="sino-notificacao">
+        <i class="fas fa-bell"></i>
+        <span class="badge-notificacao">5</span>
+      </div>
+    </div>
+    
+    <div class="grade-cards">
+      <div class="card">
+        <div class="cabecalho-card">
+          <h2 class="titulo-card">Casos Prioritários</h2>
+          <div class="icone-card">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+        </div>
+        <ul class="lista-exames">
+          <li class="item-exame">
+            <strong>Maria da Silva</strong>
+            <div>Resultado: ASC-H</div>
+            <span class="status-exame status-perigo">Alto Risco</span>
+            <button class="botao botao-primario botao-pequeno" onclick="abrirModalPaciente('Maria da Silva')">Ver Histórico</button>
+          </li>
+          <li class="item-exame">
+            <strong>Ana Oliveira</strong>
+            <div>Resultado: LSIL</div>
+            <span class="status-exame status-pendente">Monitorar</span>
+            <button class="botao botao-primario botao-pequeno" onclick="abrirModalPaciente('Ana Oliveira')">Ver Histórico</button>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <div class="cabecalho-card">
+          <h2 class="titulo-card">Últimos Laudos</h2>
+          <div class="icone-card">
+            <i class="fas fa-file-medical-alt"></i>
+          </div>
+        </div>
+        <ul class="lista-exames">
+          <li class="item-exame">
+            <strong>Joana Pereira</strong>
+            <div>15/06/2025 - NORMAL</div>
+            <button class="botao botao-secundario botao-pequeno" onclick="visualizarLaudo('Joana Pereira')">Ver Laudo</button>
+          </li>
+          <li class="item-exame">
+            <strong>Carla Santos</strong>
+            <div>14/06/2025 - ASC-US</div>
+            <button class="botao botao-secundario botao-pequeno" onclick="visualizarLaudo('Carla Santos')">Ver Laudo</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="cabecalho-card">
+          <h2 class="titulo-card">Pacientes para Reavaliação</h2>
+          <div class="icone-card">
+            <i class="fas fa-user-clock"></i>
+          </div>
+        </div>
+        <ul class="lista-exames">
+          <li class="item-exame">
+            <strong>Fernanda Costa</strong>
+            <div>2 exames alterados consecutivos</div>
+            <button class="botao botao-primario botao-pequeno" onclick="agendarRetorno('Fernanda Costa')">Agendar</button>
+          </li>
+          <li class="item-exame">
+            <strong>Patrícia Almeida</strong>
+            <div>Sem retorno há 6 meses</div>
+            <button class="botao botao-secundario botao-pequeno" onclick="enviarLembrete('Patrícia Almeida')">Lembrar</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="lista-prioridades">
+      <h2 style="color: var(--primaria); margin-bottom: 1rem;">Pacientes para Reavaliação</h2>
+      
+      <div class="item-prioridade prioridade-alta">
+        <div>
+          <strong>Fernanda Costa</strong>
+          <div>2 exames alterados consecutivos (ASC-H)</div>
+          <div class="data-exame">Último exame: 15/06/2025</div>
+        </div>
+        <button class="botao botao-primario" onclick="abrirModalPaciente('Fernanda Costa')">Avaliar Agora</button>
+      </div>
+      
+      <div class="item-prioridade prioridade-media">
+        <div>
+          <strong>Patrícia Almeida</strong>
+          <div>Sem retorno há 6 meses</div>
+          <div class="data-exame">Último exame: 15/12/2024</div>
+        </div>
+        <button class="botao botao-secundario" onclick="enviarLembrete('Patrícia Almeida')">Lembrar</button>
+      </div>
+      
+      <div class="item-prioridade prioridade-media">
+        <div>
+          <strong>Juliana Mendes</strong>
+          <div>Histórico familiar positivo</div>
+          <div class="data-exame">Mãe com câncer de colo uterino</div>
+        </div>
+        <button class="botao botao-secundario" onclick="abrirModalPaciente('Juliana Mendes')">Acompanhar</button>
+      </div>
+
+      <div class="item-prioridade prioridade-baixa">
+        <div>
+          <strong>Camila Rodrigues</strong>
+          <div>Retorno em 1 ano</div>
+          <div class="data-exame">Último exame: 15/06/2025 - Normal</div>
+        </div>
+        <button class="botao botao-secundario" onclick="agendarRetorno('Camila Rodrigues')">Agendar</button>
+      </div>
+    </div>
+
+    <div class="secao-informacoes">
+      <h2><i class="fas fa-info-circle"></i> Orientações Rápidas</h2>
+      <div class="grade-informacoes">
+        <div class="card-informacao">
+          <h3><i class="fas fa-microscope"></i> ASC-H</h3>
+          <p>Encaminhar para colposcopia com biópsia. Risco estimado de CIN2+ de 24-94%.</p>
+        </div>
+        <div class="card-informacao">
+          <h3><i class="fas fa-virus"></i> LSIL</h3>
+          <p>Na maioria dos casos regride espontaneamente. Repetir exame em 6 meses.</p>
+        </div>
+        <div class="card-informacao">
+          <h3><i class="fas fa-procedures"></i> HSIL</h3>
+          <p>Encaminhamento urgente para colposcopia e tratamento. Risco de câncer.</p>
+        </div>
+        <div class="card-informacao">
+          <h3><i class="fas fa-notes-medical"></i> ASC-US</h3>
+          <p>Testar para HPV. Se positivo, encaminhar para colposcopia.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <div class="modal" id="modalPaciente">
+    <div class="conteudo-modal">
+      <div class="cabecalho-modal">
+        <h2 class="titulo-modal" id="nomePacienteModal">Histórico do Paciente</h2>
+        <button class="fechar-modal" onclick="fecharModal()">&times;</button>
+      </div>
+      
+      <div class="historico-paciente" id="historicoPaciente"></div>
+      
+      <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+        <button class="botao botao-secundario" onclick="fecharModal()">Fechar</button>
+        <button class="botao botao-primario" onclick="encaminharPaciente()">Encaminhar Paciente</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function abrirModalPaciente(nomePaciente) {
+      document.getElementById('nomePacienteModal').textContent = `Histórico de ${nomePaciente}`;
+      
+      const conteudoHistorico = `
+        <div class="item-historico">
+          <h3>15/06/2025 - Exame Preventivo</h3>
+          <p><strong>Resultado:</strong> ASC-H</p>
+          <p><strong>Observações:</strong> Paciente relata sangramento pós-coito ocasional</p>
+        </div>
+        <div class="item-historico">
+          <h3>12/03/2025 - Consulta de Rotina</h3>
+          <p><strong>Queixa principal:</strong> Nenhuma</p>
+          <p><strong>Exame físico:</strong> Normal</p>
+        </div>
+        <div class="item-historico">
+          <h3>15/12/2024 - Exame Preventivo</h3>
+          <p><strong>Resultado:</strong> Normal</p>
+        </div>
+      `;
+      
+      document.getElementById('historicoPaciente').innerHTML = conteudoHistorico;
+      document.getElementById('modalPaciente').style.display = 'flex';
+    }
+
+    function fecharModal() {
+      document.getElementById('modalPaciente').style.display = 'none';
+    }
+
+    function encaminharPaciente() {
+      const nomePaciente = document.getElementById('nomePacienteModal').textContent.replace('Histórico de ', '');
+      alert(`Encaminhar ${nomePaciente} para especialista`);
+      fecharModal();
+    }
+
+    function agendarRetorno(nomePaciente) {
+      alert(`Agendando retorno para ${nomePaciente}`);
+    }
+
+    function enviarLembrete(nomePaciente) {
+      alert(`Enviando lembrete para ${nomePaciente}`);
+    }
+  </script>
+</body>
+</html>

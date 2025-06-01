@@ -10,10 +10,9 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.LoadHTMLGlob("src/static/*.html")
-	router.Static("/static", "./src/static")
+  	router.LoadHTMLGlob("src/static/**/*.html")
 	
-	routes.InitRoutes(&router.RouterGroup)
+	routes.InitRoutes(router.Group("/"))
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatal(err)

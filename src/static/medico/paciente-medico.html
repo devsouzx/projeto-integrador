@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prontuário Eletrônico - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --sucesso: #2ecc71;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
+      --lilas-claro: #f0e5f5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: var(--cinza-escuro);
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: var(--lilas-claro);
+    }
+
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+
+    .botao-voltar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primaria);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+
+    .botao-primario:hover {
+      background-color: var(--secundaria);
+    }
+
+    .botao-secundario {
+      background-color: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+
+    .botao-secundario:hover {
+      background-color: var(--lilas-claro);
+    }
+
+    .botao-pequeno {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .perfil-paciente {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+
+    .cabecalho-perfil {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .foto-perfil {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--secundaria);
+      background-color: var(--lilas-claro);
+    }
+
+    .grade-dados-paciente {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .cartao-dados {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .cartao-dados h3 {
+      color: var(--primaria);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .cartao-dados ul {
+      list-style: none;
+    }
+
+    .cartao-dados li {
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .cartao-dados li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--secundaria);
+      font-weight: bold;
+    }
+    
+    .container-abas {
+      display: flex;
+      border-bottom: 1px solid var(--cinza-medio);
+      margin-bottom: 1.5rem;
+    }
+
+    .aba {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      font-weight: 500;
+      color: var(--cinza-escuro);
+    }
+
+    .aba.ativa {
+      border-bottom-color: var(--primaria);
+      color: var(--primaria);
+    }
+    
+    .linha-tempo-paciente {
+      margin-top: 2rem;
+    }
+
+    .item-linha-tempo {
+      display: flex;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .data-linha-tempo {
+      width: 120px;
+      font-weight: 500;
+      color: var(--primaria);
+    }
+
+    .conteudo-linha-tempo {
+      flex: 1;
+      padding-left: 2rem;
+      border-left: 2px solid var(--secundaria);
+      position: relative;
+    }
+
+    .conteudo-linha-tempo::before {
+      content: '';
+      position: absolute;
+      left: -7px;
+      top: 5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--secundaria);
+    }
+
+    .resultado-exame {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border: 1px solid var(--cinza-medio);
+    }
+
+    .etiqueta {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .etiqueta-concluido {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .etiqueta-pendente {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .etiqueta-perigo {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .conteudo-modal {
+      background-color: white;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .cabecalho-modal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .titulo-modal {
+      font-size: 1.5rem;
+      color: var(--primaria);
+    }
+
+    .fechar-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--perigo);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .navegacao-superior {
+        padding: 0.5rem 0.5rem;
+      }
+
+      .logo {
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
+      }
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+
+      .cabecalho-perfil {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .item-linha-tempo {
+        flex-direction: column;
+      }
+
+      .data-linha-tempo {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      .conteudo-linha-tempo {
+        padding-left: 1rem;
+        border-left: none;
+        border-top: 2px solid var(--secundaria);
+        padding-top: 1rem;
+      }
+
+      .conteudo-linha-tempo::before {
+        left: 50%;
+        top: -6px;
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área do Médico</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/medico/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/medico/nova-ficha" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="/medico/laudos" class="link-navegacao"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
+        <li class="item-navegacao"><a href="/medico/pacientes" class="link-navegacao ativo"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="/medico/encaminhamentos" class="link-navegacao"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
+        <li class="item-navegacao"><a href="/medico/estatisticas" class="link-navegacao"><i class="fas fa-chart-line"></i> Estatísticas</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" >
+        <span>Dr. Carlos Silva</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Prontuário Eletrônico</h1>
+      <div>
+        <button class="botao botao-secundario">
+          <i class="fas fa-print"></i> Imprimir
+        </button>
+      </div>
+    </div>
+
+    <div class="container-abas">
+      <div class="aba ativa" data-tab="overview">Resumo</div>
+      <div class="aba" data-tab="exams">Exames</div>
+      <div class="aba" data-tab="prescriptions">Prescrições</div>
+      <div class="aba" data-tab="referrals">Encaminhamentos</div>
+      <div class="aba" data-tab="history">Histórico Completo</div>
+    </div>
+
+    <div class="perfil-paciente">
+      <div class="cabecalho-perfil">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do paciente" class="foto-perfil">
+        <div>
+          <h2>Maria da Silva</h2>
+          <p>38 anos | Feminino | Cartão SUS: 123 4567 8901 2345</p>
+          <p>Última consulta: 15/06/2025 | Próxima consulta: 15/09/2025</p>
+        </div>
+      </div>
+
+      <div class="grade-dados-paciente">
+        <div class="cartao-dados">
+          <h3><i class="fas fa-history"></i> Histórico Médico</h3>
+          <ul>
+            <li>2 gestações, 2 partos</li>
+            <li>Hipertensão arterial controlada</li>
+            <li>Tabagismo: 10 anos (interrompido em 2018)</li>
+            <li>Alergia: Dipirona (urticária)</li>
+            <li>Histórico familiar: Mãe com câncer de colo uterino</li>
+          </ul>
+        </div>
+
+        <div class="cartao-dados">
+          <h3><i class="fas fa-pills"></i> Medicações Atuais</h3>
+          <ul>
+            <li>Losartana 50mg - 1x/dia (desde 2019)</li>
+            <li>Omeprazol 20mg - 1x/dia (desde 2020)</li>
+            <li>Complexo B - 1x/dia</li>
+          </ul>
+        </div>
+
+        <div class="cartao-dados">
+          <h3><i class="fas fa-flask"></i> Exames Recentes</h3>
+          <ul>
+            <li>Preventivo (15/06/2025): ASC-H</li>
+            <li>Hemograma (10/06/2025): Normal</li>
+            <li>Ultrassom pélvico (05/2025): Sem alterações</li>
+            <li>Teste HPV (03/2025): Positivo para tipos 16/18</li>
+          </ul>
+        </div>
+
+        <div class="cartao-dados">
+          <h3><i class="fas fa-heartbeat"></i> Sinais Vitais</h3>
+          <ul>
+            <li>PA: 120x80 mmHg (15/06/2025)</li>
+            <li>IMC: 24.2 (Peso: 68kg, Altura: 1.68m)</li>
+            <li>Glicemia capilar: 92 mg/dL</li>
+            <li>Temperatura: 36.5°C</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="linha-tempo-paciente">
+      <h2><i class="fas fa-history"></i> Linha do Tempo</h2>
+      
+      <div class="item-linha-tempo">
+        <div class="data-linha-tempo">15/06/2025</div>
+        <div class="conteudo-linha-tempo">
+          <div class="resultado-exame">
+            <div style="display: flex; justify-content: space-between;">
+              <h3>Exame Preventivo - Colo do Útero</h3>
+              <span class="etiqueta etiqueta-perigo">ASC-H</span>
+            </div>
+            <p><strong>Resultado:</strong> ASC-H (Atipia em células escamosas, não pode excluir HSIL)</p>
+            <p><strong>Médico Solicitante:</strong> Dr. Ana Oliveira</p>
+            <p><strong>Observações:</strong> Paciente relata sangramento pós-coito ocasional. Teste HPV positivo.</p>
+            <div style="margin-top: 1rem;">
+              <a class="botao botao-primario botao-pequeno">
+                <i class="fas fa-file-medical-alt"></i> Ver Laudo Completo
+              </a>
+              <a href="/medico/encaminhamentos/novo" class="botao botao-secundario botao-pequeno">
+                <i class="fas fa-exchange-alt"></i> Encaminhar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-linha-tempo">
+        <div class="data-linha-tempo">12/03/2025</div>
+        <div class="conteudo-linha-tempo">
+          <div class="resultado-exame">
+            <h3>Consulta de Rotina</h3>
+            <p><strong>Médico:</strong> Dr. Carlos Silva</p>
+            <p><strong>Queixa principal:</strong> Nenhuma</p>
+            <p><strong>Exame físico:</strong> Normal</p>
+            <p><strong>Conduta:</strong> Solicitar preventivo em 3 meses</p>
+            <a class="botao botao-secundario botao-pequeno">
+              <i class="fas fa-file-alt"></i> Ver Detalhes
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-linha-tempo">
+        <div class="data-linha-tempo">15/12/2024</div>
+        <div class="conteudo-linha-tempo">
+          <div class="resultado-exame">
+            <div style="display: flex; justify-content: space-between;">
+              <h3>Exame Preventivo - Colo do Útero</h3>
+              <span class="etiqueta etiqueta-concluido">Normal</span>
+            </div>
+            <p><strong>Resultado:</strong> Negativo para neoplasia intraepitelial ou malignidade</p>
+            <p><strong>Médico Responsável:</strong> Dr. Ana Oliveira</p>
+            <a class="botao botao-secundario botao-pequeno">
+              <i class="fas fa-file-medical-alt"></i> Ver Laudo Completo
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <div class="modal" id="modalAnamnese">
+    <div class="conteudo-modal">
+      <div class="cabecalho-modal">
+        <h2 class="titulo-modal">Atualizar Anamnese</h2>
+        <button class="fechar-modal" onclick="document.getElementById('modalAnamnese').style.display='none'">&times;</button>
+      </div>
+      
+      <form>
+        <div style="margin-bottom: 1.5rem;">
+          <label for="historiaClinica" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">História Clínica</label>
+          <textarea id="historiaClinica" name="historiaClinica" style="width: 100%; padding: 0.75rem; border: 1px solid var(--cinza-medio); border-radius: 6px; min-height: 100px;"></textarea>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Fatores de Risco</label>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" name="fatoresRisco" value="tabagismo"> Tabagismo
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" name="fatoresRisco" value="hpv"> HPV+
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" name="fatoresRisco" value="multiparidade"> Multiparidade
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" name="fatoresRisco" value="familia"> Histórico Familiar
+            </label>
+          </div>
+        </div>
+        
+        <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+          <button type="button" class="botao botao-secundario" onclick="document.getElementById('modalAnamnese').style.display='none'">Cancelar</button>
+          <button type="submit" class="botao botao-primario">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.aba').forEach(aba => {
+      aba.addEventListener('click', function() {
+        document.querySelectorAll('.aba').forEach(a => a.classList.remove('ativa'));
+        this.classList.add('ativa');
+      });
+    });
+
+    function abrirModalAnamnese() {
+      document.getElementById('modalAnamnese').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>

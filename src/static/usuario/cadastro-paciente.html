@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
-      --primaria: #185a9d;
-      --secundaria: #43cea2;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
       --cinza-claro: #f5f7fa;
       --cinza-medio: #e0e0e0;
       --erro: #e74c3c;
@@ -560,7 +560,7 @@
           
           <div class="botoes-navegacao">
             <button type="button" class="botao botao-secundario" onclick="avancarParaPasso(2)">Voltar</button>
-            <button type="submit" class="botao botao-primario">Confirmar Cadastro</button>
+            <button type="submit" class="botao botao-primario" onclick="alert('Cadastro realizado com sucesso!')">Confirmar Cadastro</button>
           </div>
           
           <div class="rodape-cadastro">
@@ -573,7 +573,6 @@
 
   <script>
     function avancarParaPasso(passo) {
-      // Esconder todos os passos
       document.querySelectorAll('.passo-formulario').forEach(el => {
         el.classList.remove('ativo');
       });

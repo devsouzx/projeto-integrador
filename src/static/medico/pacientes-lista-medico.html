@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pacientes - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --sucesso: #2ecc71;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
+      --lilas-claro: #f0e5f5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: var(--cinza-escuro);
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: var(--lilas-claro);
+    }
+
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+
+    .botao {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+
+    .botao-primario:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .botao-pequeno {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .botao-secundario {
+      background-color: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+
+    .botao-secundario:hover {
+      background-color: var(--lilas-claro);
+    }
+
+    .busca-filtros {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .container-busca {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .entrada-busca {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .botoes-filtro {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .botao-filtro {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      border: 1px solid var(--cinza-medio);
+      background-color: white;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+
+    .botao-filtro.ativo {
+      background-color: var(--primaria);
+      color: white;
+      border-color: var(--primaria);
+    }
+    
+    .lista-pacientes {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .cabecalho-lista {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr auto;
+      padding: 1rem 1.5rem;
+      background-color: #f8f9fa;
+      font-weight: 600;
+      border-bottom: 1px solid var(--cinza-claro);
+    }
+
+    .item-paciente {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr auto;
+      padding: 1rem 1.5rem;
+      align-items: center;
+      border-bottom: 1px solid var(--cinza-claro);
+      transition: background-color 0.2s;
+      cursor: pointer;
+    }
+
+    .item-paciente:last-child {
+      border-bottom: none;
+    }
+
+    .item-paciente:hover {
+      background-color: var(--lilas-claro);
+    }
+
+    .info-paciente {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar-paciente {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--cinza-claro);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primaria);
+    }
+
+    .nome-paciente {
+      font-weight: 500;
+    }
+
+    .acoes-paciente {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    .etiqueta {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .prioritario {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .retorno {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .normal {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .navegacao-superior {
+        padding: 0.5rem;
+      }
+
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+
+      .container-busca {
+        flex-direction: column;
+      }
+
+      .cabecalho-lista {
+        display: none;
+      }
+
+      .item-paciente {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 1rem;
+      }
+
+      .acoes-paciente {
+        justify-content: flex-start;
+        margin-top: 0.5rem;
+      }
+    }
+
+    .etiqueta.hpv {
+      background-color: #e6f7ff;
+      color: #1890ff;
+    }
+    .etiqueta.lesao {
+      background-color: #fff1f0;
+      color: #f5222d;
+    }
+    .etiqueta.normal-ccu {
+      background-color: #f6ffed;
+      color: #52c41a;
+    }
+    .botao-ccu {
+      background-color: #722ed1;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área do Médico</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/medico/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/medico/nova-ficha" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="/medico/laudos" class="link-navegacao"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
+        <li class="item-navegacao"><a href="/medico/pacientes" class="link-navegacao ativo"><i class="fas fa-user-injured"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="/medico/encaminhamentos" class="link-navegacao"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
+        <li class="item-navegacao"><a href="/medico/estatisticas" class="link-navegacao"><i class="fas fa-chart-line"></i> Estatísticas</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" >
+        <span>Dr. Carlos Silva</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Pacientes</h1>
+      <div>
+        <button class="botao botao-primario" onclick="location.href='/medico/nova-ficha'">
+          <i class="fas fa-plus"></i> Novo Paciente
+        </button>
+      </div>
+    </div>
+
+    <div class="busca-filtros">
+      <div class="container-busca">
+        <input type="text" placeholder="Buscar por nome, CNS ou CPF..." class="entrada-busca" id="campoBusca">
+        <button class="botao botao-primario">
+          <i class="fas fa-search"></i> Buscar
+        </button>
+      </div>
+
+      <div class="botoes-filtro">
+        <button class="botao-filtro ativo">Todos</button>
+        <button class="botao-filtro">Prioritários</button>
+        <button class="botao-filtro">Para Retorno</button>
+        <button class="botao-filtro">Exames Pendentes</button>
+        <button class="botao-filtro">Resultados Anormais</button>
+      </div>
+    </div>
+
+    <div class="lista-pacientes">
+      <div class="cabecalho-lista">
+        <div>Paciente</div>
+        <div>Idade</div>
+        <div>Cartão SUS</div>
+        <div>Última consulta</div>
+        <div>Ações</div>
+      </div>
+      
+      <div class="item-paciente">
+        <div class="info-paciente">
+          <div class="avatar-paciente">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <div class="nome-paciente">Maria da Silva</div>
+            <span class="etiqueta prioritario">Prioritário</span>
+          </div>
+        </div>
+        <div>38 anos</div>
+        <div>123 4567 8901 2345</div>
+        <div>15/06/2025</div>
+        <div class="acoes-paciente">
+          <button class="botao botao-pequeno botao-primario">
+            <i class="fas fa-file-medical"></i>
+          </button>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="item-paciente">
+        <div class="info-paciente">
+          <div class="avatar-paciente">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <div class="nome-paciente">Ana Oliveira</div>
+            <span class="etiqueta retorno">Retorno</span>
+          </div>
+        </div>
+        <div>42 anos</div>
+        <div>987 6543 2109 8765</div>
+        <div>10/06/2025</div>
+        <div class="acoes-paciente">
+          <button class="botao botao-pequeno botao-primario">
+            <i class="fas fa-file-medical"></i>
+          </button>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="item-paciente">
+        <div class="info-paciente">
+          <div class="avatar-paciente">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <div class="nome-paciente">Fernanda Costa</div>
+            <span class="etiqueta prioritario">Alto Risco</span>
+          </div>
+        </div>
+        <div>45 anos</div>
+        <div>456 7890 1234 5678</div>
+        <div>05/06/2025</div>
+        <div class="acoes-paciente">
+          <button class="botao botao-pequeno botao-primario">
+            <i class="fas fa-file-medical"></i>
+          </button>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="item-paciente">
+        <div class="info-paciente">
+          <div class="avatar-paciente">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <div class="nome-paciente">Patrícia Almeida</div>
+            <span class="etiqueta normal">Normal</span>
+          </div>
+        </div>
+        <div>35 anos</div>
+        <div>321 0987 6543 2109</div>
+        <div>01/06/2025</div>
+        <div class="acoes-paciente">
+          <button class="botao botao-pequeno botao-primario">
+            <i class="fas fa-file-medical"></i>
+          </button>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

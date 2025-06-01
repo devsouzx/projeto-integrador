@@ -8,13 +8,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
-      --primaria: #185a9d;
-      --secundaria: #43cea2;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --sucesso: #2ecc71;
+      --cinza-claro: #f5f7fa;
       --cinza-medio: #e0e0e0;
-      --enfermeiro: #4e8cff;
-      --medico: #ff6b6b;
-      --agente: #6bce70;
-      --gestor: #9b59b6;
+      --cinza-escuro: #333333;
+      --lilas-claro: #f0e5f5;
+      --enfermeiro: #9b59b6;
+      --medico: #8e44ad;
+      --agente: #a569bd;
+      --gestor: #7d3c98;
     }
     
     * {
@@ -25,17 +31,61 @@
     }
     
     body {
-      background-color: #f5f7fa;
+      background-color: #f8f1ff;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: 20px;
-      background-image: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-      background-size: cover;
-      background-position: center;
-      background-blend-mode: overlay;
-      background-color: rgba(245, 247, 250, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(214, 174, 241, 0.15);
+      z-index: -1;
+    }
+    
+    body::before {
+      width: 600px;
+      height: 600px;
+      top: -300px;
+      right: -200px;
+    }
+    
+    body::after {
+      width: 800px;
+      height: 800px;
+      bottom: -400px;
+      left: -300px;
+    }
+    
+    .onda {
+      position: absolute;
+      opacity: 0.05;
+      z-index: -1;
+    }
+    
+    .onda-1 {
+      width: 1000px;
+      height: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--primaria) 0%, transparent 70%);
+    }
+    
+    .onda-2 {
+      width: 1200px;
+      height: 1000px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--secundaria) 0%, transparent 70%);
     }
     
     .container-login {
@@ -46,6 +96,7 @@
       box-shadow: 0 8px 30px rgba(0,0,0,0.15);
       overflow: hidden;
       animation: aparecer 0.5s ease-out;
+      position: relative;
     }
     
     @keyframes aparecer {
@@ -110,7 +161,7 @@
     .controle-formulario:focus {
       border-color: var(--primaria);
       outline: none;
-      box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
+      box-shadow: 0 0 0 2px rgba(155,89,182,0.2);
     }
     
     .icone-input {
@@ -139,7 +190,7 @@
     .botao:hover {
       opacity: 0.9;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(24,90,157,0.2);
+      box-shadow: 0 4px 12px rgba(155,89,182,0.2);
     }
     
     .botao:active {
@@ -187,14 +238,14 @@
     }
     
     .mensagem-erro {
-      color: #e74c3c;
+      color: var(--perigo);
       font-size: 12px;
       margin-top: 5px;
       display: none;
     }
     
     .grupo-formulario.erro .controle-formulario {
-      border-color: #e74c3c;
+      border-color: var(--perigo);
     }
     
     .grupo-formulario.erro .mensagem-erro {
@@ -260,28 +311,28 @@
     
     .opcao-profissional input[type="radio"]:checked + label {
       border-color: var(--primaria);
-      background-color: rgba(24,90,157,0.1);
+      background-color: var(--lilas-claro);
       font-weight: 500;
     }
     
     .opcao-profissional.enfermeiro input[type="radio"]:checked + label {
       border-color: var(--enfermeiro);
-      background-color: rgba(78, 140, 255, 0.1);
+      background-color: rgba(155, 89, 182, 0.1);
     }
     
     .opcao-profissional.medico input[type="radio"]:checked + label {
       border-color: var(--medico);
-      background-color: rgba(255, 107, 107, 0.1);
+      background-color: rgba(142, 68, 173, 0.1);
     }
     
     .opcao-profissional.agente input[type="radio"]:checked + label {
       border-color: var(--agente);
-      background-color: rgba(107, 206, 112, 0.1);
+      background-color: rgba(165, 105, 189, 0.1);
     }
     
     .opcao-profissional.gestor input[type="radio"]:checked + label {
       border-color: var(--gestor);
-      background-color: rgba(155, 89, 182, 0.1);
+      background-color: rgba(125, 60, 152, 0.1);
     }
     
     .icone-profissional {
@@ -297,23 +348,61 @@
       display: block;
     }
     
+    @media (max-width: 768px) {
+      body::before,
+      body::after,
+      .onda {
+        display: none;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f8f1ff, #e8d5f5);
+        padding: 10px;
+        overflow: auto;
+      }
+
+      .container-login {
+        max-width: 100%;
+        border-radius: 8px;
+      }
+    }
+
     @media (max-width: 480px) {
-      .selecao-profissional {
-        flex-direction: column;
+      .cabecalho-login {
+        padding: 20px;
       }
-      
-      .opcao-profissional {
-        min-width: 100%;
+
+      .cabecalho-login h1 {
+        font-size: 20px;
       }
-      
-      .opcao-profissional input[type="radio"] + label {
-        min-height: auto;
-        padding: 15px;
+
+      .corpo-login {
+        padding: 20px;
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+      }
+
+      .logo i {
+        font-size: 28px;
+      }
+
+      .controle-formulario {
+        padding: 12px 12px 12px 36px;
+      }
+
+      .icone-input {
+        top: 38px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="onda onda-1"></div>
+  <div class="onda onda-2"></div>
+
   <div class="container-login">
     <div class="cabecalho-login">
       <div class="logo">
@@ -324,10 +413,10 @@
     </div>
     
     <div class="corpo-login">
-      <form id="formularioLoginProfissional">
+      <form id="formularioLoginProfissional" onsubmit="validarFormulario(event)">
         <div class="tipo-profissional">
           <label>Tipo de Profissional</label>
-          <div class="selecao-profissional">
+          <div class="selecao-profissional" onclick="alternarCampos()">
             <div class="opcao-profissional enfermeiro">
               <input type="radio" id="enfermeiro" name="tipoProfissional" value="enfermeiro" checked>
               <label for="enfermeiro">
@@ -385,7 +474,7 @@
           <i class="fas fa-lock icone-input"></i>
           <div class="container-senha">
             <input type="password" id="senhaProfissional" class="controle-formulario" placeholder="Digite sua senha" required>
-            <i class="fas fa-eye alternar-senha"></i>
+            <i class="fas fa-eye alternar-senha" onclick="alternarSenha()"></i>
           </div>
           <div class="mensagem-erro">Por favor, insira sua senha</div>
         </div>
@@ -409,122 +498,91 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Alternar visibilidade da senha
-      const alternarSenha = document.querySelector('.alternar-senha');
+    function alternarSenha() {
       const inputSenha = document.getElementById('senhaProfissional');
+      const icone = document.querySelector('.alternar-senha');
       
-      alternarSenha.addEventListener('click', function() {
-        const tipo = inputSenha.getAttribute('type') === 'password' ? 'text' : 'password';
-        inputSenha.setAttribute('type', tipo);
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-      });
-      
-      // Seleção de tipo de profissional
-      const radiosTipoProfissional = document.querySelectorAll('input[name="tipoProfissional"]');
-      const inputCoren = document.getElementById('inputCoren');
-      const inputCrm = document.getElementById('inputCrm');
-      const inputEmail = document.getElementById('inputEmail');
-      const campoCoren = document.getElementById('coren');
-      const campoCrm = document.getElementById('crm');
-      const campoEmail = document.getElementById('emailProfissional');
-      
-      radiosTipoProfissional.forEach(radio => {
-        radio.addEventListener('change', function() {
-          if (this.value === 'medico') {
-            inputEmail.classList.remove('ativo');
-            inputCoren.classList.remove('ativo');
-            campoEmail.removeAttribute('required');
-            campoCoren.removeAttribute('required');
-            inputCrm.classList.add('ativo');
-            campoCrm.setAttribute('required', '');
-            campoCrm.disabled = false;
-            campoEmail.disabled = true;
-          } else if (this.value === 'enfermeiro') {
-            inputEmail.classList.remove('ativo');
-            inputCrm.classList.remove('ativo');
-            campoEmail.removeAttribute('required');
-            campoCrm.removeAttribute('required');
-            inputCoren.classList.add('ativo');
-            campoCoren.setAttribute('required', '');
-            campoCoren.disabled = false;
-            campoEmail.disabled = true;
-          } else if (this.value === 'agente') {
-            inputCrm.classList.remove('ativo');
-            inputCoren.classList.remove('ativo');
-            campoCrm.removeAttribute('required');
-            campoCoren.removeAttribute('required');
-            inputEmail.classList.add('ativo');
-            campoEmail.setAttribute('required', '');
-            campoCrm.disabled = true;
-            campoCoren.disabled = true;
-            campoEmail.disabled = false;
-          } else {
-            inputCrm.classList.remove('ativo');
-            inputCoren.classList.remove('ativo');
-            campoCrm.removeAttribute('required');
-            campoCoren.removeAttribute('required');
-            inputEmail.classList.add('ativo');
-            campoEmail.setAttribute('required', '');
-            campoCrm.disabled = true;
-            campoCoren.disabled = true;
-            campoEmail.disabled = false;
-          }
-        });
-      });
-      
-      // Validação do formulário
-      const formulario = document.getElementById('formularioLoginProfissional');
-      const botaoLogin = document.getElementById('botaoLoginProfissional');
-      
-      formulario.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Simular chamada à API
-        setTimeout(function() {
-          // Validação simples
-          let valido = true;
-          const tipoProfissional = document.querySelector('input[name="tipoProfissional"]:checked').value;
-          
-          if (tipoProfissional === 'medico' && document.getElementById('crm').value.trim() === '') {
-            valido = false;
-            alert('Por favor, insira seu CRM');
-          } else if (tipoProfissional === 'enfermeiro' && document.getElementById('coren').value.trim() === '') {
-            valido = false;
-            alert('Por favor, insira seu COREN');
-          } else if ((tipoProfissional === 'agente' || tipoProfissional === 'gestor') && 
-                     document.getElementById('emailProfissional').value.trim() === '') {
-            valido = false;
-            alert('Por favor, insira seu e-mail institucional');
-          }
-          
-          if (document.getElementById('senhaProfissional').value.trim() === '') {
-            valido = false;
-            alert('Por favor, insira sua senha');
-          }
-        }, 1500);
-      });
-      
-      // Formatar CRM/COREN
-      const formatarRegistroProfissional = (input, tipo) => {
-        let valor = input.value.replace(/\D/g, '');
-        
-        if (tipo === 'crm') {
-          if (valor.length > 5) {
-            valor = valor.substring(0, 5) + '/' + valor.substring(5, 7);
-          }
-        } else if (tipo === 'coren') {
-          if (valor.length > 6) {
-            valor = valor.substring(0, 6) + '/' + valor.substring(6, 8);
-          }
-        }
-        
-        input.value = valor.toUpperCase();
+      if (inputSenha.type === 'password') {
+        inputSenha.type = 'text';
+        icone.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        inputSenha.type = 'password';
+        icone.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+    
+    function alternarCampos() {
+      const tipo = document.querySelector('input[name="tipoProfissional"]:checked').value;
+      const campos = {
+        coren: document.getElementById('inputCoren'),
+        crm: document.getElementById('inputCrm'),
+        email: document.getElementById('inputEmail')
+      };
+      const inputs = {
+        coren: document.getElementById('coren'),
+        crm: document.getElementById('crm'),
+        email: document.getElementById('emailProfissional')
       };
       
-      campoCoren.addEventListener('input', () => formatarRegistroProfissional(campoCoren, 'coren'));
-      campoCrm.addEventListener('input', () => formatarRegistroProfissional(campoCrm, 'crm'));
+      Object.values(campos).forEach(campo => campo.classList.remove('ativo'));
+      Object.values(inputs).forEach(input => {
+        input.disabled = true;
+        input.removeAttribute('required');
+      });
+      
+      if (tipo === 'medico') {
+        campos.crm.classList.add('ativo');
+        inputs.crm.disabled = false;
+        inputs.crm.setAttribute('required', '');
+      } else if (tipo === 'enfermeiro') {
+        campos.coren.classList.add('ativo');
+        inputs.coren.disabled = false;
+        inputs.coren.setAttribute('required', '');
+      } else {
+        campos.email.classList.add('ativo');
+        inputs.email.disabled = false;
+        inputs.email.setAttribute('required', '');
+      }
+    }
+    
+    function validarFormulario(event) {
+      event.preventDefault();
+      const tipo = document.querySelector('input[name="tipoProfissional"]:checked').value;
+      let valido = true;
+      
+      if (tipo === 'medico' && document.getElementById('crm').value.trim() === '') {
+        valido = false;
+        alert('Por favor, insira seu CRM');
+      } else if (tipo === 'enfermeiro' && document.getElementById('coren').value.trim() === '') {
+        valido = false;
+        alert('Por favor, insira seu COREN');
+      } else if ((tipo === 'agente' || tipo === 'gestor') && 
+                 document.getElementById('emailProfissional').value.trim() === '') {
+        valido = false;
+        alert('Por favor, insira seu e-mail institucional');
+      }
+      
+      if (document.getElementById('senhaProfissional').value.trim() === '') {
+        valido = false;
+        alert('Por favor, insira sua senha');
+      }
+      
+      if (valido) {
+        alert('Login enviado com sucesso!');
+      }
+    }
+    
+    // Formatar CRM/COREN
+    document.getElementById('coren').addEventListener('input', function() {
+      let valor = this.value.replace(/\D/g, '');
+      if (valor.length > 6) valor = valor.substring(0, 6) + '/' + valor.substring(6, 8);
+      this.value = valor.toUpperCase();
+    });
+    
+    document.getElementById('crm').addEventListener('input', function() {
+      let valor = this.value.replace(/\D/g, '');
+      if (valor.length > 5) valor = valor.substring(0, 5) + '/' + valor.substring(5, 7);
+      this.value = valor.toUpperCase();
     });
   </script>
 </body>
