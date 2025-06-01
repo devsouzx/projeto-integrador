@@ -48,5 +48,17 @@ func InitRoutes(r *gin.RouterGroup) {
 		medico.GET("/encaminhamentos", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "encaminhamentos-lista-medico.html", nil)
 		})
+
+		medico.GET("/encaminhamentos/novo", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "encaminhamento-medico.html", nil)
+		})
+
+		medico.GET("/laudos/novo", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "laudo-medico.html", nil)
+		})
+
+		medico.GET("/medicos/pacientes/123456", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "paciente-medico.html", nil)
+		})
 	}
 }
