@@ -363,19 +363,21 @@
     /* Responsividade */
     @media (max-width: 768px) {
       .navegacao-superior {
-      padding: 0.5rem 0.5rem;
+        padding: 0.5rem 0.5rem;
       }
 
       .logo {
-      font-size: 1rem;
-      white-space: nowrap;
-      margin-right: 0.5rem;
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
       }
+      
       .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
+      
       .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
@@ -389,6 +391,11 @@
         margin-left: 0;
         flex: 0 0 auto;
       }
+      
+      .info-usuario {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
 
       .grade-especialidades {
         grid-template-columns: 1fr;
@@ -396,6 +403,33 @@
 
       .niveis-urgencia {
         grid-template-columns: 1fr;
+      }
+
+      .encaminhamentos-anteriores {
+        overflow-x: auto;
+        padding: 1rem;
+      }
+  
+      .tabela-dados {
+        width: 100%;
+        min-width: 600px;
+      }
+  
+      .tabela-dados th,
+      .tabela-dados td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9rem;
+      }
+  
+      .etiqueta {
+        display: block;
+        text-align: center;
+        margin: 0.25rem 0;
+      }
+  
+      .link-acao {
+        display: block;
+        text-align: center;
       }
     }
     
@@ -535,14 +569,6 @@
           <button type="button" class="botao botao-secundario" onclick="document.getElementById('entradaArquivo').click()">
             <i class="fas fa-paperclip"></i> Anexar Arquivos
           </button>
-          <input type="file" id="entradaArquivo" style="display: none;" onchange="document.getElementById('visualizacaoArquivo').style.display = 'flex'; document.getElementById('visualizacaoArquivo').querySelector('span').textContent = this.files[0]?.name || 'preventivo_062025.pdf'">
-          <div class="visualizacao-arquivo" id="visualizacaoArquivo" style="display: flex;">
-            <i class="fas fa-file-pdf" style="color: var(--perigo);"></i>
-            <span>preventivo_062025.pdf</span>
-            <button type="button" style="background: none; border: none; color: var(--perigo); cursor: pointer;" onclick="this.parentElement.style.display = 'none'; document.getElementById('entradaArquivo').value = ''">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
         </div>
       </div>
 

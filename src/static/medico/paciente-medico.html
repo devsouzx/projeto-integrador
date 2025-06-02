@@ -357,11 +357,13 @@
         white-space: nowrap;
         margin-right: 0.5rem;
       }
+      
       .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
+      
       .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
@@ -375,33 +377,81 @@
         margin-left: 0;
         flex: 0 0 auto;
       }
-
-      .cabecalho-perfil {
-        flex-direction: column;
-        text-align: center;
+      
+      .info-usuario {
+        justify-content: center;
+        margin-top: 0.5rem;
       }
 
-      .item-linha-tempo {
-        flex-direction: column;
-      }
+      .cabecalho {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
 
-      .data-linha-tempo {
-        width: 100%;
-        margin-bottom: 0.5rem;
-      }
+  .cabecalho-perfil {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
 
-      .conteudo-linha-tempo {
-        padding-left: 1rem;
-        border-left: none;
-        border-top: 2px solid var(--secundaria);
-        padding-top: 1rem;
-      }
+  .grade-dados-paciente {
+    grid-template-columns: 1fr;
+  }
 
-      .conteudo-linha-tempo::before {
-        left: 50%;
-        top: -6px;
-        transform: translateX(-50%);
-      }
+  .container-abas {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+
+  .container-abas::-webkit-scrollbar {
+    display: none;
+  }
+
+  .aba {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .item-linha-tempo {
+    flex-direction: column;
+  }
+
+  .data-linha-tempo {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .conteudo-linha-tempo {
+    padding-left: 1rem;
+    border-left: none;
+    border-top: 2px solid var(--secundaria);
+    padding-top: 1rem;
+  }
+
+  .conteudo-linha-tempo::before {
+    left: 50%;
+    top: -6px;
+    transform: translateX(-50%);
+  }
+
+  /* Modal mobile */
+  .conteudo-modal {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .titulo-modal {
+    font-size: 1.2rem;
+  }
+
+  /* Botões em mobile */
+  .botao {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
     }
   </style>
 </head>
