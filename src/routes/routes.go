@@ -7,23 +7,26 @@ import (
 )
 
 func InitRoutes(r *gin.RouterGroup) {
-  r.GET("/login", func(c *gin.Context) {
-    c.HTML(http.StatusOK, "login-paciente.html", nil)
-  })
+	auth := r.Group("/")
+	{
+		auth.GET("/login", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "login-paciente.html", nil)
+		})
 
-  r.GET("/login-profissionais", func(c *gin.Context) {
-    c.HTML(http.StatusOK, "login-profissionais.html", nil)
-  })
+		auth.GET("/login-profissionais", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "login-profissionais.html", nil)
+		})
 
-  r.GET("/cadastro", func(c *gin.Context) {
-    c.HTML(http.StatusOK, "cadastro-paciente.html", nil)
-  })
+		auth.GET("/cadastro", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "cadastro-paciente.html", nil)
+		})
 
-  r.GET("/recuperar-senha", func(c *gin.Context) {
-    c.HTML(http.StatusOK, "recuperar-senha.html", nil)
-  })
+		auth.GET("/recuperar-senha", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "recuperar-senha.html", nil)
+		})
+	}
 
-  medico := r.Group("/medico")
+	medico := r.Group("/medico") 
 	{
 		medico.GET("/dashboard", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "dashboard-medico.html", nil)
@@ -59,6 +62,29 @@ func InitRoutes(r *gin.RouterGroup) {
 
 		medico.GET("/medicos/pacientes/123456", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "paciente-medico.html", nil)
+		})
+	}	
+
+	enfermeira := r.Group("/enfermeira")
+	{
+		enfermeira.GET("/dashboard", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
+		})
+
+		enfermeira.GET("/nova-ficha", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
+		})
+
+		enfermeira.GET("/consultar", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
+		})
+
+		enfermeira.GET("/agendamentos", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
+		})
+
+		enfermeira.GET("/relatorios", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
 		})
 	}
 }
