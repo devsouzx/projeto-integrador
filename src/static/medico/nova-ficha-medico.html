@@ -314,13 +314,17 @@
             <span class="mensagem-erro">Por favor, informe o CNES da unidade</span>
           </div>
           <div class="grupo-formulario">
-            <label for="unidade" class="rotulo-formulario campo-obrigatorio">Nome da Unidade</label>
-            <input type="text" id="unidade" class="controle-formulario" required>
-            <span class="mensagem-erro">Por favor, informe o nome da unidade</span>
+            <label for="protocolo" class="rotulo-formulario">N° Protocolo</label>
+            <input type="text" id="protocolo" class="controle-formulario" readonly>
           </div>
         </div>
         
         <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="unidade" class="rotulo-formulario campo-obrigatorio">Nome da Unidade</label>
+            <input type="text" id="unidade" class="controle-formulario" required>
+            <span class="mensagem-erro">Por favor, informe o nome da unidade</span>
+          </div>
           <div class="grupo-formulario">
             <label for="municipio" class="rotulo-formulario campo-obrigatorio">Município</label>
             <input type="text" id="municipio" class="controle-formulario" required>
@@ -373,12 +377,16 @@
             <span class="mensagem-erro">Por favor, informe o nome completo</span>
           </div>
           <div class="grupo-formulario">
-            <label for="mae" class="rotulo-formulario">Nome da Mãe</label>
-            <input type="text" id="mae" class="controle-formulario">
+            <label for="apelido" class="rotulo-formulario">Apelido</label>
+            <input type="text" id="apelido" class="controle-formulario">
           </div>
         </div>
         
         <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="mae" class="rotulo-formulario">Nome da Mãe</label>
+            <input type="text" id="mae" class="controle-formulario">
+          </div>
           <div class="grupo-formulario">
             <label for="nascimento" class="rotulo-formulario campo-obrigatorio">Data de Nascimento</label>
             <input type="date" id="nascimento" class="controle-formulario" required>
@@ -388,6 +396,13 @@
             <label for="idade" class="rotulo-formulario campo-obrigatorio">Idade</label>
             <input type="number" id="idade" class="controle-formulario" min="0" max="120" required>
             <span class="mensagem-erro">Por favor, informe a idade</span>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="nacionalidade" class="rotulo-formulario">Nacionalidade</label>
+            <input type="text" id="nacionalidade" class="controle-formulario" value="Brasileira">
           </div>
           <div class="grupo-formulario">
             <label for="cor" class="rotulo-formulario campo-obrigatorio">Raça/Cor</label>
@@ -400,6 +415,17 @@
               <option value="indigena">Indígena</option>
             </select>
             <span class="mensagem-erro">Por favor, selecione a raça/cor</span>
+          </div>
+          <div class="grupo-formulario">
+            <label for="escolaridade" class="rotulo-formulario">Escolaridade</label>
+            <select id="escolaridade" class="controle-formulario">
+              <option value="">Selecione</option>
+              <option value="analfabeta">Analfabeta</option>
+              <option value="fundamental_incompleto">Ensino Fundamental Incompleto</option>
+              <option value="fundamental_completo">Ensino Fundamental Completo</option>
+              <option value="medio_completo">Ensino Médio Completo</option>
+              <option value="superior_completo">Ensino Superior Completo</option>
+            </select>
           </div>
         </div>
         
@@ -417,67 +443,204 @@
       </div>
       
       <div class="secao-formulario">
+        <h2 class="titulo-secao">Dados Residenciais</h2>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="logradouro" class="rotulo-formulario">Logradouro</label>
+            <input type="text" id="logradouro" class="controle-formulario">
+          </div>
+          <div class="grupo-formulario">
+            <label for="numero" class="rotulo-formulario">Número</label>
+            <input type="text" id="numero" class="controle-formulario">
+          </div>
+          <div class="grupo-formulario">
+            <label for="complemento" class="rotulo-formulario">Complemento</label>
+            <input type="text" id="complemento" class="controle-formulario">
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="bairro" class="rotulo-formulario">Bairro</label>
+            <input type="text" id="bairro" class="controle-formulario">
+          </div>
+          <div class="grupo-formulario">
+            <label for="codigo_municipio" class="rotulo-formulario">Código do Município</label>
+            <input type="text" id="codigo_municipio" class="controle-formulario">
+          </div>
+          <div class="grupo-formulario">
+            <label for="municipio_residencia" class="rotulo-formulario">Município</label>
+            <input type="text" id="municipio_residencia" class="controle-formulario">
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="cep" class="rotulo-formulario">CEP</label>
+            <input type="text" id="cep" class="controle-formulario">
+          </div>
+          <div class="grupo-formulario">
+            <label for="referencia" class="rotulo-formulario">Ponto de Referência</label>
+            <input type="text" id="referencia" class="controle-formulario">
+          </div>
+          <div class="grupo-formulario">
+            <label for="telefone" class="rotulo-formulario">Telefone</label>
+            <input type="text" id="telefone" class="controle-formulario" placeholder="(DDD) XXXXX-XXXX">
+          </div>
+        </div>
+      </div>
+      
+      <div class="secao-formulario">
         <h2 class="titulo-secao">Anamnese</h2>
         
         <div class="linha-formulario">
           <div class="grupo-formulario">
-            <label for="menarca" class="rotulo-formulario">Idade da Menarca</label>
-            <input type="number" id="menarca" class="controle-formulario" min="0" max="30">
+            <label class="rotulo-formulario campo-obrigatorio">Motivo do exame</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="motivo_exame" value="rastreamento" required> Rastreamento
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="motivo_exame" value="repeticao"> Repetição (exame alterado ASCUS/Baixo grau)
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="motivo_exame" value="seguimento"> Seguimento (pós diagnóstico colposcópico/tratamento)
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione o motivo do exame</span>
           </div>
           <div class="grupo-formulario">
-            <label for="menopausa" class="rotulo-formulario">Menopausa</label>
-            <select id="menopausa" class="controle-formulario">
-              <option value="nao">Não</option>
-              <option value="sim">Sim</option>
-              <option value="cirurgica">Menopausa Cirúrgica</option>
-            </select>
-          </div>
-          <div class="grupo-formulario">
-            <label for="idade_menopausa" class="rotulo-formulario">Idade da Menopausa</label>
-            <input type="number" id="idade_menopausa" class="controle-formulario" min="0" max="70" disabled>
-          </div>
-        </div>
-        
-        <div class="linha-formulario">
-          <div class="grupo-formulario">
-            <label for="gestacoes" class="rotulo-formulario">Nº de Gestações</label>
-            <input type="number" id="gestacoes" class="controle-formulario" min="0" max="20">
-          </div>
-          <div class="grupo-formulario">
-            <label for="partos" class="rotulo-formulario">Nº de Partos</label>
-            <input type="number" id="partos" class="controle-formulario" min="0" max="20">
-          </div>
-          <div class="grupo-formulario">
-            <label for="abortos" class="rotulo-formulario">Nº de Abortos</label>
-            <input type="number" id="abortos" class="controle-formulario" min="0" max="20">
-          </div>
-        </div>
-        
-        <div class="linha-formulario">
-          <div class="grupo-formulario">
-            <label for="hormonais" class="rotulo-formulario">Uso de Hormonais</label>
-            <select id="hormonais" class="controle-formulario">
-              <option value="nao">Não</option>
-              <option value="sim">Sim</option>
-            </select>
-          </div>
-          <div class="grupo-formulario">
-            <label for="tempo_hormonais" class="rotulo-formulario">Tempo de Uso (anos)</label>
-            <input type="number" id="tempo_hormonais" class="controle-formulario" min="0" max="50" disabled>
+            <label class="rotulo-formulario campo-obrigatorio">Fez o exame preventivo (Papanicolaou) alguma vez?</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="fez_exame" value="sim" required> Sim
+              </label>
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: 1.5rem;">
+                <span>Quando fez o último exame?</span>
+                <input type="text" id="ultimo_exame_ano" style="width: 60px;" placeholder="ano">
+              </div>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="fez_exame" value="nao"> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="fez_exame" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
           </div>
         </div>
         
         <div class="linha-formulario">
           <div class="grupo-formulario">
-            <label for="dum" class="rotulo-formulario">Data da Última Menstruação</label>
+            <label class="rotulo-formulario campo-obrigatorio">Usa DIU?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="usa_diu" value="sim" required> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="usa_diu" value="nao"> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="usa_diu" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario campo-obrigatorio">Está grávida?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="gravida" value="sim" required> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="gravida" value="nao"> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="gravida" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario campo-obrigatorio">Usa pílula anticoncepcional?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="anticoncepcional" value="sim" required> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="anticoncepcional" value="nao"> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="anticoncepcional" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Usa hormônio/remédio para tratar a menopausa?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="hormonio_menopausa" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="hormonio_menopausa" value="nao"> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="hormonio_menopausa" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Já fez tratamento por radioterapia?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="radioterapia" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="radioterapia" value="nao"> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="radioterapia" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="dum" class="rotulo-formulario">Data da última menstruação/regra</label>
             <input type="date" id="dum" class="controle-formulario">
+            <div style="margin-top: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="checkbox" id="nao_lembra_dum"> Não sabe/Não lembra
+              </label>
+            </div>
           </div>
           <div class="grupo-formulario">
-            <label for="ciclo" class="rotulo-formulario">Ciclo Menstrual</label>
-            <select id="ciclo" class="controle-formulario">
-              <option value="regular">Regular</option>
-              <option value="irregular">Irregular</option>
-            </select>
+            <label class="rotulo-formulario">Tem ou teve algum sangramento após relações sexuais?</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sangramento_pos_coito" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sangramento_pos_coito" value="nao"> Não/Não sabe/Não lembra
+              </label>
+            </div>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Tem ou teve algum sangramento após a menopausa?</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sangramento_pos_menopausa" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sangramento_pos_menopausa" value="nao"> Não/Não sabe/Não lembra/Não está na menopausa
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -487,9 +650,9 @@
         
         <div class="linha-formulario">
           <div class="grupo-formulario">
-            <label for="data_exame" class="rotulo-formulario campo-obrigatorio">Data do Exame</label>
-            <input type="date" id="data_exame" class="controle-formulario" required>
-            <span class="mensagem-erro">Por favor, informe a data do exame</span>
+            <label for="data_coleta" class="rotulo-formulario campo-obrigatorio">Data da coleta</label>
+            <input type="date" id="data_coleta" class="controle-formulario" required>
+            <span class="mensagem-erro">Por favor, informe a data da coleta</span>
           </div>
           <div class="grupo-formulario">
             <label for="responsavel" class="rotulo-formulario campo-obrigatorio">Responsável pela Coleta</label>
@@ -499,22 +662,33 @@
         
         <div class="linha-formulario">
           <div class="grupo-formulario">
-            <label for="adequabilidade" class="rotulo-formulario campo-obrigatorio">Adequabilidade do Material</label>
-            <select id="adequabilidade" class="controle-formulario" required>
-              <option value="">Selecione</option>
-              <option value="satisfatorio">Satisfatório</option>
-              <option value="insatisfatorio">Insatisfatório</option>
-            </select>
-            <span class="mensagem-erro">Por favor, selecione a adequabilidade</span>
+            <label class="rotulo-formulario campo-obrigatorio">Inspeção do colo</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="inspecao_colo" value="normal" required> Normal
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="inspecao_colo" value="ausente"> Ausente (anomalias congênitas ou retirado cirurgicamente)
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="inspecao_colo" value="alterado"> Alterado
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="inspecao_colo" value="nao_visualizado"> Colo não visualizado
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
           </div>
           <div class="grupo-formulario">
-            <label for="aspecto" class="rotulo-formulario campo-obrigatorio">Aspecto do Colo</label>
-            <select id="aspecto" class="controle-formulario" required>
-              <option value="">Selecione</option>
-              <option value="normal">Normal</option>
-              <option value="alterado">Alterado</option>
-            </select>
-            <span class="mensagem-erro">Por favor, selecione o aspecto do colo</span>
+            <label class="rotulo-formulario">Sinais sugestivos de doenças sexualmente transmissíveis?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sinais_dst" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sinais_dst" value="nao"> Não
+              </label>
+            </div>
           </div>
         </div>
         
@@ -534,25 +708,50 @@
   </main>
 
   <script>
-    document.getElementById('formularioCitopatologico').addEventListener('submit', function(e) {
-      e.preventDefault();
-      let isValid = true;
+    document.addEventListener('DOMContentLoaded', function() {
+      // Gerar número de protocolo automático
+      const protocolo = 'BR' + new Date().getFullYear() + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+      document.getElementById('protocolo').value = protocolo;
       
-      document.querySelectorAll('[required]').forEach(field => {
-        if (!field.value) {
-          field.closest('.grupo-formulario').classList.add('tem-erro');
-          isValid = false;
-        } else {
-          field.closest('.grupo-formulario').classList.remove('tem-erro');
-        }
+      // Habilitar/desabilitar campos condicionais
+      const menopausaRadios = document.querySelectorAll('input[name="hormonio_menopausa"]');
+      menopausaRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          document.getElementById('idade_menopausa').disabled = this.value !== 'sim';
+        });
       });
       
-      if (isValid) {
-        alert('Ficha cadastrada com sucesso!');
-        this.reset();
-      } else {
-        alert('Por favor, preencha todos os campos obrigatórios.');
-      }
+      // Desabilitar data DUM se não lembra
+      document.getElementById('nao_lembra_dum').addEventListener('change', function() {
+        document.getElementById('dum').disabled = this.checked;
+        if(this.checked) document.getElementById('dum').value = '';
+      });
+      
+      // Validar formulário
+      document.getElementById('formularioCitopatologico').addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        
+        document.querySelectorAll('[required]').forEach(field => {
+          if ((field.type === 'radio' && !document.querySelector(`input[name="${field.name}"]:checked`)) || 
+              (field.type !== 'radio' && !field.value)) {
+            const container = field.closest('.grupo-formulario') || field.closest('div').previousElementSibling?.closest('.grupo-formulario');
+            if(container) container.classList.add('tem-erro');
+            isValid = false;
+          } else {
+            const container = field.closest('.grupo-formulario') || field.closest('div').previousElementSibling?.closest('.grupo-formulario');
+            if(container) container.classList.remove('tem-erro');
+          }
+        });
+        
+        if (isValid) {
+          alert('Ficha cadastrada com sucesso!');
+          this.reset();
+          document.getElementById('protocolo').value = 'BR' + new Date().getFullYear() + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+        } else {
+          alert('Por favor, preencha todos os campos obrigatórios.');
+        }
+      });
     });
   </script>
 </body>
