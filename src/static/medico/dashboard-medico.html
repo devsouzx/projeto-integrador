@@ -9,13 +9,6 @@
     :root {
       --primaria: #9b59b6;
       --secundaria: #8e44ad;
-      --perigo: #e74c3c;
-      --aviso: #f39c12;
-      --sucesso: #2ecc71;
-      --cinza-claro: #f5f7fa;
-      --cinza-escuro: #333333;
-      --lilas-claro: #f0e5f5;
-      --lilas-escuro: #6a3d77;
     }
 
     * {
@@ -27,7 +20,7 @@
     
     body {
       background: rgba(214, 174, 241, 0.15);
-      color: var(--cinza-escuro);
+      color: #333333;
     }
     
     .navegacao-superior {
@@ -90,7 +83,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
     }
     
     .conteudo-principal {
@@ -121,7 +114,7 @@
       position: absolute;
       top: -5px;
       right: -5px;
-      background-color: var(--perigo);
+      background-color: #e74c3c;
       color: white;
       border-radius: 50%;
       width: 18px;
@@ -144,7 +137,7 @@
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      border-top: 4px solid var(--lilas-claro);
+      border-top: 4px solid #f0e5f5;
     }
     
     .cabecalho-card {
@@ -180,7 +173,7 @@
     }
     
     .icone-aviso {
-      background-color: var(--aviso);
+      background-color: #f39c12;
     }
     
     .lista-exames {
@@ -189,7 +182,7 @@
     
     .item-exame {
       padding: 0.75rem 0;
-      border-bottom: 1px solid var(--lilas-claro);
+      border-bottom: 1px solid #f0e5f5;
     }
     
     .item-exame:ultimo {
@@ -211,7 +204,7 @@
     
     .status-pendente {
       background-color: #ffebf3;
-      color: var(--perigo);
+      color: #e74c3c;
     }
     
     .status-concluido {
@@ -221,8 +214,8 @@
     
     .status-perigo {
       background-color: #ffebf3;
-      color: var(--perigo);
-      border: 1px solid var(--perigo);
+      color: #e74c3c;
+      border: 1px solid #e74c3c;
     }
     
     .botao {
@@ -242,7 +235,7 @@
     }
     
     .botao-primario:hover {
-      background-color: var(--lilas-escuro);
+      background-color: #6a3d77;
       transform: translateY(-2px);
     }
     
@@ -262,7 +255,7 @@
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      border-top: 4px solid var(--lilas-claro);
+      border-top: 4px solid #f0e5f5;
     }
     
     .grade-informacoes {
@@ -273,7 +266,7 @@
     }
     
     .card-informacao {
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
       padding: 1rem;
       border-radius: 6px;
       border-left: 4px solid var(--primaria);
@@ -343,13 +336,13 @@
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      border-top: 4px solid var(--lilas-claro);
+      border-top: 4px solid #f0e5f5;
       margin-bottom: 2rem;
     }
 
     .item-prioridade {
       padding: 1rem;
-      border-bottom: 1px solid var(--lilas-claro);
+      border-bottom: 1px solid #f0e5f5;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -359,15 +352,15 @@
     }
 
     .prioridade-alta {
-      border-left: 4px solid var(--perigo);
+      border-left: 4px solid #e74c3c;
     }
 
     .prioridade-media {
-      border-left: 4px solid var(--aviso);
+      border-left: 4px solid #f39c12;
     }
 
     .prioridade-baixa {
-      border-left: 4px solid var(--sucesso);
+      border-left: 4px solid #2ecc71;
     }
     
     .modal {
@@ -411,7 +404,7 @@
       border: none;
       font-size: 1.5rem;
       cursor: pointer;
-      color: var(--perigo);
+      color: #e74c3c;
     }
 
     .historico-paciente {
@@ -420,7 +413,7 @@
 
     .item-historico {
       padding: 1rem;
-      border-bottom: 1px solid var(--lilas-claro);
+      border-bottom: 1px solid #f0e5f5;
     }
 
     .item-historico:ultimo {

@@ -10,13 +10,6 @@
     :root {
       --primaria: #9b59b6;
       --secundaria: #8e44ad;
-      --perigo: #e74c3c;
-      --aviso: #f39c12;
-      --sucesso: #2ecc71;
-      --cinza-claro: #f5f7fa;
-      --cinza-medio: #e0e0e0;
-      --cinza-escuro: #333333;
-      --lilas-claro: #f0e5f5;
     }
 
     * {
@@ -28,7 +21,7 @@
 
     body {
       background: rgba(214, 174, 241, 0.15);
-      color: var(--cinza-escuro);
+      color: #333333;
     }
     
     .navegacao-superior {
@@ -91,7 +84,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
     }
 
     .conteudo-principal {
@@ -148,7 +141,7 @@
     }
 
     .botao-secundario:hover {
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
     }
 
     .botao-pequeno {
@@ -177,7 +170,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid var(--secundaria);
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
     }
 
     .grade-dados-paciente {
@@ -218,7 +211,7 @@
     
     .container-abas {
       display: flex;
-      border-bottom: 1px solid var(--cinza-medio);
+      border-bottom: 1px solid #e0e0e0;
       margin-bottom: 1.5rem;
     }
 
@@ -227,7 +220,7 @@
       cursor: pointer;
       border-bottom: 2px solid transparent;
       font-weight: 500;
-      color: var(--cinza-escuro);
+      color: #333333;
     }
 
     .aba.ativa {
@@ -275,7 +268,7 @@
       padding: 1.5rem;
       margin-bottom: 1rem;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      border: 1px solid var(--cinza-medio);
+      border: 1px solid #e0e0e0;
     }
 
     .etiqueta {
@@ -300,8 +293,7 @@
       background-color: #f8d7da;
       color: #721c24;
     }
-
-    /* Modal */
+    
     .modal {
       display: none;
       position: fixed;
@@ -343,7 +335,7 @@
       border: none;
       font-size: 1.5rem;
       cursor: pointer;
-      color: var(--perigo);
+      color: #e74c3c;
     }
 
     /* Responsividade */
@@ -436,8 +428,7 @@
     top: -6px;
     transform: translateX(-50%);
   }
-
-  /* Modal mobile */
+  
   .conteudo-modal {
     width: 95%;
     padding: 1rem;
@@ -446,8 +437,7 @@
   .titulo-modal {
     font-size: 1.2rem;
   }
-
-  /* Botões em mobile */
+  
   .botao {
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
@@ -618,7 +608,7 @@
       <form>
         <div style="margin-bottom: 1.5rem;">
           <label for="historiaClinica" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">História Clínica</label>
-          <textarea id="historiaClinica" name="historiaClinica" style="width: 100%; padding: 0.75rem; border: 1px solid var(--cinza-medio); border-radius: 6px; min-height: 100px;"></textarea>
+          <textarea id="historiaClinica" name="historiaClinica" style="width: 100%; padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; min-height: 100px;"></textarea>
         </div>
         
         <div style="margin-bottom: 1.5rem;">

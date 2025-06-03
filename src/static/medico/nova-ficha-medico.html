@@ -9,13 +9,6 @@
     :root {
       --primaria: #9b59b6;
       --secundaria: #8e44ad;
-      --perigo: #e74c3c;
-      --aviso: #f39c12;
-      --sucesso: #2ecc71;
-      --cinza-claro: #f5f7fa;
-      --cinza-medio: #e0e0e0;
-      --cinza-escuro: #333333;
-      --lilas-claro: #f0e5f5;
     }
     
     * {
@@ -27,7 +20,7 @@
     
     body {
       background: rgba(214, 174, 241, 0.15);
-      color: var(--cinza-escuro);
+      color: #333333;
     }
     
     .navegacao-superior {
@@ -90,7 +83,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
     }
     
     .conteudo-principal {
@@ -132,7 +125,7 @@
       color: var(--primaria);
       margin-bottom: 1rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--cinza-medio);
+      border-bottom: 1px solid #e0e0e0;
     }
     
     .linha-formulario {
@@ -171,7 +164,7 @@
     
     .campo-obrigatorio::after {
       content: " *";
-      color: var(--perigo);
+      color: #e74c3c;
     }
     
     .acoes-formulario {
@@ -212,14 +205,14 @@
     }
     
     .mensagem-erro {
-      color: var(--perigo);
+      color: #e74c3c;
       font-size: 0.8rem;
       margin-top: 0.25rem;
       display: none;
     }
     
     .tem-erro .controle-formulario {
-      border-color: var(--perigo);
+      border-color: #e74c3c;
     }
     
     .tem-erro .mensagem-erro {

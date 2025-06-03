@@ -10,13 +10,6 @@
     :root {
       --primaria: #9b59b6;
       --secundaria: #8e44ad;
-      --perigo: #e74c3c;
-      --aviso: #f39c12;
-      --sucesso: #2ecc71;
-      --cinza-claro: #f5f7fa;
-      --cinza-medio: #e0e0e0;
-      --cinza-escuro: #333333;
-      --lilas-claro: #f0e5f5;
     }
 
     * {
@@ -28,7 +21,7 @@
 
     body {
       background: rgba(214, 174, 241, 0.15);
-      color: var(--cinza-escuro);
+      color: #333333;
     }
     
     .navegacao-superior {
@@ -91,7 +84,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
     }
 
     .conteudo-principal {
@@ -147,7 +140,7 @@
     }
 
     .botao-secundario:hover {
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
     }
 
     .busca-filtros {
@@ -167,7 +160,7 @@
     .entrada-busca {
       flex: 1;
       padding: 0.75rem 1rem;
-      border: 1px solid var(--cinza-medio);
+      border: 1px solid #e0e0e0;
       border-radius: 6px;
       font-size: 1rem;
     }
@@ -182,7 +175,7 @@
     .botao-filtro {
       padding: 0.5rem 1rem;
       border-radius: 20px;
-      border: 1px solid var(--cinza-medio);
+      border: 1px solid #e0e0e0;
       background-color: white;
       cursor: pointer;
       white-space: nowrap;
@@ -208,7 +201,7 @@
       padding: 1rem 1.5rem;
       background-color: #f8f9fa;
       font-weight: 600;
-      border-bottom: 1px solid var(--cinza-claro);
+      border-bottom: 1px solid #f5f7fa;
     }
 
     .item-paciente {
@@ -216,7 +209,7 @@
       grid-template-columns: 2fr 1fr 1fr 1fr auto;
       padding: 1rem 1.5rem;
       align-items: center;
-      border-bottom: 1px solid var(--cinza-claro);
+      border-bottom: 1px solid #f5f7fa;
       transition: background-color 0.2s;
       cursor: pointer;
     }
@@ -226,7 +219,7 @@
     }
 
     .item-paciente:hover {
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
     }
 
     .info-paciente {
@@ -239,7 +232,7 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background-color: var(--cinza-claro);
+      background-color: #f5f7fa;
       display: flex;
       align-items: center;
       justify-content: center;
