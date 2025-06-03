@@ -7,11 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-     --primary: #9b59b6;
-      --secondary: #8e44ad;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e0e0e0;
-      --dark-gray: #333333;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
     }
     
     * {
@@ -22,13 +19,12 @@
     }
     
     body {
-     background: rgba(214, 174, 241, 0.15);
-      color: var(--dark-gray);
+      background-color: rgba(214, 174, 241, 0.15);
+      color: #333333;
     }
     
-    /* Top Navigation */
-    .top-nav {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 0.75rem 1.5rem;
       position: sticky;
@@ -37,7 +33,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    .nav-container {
+    .container-navegacao {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -50,16 +46,16 @@
       font-size: 1.25rem;
     }
     
-    .nav-menu {
+    .menu-navegacao {
       display: flex;
       list-style: none;
     }
     
-    .nav-item {
+    .item-navegacao {
       margin-left: 1rem;
     }
     
-    .nav-link {
+    .link-navegacao {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -71,53 +67,52 @@
       gap: 0.5rem;
     }
     
-    .nav-link:hover, .nav-link.active {
+    .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
     }
     
-    .user-info {
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
     
-    .user-avatar {
+    .avatar-usuario {
       width: 40px;
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
+      background-color: #f0e5f5;
     }
     
-    /* Main Content */
-    .main-content {
+    .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
     
-    .header {
+    .cabecalho {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
     }
     
-    .page-title {
+    .titulo-pagina {
       font-size: 1.75rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .back-button {
-      color: var(--primary);
+    .botao-voltar {
+      color: var(--primaria);
       text-decoration: none;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
     
-    /* Search Container */
-    .search-container {
+    .container-busca {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
@@ -125,84 +120,82 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .search-title {
+    .titulo-busca {
       font-size: 1.2rem;
-      color: var(--primary);
+      color: var(--primaria);
       margin-bottom: 1rem;
     }
     
-    .search-form {
+    .formulario-busca {
       display: grid;
       grid-template-columns: 1fr 1fr auto;
       gap: 1rem;
       align-items: flex-end;
     }
     
-    .form-group {
+    .grupo-formulario {
       display: flex;
       flex-direction: column;
     }
     
-    .form-label {
+    .rotulo-formulario {
       margin-bottom: 0.5rem;
       font-size: 0.9rem;
       color: #666;
     }
     
-    .form-control {
+    .controle-formulario {
       padding: 0.75rem;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid #e0e0e0;
       border-radius: 6px;
       font-size: 1rem;
     }
     
-    /* Results Container */
-    .results-container {
+    .container-resultados {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .results-header {
+    .cabecalho-resultados {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
     }
     
-    .results-count {
+    .contador-resultados {
       color: #666;
     }
     
-    /* Patient Table */
-    .patient-table {
+    .tabela-pacientes {
       width: 100%;
       border-collapse: collapse;
     }
     
-    .patient-table th {
-      background-color: var(--primary);
+    .tabela-pacientes th {
+      background-color: var(--primaria);
       color: white;
       padding: 1rem;
       text-align: left;
     }
     
-    .patient-table td {
+    .tabela-pacientes td {
       padding: 1rem;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid #e0e0e0;
     }
     
-    .patient-table tr:last-child td {
+    .tabela-pacientes tr:last-child td {
       border-bottom: none;
     }
     
-    .patient-table tr:hover {
-      background-color: #f0f7ff;
+    .tabela-pacientes tr:hover {
+      background-color: #f5e9ff;
     }
     
-    .action-link {
-      color: var(--primary);
+    .link-acao {
+      color: var(--primaria);
       text-decoration: none;
       font-weight: 500;
       display: flex;
@@ -210,7 +203,7 @@
       gap: 0.5rem;
     }
     
-    .status-badge {
+    .etiqueta-status {
       display: inline-block;
       padding: 0.25rem 0.5rem;
       border-radius: 20px;
@@ -219,8 +212,8 @@
     }
     
     .status-normal {
-      background-color: #d4edda;
-      color: #155724;
+      background-color: #e8d5f2;
+      color: #5e2d7a;
     }
     
     .status-alterado {
@@ -228,8 +221,7 @@
       color: #721c24;
     }
     
-    /* Buttons */
-    .btn {
+    .botao {
       display: inline-block;
       padding: 0.75rem 1.5rem;
       border-radius: 6px;
@@ -240,17 +232,16 @@
       transition: all 0.3s;
     }
     
-    .btn-primary {
-      background-color: var(--primary);
+    .botao-primario {
+      background-color: var(--primaria);
       color: white;
     }
     
-    .btn-primary:hover {
-      background-color: #245e59;
+    .botao-primario:hover {
+      background-color: #7d3c98;
       transform: translateY(-2px);
     }
     
-    /* Modal */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -267,7 +258,7 @@
       transition: all 0.3s;
     }
 
-    .modal-overlay.active {
+    .modal-overlay.ativo {
       opacity: 1;
       visibility: visible;
     }
@@ -285,11 +276,11 @@
       overflow-y: auto;
     }
 
-    .modal-overlay.active .modal {
+    .modal-overlay.ativo .modal {
       transform: translateY(0);
     }
 
-    .modal-header {
+    .cabecalho-modal {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -301,12 +292,12 @@
       z-index: 1;
     }
 
-    .modal-title {
+    .titulo-modal {
       font-size: 1.25rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
 
-    .close-modal {
+    .fechar-modal {
       background: none;
       border: none;
       font-size: 1.5rem;
@@ -314,12 +305,12 @@
       color: #666;
     }
 
-    .info-section {
+    .secao-info {
       margin-bottom: 2rem;
     }
 
-    .info-section h4 {
-      color: var(--primary);
+    .secao-info h4 {
+      color: var(--primaria);
       margin-bottom: 1rem;
       display: flex;
       align-items: center;
@@ -328,7 +319,7 @@
 
     /* Responsividade */
     @media (max-width: 768px) {
-      .top-nav {
+      .navegacao-superior {
         padding: 0.5rem 0.5rem;
       }
 
@@ -337,12 +328,12 @@
         white-space: nowrap;
         margin-right: 0.5rem;
       }
-      .nav-container {
+      .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
-      .nav-menu {
+      .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
         white-space: nowrap;
@@ -351,112 +342,112 @@
         scrollbar-width: thin;
       }
 
-      .nav-item {
+      .item-navegacao {
         margin-left: 0;
         flex: 0 0 auto;
       }
       
-      .user-info {
+      .info-usuario {
         justify-content: center;
         margin-top: 0.5rem;
       }
       
-      .main-content {
+      .conteudo-principal {
         padding: 0 1rem;
       }
 
-  .patient-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
+      .tabela-pacientes {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
 
-  .search-form {
-    grid-template-columns: 1fr;
-  }
-  
-  .modal {
-    width: 95%;
-    padding: 1rem;
-  }
-  
-  .info-section > div {
-    grid-template-columns: 1fr !important;
-  }
-  
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
+      .formulario-busca {
+        grid-template-columns: 1fr;
+      }
+      
+      .modal {
+        width: 95%;
+        padding: 1rem;
+      }
+      
+      .secao-info > div {
+        grid-template-columns: 1fr !important;
+      }
+      
+      .cabecalho {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
 
-  .modal-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-  }
-  
-  .modal-actions .btn {
-    width: 100%;
-  }
+      .acoes-modal {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+      
+      .acoes-modal .botao {
+        width: 100%;
+      }
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <nav class="top-nav">
-    <div class="nav-container">
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
       <div class="logo">Área da Enfermeira</div>
       
-      <ul class="nav-menu">
-        <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
-        <li class="nav-item"><a href="ficha.html" class="nav-link"><i class="fas fa-file-medical"></i> Fichas</a></li>
-        <li class="nav-item"><a href="historico.html" class="nav-link active"><i class="fas fa-search"></i> Consultar</a></li>
-        <li class="nav-item"><a href="agendamentos.html" class="nav-link"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
-        <li class="nav-item"><a href="relatorios.html" class="nav-link"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="dashboard.html" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="ficha.html" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="historico.html" class="link-navegacao ativo"><i class="fas fa-search"></i> Consultar</a></li>
+        <li class="item-navegacao"><a href="agendamentos.html" class="link-navegacao"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
+        <li class="item-navegacao"><a href="relatorios.html" class="link-navegacao"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
       </ul>
       
-      <div class="user-info">
-        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Foto da enfermeira" class="user-avatar">
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto da enfermeira" class="avatar-usuario">
         <span>Enf. Ana Oliveira</span>
       </div>
     </div>
   </nav>
   
-  <main class="main-content">
-    <div class="header">
-      <h1 class="page-title">Consultar Pacientes</h1>
-      <a href="dashboard-enfermeira.html" class="back-button">
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Consultar Pacientes</h1>
+      <a href="dashboard-enfermeira.html" class="botao-voltar">
         <i class="fas fa-arrow-left"></i> Voltar
       </a>
     </div>
     
-    <div class="search-container">
-      <h2 class="search-title">Buscar Paciente</h2>
-      <form class="search-form">
-        <div class="form-group">
-          <label for="search-term" class="form-label">Nome, CPF ou Cartão SUS</label>
-          <input type="text" id="search-term" class="form-control" placeholder="Digite para buscar">
+    <div class="container-busca">
+      <h2 class="titulo-busca">Buscar Paciente</h2>
+      <form class="formulario-busca">
+        <div class="grupo-formulario">
+          <label for="termo-busca" class="rotulo-formulario">Nome, CPF ou Cartão SUS</label>
+          <input type="text" id="termo-busca" class="controle-formulario" placeholder="Digite para buscar">
         </div>
         
-        <div class="form-group">
-          <label for="search-date" class="form-label">Período</label>
-          <input type="date" id="search-date" class="form-control">
+        <div class="grupo-formulario">
+          <label for="data-busca" class="rotulo-formulario">Período</label>
+          <input type="date" id="data-busca" class="controle-formulario">
         </div>
         
-        <button type="submit" class="btn btn-primary" style="height: fit-content;">
+        <button type="submit" class="botao botao-primario" style="height: fit-content;">
           <i class="fas fa-search"></i> Buscar
         </button>
       </form>
     </div>
     
-    <div class="results-container">
-      <div class="results-header">
+    <div class="container-resultados">
+      <div class="cabecalho-resultados">
         <h2>Resultados da Busca</h2>
-        <div class="results-count">5 pacientes encontrados</div>
+        <div class="contador-resultados">5 pacientes encontrados</div>
       </div>
       
-      <table class="patient-table">
+      <table class="tabela-pacientes">
         <thead>
           <tr>
             <th>Paciente</th>
@@ -473,9 +464,9 @@
             <td>15/05/1985</td>
             <td>123 4567 8901 2345</td>
             <td>15/03/2025</td>
-            <td><span class="status-badge status-normal">Normal</span></td>
+            <td><span class="etiqueta-status status-normal">Normal</span></td>
             <td>
-              <a href="#" class="action-link" onclick="openViewModal('1')"><i class="fas fa-eye"></i> Visualizar</a>
+              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('1')"><i class="fas fa-eye"></i> Visualizar</a>
             </td>
           </tr>
           <tr>
@@ -483,9 +474,9 @@
             <td>22/10/1978</td>
             <td>234 5678 9012 3456</td>
             <td>10/01/2025</td>
-            <td><span class="status-badge status-normal">Normal</span></td>
+            <td><span class="etiqueta-status status-normal">Normal</span></td>
             <td>
-              <a href="#" class="action-link" onclick="openViewModal('2')"><i class="fas fa-eye"></i> Visualizar</a>
+              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('2')"><i class="fas fa-eye"></i> Visualizar</a>
             </td>
           </tr>
           <tr>
@@ -493,9 +484,9 @@
             <td>03/07/1990</td>
             <td>345 6789 0123 4567</td>
             <td>12/09/2024</td>
-            <td><span class="status-badge status-alterado">Alterado</span></td>
+            <td><span class="etiqueta-status status-alterado">Alterado</span></td>
             <td>
-              <a href="#" class="action-link" onclick="openViewModal('3')"><i class="fas fa-eye"></i> Visualizar</a>
+              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('3')"><i class="fas fa-eye"></i> Visualizar</a>
             </td>
           </tr>
           <tr>
@@ -503,9 +494,9 @@
             <td>28/02/1982</td>
             <td>456 7890 1234 5678</td>
             <td>20/05/2024</td>
-            <td><span class="status-badge status-normal">Normal</span></td>
+            <td><span class="etiqueta-status status-normal">Normal</span></td>
             <td>
-              <a href="#" class="action-link" onclick="openViewModal('4')"><i class="fas fa-eye"></i> Visualizar</a>
+              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('4')"><i class="fas fa-eye"></i> Visualizar</a>
             </td>
           </tr>
           <tr>
@@ -513,59 +504,55 @@
             <td>17/11/1975</td>
             <td>567 8901 2345 6789</td>
             <td>15/03/2024</td>
-            <td><span class="status-badge status-normal">Normal</span></td>
+            <td><span class="etiqueta-status status-normal">Normal</span></td>
             <td>
-              <a href="#" class="action-link" onclick="openViewModal('5')"><i class="fas fa-eye"></i> Visualizar</a>
+              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('5')"><i class="fas fa-eye"></i> Visualizar</a>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </main>
-
-  <!-- Modal de Visualização -->
-  <div class="modal-overlay" id="viewModal">
+  
+  <div class="modal-overlay" id="modalVisualizacao">
     <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Histórico Completo</h3>
-        <button class="close-modal" onclick="closeViewModal()">&times;</button>
+      <div class="cabecalho-modal">
+        <h3 class="titulo-modal">Histórico Completo</h3>
+        <button class="fechar-modal" onclick="fecharModalVisualizacao()">&times;</button>
       </div>
       
-      <div class="modal-body">
-        <!-- Dados Pessoais -->
-        <div class="info-section">
+      <div class="corpo-modal">
+        <div class="secao-info">
           <h4><i class="fas fa-user"></i> Dados Pessoais</h4>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-            <div><strong>Nome:</strong> <span id="patient-name">Maria da Silva</span></div>
-            <div><strong>Cartão SUS:</strong> <span id="patient-sus">123 4567 8901 2345</span></div>
-            <div><strong>Nascimento:</strong> <span id="patient-birth">15/05/1985 (39 anos)</span></div>
-            <div><strong>Telefone:</strong> <span id="patient-phone">(11) 98765-4321</span></div>
-            <div><strong>Endereço:</strong> <span id="patient-address">Rua das Flores, 123 - São Paulo/SP</span></div>
-            <div><strong>Última atualização:</strong> <span id="patient-update">15/03/2025</span></div>
+            <div><strong>Nome:</strong> <span id="nome-paciente">Maria da Silva</span></div>
+            <div><strong>Cartão SUS:</strong> <span id="sus-paciente">123 4567 8901 2345</span></div>
+            <div><strong>Nascimento:</strong> <span id="nascimento-paciente">15/05/1985 (39 anos)</span></div>
+            <div><strong>Telefone:</strong> <span id="telefone-paciente">(11) 98765-4321</span></div>
+            <div><strong>Endereço:</strong> <span id="endereco-paciente">Rua das Flores, 123 - São Paulo/SP</span></div>
+            <div><strong>Última atualização:</strong> <span id="atualizacao-paciente">15/03/2025</span></div>
           </div>
         </div>
         
-        <!-- Último Exame -->
-        <div class="info-section">
+        <div class="secao-info">
           <h4><i class="fas fa-flask"></i> Último Exame</h4>
           <div style="margin-top: 1rem;">
             <div style="display: flex; gap: 2rem; margin-bottom: 0.5rem;">
-              <div><strong>Data:</strong> <span id="last-exam-date">15/03/2025</span></div>
-              <div><strong>Tipo:</strong> <span id="last-exam-type">Preventivo (PCCU)</span></div>
-              <div><strong>Resultado:</strong> <span id="last-exam-result" class="status-badge status-normal">Normal</span></div>
+              <div><strong>Data:</strong> <span id="data-ultimo-exame">15/03/2025</span></div>
+              <div><strong>Tipo:</strong> <span id="tipo-ultimo-exame">Preventivo (PCCU)</span></div>
+              <div><strong>Resultado:</strong> <span id="resultado-ultimo-exame" class="etiqueta-status status-normal">Normal</span></div>
             </div>
-            <div><strong>Coletado por:</strong> <span id="last-exam-nurse">Enf. Ana Oliveira</span></div>
+            <div><strong>Coletado por:</strong> <span id="enfermeira-ultimo-exame">Enf. Ana Oliveira</span></div>
             <div style="margin-top: 1rem;">
               <strong>Observações:</strong> 
-              <p id="last-exam-notes">Material coletado sem intercorrências. Paciente orientada sobre retorno anual.</p>
+              <p id="observacoes-ultimo-exame">Material coletado sem intercorrências. Paciente orientada sobre retorno anual.</p>
             </div>
           </div>
         </div>
         
-        <!-- Histórico -->
-        <div class="info-section">
+        <div class="secao-info">
           <h4><i class="fas fa-history"></i> Histórico de Exames</h4>
-          <table class="patient-table" style="margin-top: 1rem;">
+          <table class="tabela-pacientes" style="margin-top: 1rem;">
             <thead>
               <tr>
                 <th>Data</th>
@@ -574,23 +561,23 @@
                 <th>Responsável</th>
               </tr>
             </thead>
-            <tbody id="exam-history">
+            <tbody id="historico-exames">
               <tr>
                 <td>15/03/2025</td>
                 <td>Preventivo (PCCU)</td>
-                <td><span class="status-badge status-normal">Normal</span></td>
+                <td><span class="etiqueta-status status-normal">Normal</span></td>
                 <td>Enf. Ana Oliveira</td>
               </tr>
               <tr>
                 <td>10/03/2024</td>
                 <td>Preventivo (PCCU)</td>
-                <td><span class="status-badge status-normal">Normal</span></td>
+                <td><span class="etiqueta-status status-normal">Normal</span></td>
                 <td>Enf. Carlos Souza</td>
               </tr>
               <tr>
                 <td>12/03/2023</td>
                 <td>Preventivo (PCCU)</td>
-                <td><span class="status-badge status-normal">Normal</span></td>
+                <td><span class="etiqueta-status status-normal">Normal</span></td>
                 <td>Enf. Juliana Santos</td>
               </tr>
             </tbody>
@@ -598,37 +585,36 @@
         </div>
       </div>
       
-      <div class="modal-actions">
-  <button class="btn" onclick="closeViewModal()">
-    <i class="fas fa-times"></i> Fechar
-  </button>
-  <button class="btn btn-primary" onclick="location.href='editar-ficha.html'">
-    <i class="fas fa-edit"></i> Editar
-  </button>
-  <button class="btn btn-primary">
-    <i class="fas fa-calendar-plus"></i> Agendar Novo Exame
-  </button>
-  <button class="btn btn-primary">
-    <i class="fas fa-file-pdf"></i> Emitir Relatório
-  </button>
-</div>
+      <div class="acoes-modal">
+        <button class="botao" onclick="fecharModalVisualizacao()">
+          <i class="fas fa-times"></i> Fechar
+        </button>
+        <button class="botao botao-primario" onclick="location.href='editar-ficha.html'">
+          <i class="fas fa-edit"></i> Editar
+        </button>
+        <button class="botao botao-primario">
+          <i class="fas fa-calendar-plus"></i> Agendar Novo Exame
+        </button>
+        <button class="botao botao-primario">
+          <i class="fas fa-file-pdf"></i> Emitir Relatório
+        </button>
+      </div>
     </div>
   </div>
 
   <script>
-    // Funções para o modal de visualização
-    function openViewModal(patientId) {
-      if (patientId === '3') {
-        document.getElementById('last-exam-result').className = 'status-badge status-alterado';
-        document.getElementById('last-exam-result').textContent = 'Alterado';
-        document.getElementById('last-exam-notes').textContent = 'Resultado alterado. Encaminhar para avaliação médica.';
+    function abrirModalVisualizacao(idPaciente) {
+      if (idPaciente === '3') {
+        document.getElementById('resultado-ultimo-exame').className = 'etiqueta-status status-alterado';
+        document.getElementById('resultado-ultimo-exame').textContent = 'Alterado';
+        document.getElementById('observacoes-ultimo-exame').textContent = 'Resultado alterado. Encaminhar para avaliação médica.';
       }
       
-      document.getElementById('viewModal').classList.add('active');
+      document.getElementById('modalVisualizacao').classList.add('ativo');
     }
 
-    function closeViewModal() {
-      document.getElementById('viewModal').classList.remove('active');
+    function fecharModalVisualizacao() {
+      document.getElementById('modalVisualizacao').classList.remove('ativo');
     }
   </script>
 </body>

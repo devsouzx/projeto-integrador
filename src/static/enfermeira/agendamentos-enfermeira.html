@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendamentos - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: #333333;
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: #f0e5f5;
+    }
+    
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+    
+    .sino-notificacao {
+      position: relative;
+      font-size: 1.25rem;
+      color: var(--primaria);
+    }
+    
+    .badge-notificacao {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: #f8d7da;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .grade-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .cabecalho-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .titulo-card {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    
+    .icone-card {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    
+    .icone-primaria {
+      background-color: var(--primaria);
+    }
+    
+    .icone-secundaria {
+      background-color: var(--secundaria);
+    }
+    
+    .icone-alerta {
+      background-color: #fff3cd;
+    }
+    
+    .lista-exames {
+      list-style: none;
+    }
+    
+    .item-exame {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .item-exame:ultimo {
+      border-bottom: none;
+    }
+    
+    .data-exame {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    
+    .status-exame {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .status-pendente {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .status-concluido {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    .status-perigo {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .botao-primaria {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .botao-primaria:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+    }
+    
+    .botao-bloco {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .secao-informacao {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .grade-informacao {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .card-informacao {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    
+    .card-informacao h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--primaria);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .card-informacao p {
+      font-size: 0.9rem;
+    }
+    
+    .container-calendario {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+    }
+
+    .cabecalho-calendario {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .navegacao-calendario button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      color: var(--primaria);
+    }
+
+    .grade-calendario {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+
+    .dia-calendario {
+      padding: 1rem;
+      text-align: center;
+      border-radius: 6px;
+      background-color: #f8f9fa;
+    }
+
+    .dia-calendario.cabecalho {
+      background-color: var(--primaria);
+      color: white;
+      font-weight: 500;
+    }
+    
+    .lista-agendamentos {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .item-agendamento {
+      padding: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .acoes-agendamento {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+    }
+
+    .badge-sucesso {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .badge-alerta {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .conteudo-modal {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .fechar {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .fechar:hover {
+      color: #333;
+    }
+
+    .grupo-formulario {
+      margin-bottom: 1rem;
+    }
+
+    .controle-formulario {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .linha-formulario {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .linha-formulario .grupo-formulario {
+      flex: 1;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .navegacao-superior {
+        padding: 0.5rem;
+      }
+
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      
+      .logo {
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
+      }
+      
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin;
+        padding-bottom: 0.5rem;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .info-usuario {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      
+      .grade-cards {
+        grid-template-columns: 1fr;
+      }
+      
+      .conteudo-principal {
+        padding: 0 1rem;
+      }
+      
+      .cabecalho {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .grade-calendario {
+        grid-template-columns: repeat(7, minmax(30px, 1fr));
+      }
+      
+      .dia-calendario {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+      }
+      
+      .item-agendamento {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .acoes-agendamento {
+        align-self: flex-end;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .linha-formulario {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .conteudo-modal {
+        margin: 20% auto;
+        padding: 1.5rem;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área da Enfermeira</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="dashboard.html" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="ficha.html" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="historico.html" class="link-navegacao"><i class="fas fa-search"></i> Consultar</a></li>
+        <li class="item-navegacao"><a href="agendamentos.html" class="link-navegacao ativo"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
+        <li class="item-navegacao"><a href="relatorios.html" class="link-navegacao"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto da enfermeira" class="avatar-usuario">
+        <span>Enf. Ana Oliveira</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Gestão de Agendamentos</h1>
+      <button class="botao botao-primaria" onclick="abrirModalNovoAgendamento()">
+        <i class="fas fa-plus"></i> Novo Agendamento
+      </button>
+    </div>
+
+    <div class="container-calendario">
+      <div class="cabecalho-calendario">
+        <h2>Novembro 2023</h2>
+        <div class="navegacao-calendario">
+          <button><i class="fas fa-chevron-left"></i></button>
+          <button><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+      
+      <div class="grade-calendario">
+        <div class="dia-calendario cabecalho">Dom</div>
+        <div class="dia-calendario cabecalho">Seg</div>
+        <div class="dia-calendario cabecalho">Ter</div>
+        <div class="dia-calendario cabecalho">Qua</div>
+        <div class="dia-calendario cabecalho">Qui</div>
+        <div class="dia-calendario cabecalho">Sex</div>
+        <div class="dia-calendario cabecalho">Sáb</div>
+        
+        <div class="dia-calendario">29</div>
+        <div class="dia-calendario">30</div>
+        <div class="dia-calendario">31</div>
+        <div class="dia-calendario">1</div>
+        <div class="dia-calendario">2</div>
+        <div class="dia-calendario">3</div>
+        <div class="dia-calendario">4</div>
+      </div>
+    </div>
+
+    <div class="lista-agendamentos">
+      <h2>Agendamentos para Hoje (15/11/2023)</h2>
+      
+      <div class="item-agendamento">
+        <div>
+          <strong>Maria da Silva</strong>
+          <div>14:30 - Preventivo</div>
+          <span class="badge badge-sucesso">Confirmado</span>
+        </div>
+        <div class="acoes-agendamento">
+          <button class="botao botao-secundaria"><i class="fas fa-edit"></i></button>
+          <button class="botao botao-perigo"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+
+      <div class="item-agendamento">
+        <div>
+          <strong>Joana Pereira</strong>
+          <div>15:00 - Retorno</div>
+          <span class="badge badge-alerta">Pendente</span>
+        </div>
+        <div class="acoes-agendamento">
+          <button class="botao botao-secundaria"><i class="fas fa-edit"></i></button>
+          <button class="botao botao-perigo"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <div class="modal" id="modalAgendamento">
+    <div class="conteudo-modal">
+      <span class="fechar">&times;</span>
+      <h2>Novo Agendamento</h2>
+      <form id="formularioAgendamento">
+        <div class="grupo-formulario">
+          <label>Paciente</label>
+          <input type="text" class="controle-formulario" required>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label>Data</label>
+            <input type="date" class="controle-formulario" required>
+          </div>
+          <div class="grupo-formulario">
+            <label>Horário</label>
+            <select class="controle-formulario" required>
+              <option>08:00</option>
+              <option>08:30</option>
+              <option>09:00</option>
+              <option>09:30</option>
+              <option>10:00</option>
+              <option>10:30</option>
+              <option>11:00</option>
+              <option>11:30</option>
+              <option>13:00</option>
+              <option>13:30</option>
+              <option>14:00</option>
+              <option>14:30</option>
+              <option>15:00</option>
+              <option>15:30</option>
+              <option>16:00</option>
+              <option>16:30</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="botao botao-primaria">Agendar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('modalAgendamento');
+    const botaoFechar = document.querySelector('.fechar');
+
+    function abrirModalNovoAgendamento() {
+      modal.style.display = 'block';
+    }
+
+    botaoFechar.onclick = () => {
+      modal.style.display = 'none';
+    }
+
+    window.onclick = (evento) => {
+      if (evento.target == modal) {
+        modal.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

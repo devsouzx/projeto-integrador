@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatórios - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: #333333;
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-right: 1rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .item-navegacao {
+      margin-left: 0;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-left: auto;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: #f0e5f5;
+    }
+    
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .cabecalho {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+    
+    .container-relatorios {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .filtros {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .grupo-formulario {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rotulo-formulario {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .controle-formulario {
+      padding: 0.75rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      width: 100%;
+    }
+    
+    .container-graficos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .container-grafico {
+      height: 400px;
+      background-color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-width: 0;
+    }
+    
+    .tabela-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 1rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tabela-relatorio {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    .tabela-relatorio th {
+      background-color: var(--primaria);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .tabela-relatorio td {
+      padding: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .tabela-relatorio tr:last-child td {
+      border-bottom: none;
+    }
+
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .botao-primario:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+    }
+
+    .botao-secundario {
+      background-color: var(--secundaria);
+      color: white;
+    }
+
+    .botao-secundario:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+    }
+    
+    .opcoes-exportacao {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    /* Responsividade */
+    @media (max-width: 1024px) {
+      .container-graficos {
+        grid-template-columns: 1fr;
+      }
+      
+      .container-grafico {
+        height: 350px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navegacao-superior {
+        padding: 0.75rem 1rem;
+      }
+      
+      .container-navegacao {
+        flex-direction: row;
+        gap: 1rem;
+      }
+      
+      .logo {
+        font-size: 1.1rem;
+      }
+      
+      .menu-navegacao {
+        order: 3;
+        width: 100%;
+        margin-top: 1rem;
+        justify-content: center;
+      }
+      
+      .info-usuario {
+        margin-left: 0;
+      }
+      
+      .filtros {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .botao {
+        grid-column: span 2;
+      }
+      
+      .cabecalho {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .filtros {
+        grid-template-columns: 1fr;
+      }
+      
+      .botao {
+        grid-column: span 1;
+      }
+      
+      .link-navegacao {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+      }
+      
+      .info-usuario span {
+        display: none;
+      }
+      
+      .tabela-relatorio th, 
+      .tabela-relatorio td {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+      }
+      
+      .container-grafico {
+        height: 300px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área da Enfermeira</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="dashboard.html" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="ficha.html" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="historico.html" class="link-navegacao"><i class="fas fa-search"></i> Consultar</a></li>
+        <li class="item-navegacao"><a href="agendamentos.html" class="link-navegacao"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
+        <li class="item-navegacao"><a href="relatorios.html" class="link-navegacao ativo"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto da enfermeira" class="avatar-usuario">
+        <span>Enf. Ana Oliveira</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Relatórios e Estatísticas</h1>
+    </div>
+
+    <div class="container-relatorios">
+      <div class="filtros">
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Período Inicial</label>
+          <input type="date" class="controle-formulario">
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Período Final</label>
+          <input type="date" class="controle-formulario">
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Faixa Etária</label>
+          <select class="controle-formulario">
+            <option>Todas</option>
+            <option>20-30 anos</option>
+            <option>31-40 anos</option>
+            <option>41-50 anos</option>
+            <option>51-60 anos</option>
+            <option>61+ anos</option>
+          </select>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Resultado</label>
+          <select class="controle-formulario">
+            <option>Todos</option>
+            <option>Normal</option>
+            <option>Alterado</option>
+            <option>Inadequado</option>
+          </select>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Profissional</label>
+          <select class="controle-formulario">
+            <option>Todos</option>
+            <option>Enf. Ana Oliveira</option>
+            <option>Enf. Carlos Silva</option>
+            <option>Dr. Maria Santos</option>
+          </select>
+        </div>
+        <button class="botao botao-primario">Aplicar Filtros</button>
+      </div>
+
+      <div class="container-graficos">
+        <div class="container-grafico">
+          <canvas id="graficoExames"></canvas>
+        </div>
+        <div class="container-grafico">
+          <canvas id="graficoIdade"></canvas>
+        </div>
+      </div>
+
+      <div class="tabela-wrapper">
+        <table class="tabela-relatorio">
+          <thead>
+            <tr>
+              <th>Mês</th>
+              <th>Exames Realizados</th>
+              <th>Normais</th>
+              <th>Alterados</th>
+              <th>% Alteração</th>
+              <th>Profissional</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Jan/2024</td>
+              <td>48</td>
+              <td>43</td>
+              <td>5</td>
+              <td>10.4%</td>
+              <td>Enf. Ana Oliveira</td>
+            </tr>
+            <tr>
+              <td>Dez/2023</td>
+              <td>52</td>
+              <td>47</td>
+              <td>5</td>
+              <td>9.6%</td>
+              <td>Enf. Carlos Silva</td>
+            </tr>
+            <tr>
+              <td>Nov/2023</td>
+              <td>42</td>
+              <td>38</td>
+              <td>4</td>
+              <td>9.5%</td>
+              <td>Enf. Ana Oliveira</td>
+            </tr>
+            <tr>
+              <td>Out/2023</td>
+              <td>37</td>
+              <td>35</td>
+              <td>2</td>
+              <td>5.4%</td>
+              <td>Enf. Carlos Silva</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="opcoes-exportacao">
+        <button class="botao botao-secundario"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+        <button class="botao botao-secundario"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+        <button class="botao botao-secundario"><i class="fas fa-file-csv"></i> Exportar CSV</button>
+        <button class="botao botao-primario"><i class="fas fa-print"></i> Imprimir</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Gráfico de Exames por Mês
+    const ctxExames = document.getElementById('graficoExames').getContext('2d');
+    new Chart(ctxExames, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+        datasets: [{
+          label: 'Exames Normais',
+          data: [48, 42, 45, 38, 52, 47],
+          backgroundColor: '#9b59b6'
+        },{
+          label: 'Exames Alterados',
+          data: [5, 4, 3, 2, 5, 4],
+          backgroundColor: '#8e44ad'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Distribuição de Exames por Mês'
+          }
+        }
+      }
+    });
+
+    // Gráfico de Distribuição por Faixa Etária
+    const ctxIdade = document.getElementById('graficoIdade').getContext('2d');
+    new Chart(ctxIdade, {
+      type: 'pie',
+      data: {
+        labels: ['20-30 anos', '31-40 anos', '41-50 anos', '51-60 anos', '61+ anos'],
+        datasets: [{
+          data: [15, 35, 25, 15, 10],
+          backgroundColor: [
+            '#9b59b6',
+            '#8e44ad',
+            '#b57edc',
+            '#d2a8e6',
+            '#e9d4f2'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Distribuição por Faixa Etária'
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -72,19 +72,19 @@ func InitRoutes(r *gin.RouterGroup) {
 		})
 
 		enfermeira.GET("/nova-ficha", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
+			c.HTML(http.StatusOK, "nova-ficha-enfermeira.html", nil)
 		})
 
 		enfermeira.GET("/consultar", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
+			c.HTML(http.StatusOK, "consultar-enfermeira.html", nil)
 		})
 
 		enfermeira.GET("/agendamentos", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
+			c.HTML(http.StatusOK, "agendamentos-enfermeira.html", nil)
 		})
 
 		enfermeira.GET("/relatorios", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
+			c.HTML(http.StatusOK, "relatorios-enfermeira.html", nil)
 		})
 	}
 }

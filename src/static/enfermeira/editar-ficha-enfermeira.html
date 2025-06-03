@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Ficha - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: #333333;
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: #f0e5f5;
+    }
+    
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+    
+    .botao-voltar {
+      color: var(--primaria);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .secao-formulario {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    
+    .titulo-secao {
+      font-size: 1.2rem;
+      color: var(--primaria);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .info-secao {
+      font-size: 0.85rem;
+      color: #666;
+      font-weight: normal;
+    }
+    
+    .linha-formulario {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .grupo-formulario {
+      flex: 1;
+    }
+    
+    .rotulo-formulario {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .controle-formulario {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    
+    .controle-formulario:focus {
+      outline: none;
+      border-color: var(--primaria);
+    }
+    
+    .controle-formulario[disabled] {
+      background-color: #f0f0f0;
+    }
+    
+    .campo-somente-leitura {
+      background-color: #f9f9f9;
+      color: #666;
+    }
+    
+    .campo-obrigatorio::after {
+      content: " *";
+      color: #e74c3c;
+    }
+    
+    .acoes-formulario {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    .botao {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .botao-primario:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .botao-secundario {
+      background-color: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+    
+    .botao-secundario:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .botao-perigo {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .botao-perigo:hover {
+      background-color: #c0392b;
+    }
+    
+    .salvamento-automatico {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--secundaria);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      display: none;
+      z-index: 100;
+    }
+    
+    .info-auditoria {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #ddd;
+    }
+    
+    .info-auditoria span {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    
+    .alternar-historico {
+      color: var(--primaria);
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .container-historico {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+    }
+    
+    .container-historico.ativo {
+      max-height: 300px;
+      padding: 1rem;
+      border: 1px solid #eee;
+    }
+    
+    .item-historico {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .item-historico:last-child {
+      border-bottom: none;
+    }
+    
+    .data-historico {
+      font-weight: 500;
+      color: var(--primaria);
+    }
+    
+    .usuario-historico {
+      font-style: italic;
+    }
+    
+    .permissao-restringida {
+      position: relative;
+    }
+    
+    .permissao-restringida::after {
+      content: "🔒";
+      position: absolute;
+      right: 10px;
+      top: 35px;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    
+    .mensagem-erro {
+      color: #e74c3c;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    
+    .tem-erro .controle-formulario {
+      border-color: #e74c3c;
+    }
+    
+    .tem-erro .mensagem-erro {
+      display: block;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .navegacao-superior {
+      padding: 0.5rem 0.5rem;
+      }
+      
+      .logo {
+      font-size: 1rem;
+      white-space: nowrap;
+      margin-right: 0.5rem;
+      }
+      
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin;
+      }
+      
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .info-usuario {
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      
+      .linha-formulario {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .conteudo-principal {
+        padding: 0 1rem;
+      }
+      
+      .acoes-formulario {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+    }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-overlay.ativo {
+  display: flex;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.cabecalho-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.titulo-modal {
+  font-size: 1.25rem;
+  color: var(--primaria);
+}
+
+.fechar-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333333;
+}
+
+.corpo-modal {
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.acoes-modal {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área da Enfermeira</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="dashboard.html" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="ficha.html" class="link-navegacao ativo"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="historico.html" class="link-navegacao"><i class="fas fa-search"></i> Consultar</a></li>
+        <li class="item-navegacao"><a href="agendamentos.html" class="link-navegacao"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
+        <li class="item-navegacao"><a href="relatorios.html" class="link-navegacao"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto da enfermeira" class="avatar-usuario">
+        <span>Enf. Ana Oliveira</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Editar Ficha Citopatológica <span style="font-size: 1rem; color: #666; font-weight: normal;">#F-2023-0042</span></h1>
+      <a href="historico.html" class="botao-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+    
+    <form id="formularioCitopatologico">
+      <div class="secao-formulario">
+        <h2 class="titulo-secao">
+          Identificação da Unidade
+          <span class="info-secao">Última atualização: 15/03/2023 por Enf. Carlos Silva</span>
+        </h2>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="cnes" class="rotulo-formulario campo-obrigatorio">CNES</label>
+            <input type="text" id="cnes" class="controle-formulario" value="1234567" required>
+            <span class="mensagem-erro">Por favor, informe o CNES da unidade</span>
+          </div>
+          <div class="grupo-formulario">
+            <label for="protocolo" class="rotulo-formulario">N° Protocolo</label>
+            <input type="text" id="protocolo" class="controle-formulario" value="BR20230042" readonly>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="unidade" class="rotulo-formulario campo-obrigatorio">Nome da Unidade</label>
+            <input type="text" id="unidade" class="controle-formulario" value="UBS Jardim das Flores" required>
+            <span class="mensagem-erro">Por favor, informe o nome da unidade</span>
+          </div>
+          <div class="grupo-formulario">
+            <label for="municipio" class="rotulo-formulario campo-obrigatorio">Município</label>
+            <input type="text" id="municipio" class="controle-formulario" value="São Paulo" required>
+            <span class="mensagem-erro">Por favor, informe o município</span>
+          </div>
+          <div class="grupo-formulario">
+            <label for="uf" class="rotulo-formulario campo-obrigatorio">UF</label>
+            <select id="uf" class="controle-formulario" required>
+              <option value="">Selecione</option>
+              <option value="SP" selected>São Paulo</option>
+              <option value="AC">Acre</option>
+              <option value="AL">Alagoas</option>
+              <option value="AP">Amapá</option>
+              <option value="AM">Amazonas</option>
+              <option value="BA">Bahia</option>
+              <option value="CE">Ceará</option>
+              <option value="DF">Distrito Federal</option>
+              <option value="ES">Espírito Santo</option>
+              <option value="GO">Goiás</option>
+              <option value="MA">Maranhão</option>
+              <option value="MT">Mato Grosso</option>
+              <option value="MS">Mato Grosso do Sul</option>
+              <option value="MG">Minas Gerais</option>
+              <option value="PA">Pará</option>
+              <option value="PB">Paraíba</option>
+              <option value="PR">Paraná</option>
+              <option value="PE">Pernambuco</option>
+              <option value="PI">Piauí</option>
+              <option value="RJ">Rio de Janeiro</option>
+              <option value="RN">Rio Grande do Norte</option>
+              <option value="RS">Rio Grande do Sul</option>
+              <option value="RO">Rondônia</option>
+              <option value="RR">Roraima</option>
+              <option value="SC">Santa Catarina</option>
+              <option value="SE">Sergipe</option>
+              <option value="TO">Tocantins</option>
+            </select>
+            <span class="mensagem-erro">Por favor, selecione a UF</span>
+          </div>
+        </div>
+        
+        <div class="info-auditoria">
+          <span><strong>Criado em:</strong> 10/03/2023 14:30 por Enf. Ana Oliveira</span>
+          <span><strong>Última atualização:</strong> 15/03/2023 09:15 por Enf. Carlos Silva</span>
+        </div>
+      </div>
+      
+      <div class="secao-formulario">
+        <h2 class="titulo-secao">
+          Dados da Paciente
+          <span class="info-secao">Dados cadastrais - somente administradores podem editar</span>
+        </h2>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario permissao-restringida">
+            <label for="nome" class="rotulo-formulario campo-obrigatorio">Nome Completo</label>
+            <input type="text" id="nome" class="controle-formulario campo-somente-leitura" value="Maria da Silva" required readonly>
+            <span class="mensagem-erro">Por favor, informe o nome completo</span>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="apelido" class="rotulo-formulario">Apelido</label>
+            <input type="text" id="apelido" class="controle-formulario campo-somente-leitura" value="Mari" readonly>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario permissao-restringida">
+            <label for="mae" class="rotulo-formulario">Nome da Mãe</label>
+            <input type="text" id="mae" class="controle-formulario campo-somente-leitura" value="Joana da Silva" readonly>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="nascimento" class="rotulo-formulario campo-obrigatorio">Data de Nascimento</label>
+            <input type="date" id="nascimento" class="controle-formulario campo-somente-leitura" value="1985-05-15" required readonly>
+            <span class="mensagem-erro">Por favor, informe a data de nascimento</span>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="idade" class="rotulo-formulario campo-obrigatorio">Idade</label>
+            <input type="number" id="idade" class="controle-formulario campo-somente-leitura" min="0" max="120" value="38" required readonly>
+            <span class="mensagem-erro">Por favor, informe a idade</span>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario permissao-restringida">
+            <label for="nacionalidade" class="rotulo-formulario">Nacionalidade</label>
+            <input type="text" id="nacionalidade" class="controle-formulario campo-somente-leitura" value="Brasileira" readonly>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="cor" class="rotulo-formulario campo-obrigatorio">Raça/Cor</label>
+            <select id="cor" class="controle-formulario campo-somente-leitura" required disabled>
+              <option value="">Selecione</option>
+              <option value="branca" selected>Branca</option>
+              <option value="preta">Preta</option>
+              <option value="parda">Parda</option>
+              <option value="amarela">Amarela</option>
+              <option value="indigena">Indígena</option>
+            </select>
+            <span class="mensagem-erro">Por favor, selecione a raça/cor</span>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="escolaridade" class="rotulo-formulario">Escolaridade</label>
+            <select id="escolaridade" class="controle-formulario campo-somente-leitura" disabled>
+              <option value="">Selecione</option>
+              <option value="fundamental_completo" selected>Ensino Fundamental Completo</option>
+              <option value="analfabeta">Analfabeta</option>
+              <option value="fundamental_incompleto">Ensino Fundamental Incompleto</option>
+              <option value="medio_completo">Ensino Médio Completo</option>
+              <option value="superior_completo">Ensino Superior Completo</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario permissao-restringida">
+            <label for="cns" class="rotulo-formulario campo-obrigatorio">Cartão SUS (CNS)</label>
+            <input type="text" id="cns" class="controle-formulario campo-somente-leitura" value="123 4567 8901 2345" required readonly>
+            <span class="mensagem-erro">Por favor, informe o número do Cartão SUS</span>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="cpf" class="rotulo-formulario">CPF</label>
+            <input type="text" id="cpf" class="controle-formulario campo-somente-leitura" value="123.456.789-00" readonly>
+          </div>
+        </div>
+      </div>
+      
+      <div class="secao-formulario">
+        <h2 class="titulo-secao">Dados Residenciais</h2>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario permissao-restringida">
+            <label for="logradouro" class="rotulo-formulario">Logradouro</label>
+            <input type="text" id="logradouro" class="controle-formulario campo-somente-leitura" value="Rua das Flores" readonly>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="numero" class="rotulo-formulario">Número</label>
+            <input type="text" id="numero" class="controle-formulario campo-somente-leitura" value="123" readonly>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="complemento" class="rotulo-formulario">Complemento</label>
+            <input type="text" id="complemento" class="controle-formulario campo-somente-leitura" value="Apto 101" readonly>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario permissao-restringida">
+            <label for="bairro" class="rotulo-formulario">Bairro</label>
+            <input type="text" id="bairro" class="controle-formulario campo-somente-leitura" value="Jardim das Flores" readonly>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="codigo_municipio" class="rotulo-formulario">Código do Município</label>
+            <input type="text" id="codigo_municipio" class="controle-formulario campo-somente-leitura" value="3550308" readonly>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="municipio_residencia" class="rotulo-formulario">Município</label>
+            <input type="text" id="municipio_residencia" class="controle-formulario campo-somente-leitura" value="São Paulo" readonly>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario permissao-restringida">
+            <label for="cep" class="rotulo-formulario">CEP</label>
+            <input type="text" id="cep" class="controle-formulario campo-somente-leitura" value="01234-567" readonly>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="referencia" class="rotulo-formulario">Ponto de Referência</label>
+            <input type="text" id="referencia" class="controle-formulario campo-somente-leitura" value="Próximo ao mercado" readonly>
+          </div>
+          <div class="grupo-formulario permissao-restringida">
+            <label for="telefone" class="rotulo-formulario">Telefone</label>
+            <input type="text" id="telefone" class="controle-formulario campo-somente-leitura" value="(11) 98765-4321" readonly>
+          </div>
+        </div>
+      </div>
+      
+      <div class="secao-formulario">
+        <h2 class="titulo-secao">Anamnese</h2>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario campo-obrigatorio">Motivo do exame</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="motivo_exame" value="rastreamento" required checked> Rastreamento
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="motivo_exame" value="repeticao"> Repetição (exame alterado ASCUS/Baixo grau)
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="motivo_exame" value="seguimento"> Seguimento (pós diagnóstico colposcópico/tratamento)
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione o motivo do exame</span>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario campo-obrigatorio">Fez o exame preventivo (Papanicolaou) alguma vez?</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="fez_exame" value="sim" required checked> Sim
+              </label>
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: 1.5rem;">
+                <span>Quando fez o último exame?</span>
+                <input type="text" id="ultimo_exame_ano" style="width: 60px;" value="2022">
+              </div>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="fez_exame" value="nao"> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="fez_exame" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario campo-obrigatorio">Usa DIU?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="usa_diu" value="sim" required> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="usa_diu" value="nao" checked> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="usa_diu" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario campo-obrigatorio">Está grávida?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="gravida" value="sim" required> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="gravida" value="nao" checked> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="gravida" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario campo-obrigatorio">Usa pílula anticoncepcional?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="anticoncepcional" value="sim" required checked> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="anticoncepcional" value="nao"> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="anticoncepcional" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Usa hormônio/remédio para tratar a menopausa?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="hormonio_menopausa" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="hormonio_menopausa" value="nao" checked> Não
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="hormonio_menopausa" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Já fez tratamento por radioterapia?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="radioterapia" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="radioterapia" value="nao" checked> Não
+              </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="radioterapia" value="nao_sabe"> Não sabe
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="dum" class="rotulo-formulario">Data da última menstruação/regra</label>
+            <input type="date" id="dum" class="controle-formulario" value="2023-03-01">
+            <div style="margin-top: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="checkbox" id="nao_lembra_dum"> Não sabe/Não lembra
+              </label>
+            </div>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Tem ou teve algum sangramento após relações sexuais?</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sangramento_pos_coito" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sangramento_pos_coito" value="nao" checked> Não/Não sabe/Não lembra
+              </label>
+            </div>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Tem ou teve algum sangramento após a menopausa?</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sangramento_pos_menopausa" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sangramento_pos_menopausa" value="nao" checked> Não/Não sabe/Não lembra/Não está na menopausa
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="secao-formulario">
+        <h2 class="titulo-secao">Exame Clínico</h2>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="data_coleta" class="rotulo-formulario campo-obrigatorio">Data da coleta</label>
+            <input type="date" id="data_coleta" class="controle-formulario" value="2023-03-15" required>
+            <span class="mensagem-erro">Por favor, informe a data da coleta</span>
+          </div>
+          <div class="grupo-formulario">
+            <label for="responsavel" class="rotulo-formulario campo-obrigatorio">Responsável pela Coleta</label>
+            <input type="text" id="responsavel" class="controle-formulario" value="Enf. Ana Oliveira" readonly required>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario campo-obrigatorio">Inspeção do colo</label>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="inspecao_colo" value="normal" required checked> Normal
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="inspecao_colo" value="ausente"> Ausente (anomalias congênitas ou retirado cirurgicamente)
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="inspecao_colo" value="alterado"> Alterado
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="inspecao_colo" value="nao_visualizado"> Colo não visualizado
+              </label>
+            </div>
+            <span class="mensagem-erro">Por favor, selecione uma opção</span>
+          </div>
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Sinais sugestivos de doenças sexualmente transmissíveis?</label>
+            <div style="display: flex; gap: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sinais_dst" value="sim"> Sim
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="radio" name="sinais_dst" value="nao" checked> Não
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="adequabilidade" class="rotulo-formulario campo-obrigatorio">Adequabilidade do Material</label>
+            <select id="adequabilidade" class="controle-formulario" required>
+              <option value="">Selecione</option>
+              <option value="satisfatorio" selected>Satisfatório</option>
+              <option value="insatisfatorio">Insatisfatório</option>
+            </select>
+            <span class="mensagem-erro">Por favor, selecione a adequabilidade</span>
+          </div>
+          <div class="grupo-formulario">
+            <label for="aspecto" class="rotulo-formulario campo-obrigatorio">Aspecto do Colo</label>
+            <select id="aspecto" class="controle-formulario" required>
+              <option value="">Selecione</option>
+              <option value="normal" selected>Normal</option>
+              <option value="alterado">Alterado</option>
+            </select>
+            <span class="mensagem-erro">Por favor, selecione o aspecto do colo</span>
+          </div>
+        </div>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="observacoes" class="rotulo-formulario">Observações</label>
+            <textarea id="observacoes" class="controle-formulario" rows="3">Paciente relatou desconforto mínimo durante o exame. Material coletado sem intercorrências.</textarea>
+          </div>
+        </div>
+      </div>
+      
+      <div class="acoes-formulario">
+        <div>
+          <button type="button" class="botao botao-perigo" onclick="confirmarExclusao()">
+            <i class="fas fa-trash-alt"></i> Excluir Ficha
+          </button>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="button" class="botao botao-secundario">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+          <button type="submit" class="botao botao-primario">
+            <i class="fas fa-save"></i> Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </form>
+  </main>
+  
+  <div class="modal-overlay" id="modalConfirmacao">
+    <div class="modal">
+      <div class="cabecalho-modal">
+        <h3 class="titulo-modal">Confirmar Exclusão</h3>
+        <button class="fechar-modal" onclick="fecharModal()">&times;</button>
+      </div>
+      <div class="corpo-modal">
+        <p>Tem certeza que deseja excluir esta ficha permanentemente? Esta ação não pode ser desfeita.</p>
+        <p><strong>Ficha #F-2023-0042</strong> - Maria da Silva</p>
+      </div>
+      <div class="acoes-modal">
+        <button class="botao botao-secundario" onclick="fecharModal()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button class="botao botao-perigo" onclick="excluirRegistro()">
+          <i class="fas fa-trash-alt"></i> Confirmar Exclusão
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function confirmarExclusao() {
+      document.getElementById('modalConfirmacao').classList.add('ativo');
+    }
+    
+    function fecharModal() {
+      document.getElementById('modalConfirmacao').classList.remove('ativo');
+    }
+    
+    function excluirRegistro() {
+      alert('Ficha excluída com sucesso!');
+      fecharModal();
+      window.location.href = 'historico.html';
+    }
+    
+    // Validação do formulário
+    formularioCitopatologico.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      let valido = true;
+      const camposObrigatorios = this.querySelectorAll('[required]');
+      
+      camposObrigatorios.forEach(campo => {
+        const grupoFormulario = campo.closest('.grupo-formulario');
+        
+        if (!campo.value && !(campo.type === 'radio' && document.querySelector(`input[name="${campo.name}"]:checked`))) {
+          grupoFormulario.classList.add('tem-erro');
+          valido = false;
+        } else {
+          grupoFormulario.classList.remove('tem-erro');
+        }
+      });
+      
+      if (!valido) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+      }
+      
+      // Simular envio do formulário
+      indicadorSalvamento.style.display = 'flex';
+      setTimeout(function() {
+        indicadorSalvamento.style.display = 'none';
+        alert('Alterações salvas com sucesso!');
+      }, 1000);
+    });
+    
+    // Mostrar que alguns campos são restritos
+    document.querySelectorAll('.permissao-restringida').forEach(el => {
+      el.addEventListener('mouseenter', function() {
+        const dica = document.createElement('div');
+        dica.className = 'dica';
+        dica.textContent = 'Somente administradores podem editar este campo';
+        dica.style.position = 'absolute';
+        dica.style.backgroundColor = '#333';
+        dica.style.color = 'white';
+        dica.style.padding = '5px 10px';
+        dica.style.borderRadius = '4px';
+        dica.style.zIndex = '100';
+        dica.style.bottom = '100%';
+        dica.style.left = '50%';
+        dica.style.transform = 'translateX(-50%)';
+        dica.style.whiteSpace = 'nowrap';
+        
+        this.appendChild(dica);
+        
+        setTimeout(() => {
+          dica.style.opacity = '0';
+          setTimeout(() => dica.remove(), 300);
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>

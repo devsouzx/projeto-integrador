@@ -7,13 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-     --primary: #9b59b6;
-      --secondary: #8e44ad;
-      --danger: #e74c3c;
-      --warning: #f39c12;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e0e0e0;
-      --dark-gray: #333333;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
     }
     
     * {
@@ -24,13 +19,12 @@
     }
     
     body {
-     background: rgba(214, 174, 241, 0.15);
-      color: var(--dark-gray);
+      background: rgba(214, 174, 241, 0.15);
+      color: #333333;
     }
     
-    /* Top Navigation */
-    .top-nav {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 0.75rem 1.5rem;
       position: sticky;
@@ -39,7 +33,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    .nav-container {
+    .container-navegacao {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -52,16 +46,16 @@
       font-size: 1.25rem;
     }
     
-    .nav-menu {
+    .menu-navegacao {
       display: flex;
       list-style: none;
     }
     
-    .nav-item {
+    .item-navegacao {
       margin-left: 1rem;
     }
     
-    .nav-link {
+    .link-navegacao {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -73,54 +67,54 @@
       gap: 0.5rem;
     }
     
-    .nav-link:hover, .nav-link.active {
+    .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
     }
     
-    .user-info {
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
     
-    .user-avatar {
+    .avatar-usuario {
       width: 40px;
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
+      background-color: #f0e5f5;
     }
     
-    /* Main Content */
-    .main-content {
+    .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
     
-    .header {
+    .cabecalho {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
     }
     
-    .page-title {
+    .titulo-pagina {
       font-size: 1.75rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .notification-bell {
+    .sino-notificacao {
       position: relative;
       font-size: 1.25rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .notification-badge {
+    .badge-notificacao {
       position: absolute;
       top: -5px;
       right: -5px;
-      background-color: var(--danger);
+      background-color: #e74c3c;
       color: white;
       border-radius: 50%;
       width: 18px;
@@ -131,8 +125,7 @@
       justify-content: center;
     }
     
-    /* Cards */
-    .cards-grid {
+    .grade-cards {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
@@ -146,19 +139,19 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .card-header {
+    .cabecalho-card {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
     }
     
-    .card-title {
+    .titulo-card {
       font-size: 1.1rem;
       font-weight: 600;
     }
     
-    .card-icon {
+    .icone-card {
       width: 40px;
       height: 40px;
       border-radius: 8px;
@@ -168,37 +161,37 @@
       color: white;
     }
     
-    .icon-primary {
-      background-color: var(--primary);
+    .icone-primaria {
+      background-color: var(--primaria);
     }
     
-    .icon-secondary {
-      background-color: var(--secondary);
+    .icone-secundaria {
+      background-color: var(--secundaria);
     }
     
-    .icon-warning {
-      background-color: var(--warning);
+    .icone-alerta {
+      background-color: #f39c12;
     }
     
-    .exam-list {
+    .lista-exames {
       list-style: none;
     }
     
-    .exam-item {
+    .item-exame {
       padding: 0.75rem 0;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid #e0e0e0;
     }
     
-    .exam-item:last-child {
+    .item-exame:ultimo-filho {
       border-bottom: none;
     }
     
-    .exam-date {
+    .data-exame {
       font-size: 0.85rem;
       color: #666;
     }
     
-    .exam-status {
+    .status-exame {
       display: inline-block;
       padding: 0.25rem 0.5rem;
       border-radius: 20px;
@@ -206,22 +199,22 @@
       font-weight: 500;
     }
     
-    .status-pending {
+    .status-pendente {
       background-color: #fff3cd;
       color: #856404;
     }
     
-    .status-completed {
+    .status-concluido {
       background-color: #d4edda;
       color: #155724;
     }
     
-    .status-danger {
+    .status-perigo {
       background-color: #f8d7da;
       color: #721c24;
     }
     
-    .btn {
+    .botao {
       display: inline-block;
       padding: 0.75rem 1.5rem;
       border-radius: 6px;
@@ -232,73 +225,74 @@
       transition: all 0.3s;
     }
     
-    .btn-primary {
-      background-color: var(--primary);
+    .botao-primario {
+      background-color: var(--primaria);
       color: white;
     }
     
-    .btn-primary:hover {
-      background-color: #134a80;
+    .botao-primario:hover {
+      background-color: #7d3c98;
       transform: translateY(-2px);
     }
     
-    .btn-block {
+    .botao-bloco {
       display: block;
       width: 100%;
       text-align: center;
     }
     
-    /* Seção de Orientações */
-    .info-section {
+    .secao-informacao {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .info-grid {
+    .grade-informacao {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1rem;
       margin-top: 1rem;
     }
     
-    .info-card {
+    .card-informacao {
       background-color: #f8f9fa;
       padding: 1rem;
       border-radius: 6px;
     }
     
-    .info-card h3 {
+    .card-informacao h3 {
       font-size: 1rem;
       margin-bottom: 0.5rem;
-      color: var(--primary);
+      color: var(--primaria);
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
     
-    .info-card p {
+    .card-informacao p {
       font-size: 0.9rem;
     }
     
     /* Responsividade */
     @media (max-width: 768px) {
-      .top-nav {
-      padding: 0.5rem 0.5rem;
+      .navegacao-superior {
+        padding: 0.5rem 0.5rem;
       }
 
       .logo {
-      font-size: 1rem;
-      white-space: nowrap;
-      margin-right: 0.5rem;
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
       }
-      .nav-container {
+
+      .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
-      .nav-menu {
+
+      .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
         white-space: nowrap;
@@ -307,33 +301,33 @@
         scrollbar-width: thin;
       }
 
-      .nav-item {
+      .item-navegacao {
         margin-left: 0;
         flex: 0 0 auto;
       }
       
-      .user-info {
+      .info-usuario {
         justify-content: center;
         margin-top: 0.5rem;
       }
       
-      .cards-grid {
+      .grade-cards {
         grid-template-columns: 1fr;
       }
       
-      .main-content {
+      .conteudo-principal {
         padding: 0 1rem;
       }
     }
     
-    .quick-actions {
+    .acoes-rapidas {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       gap: 1rem;
       margin-bottom: 2rem;
     }
     
-    .quick-action {
+    .acao-rapida {
       background-color: white;
       border-radius: 8px;
       padding: 1rem;
@@ -343,96 +337,95 @@
       transition: all 0.3s;
     }
     
-    .quick-action:hover {
+    .acao-rapida:hover {
       transform: translateY(-3px);
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
-    .action-icon {
+    .icone-acao {
       width: 50px;
       height: 50px;
       margin: 0 auto 0.5rem;
-      background-color: #e8f4f3;
+      background-color: #f0e6f5;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--primary);
+      color: var(--primaria);
       font-size: 1.5rem;
     }
     
-    .stats-grid {
+    .grade-estatisticas {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 1.5rem;
       margin-bottom: 2rem;
     }
     
-    .stat-card {
+    .card-estatistica {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .stat-value {
+    .valor-estatistica {
       font-size: 2rem;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--primaria);
       margin: 0.5rem 0;
     }
     
-    .pending-exams {
+    .exames-pendentes {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .exam-item {
+    .item-exame {
       padding: 1rem;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid #e0e0e0;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .alert-indicator {
+    .indicador-alerta {
       width: 12px;
       height: 12px;
-      background-color: var(--danger);
+      background-color: #e74c3c;
       border-radius: 50%;
       display: inline-block;
       margin-left: 8px;
     }
 
-    .filters-container {
+    .container-filtros {
       display: flex;
       gap: 1rem;
       margin-bottom: 1rem;
       flex-wrap: wrap;
     }
 
-    .filter-item {
+    .item-filtro {
       flex: 1;
       min-width: 200px;
     }
 
-    .filter-item label {
+    .item-filtro label {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
     }
 
-    .filter-item select, .filter-item input {
+    .item-filtro select, .item-filtro input {
       width: 100%;
       padding: 0.5rem;
       border-radius: 6px;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid #e0e0e0;
     }
-
-    /* Modal */
-    .modal-overlay {
+    
+    .sobreposicao-modal {
       position: fixed;
       top: 0;
       left: 0;
@@ -448,7 +441,7 @@
       transition: all 0.3s;
     }
 
-    .modal-overlay.active {
+    .sobreposicao-modal.ativo {
       opacity: 1;
       visibility: visible;
     }
@@ -464,23 +457,23 @@
       transition: transform 0.3s;
     }
 
-    .modal-overlay.active .modal {
+    .sobreposicao-modal.ativo .modal {
       transform: translateY(0);
     }
 
-    .modal-header {
+    .cabecalho-modal {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
     }
 
-    .modal-title {
+    .titulo-modal {
       font-size: 1.25rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
 
-    .close-modal {
+    .fechar-modal {
       background: none;
       border: none;
       font-size: 1.5rem;
@@ -488,30 +481,30 @@
       color: #666;
     }
 
-    .form-group {
+    .grupo-formulario {
       margin-bottom: 1rem;
     }
 
-    .form-group label {
+    .grupo-formulario label {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
     }
 
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
+    .grupo-formulario input,
+    .grupo-formulario textarea,
+    .grupo-formulario select {
       width: 100%;
       padding: 0.75rem;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid #e0e0e0;
       border-radius: 6px;
     }
 
-    .form-group textarea {
+    .grupo-formulario textarea {
       min-height: 100px;
     }
 
-    .modal-actions {
+    .acoes-modal {
       display: flex;
       justify-content: flex-end;
       gap: 1rem;
@@ -521,86 +514,86 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <nav class="top-nav">
-    <div class="nav-container">
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
       <div class="logo">Área da Enfermeira</div>
       
-      <ul class="nav-menu">
-        <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="fas fa-home"></i> Início</a></li>
-        <li class="nav-item"><a href="ficha.html" class="nav-link"><i class="fas fa-file-medical"></i> Fichas</a></li>
-        <li class="nav-item"><a href="historico.html" class="nav-link"><i class="fas fa-search"></i> Consultar</a></li>
-        <li class="nav-item"><a href="agendamentos.html" class="nav-link"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
-        <li class="nav-item"><a href="relatorios.html" class="nav-link"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="dashboard.html" class="link-navegacao ativo"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="ficha.html" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
+        <li class="item-navegacao"><a href="historico.html" class="link-navegacao"><i class="fas fa-search"></i> Consultar</a></li>
+        <li class="item-navegacao"><a href="agendamentos.html" class="link-navegacao"><i class="fas fa-calendar-check"></i> Agendamentos</a></li>
+        <li class="item-navegacao"><a href="relatorios.html" class="link-navegacao"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
       </ul>
       
-      <div class="user-info">
-        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Foto da enfermeira" class="user-avatar">
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto da enfermeira" class="avatar-usuario">
         <span>Enf. Ana Oliveira</span>
       </div>
     </div>
   </nav>
   
-  <main class="main-content">
-    <div class="header">
-      <h1 class="page-title">Bem-vinda, Enf. Ana</h1>
-      <div class="notification-bell">
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Bem-vinda, Enf. Ana</h1>
+      <div class="sino-notificacao">
         <i class="fas fa-bell"></i>
-        <span class="notification-badge">2</span>
+        <span class="badge-notificacao">2</span>
       </div>
     </div>
     
-    <div class="quick-actions">
-      <div class="quick-action" onclick="location.href='ficha.html'">
-        <div class="action-icon"><i class="fas fa-file-medical"></i></div>
+    <div class="acoes-rapidas">
+      <div class="acao-rapida" onclick="location.href='ficha.html'">
+        <div class="icone-acao"><i class="fas fa-file-medical"></i></div>
         <div>Nova Ficha</div>
       </div>
-      <div class="quick-action" onclick="location.href='historico.html'">
-        <div class="action-icon"><i class="fas fa-search"></i></div>
+      <div class="acao-rapida" onclick="location.href='historico.html'">
+        <div class="icone-acao"><i class="fas fa-search"></i></div>
         <div>Consultar Paciente</div>
       </div>
-      <div class="quick-action" onclick="location.href='agendamentos.html'">
-        <div class="action-icon"><i class="fas fa-calendar-check"></i></div>
+      <div class="acao-rapida" onclick="location.href='agendamentos.html'">
+        <div class="icone-acao"><i class="fas fa-calendar-check"></i></div>
         <div>Agendamentos</div>
       </div>
     </div>
     
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="card-title">Exames Hoje</div>
-        <div class="stat-value">8 <span class="alert-indicator" title="1 resultado alterado"></span></div>
+    <div class="grade-estatisticas">
+      <div class="card-estatistica">
+        <div class="titulo-card">Exames Hoje</div>
+        <div class="valor-estatistica">8 <span class="indicador-alerta" title="1 resultado alterado"></span></div>
         <div>2 pendentes</div>
       </div>
-      <div class="stat-card">
-        <div class="card-title">Exames Semana</div>
-        <div class="stat-value">42 <span class="alert-indicator" title="3 resultados alterados"></span></div>
+      <div class="card-estatistica">
+        <div class="titulo-card">Exames Semana</div>
+        <div class="valor-estatistica">42 <span class="indicador-alerta" title="3 resultados alterados"></span></div>
         <div>+15% que semana passada</div>
       </div>
-      <div class="stat-card">
-        <div class="card-title">Pacientes Atendidos</div>
-        <div class="stat-value">127</div>
+      <div class="card-estatistica">
+        <div class="titulo-card">Pacientes Atendidos</div>
+        <div class="valor-estatistica">127</div>
         <div>Este mês</div>
       </div>
-      <div class="stat-card">
-        <div class="card-title">Resultados Alterados</div>
-        <div class="stat-value">3</div>
+      <div class="card-estatistica">
+        <div class="titulo-card">Resultados Alterados</div>
+        <div class="valor-estatistica">3</div>
         <div>Últimos 30 dias</div>
       </div>
     </div>
     
-    <div class="pending-exams">
-      <div class="card-header">
-        <h2 class="card-title">Exames Pendentes de Coleta</h2>
-        <div class="card-icon" style="background-color: var(--warning);">
+    <div class="exames-pendentes">
+      <div class="cabecalho-card">
+        <h2 class="titulo-card">Exames Pendentes de Coleta</h2>
+        <div class="icone-card" style="background-color: #f39c12;">
           <i class="fas fa-exclamation"></i>
         </div>
       </div>
 
-      <div class="filters-container">
-        <div class="filter-item">
+      <div class="container-filtros">
+        <div class="item-filtro">
           <label for="filter-date">Data</label>
           <input type="date" id="filter-date">
         </div>
-        <div class="filter-item">
+        <div class="item-filtro">
           <label for="filter-type">Tipo de Exame</label>
           <select id="filter-type">
             <option value="">Todos</option>
@@ -608,7 +601,7 @@
             <option value="retorno">Retorno</option>
           </select>
         </div>
-        <div class="filter-item">
+        <div class="item-filtro">
           <label for="filter-status">Status</label>
           <select id="filter-status">
             <option value="">Todos</option>
@@ -618,83 +611,80 @@
         </div>
       </div>
       
-      <div class="exam-item">
+      <div class="item-exame">
         <div>
           <strong>Maria da Silva</strong>
           <div>Preventivo - 15/06/2025 14:30</div>
         </div>
-        <button onclick="openColetaModal('123')" style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
+        <button onclick="abrirModalColeta('123')" style="background-color: var(--primaria); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
           Registrar Coleta
         </button>
       </div>
       
-      <div class="exam-item">
+      <div class="item-exame">
         <div>
           <strong>Joana Pereira</strong>
           <div>Preventivo - 16/06/2025 09:00</div>
         </div>
-        <button onclick="openColetaModal('123')" style="background-color: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;" >
+        <button onclick="abrirModalColeta('123')" style="background-color: var(--primaria); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;" >
           Registrar Coleta
         </button>
       </div>
     </div>
   </main>
-
-  <!-- Modal de Registro de Coleta -->
-  <div class="modal-overlay" id="coletaModal">
+  
+  <div class="sobreposicao-modal" id="modalColeta">
     <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Registrar Coleta Realizada</h3>
-        <button class="close-modal" onclick="closeColetaModal()">&times;</button>
+      <div class="cabecalho-modal">
+        <h3 class="titulo-modal">Registrar Coleta Realizada</h3>
+        <button class="fechar-modal" onclick="fecharModalColeta()">&times;</button>
       </div>
-      <form id="coletaForm">
-        <input type="hidden" id="pacienteId">
+      <form id="formularioColeta">
+        <input type="hidden" id="idPaciente">
         
-        <div class="form-group">
+        <div class="grupo-formulario">
           <label for="dataColeta">Data e Hora da Coleta</label>
           <input type="datetime-local" id="dataColeta" required>
         </div>
         
-        <div class="form-group">
+        <div class="grupo-formulario">
           <label for="observacoes">Observações</label>
           <textarea id="observacoes" placeholder="Ex.: Material coletado com sangramento mínimo"></textarea>
         </div>
         
-        <div class="modal-actions">
-          <button type="button" class="btn" onclick="closeColetaModal()">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Confirmar Coleta</button>
+        <div class="acoes-modal">
+          <button type="button" class="botao" onclick="fecharModalColeta()">Cancelar</button>
+          <button type="submit" class="botao botao-primario">Confirmar Coleta</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    // Funções para o modal de coleta
-    function openColetaModal(pacienteId) {
-      document.getElementById('pacienteId').value = pacienteId;
-      document.getElementById('coletaModal').classList.add('active');
+    function abrirModalColeta(idPaciente) {
+      document.getElementById('idPaciente').value = idPaciente;
+      document.getElementById('modalColeta').classList.add('ativo');
       
-      const now = new Date();
-      const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-      document.getElementById('dataColeta').value = localDateTime;
+      const agora = new Date();
+      const dataLocal = new Date(agora.getTime() - agora.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      document.getElementById('dataColeta').value = dataLocal;
     }
 
-    function closeColetaModal() {
-      document.getElementById('coletaModal').classList.remove('active');
+    function fecharModalColeta() {
+      document.getElementById('modalColeta').classList.remove('ativo');
     }
-
-    // Submissão do formulário de coleta
-    document.getElementById('coletaForm').addEventListener('submit', function(e) {
+    
+    document.getElementById('formularioColeta').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      const pacienteId = document.getElementById('pacienteId').value;
+      const idPaciente = document.getElementById('idPaciente').value;
       const dataColeta = document.getElementById('dataColeta').value;
       const observacoes = document.getElementById('observacoes').value;
       
-      console.log('Coleta registrada:', { pacienteId, dataColeta, observacoes });
+      console.log('Coleta registrada:', { idPaciente, dataColeta, observacoes });
       
       alert('Coleta registrada com sucesso!');
-      closeColetaModal();
+      fecharModalColeta();
     });
   </script>
 </body>
