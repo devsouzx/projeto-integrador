@@ -8,34 +8,75 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
-      --primaria: #185a9d;
-      --secundaria: #43cea2;
-      --cinza-claro: #f5f7fa;
-      --cinza-medio: #e0e0e0;
-      --erro: #e74c3c;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
     }
-
+    
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Inter', sans-serif;
     }
-
+    
     body {
-      background-color: var(--cinza-claro);
+      background-color: #f8f1ff;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: 20px;
-      background-image: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-      background-size: cover;
-      background-position: center;
-      background-blend-mode: overlay;
-      background-color: rgba(245, 247, 250, 0.9);
+      position: relative;
+      overflow: hidden;
     }
-
+    
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(214, 174, 241, 0.15);
+      z-index: -1;
+    }
+    
+    body::before {
+      width: 600px;
+      height: 600px;
+      top: -300px;
+      right: -200px;
+    }
+    
+    body::after {
+      width: 800px;
+      height: 800px;
+      bottom: -400px;
+      left: -300px;
+    }
+    
+    .onda {
+      position: absolute;
+      opacity: 0.05;
+      z-index: -1;
+    }
+    
+    .onda-1 {
+      width: 1000px;
+      height: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--primaria) 0%, transparent 70%);
+    }
+    
+    .onda-2 {
+      width: 1200px;
+      height: 1000px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--secundaria) 0%, transparent 70%);
+    }
+    
     .container-login {
       width: 100%;
       max-width: 450px;
@@ -44,13 +85,14 @@
       box-shadow: 0 8px 30px rgba(0,0,0,0.15);
       overflow: hidden;
       animation: aparecer 0.5s ease-out;
+      position: relative;
     }
-
+    
     @keyframes aparecer {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
+    
     .cabecalho-login {
       background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
@@ -58,12 +100,12 @@
       text-align: center;
       position: relative;
     }
-
+    
     .cabecalho-login h1 {
       font-size: 24px;
       margin-bottom: 10px;
     }
-
+    
     .logo {
       width: 80px;
       height: 80px;
@@ -75,21 +117,21 @@
       margin: 0 auto 15px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
+    
     .logo i {
       color: var(--primaria);
       font-size: 36px;
     }
-
+    
     .corpo-login {
       padding: 30px;
     }
-
+    
     .grupo-formulario {
       margin-bottom: 20px;
       position: relative;
     }
-
+    
     .rotulo-formulario {
       display: block;
       margin-bottom: 8px;
@@ -97,32 +139,32 @@
       font-size: 14px;
       color: #555;
     }
-
+    
     .controle-formulario {
       width: 100%;
       padding: 12px 15px 12px 40px;
-      border: 1px solid var(--cinza-medio);
+      border: 1px solid #e0e0e0;
       border-radius: 8px;
       font-size: 16px;
       transition: all 0.3s;
       height: 46px;
       box-sizing: border-box;
     }
-
+    
     .controle-formulario:focus {
       border-color: var(--primaria);
       outline: none;
-      box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
+      box-shadow: 0 0 0 2px rgba(155,89,182,0.2);
     }
-
+    
     .icone-input {
       position: absolute;
       left: 15px;
       top: 37px;
-      color: var(--cinza-medio);
+      color: #e0e0e0;
       font-size: 16px;
     }
-
+    
     .botao {
       width: 100%;
       padding: 14px;
@@ -138,17 +180,17 @@
       position: relative;
       overflow: hidden;
     }
-
+    
     .botao:hover {
       opacity: 0.9;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(24,90,157,0.2);
+      box-shadow: 0 4px 12px rgba(155,89,182,0.2);
     }
-
+    
     .botao:active {
       transform: translateY(0);
     }
-
+    
     .botao-carregando::after {
       content: "";
       position: absolute;
@@ -164,30 +206,30 @@
       border-radius: 50%;
       animation: girar-carregamento 1s ease infinite;
     }
-
+    
     @keyframes girar-carregamento {
       from { transform: rotate(0turn); }
       to { transform: rotate(1turn); }
     }
-
+    
     .rodape-login {
       text-align: center;
       margin-top: 20px;
       font-size: 14px;
     }
-
+    
     .rodape-login a {
       color: var(--primaria);
       text-decoration: none;
       font-weight: 500;
       transition: color 0.3s;
     }
-
+    
     .rodape-login a:hover {
       color: var(--secundaria);
       text-decoration: underline;
     }
-
+    
     .opcoes-login {
       display: flex;
       justify-content: space-between;
@@ -195,53 +237,106 @@
       font-size: 13px;
       align-items: center;
     }
-
+    
     .opcoes-login a {
       color: #666;
       text-decoration: none;
       transition: color 0.3s;
     }
-
+    
     .opcoes-login a:hover {
       color: var(--primaria);
     }
-
+    
     .mensagem-erro {
-      color: var(--erro);
+      color: #e74c3c;
       font-size: 12px;
       margin-top: 5px;
       display: none;
     }
-
+    
     .grupo-formulario.erro .controle-formulario {
-      border-color: var(--erro);
+      border-color: #e74c3c;
     }
-
+    
     .grupo-formulario.erro .mensagem-erro {
       display: block;
     }
-
+    
     .alternar-senha {
       position: absolute;
       right: 15px;
       top: 37px;
-      color: var(--cinza-medio);
+      color: #e0e0e0;
       cursor: pointer;
       font-size: 16px;
     }
-
+    
     .checkbox-lembrar {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-
+    
     .checkbox-lembrar input {
       margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      body::before,
+      body::after,
+      .onda {
+        display: none;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f8f1ff, #e8d5f5);
+        padding: 10px;
+        overflow: auto;
+      }
+
+      .container-login {
+        max-width: 100%;
+        border-radius: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cabecalho-login {
+        padding: 20px;
+      }
+
+      .cabecalho-login h1 {
+        font-size: 20px;
+      }
+
+      .corpo-login {
+        padding: 20px;
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+      }
+
+      .logo i {
+        font-size: 28px;
+      }
+
+      .controle-formulario {
+        padding: 12px 12px 12px 36px;
+      }
+
+      .icone-input {
+        top: 38px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="onda onda-1"></div>
+  <div class="onda onda-2"></div>
+
   <div class="container-login">
     <div class="cabecalho-login">
       <div class="logo">
@@ -264,7 +359,7 @@
           <label for="senha" class="rotulo-formulario">Senha</label>
           <i class="fas fa-lock icone-input"></i>
           <input type="password" id="senha" class="controle-formulario" placeholder="Digite sua senha" required>
-          <i class="fas fa-eye alternar-senha"></i>
+          <i class="fas fa-eye alternar-senha" onclick="alternarSenha()"></i>
           <div class="mensagem-erro">Por favor, insira sua senha</div>
         </div>
         
@@ -287,17 +382,20 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const alternarSenha = document.querySelector('.alternar-senha');
+    function alternarSenha() {
       const inputSenha = document.getElementById('senha');
-
-      alternarSenha.addEventListener('click', function() {
-        const tipo = inputSenha.getAttribute('type') === 'password' ? 'text' : 'password';
-        inputSenha.setAttribute('type', tipo);
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-      });
-
+      const icone = document.querySelector('.alternar-senha');
+      
+      if (inputSenha.type === 'password') {
+        inputSenha.type = 'text';
+        icone.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        inputSenha.type = 'password';
+        icone.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
       const inputUsuario = document.getElementById('usuario');
       inputUsuario.addEventListener('input', function() {
         if (this.value.replace(/\D/g, '').length === 11) {

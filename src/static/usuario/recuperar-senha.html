@@ -8,12 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
-      --primaria: #185a9d;
-      --secundaria: #43cea2;
-      --cinza-claro: #f5f7fa;
-      --cinza-medio: #e0e0e0;
-      --erro: #e74c3c;
-      --sucesso: #2ecc71;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
     }
     
     * {
@@ -24,12 +20,61 @@
     }
     
     body {
-      background-color: var(--cinza-claro);
+      background-color: #f8f1ff;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(214, 174, 241, 0.15);
+      z-index: -1;
+    }
+    
+    body::before {
+      width: 600px;
+      height: 600px;
+      top: -300px;
+      right: -200px;
+    }
+    
+    body::after {
+      width: 800px;
+      height: 800px;
+      bottom: -400px;
+      left: -300px;
+    }
+    
+    .onda {
+      position: absolute;
+      opacity: 0.05;
+      z-index: -1;
+    }
+    
+    .onda-1 {
+      width: 1000px;
+      height: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--primaria) 0%, transparent 70%);
+    }
+    
+    .onda-2 {
+      width: 1200px;
+      height: 1000px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--secundaria) 0%, transparent 70%);
     }
     
     .container-recuperacao {
@@ -39,11 +84,12 @@
       border-radius: 12px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.15);
       overflow: hidden;
-      animation: subir 0.5s ease-out;
+      animation: aparecer 0.5s ease-out;
+      position: relative;
     }
     
-    @keyframes subir {
-      from { opacity: 0; transform: translateY(30px); }
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
     
@@ -52,11 +98,29 @@
       color: white;
       padding: 30px;
       text-align: center;
+      position: relative;
     }
     
     .cabecalho-recuperacao h1 {
       font-size: 24px;
       margin-bottom: 10px;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      background-color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .logo i {
+      color: var(--primaria);
+      font-size: 36px;
     }
     
     .icone-recuperacao {
@@ -80,7 +144,7 @@
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      background-color: var(--cinza-medio);
+      background-color: #e0e0e0;
       color: #666;
       display: flex;
       justify-content: center;
@@ -96,7 +160,7 @@
     }
     
     .passo.concluido {
-      background-color: var(--sucesso);
+      background-color: #2ecc71;
       color: white;
     }
     
@@ -105,7 +169,7 @@
       position: absolute;
       width: 20px;
       height: 2px;
-      background-color: var(--cinza-medio);
+      background-color: #e0e0e0;
       right: -20px;
     }
     
@@ -122,28 +186,33 @@
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
+      font-size: 14px;
+      color: #555;
     }
     
     .controle-formulario {
       width: 100%;
-      padding: 14px 14px 14px 40px;
-      border: 1px solid var(--cinza-medio);
+      padding: 12px 15px 12px 40px;
+      border: 1px solid #e0e0e0;
       border-radius: 8px;
       font-size: 16px;
       transition: all 0.3s;
+      height: 46px;
+      box-sizing: border-box;
     }
     
     .controle-formulario:focus {
       border-color: var(--primaria);
       outline: none;
-      box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
+      box-shadow: 0 0 0 2px rgba(155,89,182,0.2);
     }
     
     .icone-entrada {
       position: absolute;
       left: 15px;
-      top: 40px;
-      color: var(--cinza-medio);
+      top: 37px;
+      color: #e0e0e0;
+      font-size: 16px;
     }
     
     .botao {
@@ -158,12 +227,14 @@
       cursor: pointer;
       margin-top: 10px;
       transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
     }
     
     .botao:hover {
       opacity: 0.9;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(24,90,157,0.2);
+      box-shadow: 0 4px 12px rgba(155,89,182,0.2);
     }
     
     .botao:active {
@@ -203,7 +274,7 @@
     
     .mensagem-sucesso i {
       font-size: 50px;
-      color: var(--sucesso);
+      color: #2ecc71;
       margin-bottom: 15px;
     }
     
@@ -224,14 +295,14 @@
       height: 50px;
       text-align: center;
       font-size: 20px;
-      border: 1px solid var(--cinza-medio);
+      border: 1px solid #e0e0e0;
       border-radius: 8px;
     }
     
     .codigo-verificacao input:focus {
       border-color: var(--primaria);
       outline: none;
-      box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
+      box-shadow: 0 0 0 2px rgba(155,89,182,0.2);
     }
     
     .reenviar-codigo {
@@ -260,14 +331,14 @@
     }
     
     .mensagem-erro {
-      color: var(--erro);
+      color: #e74c3c;
       font-size: 12px;
       margin-top: 5px;
       display: none;
     }
     
     .grupo-formulario.erro .controle-formulario {
-      border-color: var(--erro);
+      border-color: #e74c3c;
     }
     
     .grupo-formulario.erro .mensagem-erro {
@@ -281,15 +352,33 @@
     .alternar-senha {
       position: absolute;
       right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--cinza-medio);
+      top: 14px;
+      color: #e0e0e0;
       cursor: pointer;
-      z-index: 2;
+      font-size: 16px;
     }
   
     .container-senha .controle-formulario {
       padding-right: 40px;
+    }
+    
+    @media (max-width: 768px) {
+      body::before,
+      body::after,
+      .onda {
+        display: none;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f8f1ff, #e8d5f5);
+        padding: 10px;
+        overflow: auto;
+      }
+
+      .container-recuperacao {
+        max-width: 100%;
+        border-radius: 8px;
+      }
     }
     
     @media (max-width: 480px) {
@@ -306,14 +395,33 @@
       .cabecalho-recuperacao {
         padding: 20px;
       }
+      
+      .cabecalho-recuperacao h1 {
+        font-size: 20px;
+      }
+      
+      .icone-recuperacao {
+        font-size: 40px;
+      }
+      
+      .controle-formulario {
+        padding: 12px 12px 12px 36px;
+      }
+      
+      .icone-entrada {
+        top: 38px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="onda onda-1"></div>
+  <div class="onda onda-2"></div>
+
   <div class="container-recuperacao">
     <div class="cabecalho-recuperacao">
-      <div class="icone-recuperacao">
-        <i class="fas fa-key"></i>
+      <div class="logo">
+        <i class="fas fa-heartbeat"></i>
       </div>
       <h1>Recuperar Senha</h1>
       <p id="subtitulo-recuperacao">Informe seu CPF ou e-mail cadastrado</p>
@@ -406,67 +514,33 @@
       const botaoContinuar = document.getElementById('botao-continuar');
       const botaoVerificar = document.getElementById('botao-verificar');
       const botaoRedefinir = document.getElementById('botao-redefinir');
-      const linkReenviar = document.getElementById('link-reenviar');
-      const contador = document.getElementById('contador');
-      const tempoContador = document.getElementById('tempo-contador');
-      const mensagemVerificacao = document.getElementById('mensagem-verificacao');
-      const subtituloRecuperacao = document.getElementById('subtitulo-recuperacao');
       const entradaEmail = document.getElementById('email');
       const entradasCodigo = document.querySelectorAll('.codigo-verificacao input');
-      const entradaNovaSenha = document.getElementById('nova-senha');
-      const entradaConfirmarSenha = document.getElementById('confirmar-senha');
-      const botoesCancelar = document.querySelectorAll('[id^="botao-cancelar"]');
+      const alternarSenhaBtns = document.querySelectorAll('.alternar-senha');
       
-      let passoAtual = 1;
-      let podeReenviarCodigo = false;
-      let intervaloContador;
-      const emailTeste = 'sousamarinho@discente.ufg.br';
-      
-      // Botão continuar (Passo 1)
       botaoContinuar.addEventListener('click', function(e) {
         e.preventDefault();
-        
-        // Validar CPF ou e-mail
         const valor = entradaEmail.value.trim();
-        let valido = false;
-        
-        // Verificar se é e-mail válido
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (emailRegex.test(valor)) {
-          valido = true;
-        }
-        
-        // Verificar se é CPF válido (apenas formato básico)
         const cpfRegex = /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/;
-        if (cpfRegex.test(valor)) {
-          valido = true;
-        }
         
-        if (!valido) {
+        if (!emailRegex.test(valor) && !cpfRegex.test(valor)) {
           document.getElementById('erro-email').style.display = 'block';
           entradaEmail.parentElement.classList.add('erro');
           return;
         }
         
-        // Esconder mensagem de erro se existir
-        document.getElementById('erro-email').style.display = 'none';
-        entradaEmail.parentElement.classList.remove('erro');
-        
-        // Atualizar UI para passo 2
         formularioRecuperacao.style.display = 'none';
         etapaVerificacao.style.display = 'block';
-        atualizarPassos(2);
+        document.getElementById('passo1').classList.remove('ativo');
+        document.getElementById('passo1').classList.add('concluido');
+        document.getElementById('passo2').classList.add('ativo');
         
-        const emailOculto = ocultarEmail(emailTeste);
-        subtituloRecuperacao.textContent = `Enviamos um código de verificação para ${emailOculto}. Por favor, verifique sua caixa de entrada.`;
-        
-        // Auto-focus no primeiro campo do código
         if (entradasCodigo.length > 0) {
           entradasCodigo[0].focus();
         }
       });
 
-      // Botão verificar código (Passo 2)
       botaoVerificar.addEventListener('click', function() {
         const codigo = Array.from(entradasCodigo).map(input => input.value).join('');
         
@@ -475,59 +549,44 @@
           return;
         }
         
-        // Esconder mensagem de erro se existir
-        document.getElementById('erro-codigo').style.display = 'none';
-        
-        // Simular verificação de código
-        setTimeout(() => {
-          etapaVerificacao.style.display = 'none';
-          etapaRedefinir.style.display = 'block';
-          atualizarPassos(3);
-          subtituloRecuperacao.textContent = 'Crie uma nova senha para sua conta';
-          
-          entradaNovaSenha.focus();
-        }, 500);
+        etapaVerificacao.style.display = 'none';
+        etapaRedefinir.style.display = 'block';
+        document.getElementById('passo2').classList.remove('ativo');
+        document.getElementById('passo2').classList.add('concluido');
+        document.getElementById('passo3').classList.add('ativo');
       });
       
-      // Botão redefinir senha (Passo 3)
       botaoRedefinir.addEventListener('click', function() {
-        const novaSenha = entradaNovaSenha.value;
-        const confirmarSenha = entradaConfirmarSenha.value;
+        const novaSenha = document.getElementById('nova-senha').value;
+        const confirmarSenha = document.getElementById('confirmar-senha').value;
         
-        // Verificar apenas se as senhas coincidem
         if (novaSenha !== confirmarSenha) {
-          document.getElementById('erro-confirmacao').textContent = 'As senhas não coincidem';
-          document.getElementById('erro-confirmacao').style.display = 'block';
+          document.getElementById('erro-senha').textContent = 'As senhas não coincidem';
+          document.getElementById('erro-senha').style.display = 'block';
           return;
         }
         
-        // Simular redefinição de senha
-        setTimeout(() => {
-          const container = document.querySelector('.container-recuperacao');
-          container.style.animation = 'none';
-          void container.offsetWidth;
-          container.style.animation = 'subir 0.5s ease-out';
+        const container = document.querySelector('.container-recuperacao');
+        container.style.animation = 'none';
+        void container.offsetWidth;
+        container.style.animation = 'aparecer 0.5s ease-out';
           
-          // Mostrar mensagem de sucesso
-          etapaRedefinir.innerHTML = `
-            <div class="mensagem-sucesso" style="display: block;">
-              <i class="fas fa-check-circle"></i>
-              <h3>Senha redefinida com sucesso!</h3>
-              <p>Sua senha foi atualizada com sucesso. Você será redirecionado para a página de login.</p>
-            </div>
-          `;
-        }, 500);
+        etapaRedefinir.innerHTML = `
+          <div class="mensagem-sucesso" style="display: block;">
+            <i class="fas fa-check-circle"></i>
+            <h3>Senha redefinida com sucesso!</h3>
+            <p>Sua senha foi atualizada com sucesso. Você será redirecionado para a página de login.</p>
+          </div>
+        `;
       });
       
-      // Botões cancelar
-      botoesCancelar.forEach(botao => {
+      document.querySelectorAll('[id^="botao-cancelar"]').forEach(botao => {
         botao.addEventListener('click', function() {
           window.location.href = '/login';
         });
       });
       
-      // Alternar visibilidade da senha
-      document.querySelectorAll('.alternar-senha').forEach(icone => {
+      alternarSenhaBtns.forEach(icone => {
         icone.addEventListener('click', function() {
           const entrada = this.parentElement.querySelector('input');
           const tipo = entrada.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -537,16 +596,10 @@
         });
       });
       
-      // Avanço automático entre campos de código
       entradasCodigo.forEach((entrada, indice) => {
         entrada.addEventListener('input', function() {
           if (this.value.length === 1 && indice < entradasCodigo.length - 1) {
             entradasCodigo[indice + 1].focus();
-          }
-          
-          const todosPreenchidos = Array.from(entradasCodigo).every(input => input.value.length === 1);
-          if (todosPreenchidos) {
-            botaoVerificar.focus();
           }
         });
         
@@ -556,32 +609,6 @@
           }
         });
       });
-      
-      // Permitir submit do formulário com Enter
-      formularioRecuperacao.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          botaoContinuar.click();
-        }
-      });
-      
-      // Funções auxiliares
-      function atualizarPassos(passoAtivo) {
-        passoAtual = passoAtivo;
-        document.querySelectorAll('.passo').forEach((passo, indice) => {
-          passo.classList.remove('ativo', 'concluido');
-          if (indice + 1 < passoAtivo) {
-            passo.classList.add('concluido');
-          } else if (indice + 1 === passoAtivo) {
-            passo.classList.add('ativo');
-          }
-        });
-      }
-      
-      function ocultarEmail(email) {
-        if (!email.includes('@')) return email;
-        const [nome, dominio] = email.split('@');
-        return `${nome.charAt(0)}****${nome.slice(-1)}@${dominio}`;
-      }
     });
   </script>
 </body>

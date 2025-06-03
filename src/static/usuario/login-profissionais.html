@@ -10,17 +10,6 @@
     :root {
       --primaria: #9b59b6;
       --secundaria: #8e44ad;
-      --perigo: #e74c3c;
-      --aviso: #f39c12;
-      --sucesso: #2ecc71;
-      --cinza-claro: #f5f7fa;
-      --cinza-medio: #e0e0e0;
-      --cinza-escuro: #333333;
-      --lilas-claro: #f0e5f5;
-      --enfermeiro: #9b59b6;
-      --medico: #8e44ad;
-      --agente: #a569bd;
-      --gestor: #7d3c98;
     }
     
     * {
@@ -152,7 +141,7 @@
     .controle-formulario {
       width: 100%;
       padding: 14px 14px 14px 40px;
-      border: 1px solid var(--cinza-medio);
+      border: 1px solid #e0e0e0;
       border-radius: 8px;
       font-size: 16px;
       transition: all 0.3s;
@@ -168,7 +157,7 @@
       position: absolute;
       left: 15px;
       top: 43px;
-      color: var(--cinza-medio);
+      color: #e0e0e0;
     }
     
     .botao {
@@ -238,14 +227,14 @@
     }
     
     .mensagem-erro {
-      color: var(--perigo);
+      color: #e74c3c;
       font-size: 12px;
       margin-top: 5px;
       display: none;
     }
     
     .grupo-formulario.erro .controle-formulario {
-      border-color: var(--perigo);
+      border-color: #e74c3c;
     }
     
     .grupo-formulario.erro .mensagem-erro {
@@ -260,7 +249,7 @@
       position: absolute;
       right: 15px;
       top: 14px;
-      color: var(--cinza-medio);
+      color: #e0e0e0;
       cursor: pointer;
     }
     
@@ -296,7 +285,7 @@
       flex-direction: column;
       flex-grow: 1;
       padding: 12px;
-      border: 1px solid var(--cinza-medio);
+      border: 1px solid #e0e0e0;
       border-radius: 8px;
       text-align: center;
       cursor: pointer;
@@ -311,27 +300,27 @@
     
     .opcao-profissional input[type="radio"]:checked + label {
       border-color: var(--primaria);
-      background-color: var(--lilas-claro);
+      background-color: #f0e5f5;
       font-weight: 500;
     }
     
     .opcao-profissional.enfermeiro input[type="radio"]:checked + label {
-      border-color: var(--enfermeiro);
+      border-color: #9b59b6;
       background-color: rgba(155, 89, 182, 0.1);
     }
     
     .opcao-profissional.medico input[type="radio"]:checked + label {
-      border-color: var(--medico);
+      border-color: #8e44ad;
       background-color: rgba(142, 68, 173, 0.1);
     }
     
     .opcao-profissional.agente input[type="radio"]:checked + label {
-      border-color: var(--agente);
+      border-color: #a569bd;
       background-color: rgba(165, 105, 189, 0.1);
     }
     
     .opcao-profissional.gestor input[type="radio"]:checked + label {
-      border-color: var(--gestor);
+      border-color: #7d3c98;
       background-color: rgba(125, 60, 152, 0.1);
     }
     

@@ -10,10 +10,6 @@
     :root {
       --primaria: #9b59b6;
       --secundaria: #8e44ad;
-      --cinza-claro: #f5f7fa;
-      --cinza-medio: #e0e0e0;
-      --erro: #e74c3c;
-      --sucesso: #2ecc71;
     }
     
     * {
@@ -24,12 +20,61 @@
     }
     
     body {
-      background-color: var(--cinza-claro);
+      background-color: #f8f1ff;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(214, 174, 241, 0.15);
+      z-index: -1;
+    }
+    
+    body::before {
+      width: 600px;
+      height: 600px;
+      top: -300px;
+      right: -200px;
+    }
+    
+    body::after {
+      width: 800px;
+      height: 800px;
+      bottom: -400px;
+      left: -300px;
+    }
+    
+    .onda {
+      position: absolute;
+      opacity: 0.05;
+      z-index: -1;
+    }
+    
+    .onda-1 {
+      width: 1000px;
+      height: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--primaria) 0%, transparent 70%);
+    }
+    
+    .onda-2 {
+      width: 1200px;
+      height: 1000px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--secundaria) 0%, transparent 70%);
     }
     
     .container-cadastro {
@@ -37,8 +82,15 @@
       max-width: 700px;
       background-color: white;
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
       overflow: hidden;
+      animation: aparecer 0.5s ease-out;
+      position: relative;
+    }
+    
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     
     .cabecalho-cadastro {
@@ -52,6 +104,23 @@
     .cabecalho-cadastro h1 {
       font-size: 24px;
       margin-bottom: 10px;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      background-color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .logo i {
+      color: var(--primaria);
+      font-size: 36px;
     }
     
     .passos-progresso {
@@ -159,24 +228,24 @@
     
     .controle-formulario {
       width: 100%;
-      padding: 14px;
-      border: 1px solid var(--cinza-medio);
+      padding: 14px 14px 14px 40px;
+      border: 1px solid #e0e0e0;
       border-radius: 8px;
       font-size: 16px;
-      transition: border 0.3s;
+      transition: all 0.3s;
     }
     
     .controle-formulario:focus {
       border-color: var(--primaria);
       outline: none;
-      box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
+      box-shadow: 0 0 0 2px rgba(155,89,182,0.2);
     }
     
     .icone-input {
       position: absolute;
-      right: 15px;
+      left: 15px;
       top: 43px;
-      color: var(--cinza-medio);
+      color: #e0e0e0;
     }
     
     .botoes-navegacao {
@@ -193,7 +262,7 @@
       font-size: 16px;
       font-weight: 500;
       cursor: pointer;
-      transition: opacity 0.3s;
+      transition: all 0.3s;
       flex: 1;
     }
     
@@ -209,6 +278,12 @@
     
     .botao:hover {
       opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(155,89,182,0.2);
+    }
+    
+    .botao:active {
+      transform: translateY(0);
     }
     
     .rodape-cadastro {
@@ -221,17 +296,23 @@
       color: var(--primaria);
       text-decoration: none;
       font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    .rodape-cadastro a:hover {
+      color: var(--secundaria);
+      text-decoration: underline;
     }
     
     .mensagem-erro {
-      color: var(--erro);
+      color: #e74c3c;
       font-size: 12px;
       margin-top: 5px;
       display: none;
     }
     
     .grupo-formulario.erro .controle-formulario {
-      border-color: var(--erro);
+      border-color: #e74c3c;
     }
     
     .grupo-formulario.erro .mensagem-erro {
@@ -239,7 +320,7 @@
     }
     
     .grupo-formulario.sucesso .controle-formulario {
-      border-color: var(--sucesso);
+      border-color: #2ecc71;
     }
     
     .dicas-senha {
@@ -276,14 +357,44 @@
       color: #555;
     }
     
+    .container-senha {
+      position: relative;
+    }
+
+    .container-senha .icone-input {
+      left: 15px;
+      top: 14px;
+    }
+    
+    .alternar-senha {
+      position: absolute;
+      right: 15px;
+      top: 14px;
+      color: #e0e0e0;
+      cursor: pointer;
+    }
+    
     @media (max-width: 768px) {
+      body::before,
+      body::after,
+      .onda {
+        display: none;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f8f1ff, #e8d5f5);
+        padding: 10px;
+        overflow: auto;
+      }
+
+      .container-cadastro {
+        max-width: 100%;
+        border-radius: 8px;
+      }
+      
       .linha-formulario {
         flex-direction: column;
         gap: 15px;
-      }
-      
-      .container-cadastro {
-        max-width: 100%;
       }
       
       .grupo-formulario.cep,
@@ -295,12 +406,58 @@
       .botoes-navegacao {
         flex-direction: column;
       }
+      
+      .passos-progresso {
+        gap: 15px;
+      }
+      
+      .passo::after {
+        width: 15px;
+        right: -15px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .cabecalho-cadastro {
+        padding: 20px;
+      }
+
+      .cabecalho-cadastro h1 {
+        font-size: 20px;
+      }
+
+      .corpo-cadastro {
+        padding: 20px;
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+      }
+
+      .logo i {
+        font-size: 28px;
+      }
+
+      .controle-formulario {
+        padding: 12px 12px 12px 36px;
+      }
+
+      .icone-input {
+        top: 38px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="onda onda-1"></div>
+  <div class="onda onda-2"></div>
+
   <div class="container-cadastro">
     <div class="cabecalho-cadastro">
+      <div class="logo">
+        <i class="fas fa-heartbeat"></i>
+      </div>
       <h1>Cadastro de Paciente</h1>
       <p>Preencha seus dados para criar uma conta</p>
       
@@ -327,6 +484,7 @@
           <div class="linha-formulario">
             <div class="grupo-formulario">
               <label for="nome" class="rotulo-formulario">Nome Completo</label>
+              <i class="fas fa-user icone-input"></i>
               <input type="text" id="nome" class="controle-formulario" placeholder="Digite seu nome completo" required>
               <div class="mensagem-erro">Por favor, insira seu nome completo</div>
             </div>
@@ -335,14 +493,14 @@
           <div class="linha-formulario">
             <div class="grupo-formulario">
               <label for="cpf" class="rotulo-formulario">CPF</label>
-              <input type="text" id="cpf" class="controle-formulario" placeholder="000.000.000-00" required>
               <i class="fas fa-id-card icone-input"></i>
+              <input type="text" id="cpf" class="controle-formulario" placeholder="000.000.000-00" required>
               <div class="mensagem-erro">CPF inválido</div>
             </div>
             <div class="grupo-formulario">
               <label for="sus" class="rotulo-formulario">Cartão SUS</label>
-              <input type="text" id="sus" class="controle-formulario" placeholder="Digite seu Cartão SUS" required>
               <i class="fas fa-address-card icone-input"></i>
+              <input type="text" id="sus" class="controle-formulario" placeholder="Digite seu Cartão SUS" required>
               <div class="mensagem-erro">Número do SUS inválido</div>
             </div>
           </div>
@@ -350,11 +508,13 @@
           <div class="linha-formulario">
             <div class="grupo-formulario">
               <label for="dataNascimento" class="rotulo-formulario">Data de Nascimento</label>
+              <i class="fas fa-calendar-alt icone-input"></i>
               <input type="date" id="dataNascimento" class="controle-formulario" required>
               <div class="mensagem-erro">Data inválida</div>
             </div>
             <div class="grupo-formulario">
               <label for="nomeMae" class="rotulo-formulario">Nome da Mãe</label>
+              <i class="fas fa-user-friends icone-input"></i>
               <input type="text" id="nomeMae" class="controle-formulario" placeholder="Nome completo da mãe" required>
               <div class="mensagem-erro">Por favor, insira o nome da mãe</div>
             </div>
@@ -363,14 +523,14 @@
           <div class="linha-formulario">
             <div class="grupo-formulario">
               <label for="email" class="rotulo-formulario">E-mail</label>
-              <input type="email" id="email" class="controle-formulario" placeholder="Digite seu e-mail" required>
               <i class="fas fa-envelope icone-input"></i>
+              <input type="email" id="email" class="controle-formulario" placeholder="Digite seu e-mail" required>
               <div class="mensagem-erro">E-mail inválido</div>
             </div>
             <div class="grupo-formulario">
               <label for="telefone" class="rotulo-formulario">Telefone</label>
-              <input type="tel" id="telefone" class="controle-formulario" placeholder="(00) 00000-0000" required>
               <i class="fas fa-phone icone-input"></i>
+              <input type="tel" id="telefone" class="controle-formulario" placeholder="(00) 00000-0000" required>
               <div class="mensagem-erro">Telefone inválido</div>
             </div>
           </div>
@@ -378,8 +538,11 @@
           <div class="linha-formulario">
             <div class="grupo-formulario">
               <label for="senha" class="rotulo-formulario">Senha</label>
-              <input type="password" id="senha" class="controle-formulario" placeholder="Crie uma senha" required>
-              <i class="fas fa-eye icone-input alternar-senha" onclick="alternarSenha('senha', this)"></i>
+              <div class="container-senha">
+                <i class="fas fa-lock icone-input"></i>
+                <input type="password" id="senha" class="controle-formulario" placeholder="Crie uma senha" required>
+                <i class="fas fa-eye alternar-senha" onclick="alternarSenha('senha', this)"></i>
+              </div>
               <div class="dicas-senha">
                 A senha deve conter: mínimo 8 caracteres, 1 número, 1 letra maiúscula e 1 caractere especial (!@#$%^&*)
               </div>
@@ -387,8 +550,11 @@
             </div>
             <div class="grupo-formulario">
               <label for="confirmarSenha" class="rotulo-formulario">Confirmar Senha</label>
-              <input type="password" id="confirmarSenha" class="controle-formulario" placeholder="Repita a senha" required>
-              <i class="fas fa-eye icone-input alternar-senha" onclick="alternarSenha('confirmarSenha', this)"></i>
+              <div class="container-senha">
+                <i class="fas fa-lock icone-input"></i>
+                <input type="password" id="confirmarSenha" class="controle-formulario" placeholder="Repita a senha" required>
+                <i class="fas fa-eye alternar-senha" onclick="alternarSenha('confirmarSenha', this)"></i>
+              </div>
               <div class="mensagem-erro">As senhas não coincidem</div>
             </div>
           </div>
@@ -409,8 +575,8 @@
           <div class="linha-formulario">
             <div class="grupo-formulario cep">
               <label for="cep" class="rotulo-formulario">CEP</label>
-              <input type="text" id="cep" class="controle-formulario" placeholder="00000-000" required oninput="formatarCEP(this)">
               <i class="fas fa-map-marker-alt icone-input"></i>
+              <input type="text" id="cep" class="controle-formulario" placeholder="00000-000" required oninput="formatarCEP(this)">
               <div class="mensagem-erro">CEP inválido</div>
             </div>
           </div>
@@ -418,11 +584,13 @@
           <div class="linha-formulario">
             <div class="grupo-formulario">
               <label for="logradouro" class="rotulo-formulario">Logradouro</label>
+              <i class="fas fa-road icone-input"></i>
               <input type="text" id="logradouro" class="controle-formulario" placeholder="Rua, Avenida, etc." required>
               <div class="mensagem-erro">Por favor, informe o logradouro</div>
             </div>
             <div class="grupo-formulario numero">
               <label for="numero" class="rotulo-formulario">Número</label>
+              <i class="fas fa-home icone-input"></i>
               <input type="text" id="numero" class="controle-formulario" placeholder="Nº" required>
               <div class="mensagem-erro">Por favor, informe o número</div>
             </div>
@@ -431,10 +599,12 @@
           <div class="linha-formulario">
             <div class="grupo-formulario">
               <label for="complemento" class="rotulo-formulario">Complemento</label>
+              <i class="fas fa-building icone-input"></i>
               <input type="text" id="complemento" class="controle-formulario" placeholder="Apto, Bloco, etc.">
             </div>
             <div class="grupo-formulario">
               <label for="bairro" class="rotulo-formulario">Bairro</label>
+              <i class="fas fa-map-signs icone-input"></i>
               <input type="text" id="bairro" class="controle-formulario" placeholder="Seu bairro" required>
               <div class="mensagem-erro">Por favor, informe o bairro</div>
             </div>
@@ -443,11 +613,13 @@
           <div class="linha-formulario">
             <div class="grupo-formulario">
               <label for="cidade" class="rotulo-formulario">Cidade</label>
+              <i class="fas fa-city icone-input"></i>
               <input type="text" id="cidade" class="controle-formulario" placeholder="Sua cidade" required>
               <div class="mensagem-erro">Por favor, informe a cidade</div>
             </div>
             <div class="grupo-formulario uf">
               <label for="uf" class="rotulo-formulario">UF</label>
+              <i class="fas fa-map-pin icone-input"></i>
               <select id="uf" class="controle-formulario" required>
                 <option value="">Selecione</option>
                 <option value="AC">AC</option>
