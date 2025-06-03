@@ -10,13 +10,8 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root {
-      --primary: #9b59b6;
-      --secondary: #8e44ad;
-      --danger: #e74c3c;
-      --warning: #f39c12;
-      --light-gray: #f5f7fa;
-      --dark-gray: #333333;
-      --medium-gray: #e0e0e0;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
     }
 
     * {
@@ -27,13 +22,12 @@
     }
     
     body {
-      background: rgba(214, 174, 241, 0.15);
-      color: var(--dark-gray);
+      background-color: rgba(214, 174, 241, 0.15);
+      color: #333333;
     }
     
-    /* Top Navigation */
-    .top-nav {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    .topo-navegacao {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 0.75rem 1.5rem;
       position: sticky;
@@ -42,7 +36,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    .nav-container {
+    .container-navegacao {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -55,16 +49,16 @@
       font-size: 1.25rem;
     }
     
-    .nav-menu {
+    .menu-navegacao {
       display: flex;
       list-style: none;
     }
     
-    .nav-item {
+    .item-navegacao {
       margin-left: 1rem;
     }
     
-    .nav-link {
+    .link-navegacao {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -76,44 +70,44 @@
       gap: 0.5rem;
     }
     
-    .nav-link:hover, .nav-link.active {
+    .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
     }
     
-    .user-info {
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
     
-    .user-avatar {
+    .avatar-usuario {
       width: 40px;
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
+      background-color: #f0e5f5;
     }
     
-    /* Main Content */
-    .main-content {
+    .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
     
-    .header {
+    .cabecalho {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
     }
     
-    .page-title {
+    .titulo-pagina {
       font-size: 1.75rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .btn {
+    .botao {
       display: inline-block;
       padding: 0.75rem 1.5rem;
       border-radius: 6px;
@@ -124,27 +118,26 @@
       transition: all 0.3s;
     }
     
-    .btn-primary {
-      background-color: var(--primary);
+    .botao-primario {
+      background-color: var(--primaria);
       color: white;
     }
     
-    .btn-primary:hover {
-      background-color: #219653;
+    .botao-primario:hover {
+      background-color: var(--secundaria);
     }
     
-    .btn-secondary {
+    .botao-secundario {
       background-color: white;
-      color: var(--primary);
-      border: 1px solid var(--primary);
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
     }
     
-    .btn-secondary:hover {
+    .botao-secundario:hover {
       background-color: #f0f7ff;
     }
     
-    /* Mapa */
-    .map-container {
+    .container-mapa {
       height: 500px;
       border-radius: 10px;
       overflow: hidden;
@@ -152,14 +145,14 @@
       position: relative;
     }
 
-    #map {
+    #mapa {
       width: 100%;
       height: 100%;
-       position: static;
-  z-index: 0; 
+      position: static;
+      z-index: 0; 
     }
 
-    .map-overlay {
+    .sobreposicao-mapa {
       position: absolute;
       top: 1rem;
       left: 1rem;
@@ -170,67 +163,53 @@
       z-index: 0;
     }
 
-    .map-legend {
+    .legenda-mapa {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
     }
 
-    .legend-item {
+    .item-legenda {
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
 
-    .legend-color {
+    .cor-legenda {
       width: 12px;
       height: 12px;
       border-radius: 50%;
     }
     
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .legend-color {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-    
-    /* Filtros */
-    .map-filters {
+    .filtros-mapa {
       display: flex;
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
     
-    .filter-select {
+    .seletor-filtro {
       padding: 0.75rem;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid #e0e0e0;
       border-radius: 6px;
       font-size: 1rem;
       flex: 1;
     }
     
-    /* Estatísticas */
-    .stats-grid {
+    .grid-estatisticas {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1.5rem;
       margin-top: 1.5rem;
     }
     
-    .stat-card {
+    .cartao-estatistica {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .stat-card h3 {
+    .cartao-estatistica h3 {
       font-size: 1rem;
       color: #666;
       margin-bottom: 0.5rem;
@@ -239,27 +218,26 @@
       gap: 0.5rem;
     }
     
-    .stat-value {
+    .valor-estatistica {
       font-size: 1.75rem;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .stat-trend {
+    .tendencia-estatistica {
       font-size: 0.85rem;
       margin-top: 0.25rem;
     }
     
-    .trend-up {
-      color: var(--primary);
+    .tendencia-positiva {
+      color: var(--primaria);
     }
     
-    .trend-down {
-      color: var(--danger);
+    .tendencia-negativa {
+      color: #e74c3c;
     }
     
-    /* Lista de Pacientes */
-    .patients-section {
+    .secao-pacientes {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
@@ -267,19 +245,19 @@
       margin-top: 1.5rem;
     }
     
-    .patients-header {
+    .cabecalho-pacientes {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
     }
     
-    .patients-table {
+    .tabela-pacientes {
       width: 100%;
       border-collapse: collapse;
     }
     
-    .patients-table th {
+    .tabela-pacientes th {
       background-color: #f8f9fa;
       padding: 1rem;
       text-align: left;
@@ -287,12 +265,12 @@
       color: #666;
     }
     
-    .patients-table td {
+    .tabela-pacientes td {
       padding: 1rem;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid #e0e0e0;
     }
     
-    .patient-status {
+    .status-paciente {
       display: inline-block;
       padding: 0.25rem 0.75rem;
       border-radius: 20px;
@@ -300,73 +278,74 @@
       font-weight: 500;
     }
     
-    .status-good {
+    .status-bom {
       background-color: #e8f5e9;
       color: #2e7d32;
     }
     
-    .status-warning {
+    .status-alerta {
       background-color: #fff3cd;
       color: #856404;
     }
     
-    .status-bad {
+    .status-ruim {
       background-color: #f8d7da;
       color: #721c24;
     }
     
-    .action-btn {
+    .botao-acao {
       background: none;
       border: none;
-      color: var(--primary);
+      color: var(--primaria);
       cursor: pointer;
       margin: 0 0.25rem;
     }
     
-    /* Responsividade */
     @media (max-width: 768px) {
-      .top-nav {
-      padding: 0.5rem 0.5rem;
+      .topo-navegacao {
+        padding: 0.5rem 0.5rem;
       }
 
       .logo {
-      font-size: 1rem; /* diminui o tamanho da logo */
-      white-space: nowrap;
-      margin-right: 0.5rem;
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
       }
-      .nav-container {
+      
+      .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
-      .nav-menu {
+      
+      .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
         white-space: nowrap;
         gap: 0.25rem;
         width: 100%;
-        scrollbar-width: thin; /* Firefox */
+        scrollbar-width: thin;
       }
 
-      .nav-item {
+      .item-navegacao {
         margin-left: 0;
         flex: 0 0 auto;
       }
       
-      .user-info {
+      .info-usuario {
         justify-content: center;
         margin-top: 0.5rem;
       }
       
-      .map-filters {
+      .filtros-mapa {
         flex-direction: column;
       }
       
-      .stats-grid {
+      .grid-estatisticas {
         grid-template-columns: 1fr 1fr;
       }
       
-      .patients-table {
+      .tabela-pacientes {
         display: block;
         overflow-x: auto;
       }
@@ -374,43 +353,43 @@
   </style>
 </head>
 <body>
-  <nav class="top-nav">
-    <div class="nav-container">
+  <nav class="topo-navegacao">
+    <div class="container-navegacao">
       <div class="logo">Área do Agente Comunitário</div>
       
-     <ul class="nav-menu">
-        <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
-        <li class="nav-item"><a href="pacientes.html" class="nav-link"><i class="fas fa-users"></i> Pacientes</a></li>
-        <li class="nav-item"><a href="visitas.html" class="nav-link"><i class="fas fa-calendar-check"></i> Visitas</a></li>
-        <li class="nav-item"><a href="alertas.html" class="nav-link"><i class="fas fa-bell"></i> Alertas</a></li>
-        <li class="nav-item"><a href="territorio.html" class="nav-link active"><i class="fas fa-map-marked-alt"></i> Território</a></li>
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="dashboard.html" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="pacientes.html" class="link-navegacao"><i class="fas fa-users"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="visitas.html" class="link-navegacao"><i class="fas fa-calendar-check"></i> Visitas</a></li>
+        <li class="item-navegacao"><a href="alertas.html" class="link-navegacao"><i class="fas fa-bell"></i> Alertas</a></li>
+        <li class="item-navegacao"><a href="territorio.html" class="link-navegacao ativo"><i class="fas fa-map-marked-alt"></i> Território</a></li>
       </ul>
       
-      <div class="user-info">
-        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Foto do agente" class="user-avatar">
-        <span>Ana Oliveira</span>
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do agente" class="avatar-usuario">
+        <span>Agente Comunitário</span>
       </div>
     </div>
   </nav>
   
-  <main class="main-content">
-    <div class="header">
-      <h1 class="page-title">Visão do Território</h1>
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Visão do Território</h1>
       <div>
-        <button class="btn btn-primary">
+        <button class="botao botao-primario">
           <i class="fas fa-sync-alt"></i> Atualizar
         </button>
       </div>
     </div>
 
-    <div class="map-filters">
-      <select class="filter-select">
+    <div class="filtros-mapa">
+      <select class="seletor-filtro">
         <option>Todas as áreas</option>
         <option>Área 1 - Centro</option>
         <option>Área 2 - Vila Nova</option>
         <option>Área 3 - Jardim São Paulo</option>
       </select>
-      <select class="filter-select">
+      <select class="seletor-filtro">
         <option>Todos os status</option>
         <option>Em dia com exames</option>
         <option>Exames atrasados</option>
@@ -419,59 +398,59 @@
       </select>
     </div>
 
-    <div class="map-container">
-      <div id="map"></div>
-      <div class="map-overlay">
-        <div class="map-legend">
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: var(--primary);"></div>
+    <div class="container-mapa">
+      <div id="mapa"></div>
+      <div class="sobreposicao-mapa">
+        <div class="legenda-mapa">
+          <div class="item-legenda">
+            <div class="cor-legenda" style="background-color: var(--primaria);"></div>
             <span>Em dia com exames</span>
           </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: var(--warning);"></div>
+          <div class="item-legenda">
+            <div class="cor-legenda" style="background-color: #f39c12;"></div>
             <span>Exames atrasados</span>
           </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: var(--danger);"></div>
+          <div class="item-legenda">
+            <div class="cor-legenda" style="background-color: #e74c3c;"></div>
             <span>Nunca realizaram</span>
           </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: #8e44ad;"></div>
+          <div class="item-legenda">
+            <div class="cor-legenda" style="background-color: var(--secundaria);"></div>
             <span>Casos prioritários</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card">
+    <div class="grid-estatisticas">
+      <div class="cartao-estatistica">
         <h3><i class="fas fa-users"></i> Total de Pacientes</h3>
-        <div class="stat-value">128</div>
+        <div class="valor-estatistica">128</div>
       </div>
-      <div class="stat-card">
+      <div class="cartao-estatistica">
         <h3><i class="fas fa-check-circle"></i> Em dia</h3>
-        <div class="stat-value">85</div>
-        <div class="stat-trend trend-up">66%</div>
+        <div class="valor-estatistica">85</div>
+        <div class="tendencia-estatistica tendencia-positiva">66%</div>
       </div>
-      <div class="stat-card">
+      <div class="cartao-estatistica">
         <h3><i class="fas fa-exclamation-triangle"></i> Atrasados</h3>
-        <div class="stat-value">12</div>
+        <div class="valor-estatistica">12</div>
       </div>
-      <div class="stat-card">
+      <div class="cartao-estatistica">
         <h3><i class="fas fa-times-circle"></i> Nunca realizaram</h3>
-        <div class="stat-value">5</div>
+        <div class="valor-estatistica">5</div>
       </div>
     </div>
 
-    <div class="patients-section">
-      <div class="patients-header">
+    <div class="secao-pacientes">
+      <div class="cabecalho-pacientes">
         <h2><i class="fas fa-list"></i> Pacientes na Área Selecionada</h2>
-        <button class="btn btn-secondary">
+        <button class="botao botao-secundario">
           <i class="fas fa-download"></i> Exportar
         </button>
       </div>
       
-      <table class="patients-table">
+      <table class="tabela-pacientes">
         <thead>
           <tr>
             <th>Nome</th>
@@ -487,44 +466,44 @@
             <td>Maria da Silva</td>
             <td>38</td>
             <td>Rua das Flores, 123</td>
-            <td><span class="patient-status status-warning">Atrasado</span></td>
+            <td><span class="status-paciente status-alerta">Atrasado</span></td>
             <td>15/12/2024</td>
             <td>
-              <button class="action-btn" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
-              <button class="action-btn" title="Detalhes"><i class="fas fa-eye"></i></button>
+              <button class="botao-acao" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
+              <button class="botao-acao" title="Detalhes"><i class="fas fa-eye"></i></button>
             </td>
           </tr>
           <tr>
             <td>Joana Pereira</td>
             <td>42</td>
             <td>Av. Central, 456</td>
-            <td><span class="patient-status status-warning">Atrasado</span></td>
+            <td><span class="status-paciente status-alerta">Atrasado</span></td>
             <td>10/01/2025</td>
             <td>
-              <button class="action-btn" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
-              <button class="action-btn" title="Detalhes"><i class="fas fa-eye"></i></button>
+              <button class="botao-acao" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
+              <button class="botao-acao" title="Detalhes"><i class="fas fa-eye"></i></button>
             </td>
           </tr>
           <tr>
             <td>Carla Santos</td>
             <td>35</td>
             <td>Rua B, 789</td>
-            <td><span class="patient-status status-bad">Nunca realizou</span></td>
+            <td><span class="status-paciente status-ruim">Nunca realizou</span></td>
             <td>-</td>
             <td>
-              <button class="action-btn" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
-              <button class="action-btn" title="Detalhes"><i class="fas fa-eye"></i></button>
+              <button class="botao-acao" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
+              <button class="botao-acao" title="Detalhes"><i class="fas fa-eye"></i></button>
             </td>
           </tr>
           <tr>
             <td>Fernanda Costa</td>
             <td>45</td>
             <td>Rua C, 101</td>
-            <td><span class="patient-status status-good">Em dia</span></td>
+            <td><span class="status-paciente status-bom">Em dia</span></td>
             <td>20/03/2025</td>
             <td>
-              <button class="action-btn" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
-              <button class="action-btn" title="Detalhes"><i class="fas fa-eye"></i></button>
+              <button class="botao-acao" title="Agendar visita"><i class="fas fa-calendar-plus"></i></button>
+              <button class="botao-acao" title="Detalhes"><i class="fas fa-eye"></i></button>
             </td>
           </tr>
         </tbody>
@@ -533,69 +512,62 @@
   </main>
 
   <script>
-    // Simulação de interação com o mapa
     document.addEventListener('DOMContentLoaded', function() {
-      // Filtros
-      const areaFilter = document.querySelector('.filter-select:first-of-type');
-      const statusFilter = document.querySelector('.filter-select:last-of-type');
+      const filtroArea = document.querySelector('.seletor-filtro:first-of-type');
+      const filtroStatus = document.querySelector('.seletor-filtro:last-of-type');
       
-      areaFilter.addEventListener('change', function() {
+      filtroArea.addEventListener('change', function() {
         console.log('Área selecionada:', this.value);
-        // Aqui iria a lógica para filtrar o mapa
       });
       
-      statusFilter.addEventListener('change', function() {
+      filtroStatus.addEventListener('change', function() {
         console.log('Status selecionado:', this.value);
-        // Aqui iria a lógica para filtrar os pacientes
       });
       
-      // Botão de atualizar
-      const refreshBtn = document.querySelector('.btn-primary');
-      refreshBtn.addEventListener('click', function() {
+      const botaoAtualizar = document.querySelector('.botao-primario');
+      botaoAtualizar.addEventListener('click', function() {
         alert('Mapa e dados atualizados com sucesso!');
       });
       
-      // Botões de ação
-      document.querySelectorAll('.action-btn').forEach(button => {
-        button.addEventListener('click', function() {
-          const action = this.getAttribute('title');
-          const patientName = this.closest('tr').querySelector('td:first-child').textContent;
+      document.querySelectorAll('.botao-acao').forEach(botao => {
+        botao.addEventListener('click', function() {
+          const acao = this.getAttribute('title');
+          const nomePaciente = this.closest('tr').querySelector('td:first-child').textContent;
           
-          if (action === 'Agendar visita') {
-            alert(`Agendando visita para ${patientName}`);
-          } else if (action === 'Detalhes') {
-            alert(`Abrindo detalhes de ${patientName}`);
+          if (acao === 'Agendar visita') {
+            alert(`Agendando visita para ${nomePaciente}`);
+          } else if (acao === 'Detalhes') {
+            alert(`Abrindo detalhes de ${nomePaciente}`);
           }
         });
       });
+
+      const mapa = L.map('mapa').setView([-16.6869, -49.2648], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+      }).addTo(mapa);
+
+      L.circleMarker([-16.6869, -49.2648], {
+        color: '#9b59b6',
+        radius: 8
+      }).addTo(mapa).bindPopup("Paciente em dia");
+
+      L.circleMarker([-16.69, -49.27], {
+        color: '#f39c12',
+        radius: 8
+      }).addTo(mapa).bindPopup("Paciente com exame atrasado");
+
+      L.circleMarker([-16.68, -49.26], {
+        color: '#e74c3c',
+        radius: 8
+      }).addTo(mapa).bindPopup("Paciente nunca realizou exame");
+
+      L.circleMarker([-16.685, -49.25], {
+        color: '#8e44ad',
+        radius: 8
+      }).addTo(mapa).bindPopup("Paciente prioritário");
     });
-
-     const map = L.map('map').setView([-16.6869, -49.2648], 13); // Goiânia como exemplo
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap',
-    }).addTo(map);
-
-    // Exemplo de marcadores
-    L.circleMarker([-16.6869, -49.2648], {
-      color: '#185a9d',
-      radius: 8
-    }).addTo(map).bindPopup("Paciente em dia");
-
-    L.circleMarker([-16.69, -49.27], {
-      color: '#f39c12',
-      radius: 8
-    }).addTo(map).bindPopup("Paciente com exame atrasado");
-
-    L.circleMarker([-16.68, -49.26], {
-      color: '#e74c3c',
-      radius: 8
-    }).addTo(map).bindPopup("Paciente nunca realizou exame");
-
-    L.circleMarker([-16.685, -49.25], {
-      color: '#8e44ad',
-      radius: 8
-    }).addTo(map).bindPopup("Paciente prioritário");
   </script>
 </body>
 </html>

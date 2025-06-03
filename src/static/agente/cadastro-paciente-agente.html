@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Paciente - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: rgba(214, 174, 241, 0.15);
+      color: #333333;
+    }
+    
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: #f0e5f5;
+    }
+    
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+    
+    .botao-voltar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primaria);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .secao-formulario {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .grid-formulario {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .cabecalho-formulario {
+      border-bottom: 2px solid var(--primaria);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primaria);
+    }
+    
+    .grupo-formulario {
+      margin-bottom: 1rem;
+    }
+    
+    .rotulo-formulario {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primaria);
+    }
+    
+    .controle-formulario {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    
+    .upload-documento {
+      border: 2px dashed #e0e0e0;
+      padding: 1.5rem;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .upload-documento:hover {
+      border-color: var(--primaria);
+      background-color: #f0f7ff;
+    }
+    
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .botao-primario:hover {
+      background-color: var(--secundaria);
+    }
+    
+    .botao-secundario {
+      background-color: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+    
+    .botao-secundario:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .acoes-formulario {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .navegacao-superior {
+      padding: 0.5rem 0.5rem;
+      }
+
+      .logo {
+      font-size: 1rem;
+      white-space: nowrap;
+      margin-right: 0.5rem;
+      }
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .grid-formulario {
+        grid-template-columns: 1fr;
+      }
+      
+      .acoes-formulario {
+        flex-direction: column;
+      }
+      
+      .botao {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área do Agente Comunitário</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="dashboard.html" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="pacientes.html" class="link-navegacao ativo"><i class="fas fa-users"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="visitas.html" class="link-navegacao"><i class="fas fa-calendar-check"></i> Visitas</a></li>
+        <li class="item-navegacao"><a href="alertas.html" class="link-navegacao"><i class="fas fa-bell"></i> Alertas</a></li>
+        <li class="item-navegacao"><a href="territorio.html" class="link-navegacao"><i class="fas fa-map-marked-alt"></i> Território</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do agente" class="avatar-usuario">
+        <span>Agente Comunitário</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Cadastro de Paciente</h1>
+      <a href="pacientes.html" class="botao-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+
+    <div class="secao-formulario">
+      <h2 class="cabecalho-formulario"><i class="fas fa-user"></i> Dados Pessoais</h2>
+      <div class="grid-formulario">
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Nome Completo*</label>
+          <input type="text" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Nome da Mãe*</label>
+          <input type="text" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Data de Nascimento*</label>
+          <input type="date" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">CPF</label>
+          <input type="text" class="controle-formulario" placeholder="000.000.000-00">
+        </div>
+      </div>
+      
+      <div class="grid-formulario">
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Cartão SUS*</label>
+          <input type="text" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Raça/Cor</label>
+          <select class="controle-formulario">
+            <option>Branca</option>
+            <option>Preta</option>
+            <option>Parda</option>
+            <option>Amarela</option>
+            <option>Indígena</option>
+          </select>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Escolaridade</label>
+          <select class="controle-formulario">
+            <option>Analfabeta</option>
+            <option>Fundamental Incompleto</option>
+            <option>Fundamental Completo</option>
+            <option>Médio Completo</option>
+            <option>Superior Completo</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="secao-formulario">
+      <h2 class="cabecalho-formulario"><i class="fas fa-home"></i> Endereço</h2>
+      <div class="grid-formulario">
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">CEP*</label>
+          <input type="text" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Logradouro*</label>
+          <input type="text" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Número*</label>
+          <input type="text" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Complemento</label>
+          <input type="text" class="controle-formulario">
+        </div>
+      </div>
+      
+      <div class="grid-formulario">
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Bairro*</label>
+          <input type="text" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Município*</label>
+          <input type="text" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">UF*</label>
+          <select class="controle-formulario" required>
+            <option>SP</option>
+            <option>RJ</option>
+            <option>MG</option>
+          </select>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Ponto de Referência</label>
+          <input type="text" class="controle-formulario">
+        </div>
+      </div>
+    </div>
+
+    <div class="secao-formulario">
+      <h2 class="cabecalho-formulario"><i class="fas fa-phone"></i> Contato</h2>
+      <div class="grid-formulario">
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Telefone*</label>
+          <input type="tel" class="controle-formulario" required>
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">WhatsApp</label>
+          <input type="tel" class="controle-formulario">
+        </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">E-mail</label>
+          <input type="email" class="controle-formulario">
+        </div>
+      </div>
+    </div>
+
+    <div class="secao-formulario">
+      <h2 class="cabecalho-formulario"><i class="fas fa-file-upload"></i> Documentos</h2>
+      <div class="upload-documento">
+        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--primaria); margin-bottom: 1rem;"></i>
+        <p>Arraste documentos aqui ou clique para selecionar</p>
+        <p style="color: #666; font-size: 0.9rem;">Cartão SUS, RG, CPF ou comprovante de residência</p>
+      </div>
+    </div>
+
+    <div class="acoes-formulario">
+      <button class="botao botao-secundario">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+      <button class="botao botao-primario">
+        <i class="fas fa-save"></i> Salvar Paciente
+      </button>
+    </div>
+  </main>
+</body>
+</html>

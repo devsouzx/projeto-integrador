@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Visita - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: rgba(214, 174, 241, 0.15);
+      color: #333333;
+    }
+    
+    .topo-navegacao {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: #f0e5f5;
+    }
+    
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+    
+    .botao-voltar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primaria);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .secao-formulario {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .grupo-formulario {
+      margin-bottom: 1rem;
+    }
+    
+    .rotulo-formulario {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primaria);
+    }
+    
+    .controle-formulario {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    
+    .lista-pacientes {
+      list-style: none;
+      margin-top: 1rem;
+    }
+    
+    .item-paciente {
+      padding: 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .item-paciente:hover {
+      background-color: #f5f7fa;
+    }
+    
+    .item-paciente.selecionado {
+      border-color: var(--primaria);
+      background-color: #f0f7ff;
+    }
+    
+    .nome-paciente {
+      font-weight: 500;
+    }
+    
+    .detalhes-paciente {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .container-calendario {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .cabecalho-calendario {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .grade-calendario {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+    }
+    
+    .cabecalho-dia {
+      text-align: center;
+      font-weight: 600;
+      padding: 0.5rem;
+      color: var(--primaria);
+    }
+    
+    .dia-calendario {
+      aspect-ratio: 1;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .dia-calendario:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .numero-dia {
+      font-weight: 500;
+    }
+    
+    .dia-calendario.hoje {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .dia-calendario.com-visitas::after {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: #f39c12;
+      border-radius: 50%;
+      margin: 0.25rem auto 0;
+    }
+    
+    .dia-calendario.selecionado {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .dia-calendario.desabilitado {
+      color: #ccc;
+      background-color: #f9f9f9;
+      cursor: not-allowed;
+    }
+    
+    .horarios-disponiveis {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .horario {
+      padding: 0.75rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .horario:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .horario.selecionado {
+      background-color: var(--primaria);
+      color: white;
+      border-color: var(--primaria);
+    }
+    
+    .horario.indisponivel {
+      background-color: #f9f9f9;
+      color: #ccc;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+    
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .botao-primario:hover {
+      background-color: #8e44ad;
+    }
+    
+    .botao-secundario {
+      background-color: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+    
+    .botao-secundario:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .botao-pequeno {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .acoes-formulario {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .mensagem-erro {
+      color: #e74c3c;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .topo-navegacao {
+        padding: 0.5rem 0.5rem;
+      }
+
+      .logo {
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
+      }
+      
+      .container-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+      
+      .menu-navegacao {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.25rem;
+        width: 100%;
+        scrollbar-width: thin;
+        padding-bottom: 0.5rem;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .grade-calendario {
+        grid-template-columns: repeat(7, 1fr);
+        font-size: 0.8rem;
+      }
+      
+      .horarios-disponiveis {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .acoes-formulario {
+        flex-direction: column;
+      }
+      
+      .botao {
+        width: 100%;
+      }
+      
+      .secao-formulario {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="topo-navegacao">
+    <div class="container-navegacao">
+      <div class="logo">Área do Agente Comunitário</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="dashboard.html" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="pacientes.html" class="link-navegacao"><i class="fas fa-users"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="visitas.html" class="link-navegacao ativo"><i class="fas fa-calendar-check"></i> Visitas</a></li>
+        <li class="item-navegacao"><a href="alertas.html" class="link-navegacao"><i class="fas fa-bell"></i> Alertas</a></li>
+        <li class="item-navegacao"><a href="territorio.html" class="link-navegacao"><i class="fas fa-map-marked-alt"></i> Território</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do agente" class="avatar-usuario">
+        <span>Agente Comunitário</span>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Agendar Visita Domiciliar</h1>
+      <a href="visitas.html" class="botao-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+
+    <div class="secao-formulario">
+      <h2 class="cabecalho-formulario"><i class="fas fa-user"></i> Selecionar Paciente</h2>
+      <div class="grupo-formulario">
+        <input type="text" id="busca-paciente" class="controle-formulario" placeholder="Digite o nome ou cartão SUS">
+        <div id="erro-busca" class="mensagem-erro">Nenhum paciente encontrado</div>
+      </div>
+      
+      <ul class="lista-pacientes" id="lista-pacientes">
+        <li class="item-paciente selecionado" data-paciente-id="1">
+          <div class="nome-paciente">Maria da Silva</div>
+          <div class="detalhes-paciente">38 anos | Rua das Flores, 123</div>
+        </li>
+        <li class="item-paciente" data-paciente-id="2">
+          <div class="nome-paciente">Joana Pereira</div>
+          <div class="detalhes-paciente">42 anos | Av. Central, 456</div>
+        </li>
+        <li class="item-paciente" data-paciente-id="3">
+          <div class="nome-paciente">Carla Santos</div>
+          <div class="detalhes-paciente">35 anos | Rua B, 789</div>
+        </li>
+      </ul>
+      <div id="erro-paciente" class="mensagem-erro">Selecione um paciente</div>
+    </div>
+
+    <div class="container-calendario">
+      <div class="cabecalho-calendario">
+        <button id="mes-anterior" class="botao botao-secundario botao-pequeno">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <h3 id="mes-atual">Junho 2025</h3>
+        <button id="proximo-mes" class="botao botao-secundario botao-pequeno">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      
+      <div class="grade-calendario" id="grade-calendario">
+      </div>
+    </div>
+
+    <div class="secao-formulario">
+      <h2 class="cabecalho-formulario"><i class="fas fa-clock"></i> Horário</h2>
+      <div class="horarios-disponiveis" id="horarios-disponiveis">
+        <div class="horario" data-horario="08:00">08:00 - 09:00</div>
+        <div class="horario" data-horario="09:00">09:00 - 10:00</div>
+        <div class="horario selecionado" data-horario="10:00">10:00 - 11:00</div>
+        <div class="horario" data-horario="11:00">11:00 - 12:00</div>
+        <div class="horario indisponivel" data-horario="14:00">14:00 - 15:00</div>
+        <div class="horario" data-horario="15:00">15:00 - 16:00</div>
+        <div class="horario" data-horario="16:00">16:00 - 17:00</div>
+      </div>
+      <div id="erro-horario" class="mensagem-erro">Selecione um horário disponível</div>
+    </div>
+
+    <div class="secao-formulario">
+      <h2 class="cabecalho-formulario"><i class="fas fa-edit"></i> Motivo da Visita</h2>
+      <div class="grupo-formulario">
+        <select id="motivo-visita" class="controle-formulario">
+          <option value="">Selecione um motivo</option>
+          <option value="preventivo">Lembrete de exame preventivo</option>
+          <option value="acompanhamento" selected>Acompanhamento de resultado anormal</option>
+          <option value="orientacoes">Orientações de saúde</option>
+          <option value="cadastro">Cadastro inicial</option>
+          <option value="outro">Outro</option>
+        </select>
+        <div id="erro-motivo" class="mensagem-erro">Selecione um motivo para a visita</div>
+      </div>
+      <div class="grupo-formulario">
+        <label class="rotulo-formulario">Observações</label>
+        <textarea id="observacoes-visita" class="controle-formulario" rows="3" placeholder="Detalhes sobre a visita..."></textarea>
+      </div>
+    </div>
+
+    <div class="acoes-formulario">
+      <button id="botao-cancelar" class="botao botao-secundario">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+      <button id="botao-enviar" class="botao botao-primario">
+        <i class="fas fa-calendar-check"></i> Agendar Visita
+      </button>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let dataAtual = new Date(2025, 5, 1);
+      let pacienteSelecionado = 1;
+      let dataSelecionada = null;
+      let horarioSelecionado = "10:00";
+      
+      const itensPaciente = document.querySelectorAll('.item-paciente');
+      const buscaPaciente = document.getElementById('busca-paciente');
+      const gradeCalendario = document.getElementById('grade-calendario');
+      const mesAtualElemento = document.getElementById('mes-atual');
+      const mesAnteriorBtn = document.getElementById('mes-anterior');
+      const proximoMesBtn = document.getElementById('proximo-mes');
+      const horarios = document.querySelectorAll('.horario');
+      const motivoVisita = document.getElementById('motivo-visita');
+      const botaoEnviar = document.getElementById('botao-enviar');
+      const botaoCancelar = document.getElementById('botao-cancelar');
+      
+      const erroPaciente = document.getElementById('erro-paciente');
+      const erroHorario = document.getElementById('erro-horario');
+      const erroMotivo = document.getElementById('erro-motivo');
+      const erroBusca = document.getElementById('erro-busca');
+      
+      function renderizarCalendario() {
+        gradeCalendario.innerHTML = '';
+        
+        const nomesDias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        nomesDias.forEach(dia => {
+          const elementoDia = document.createElement('div');
+          elementoDia.className = 'cabecalho-dia';
+          elementoDia.textContent = dia;
+          gradeCalendario.appendChild(elementoDia);
+        });
+        
+        const primeiroDia = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 1);
+        const ultimoDia = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0);
+        const diaInicio = primeiroDia.getDay();
+        
+        const ultimoDiaMesAnterior = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 0).getDate();
+        for (let i = diaInicio - 1; i >= 0; i--) {
+          const elementoDia = document.createElement('div');
+          elementoDia.className = 'dia-calendario desabilitado';
+          elementoDia.innerHTML = `<div class="numero-dia">${ultimoDiaMesAnterior - i}</div>`;
+          gradeCalendario.appendChild(elementoDia);
+        }
+        
+        const hoje = new Date();
+        for (let i = 1; i <= ultimoDia.getDate(); i++) {
+          const elementoDia = document.createElement('div');
+          elementoDia.className = 'dia-calendario';
+          
+          if (dataAtual.getFullYear() === hoje.getFullYear() && 
+              dataAtual.getMonth() === hoje.getMonth() && 
+              i === hoje.getDate()) {
+            elementoDia.classList.add('hoje');
+          }
+          
+          if (i % 5 === 0) {
+            elementoDia.classList.add('com-visitas');
+          }
+          
+          if (i === 20 && dataAtual.getMonth() === 5 && dataAtual.getFullYear() === 2025) {
+            elementoDia.classList.add('selecionado');
+            dataSelecionada = new Date(2025, 5, 20);
+          }
+          
+          elementoDia.innerHTML = `<div class="numero-dia">${i}</div>`;
+          
+          elementoDia.addEventListener('click', function() {
+            if (!this.classList.contains('desabilitado')) {
+              document.querySelectorAll('.dia-calendario.selecionado').forEach(el => {
+                el.classList.remove('selecionado');
+              });
+              
+              this.classList.add('selecionado');
+              
+              dataSelecionada = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), i);
+              
+              atualizarHorarios();
+            }
+          });
+          
+          gradeCalendario.appendChild(elementoDia);
+        }
+        
+        const totalCelulas = diaInicio + ultimoDia.getDate() > 35 ? 42 : 35;
+        const celulasRestantes = totalCelulas - (diaInicio + ultimoDia.getDate());
+        for (let i = 1; i <= celulasRestantes; i++) {
+          const elementoDia = document.createElement('div');
+          elementoDia.className = 'dia-calendario desabilitado';
+          elementoDia.innerHTML = `<div class="numero-dia">${i}</div>`;
+          gradeCalendario.appendChild(elementoDia);
+        }
+        
+        const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        mesAtualElemento.textContent = `${meses[dataAtual.getMonth()]} ${dataAtual.getFullYear()}`;
+      }
+      
+      function atualizarHorarios() {
+        horarios.forEach(horario => {
+          if (Math.random() < 0.3 && !horario.classList.contains('selecionado')) {
+            horario.classList.add('indisponivel');
+          } else if (!horario.classList.contains('selecionado')) {
+            horario.classList.remove('indisponivel');
+          }
+        });
+      }
+      
+      itensPaciente.forEach(item => {
+        item.addEventListener('click', function() {
+          itensPaciente.forEach(i => i.classList.remove('selecionado'));
+          
+          this.classList.add('selecionado');
+          
+          pacienteSelecionado = parseInt(this.getAttribute('data-paciente-id'));
+          
+          erroPaciente.style.display = 'none';
+        });
+      });
+      
+      buscaPaciente.addEventListener('input', function() {
+        const termoBusca = this.value.toLowerCase();
+        let encontrado = false;
+        
+        itensPaciente.forEach(item => {
+          const nome = item.querySelector('.nome-paciente').textContent.toLowerCase();
+          const detalhes = item.querySelector('.detalhes-paciente').textContent.toLowerCase();
+          
+          if (nome.includes(termoBusca) || detalhes.includes(termoBusca)) {
+            item.style.display = 'block';
+            encontrado = true;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+        
+        erroBusca.style.display = encontrado ? 'none' : 'block';
+      });
+      
+      horarios.forEach(horario => {
+        horario.addEventListener('click', function() {
+          if (!this.classList.contains('indisponivel')) {
+            horarios.forEach(h => h.classList.remove('selecionado'));
+            
+            this.classList.add('selecionado');
+            
+            horarioSelecionado = this.getAttribute('data-horario');
+            
+            erroHorario.style.display = 'none';
+          }
+        });
+      });
+      
+      mesAnteriorBtn.addEventListener('click', function() {
+        dataAtual.setMonth(dataAtual.getMonth() - 1);
+        renderizarCalendario();
+      });
+      
+      proximoMesBtn.addEventListener('click', function() {
+        dataAtual.setMonth(dataAtual.getMonth() + 1);
+        renderizarCalendario();
+      });
+      
+      botaoEnviar.addEventListener('click', function(e) {
+        e.preventDefault();
+        let valido = true;
+        
+        if (!pacienteSelecionado) {
+          erroPaciente.style.display = 'block';
+          valido = false;
+        }
+        
+        if (!dataSelecionada) {
+          alert('Selecione uma data no calendário');
+          valido = false;
+        }
+        
+        if (!horarioSelecionado) {
+          erroHorario.style.display = 'block';
+          valido = false;
+        }
+        
+        if (!motivoVisita.value) {
+          erroMotivo.style.display = 'block';
+          valido = false;
+        }
+        
+        if (valido) {
+          const nomePaciente = document.querySelector('.item-paciente.selecionado .nome-paciente').textContent;
+          const dataFormatada = dataSelecionada.toLocaleDateString('pt-BR');
+          
+          alert(`Visita agendada com sucesso!\n\nPaciente: ${nomePaciente}\nData: ${dataFormatada}\nHorário: ${horarioSelecionado}\nMotivo: ${motivoVisita.options[motivoVisita.selectedIndex].text}`);
+          
+          setTimeout(() => {
+            window.location.href = 'visitas.html';
+          }, 1500);
+        }
+      });
+      
+      botaoCancelar.addEventListener('click', function() {
+        if (confirm('Deseja cancelar o agendamento? Todos os dados serão perdidos.')) {
+          window.location.href = 'visitas.html';
+        }
+      });
+      
+      renderizarCalendario();
+    });
+  </script>
+</body>
+</html>

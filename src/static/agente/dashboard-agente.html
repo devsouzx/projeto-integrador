@@ -10,11 +10,6 @@
     :root {
       --primary: #9b59b6;
       --secondary: #8e44ad;
-      --danger: #e74c3c;
-      --warning: #f39c12;
-      --light-gray: #f5f7fa;
-      --dark-gray: #333333;
-      --medium-gray: #e0e0e0;
     }
 
     * {
@@ -25,12 +20,11 @@
     }
     
     body {
-      background: rgba(214, 174, 241, 0.15);
-      color: var(--dark-gray);
+      background-color: rgba(214, 174, 241, 0.15);
+      color: #333333;
     }
     
-    /* Top Navigation */
-    .top-nav {
+    .navegacao-superior {
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       color: white;
       padding: 0.75rem 1.5rem;
@@ -40,7 +34,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    .nav-container {
+    .container-navegacao {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -53,16 +47,16 @@
       font-size: 1.25rem;
     }
     
-    .nav-menu {
+    .menu-navegacao {
       display: flex;
       list-style: none;
     }
     
-    .nav-item {
+    .item-navegacao {
       margin-left: 1rem;
     }
     
-    .nav-link {
+    .link-navegacao {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -74,54 +68,54 @@
       gap: 0.5rem;
     }
     
-    .nav-link:hover, .nav-link.active {
+    .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
     }
     
-    .user-info {
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
     
-    .user-avatar {
+    .avatar-usuario {
       width: 40px;
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
+      background-color: #f0e5f5;
     }
     
-    /* Main Content */
-    .main-content {
+    .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
     
-    .header {
+    .cabecalho {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
     }
     
-    .page-title {
+    .titulo-pagina {
       font-size: 1.75rem;
       color: var(--primary);
     }
     
-    .notification-bell {
+    .sino-notificacao {
       position: relative;
       font-size: 1.25rem;
       color: var(--primary);
     }
     
-    .notification-badge {
+    .badge-notificacao {
       position: absolute;
       top: -5px;
       right: -5px;
-      background-color: var(--danger);
+      background-color: #e74c3c;
       color: white;
       border-radius: 50%;
       width: 18px;
@@ -132,8 +126,7 @@
       justify-content: center;
     }
     
-    /* Cards */
-    .cards-grid {
+    .grade-cards {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
@@ -147,19 +140,19 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .card-header {
+    .cabecalho-card {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
     }
     
-    .card-title {
+    .titulo-card {
       font-size: 1.1rem;
       font-weight: 600;
     }
     
-    .card-icon {
+    .icone-card {
       width: 40px;
       height: 40px;
       border-radius: 8px;
@@ -169,49 +162,49 @@
       color: white;
     }
     
-    .icon-primary {
+    .icone-primario {
       background-color: var(--primary);
     }
     
-    .icon-secondary {
+    .icone-secundario {
       background-color: var(--secondary);
     }
     
-    .icon-warning {
-      background-color: var(--warning);
+    .icone-alerta {
+      background-color: #f39c12;
     }
     
-    .patient-list {
+    .lista-pacientes {
       list-style: none;
     }
     
-    .patient-item {
+    .item-paciente {
       padding: 0.75rem 0;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid #e0e0e0;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     
-    .patient-item:last-child {
+    .item-paciente:ultimo {
       border-bottom: none;
     }
     
-    .patient-info {
+    .info-paciente {
       flex: 1;
     }
     
-    .patient-name {
+    .nome-paciente {
       font-weight: 500;
     }
     
-    .patient-details {
+    .detalhes-paciente {
       font-size: 0.85rem;
       color: #666;
       margin-top: 0.25rem;
     }
     
-    .patient-status {
+    .status-paciente {
       display: inline-block;
       padding: 0.25rem 0.5rem;
       border-radius: 20px;
@@ -219,22 +212,22 @@
       font-weight: 500;
     }
     
-    .status-pending {
+    .status-pendente {
       background-color: #fff3cd;
       color: #856404;
     }
     
-    .status-completed {
+    .status-concluido {
       background-color: #d4edda;
       color: #155724;
     }
     
-    .status-danger {
+    .status-prioritario {
       background-color: #f8d7da;
       color: #721c24;
     }
     
-    .btn {
+    .botao {
       display: inline-block;
       padding: 0.75rem 1.5rem;
       border-radius: 6px;
@@ -245,33 +238,32 @@
       transition: all 0.3s;
     }
     
-    .btn-primary {
+    .botao-primario {
       background-color: var(--primary);
       color: white;
     }
     
-    .btn-primary:hover {
-      background-color: #219653;
+    .botao-primario:hover {
+      background-color: #8e44ad;
       transform: translateY(-2px);
     }
     
-    .btn-secondary {
+    .botao-secundario {
       background-color: white;
       color: var(--primary);
       border: 1px solid var(--primary);
     }
     
-    .btn-secondary:hover {
-      background-color: #f0f7ff;
+    .botao-secundario:hover {
+      background-color: #f0e5f5;
     }
     
-    .btn-small {
+    .botao-pequeno {
       padding: 0.5rem 1rem;
       font-size: 0.9rem;
     }
     
-    /* Seção de Território */
-    .territory-section {
+    .secao-territorio {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
@@ -279,7 +271,7 @@
       margin-bottom: 2rem;
     }
     
-    .map-container {
+    .container-mapa {
       height: 300px;
       background-color: #f8f9fa;
       border-radius: 8px;
@@ -290,132 +282,130 @@
       color: #999;
     }
     
-    /* Lista de Visitas */
-    .visit-list {
+    .lista-visitas {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .visit-item {
+    .item-visita {
       padding: 1rem;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid #e0e0e0;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     
-    .visit-item:last-child {
+    .item-visita:ultimo {
       border-bottom: none;
     }
     
-    .visit-info {
+    .info-visita {
       flex: 1;
     }
     
-    .visit-date {
+    .data-visita {
       font-weight: 500;
       color: var(--primary);
     }
     
-    .visit-address {
+    .endereco-visita {
       font-size: 0.9rem;
       color: #666;
       margin-top: 0.25rem;
     }
     
-    .visit-status {
+    .status-visita {
       font-size: 0.85rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
     
-    /* Formulário de Cadastro */
-    .form-container {
+    .container-formulario {
       background-color: white;
       border-radius: 10px;
       padding: 2rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .form-group {
+    .grupo-formulario {
       margin-bottom: 1.5rem;
     }
     
-    .form-label {
+    .rotulo-formulario {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
       color: var(--primary);
     }
     
-    .form-control {
+    .controle-formulario {
       width: 100%;
       padding: 0.75rem;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid #e0e0e0;
       border-radius: 6px;
       font-size: 1rem;
     }
     
-    .form-actions {
+    .acoes-formulario {
       display: flex;
       justify-content: flex-end;
       gap: 1rem;
       margin-top: 2rem;
     }
     
-    /* Responsividade */
     @media (max-width: 768px) {
-      .top-nav {
-      padding: 0.5rem 0.5rem;
+      .navegacao-superior {
+        padding: 0.5rem 0.5rem;
       }
 
       .logo {
-      font-size: 1rem; /* diminui o tamanho da logo */
-      white-space: nowrap;
-      margin-right: 0.5rem;
+        font-size: 1rem;
+        white-space: nowrap;
+        margin-right: 0.5rem;
       }
-      .nav-container {
+      
+      .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
-      .nav-menu {
+      
+      .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
         white-space: nowrap;
         gap: 0.25rem;
         width: 100%;
-        scrollbar-width: thin; /* Firefox */
+        scrollbar-width: thin;
       }
 
-      .nav-item {
+      .item-navegacao {
         margin-left: 0;
         flex: 0 0 auto;
       }
       
-      .cards-grid {
+      .grade-cards {
         grid-template-columns: 1fr;
       }
       
-      .main-content {
+      .conteudo-principal {
         padding: 0 1rem;
       }
       
-      .form-actions {
+      .acoes-formulario {
         flex-direction: column;
       }
       
-      .btn {
+      .botao {
         width: 100%;
       }
     }
 
-    /* Modo offline */
-    .offline-banner {
-      background-color: var(--warning);
+    .banner-offline {
+      background-color: #f39c12;
       color: white;
       padding: 0.75rem;
       text-align: center;
@@ -432,187 +422,183 @@
   </style>
 </head>
 <body>
-  <nav class="top-nav">
-    <div class="nav-container">
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
       <div class="logo">Área do Agente Comunitário</div>
       
-      <ul class="nav-menu">
-        <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="fas fa-home"></i> Início</a></li>
-        <li class="nav-item"><a href="pacientes.html" class="nav-link"><i class="fas fa-users"></i> Pacientes</a></li>
-        <li class="nav-item"><a href="visitas.html" class="nav-link"><i class="fas fa-calendar-check"></i> Visitas</a></li>
-        <li class="nav-item"><a href="alertas.html" class="nav-link"><i class="fas fa-bell"></i> Alertas</a></li>
-        <li class="nav-item"><a href="territorio.html" class="nav-link"><i class="fas fa-map-marked-alt"></i> Território</a></li>
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="dashboard.html" class="link-navegacao ativo"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="pacientes.html" class="link-navegacao"><i class="fas fa-users"></i> Pacientes</a></li>
+        <li class="item-navegacao"><a href="visitas.html" class="link-navegacao"><i class="fas fa-calendar-check"></i> Visitas</a></li>
+        <li class="item-navegacao"><a href="alertas.html" class="link-navegacao"><i class="fas fa-bell"></i> Alertas</a></li>
+        <li class="item-navegacao"><a href="territorio.html" class="link-navegacao"><i class="fas fa-map-marked-alt"></i> Território</a></li>
       </ul>
       
-      <div class="user-info">
-        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Foto do agente" class="user-avatar">
-        <span>Ana Oliveira</span>
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do agente" class="avatar-usuario">
+        <span>Agente Comunitário</span>
       </div>
     </div>
   </nav>
   
-  <main class="main-content">
-    <div class="header">
-      <h1 class="page-title">Painel do Agente Comunitário</h1>
-      <div class="notification-bell">
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Painel do Agente Comunitário</h1>
+      <div class="sino-notificacao">
         <i class="fas fa-bell"></i>
-        <span class="notification-badge">3</span>
+        <span class="badge-notificacao">3</span>
       </div>
     </div>
     
-    <div class="cards-grid">
+    <div class="grade-cards">
       <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Pacientes com Exames Pendentes</h2>
-          <div class="card-icon icon-warning">
+        <div class="cabecalho-card">
+          <h2 class="titulo-card">Pacientes com Exames Pendentes</h2>
+          <div class="icone-card icone-alerta">
             <i class="fas fa-exclamation-triangle"></i>
           </div>
         </div>
-        <ul class="patient-list">
-          <li class="patient-item">
-            <div class="patient-info">
-              <div class="patient-name">Maria da Silva</div>
-              <div class="patient-details">38 anos | Último exame: 15/12/2024</div>
+        <ul class="lista-pacientes">
+          <li class="item-paciente">
+            <div class="info-paciente">
+              <div class="nome-paciente">Maria da Silva</div>
+              <div class="detalhes-paciente">38 anos | Último exame: 15/12/2024</div>
             </div>
-            <span class="patient-status status-pending">Atrasado 3 meses</span>
+            <span class="status-paciente status-pendente">Atrasado 3 meses</span>
           </li>
-          <li class="patient-item">
-            <div class="patient-info">
-              <div class="patient-name">Joana Pereira</div>
-              <div class="patient-details">42 anos | Último exame: 10/01/2025</div>
+          <li class="item-paciente">
+            <div class="info-paciente">
+              <div class="nome-paciente">Joana Pereira</div>
+              <div class="detalhes-paciente">42 anos | Último exame: 10/01/2025</div>
             </div>
-            <span class="patient-status status-pending">Atrasado 2 meses</span>
+            <span class="status-paciente status-pendente">Atrasado 2 meses</span>
           </li>
-          <li class="patient-item">
-            <div class="patient-info">
-              <div class="patient-name">Carla Santos</div>
-              <div class="patient-details">35 anos | Nunca realizou</div>
+          <li class="item-paciente">
+            <div class="info-paciente">
+              <div class="nome-paciente">Carla Santos</div>
+              <div class="detalhes-paciente">35 anos | Nunca realizou</div>
             </div>
-            <span class="patient-status status-danger">Prioritário</span>
+            <span class="status-paciente status-prioritario">Prioritário</span>
           </li>
         </ul>
-        <button class="btn btn-primary btn-block" style="margin-top: 1rem;">
+        <button class="botao botao-primario" style="margin-top: 1rem;">
           <i class="fas fa-list"></i> Ver Todos (12)
         </button>
       </div>
       
       <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Próximas Visitas</h2>
-          <div class="card-icon icon-primary">
+        <div class="cabecalho-card">
+          <h2 class="titulo-card">Próximas Visitas</h2>
+          <div class="icone-card icone-primario">
             <i class="fas fa-calendar-day"></i>
           </div>
         </div>
-        <ul class="patient-list">
-          <li class="patient-item">
-            <div class="patient-info">
-              <div class="patient-name">Fernanda Costa</div>
-              <div class="patient-details">Amanhã, 09:00 | Rua das Flores, 123</div>
+        <ul class="lista-pacientes">
+          <li class="item-paciente">
+            <div class="info-paciente">
+              <div class="nome-paciente">Fernanda Costa</div>
+              <div class="detalhes-paciente">Amanhã, 09:00 | Rua das Flores, 123</div>
             </div>
-            <button class="btn btn-secondary btn-small">
+            <button class="botao botao-secundario botao-pequeno">
               <i class="fas fa-phone"></i> Confirmar
             </button>
           </li>
-          <li class="patient-item">
-            <div class="patient-info">
-              <div class="patient-name">Patrícia Almeida</div>
-              <div class="patient-details">20/06/2025, 14:00 | Av. Principal, 456</div>
+          <li class="item-paciente">
+            <div class="info-paciente">
+              <div class="nome-paciente">Patrícia Almeida</div>
+              <div class="detalhes-paciente">20/06/2025, 14:00 | Av. Principal, 456</div>
             </div>
-            <button class="btn btn-secondary btn-small">
+            <button class="botao botao-secundario botao-pequeno">
               <i class="fas fa-phone"></i> Confirmar
             </button>
           </li>
         </ul>
-        <button class="btn btn-primary btn-block" style="margin-top: 1rem;">
+        <button class="botao botao-primario" style="margin-top: 1rem;">
           <i class="fas fa-plus"></i> Agendar Nova Visita
         </button>
       </div>
       
       <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Cadastro Rápido</h2>
-          <div class="card-icon icon-secondary">
+        <div class="cabecalho-card">
+          <h2 class="titulo-card">Cadastro Rápido</h2>
+          <div class="icone-card icone-secundario">
             <i class="fas fa-user-plus"></i>
           </div>
         </div>
-        <div class="form-container">
-          <div class="form-group">
-            <label class="form-label">Nome Completo</label>
-            <input type="text" class="form-control" placeholder="Digite o nome da paciente">
+        <div class="container-formulario">
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Nome Completo</label>
+            <input type="text" class="controle-formulario" placeholder="Digite o nome da paciente">
           </div>
-          <div class="form-group">
-            <label class="form-label">Data de Nascimento</label>
-            <input type="date" class="form-control">
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Data de Nascimento</label>
+            <input type="date" class="controle-formulario">
           </div>
-          <div class="form-group">
-            <label class="form-label">Cartão SUS</label>
-            <input type="text" class="form-control" placeholder="Número do Cartão SUS">
+          <div class="grupo-formulario">
+            <label class="rotulo-formulario">Cartão SUS</label>
+            <input type="text" class="controle-formulario" placeholder="Número do Cartão SUS">
           </div>
-          <button class="btn btn-primary btn-block">
+          <button class="botao botao-primario">
             <i class="fas fa-save"></i> Salvar Cadastro
           </button>
         </div>
       </div>
     </div>
     
-    <div class="visit-list">
+    <div class="lista-visitas">
       <h2><i class="fas fa-history"></i> Últimas Visitas</h2>
       <ul>
-        <li class="visit-item">
-          <div class="visit-info">
-            <div class="visit-date">15/06/2025 - 10:30</div>
-            <div class="visit-address">Maria da Silva - Rua das Flores, 123</div>
+        <li class="item-visita">
+          <div class="info-visita">
+            <div class="data-visita">15/06/2025 - 10:30</div>
+            <div class="endereco-visita">Maria da Silva - Rua das Flores, 123</div>
           </div>
-          <div class="visit-status">
+          <div class="status-visita">
             <i class="fas fa-check-circle" style="color: var(--primary);"></i>
             <span>Visita realizada</span>
           </div>
         </li>
-        <li class="visit-item">
-          <div class="visit-info">
-            <div class="visit-date">14/06/2025 - 15:15</div>
-            <div class="visit-address">Joana Pereira - Av. Central, 456</div>
+        <li class="item-visita">
+          <div class="info-visita">
+            <div class="data-visita">14/06/2025 - 15:15</div>
+            <div class="endereco-visita">Joana Pereira - Av. Central, 456</div>
           </div>
-          <div class="visit-status">
+          <div class="status-visita">
             <i class="fas fa-check-circle" style="color: var(--primary);"></i>
             <span>Visita realizada</span>
           </div>
         </li>
-        <li class="visit-item">
-          <div class="visit-info">
-            <div class="visit-date">12/06/2025 - 09:00</div>
-            <div class="visit-address">Carla Santos - Rua B, 789</div>
+        <li class="item-visita">
+          <div class="info-visita">
+            <div class="data-visita">12/06/2025 - 09:00</div>
+            <div class="endereco-visita">Carla Santos - Rua B, 789</div>
           </div>
-          <div class="visit-status">
-            <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+          <div class="status-visita">
+            <i class="fas fa-times-circle" style="color: #e74c3c;"></i>
             <span>Paciente ausente</span>
           </div>
         </li>
       </ul>
-      <button class="btn btn-secondary btn-block" style="margin-top: 1rem;">
+      <button class="botao botao-secundario" style="margin-top: 1rem;">
         <i class="fas fa-book"></i> Ver Relatório Completo
       </button>
     </div>
     
-    <!-- Banner de modo offline (aparece apenas quando desconectado) -->
-    <div class="offline-banner" style="display: none;">
+    <div class="banner-offline" style="display: none;">
       <i class="fas fa-wifi-slash"></i>
       <span>Você está trabalhando offline. Os dados serão sincronizados quando a conexão for restabelecida.</span>
     </div>
   </main>
 
   <script>
-    // Simulação de funcionalidade offline
     document.addEventListener('DOMContentLoaded', function() {
-      // Verificar conexão (simulação)
       const isOnline = navigator.onLine;
-      const offlineBanner = document.querySelector('.offline-banner');
+      const offlineBanner = document.querySelector('.banner-offline');
       
       if (!isOnline) {
         offlineBanner.style.display = 'flex';
       }
       
-      // Ouvinte para mudanças de conexão
       window.addEventListener('online', function() {
         offlineBanner.style.display = 'none';
         alert('Conexão restabelecida. Sincronizando dados...');
@@ -622,21 +608,18 @@
         offlineBanner.style.display = 'flex';
       });
       
-      // Botão de confirmar visita
-      document.querySelectorAll('.btn-small').forEach(button => {
+      document.querySelectorAll('.botao-pequeno').forEach(button => {
         button.addEventListener('click', function() {
-          const patientName = this.closest('.patient-item').querySelector('.patient-name').textContent;
+          const patientName = this.closest('.item-paciente').querySelector('.nome-paciente').textContent;
           alert(`Ligação para ${patientName} será iniciada...`);
         });
       });
       
-      // Botão de cadastro rápido
-      const quickRegisterBtn = document.querySelector('.btn-block[aria-label="Salvar Cadastro"]');
+      const quickRegisterBtn = document.querySelector('.botao[aria-label="Salvar Cadastro"]');
       if (quickRegisterBtn) {
         quickRegisterBtn.addEventListener('click', function() {
           alert('Paciente cadastrado com sucesso!');
-          // Limpar formulário
-          document.querySelectorAll('.form-control').forEach(input => {
+          document.querySelectorAll('.controle-formulario').forEach(input => {
             input.value = '';
           });
         });

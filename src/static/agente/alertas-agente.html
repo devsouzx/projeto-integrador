@@ -14,13 +14,8 @@
     />
     <style>
       :root {
-        --primary: #9b59b6;
-        --secondary: #8e44ad;
-        --danger: #e74c3c;
-        --warning: #f39c12;
-        --light-gray: #f5f7fa;
-        --dark-gray: #333333;
-        --medium-gray: #e0e0e0;
+        --primary: #8e44ad;
+        --secondary: #9b59b6;
       }
 
       * {
@@ -32,11 +27,10 @@
 
       body {
         background-color: rgba(214, 174, 241, 0.15);
-        color: var(--dark-gray);
+        color: #333333;
       }
 
-      /* Top Navigation */
-      .top-nav {
+      .navegacao-superior {
         background: linear-gradient(90deg, var(--primary), var(--secondary));
         color: white;
         padding: 0.75rem 1.5rem;
@@ -46,7 +40,7 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
 
-      .nav-container {
+      .container-navegacao {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -59,16 +53,16 @@
         font-size: 1.25rem;
       }
 
-      .nav-menu {
+      .menu-navegacao {
         display: flex;
         list-style: none;
       }
 
-      .nav-item {
+      .item-navegacao {
         margin-left: 1rem;
       }
 
-      .nav-link {
+      .link-navegacao {
         color: white;
         text-decoration: none;
         padding: 0.5rem 1rem;
@@ -80,46 +74,46 @@
         gap: 0.5rem;
       }
 
-      .nav-link:hover,
-      .nav-link.active {
+      .link-navegacao:hover,
+      .link-navegacao.ativo {
         background-color: rgba(255, 255, 255, 0.2);
       }
 
-      .user-info {
+      .info-usuario {
         display: flex;
         align-items: center;
         gap: 0.75rem;
       }
 
-      .user-avatar {
+      .avatar-usuario {
         width: 40px;
         height: 40px;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid white;
+        background-color: #f0e5f5;
       }
 
-      /* Main Content */
-      .main-content {
+      .conteudo-principal {
         max-width: 1200px;
         margin: 2rem auto;
         padding: 0 1.5rem;
       }
 
-      .header {
+      .cabecalho {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem;
       }
 
-      .page-title {
+      .titulo-pagina {
         font-size: 1.75rem;
         color: var(--primary);
       }
 
-      .notification-badge {
-        background-color: var(--danger);
+      .badge-notificacao {
+        background-color: #e74c3c;
         color: white;
         border-radius: 20px;
         padding: 0.25rem 0.75rem;
@@ -127,8 +121,7 @@
         font-weight: 500;
       }
 
-      /* Alertas */
-      .alert-section {
+      .secao-alerta {
         background-color: white;
         border-radius: 10px;
         padding: 1.5rem;
@@ -136,7 +129,7 @@
         margin-bottom: 1.5rem;
       }
 
-      .alert-item {
+      .item-alerta {
         padding: 1rem;
         border-left: 4px solid;
         margin-bottom: 1rem;
@@ -146,27 +139,27 @@
         border-radius: 0 8px 8px 0;
       }
 
-      .alert-high {
-        border-left-color: var(--danger);
+      .alerta-alta {
+        border-left-color: #e74c3c;
         background-color: #fef2f2;
       }
 
-      .alert-medium {
-        border-left-color: var(--warning);
+      .alerta-media {
+        border-left-color: #f39c12;
         background-color: #fffbeb;
       }
 
-      .alert-low {
+      .alerta-baixa {
         border-left-color: var(--primary);
         background-color: #f0fdf4;
       }
 
-      .alert-actions {
+      .acoes-alerta {
         display: flex;
         gap: 0.5rem;
       }
 
-      .alert-badge {
+      .badge-alerta {
         display: inline-block;
         padding: 0.25rem 0.5rem;
         border-radius: 20px;
@@ -175,7 +168,7 @@
         margin-left: 0.5rem;
       }
 
-      .btn {
+      .botao {
         display: inline-block;
         padding: 0.75rem 1.5rem;
         border-radius: 6px;
@@ -186,34 +179,33 @@
         transition: all 0.3s;
       }
 
-      .btn-primary {
+      .botao-primario {
         background-color: var(--primary);
         color: white;
       }
 
-      .btn-primary:hover {
-        background-color: #219653;
+      .botao-primario:hover {
+        background-color: var(--secondary);
         transform: translateY(-2px);
       }
 
-      .btn-secondary {
+      .botao-secundario {
         background-color: white;
         color: var(--primary);
         border: 1px solid var(--primary);
       }
 
-      .btn-secondary:hover {
+      .botao-secundario:hover {
         background-color: #f0f7ff;
       }
 
-      .btn-small {
+      .botao-pequeno {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
       }
 
-      /* Responsividade */
       @media (max-width: 768px) {
-        .top-nav {
+        .navegacao-superior {
           padding: 0.5rem 0.5rem;
         }
 
@@ -223,13 +215,13 @@
           margin-right: 0.5rem;
         }
 
-        .nav-container {
+        .container-navegacao {
           flex-direction: column;
           align-items: stretch;
           gap: 1rem;
         }
 
-        .nav-menu {
+        .menu-navegacao {
           flex-direction: row;
           overflow-x: auto;
           white-space: nowrap;
@@ -238,18 +230,18 @@
           scrollbar-width: thin;
         }
 
-        .nav-item {
+        .item-navegacao {
           margin-left: 0;
           flex: 0 0 auto;
         }
 
-        .alert-item {
+        .item-alerta {
           flex-direction: column;
           align-items: flex-start;
           gap: 1rem;
         }
 
-        .alert-actions {
+        .acoes-alerta {
           width: 100%;
           justify-content: flex-end;
         }
@@ -257,158 +249,155 @@
     </style>
   </head>
   <body>
-    <nav class="top-nav">
-      <div class="nav-container">
+    <nav class="navegacao-superior">
+      <div class="container-navegacao">
         <div class="logo">Área do Agente Comunitário</div>
 
-        <ul class="nav-menu">
-          <li class="nav-item">
-            <a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Início</a>
+        <ul class="menu-navegacao">
+          <li class="item-navegacao">
+            <a href="dashboard.html" class="link-navegacao"><i class="fas fa-home"></i> Início</a>
           </li>
-          <li class="nav-item">
-            <a href="pacientes.html" class="nav-link"><i class="fas fa-users"></i> Pacientes</a>
+          <li class="item-navegacao">
+            <a href="pacientes.html" class="link-navegacao"><i class="fas fa-users"></i> Pacientes</a>
           </li>
-          <li class="nav-item">
-            <a href="visitas.html" class="nav-link"><i class="fas fa-calendar-check"></i> Visitas</a>
+          <li class="item-navegacao">
+            <a href="visitas.html" class="link-navegacao"><i class="fas fa-calendar-check"></i> Visitas</a>
           </li>
-          <li class="nav-item">
-            <a href="alertas.html" class="nav-link active"><i class="fas fa-bell"></i> Alertas</a>
+          <li class="item-navegacao">
+            <a href="alertas.html" class="link-navegacao ativo"><i class="fas fa-bell"></i> Alertas</a>
           </li>
-          <li class="nav-item">
-            <a href="territorio.html" class="nav-link"><i class="fas fa-map-marked-alt"></i> Território</a>
+          <li class="item-navegacao">
+            <a href="territorio.html" class="link-navegacao"><i class="fas fa-map-marked-alt"></i> Território</a>
           </li>
         </ul>
 
-        <div class="user-info">
-          <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Foto do agente" class="user-avatar" />
-          <span>Ana Oliveira</span>
+        <div class="info-usuario">
+          <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do agente" class="avatar-usuario" />
+          <span>Agente Comunitário</span>
         </div>
       </div>
     </nav>
 
-    <main class="main-content">
-      <div class="header">
-        <h1 class="page-title">Alertas e Notificações</h1>
-        <div class="notification-badge">3 novos</div>
+    <main class="conteudo-principal">
+      <div class="cabecalho">
+        <h1 class="titulo-pagina">Alertas e Notificações</h1>
+        <div class="badge-notificacao">3 novos</div>
       </div>
 
-      <div class="alert-section">
+      <div class="secao-alerta">
         <h2><i class="fas fa-exclamation-triangle"></i> Prioridades</h2>
 
-        <div class="alert-item alert-high">
-          <div>
-            <strong>Maria da Silva</strong>
-            <span class="alert-badge" style="background-color: var(--danger); color: white">Alta Prioridade<span>
-            <p>Exame preventivo atrasado há 6 meses</p>
-            <small>Último exame: 15/12/2024 | Rua das Flores, 123 | Área: Centro</small>
-            <div class="alert-meta">
-              <span><i class="fas fa-phone"></i> (62) 99999-9999</span>
-              <span><i class="fas fa-history"></i> 3 tentativas de contato</span>
-            </div>
-          </div>
-          <div class="alert-actions">
-            <button class="btn btn-secondary btn-small">
-              Registrar Tentativa
-            </button>
-            <button class="btn btn-primary btn-small">Agendar Visita</button>
-          </div>
-        </div>
-
-        <div class="alert-item alert-medium">
+        <div class="item-alerta alerta-alta">
           <div>
             <strong>Joana Pereira</strong>
-            <span class="alert-badge" style="background-color: var(--warning); color: #856404">Média Prioridade</span>
+            <span class="badge-alerta" style="background-color: #e74c3c; color: white">Alta Prioridade</span>
             <p>Não compareceu à última visita agendada</p>
             <small>Visita em: 20/06/2025 | Av. Principal, 456</small>
-            <div class="alert-meta">
+            <div>
               <span><i class="fas fa-phone"></i> (62) 99999-9999</span>
             </div>
           </div>
-          <div class="alert-actions">
-            <button class="btn btn-secondary btn-small">Lembrar</button>
-            <button class="btn btn-primary btn-small">Reagendar</button>
+          <div class="acoes-alerta">
+            <button class="botao botao-secundario botao-pequeno">Lembrar</button>
+            <button class="botao botao-primario botao-pequeno">Reagendar</button>
           </div>
         </div>
 
-        <div class="alert-item alert-high">
+        <div class="item-alerta alerta-media">
+          <div>
+            <strong>Joana Pereira</strong>
+            <span class="badge-alerta" style="background-color: #f39c12; color: #856404">Média Prioridade</span>
+            <p>Não compareceu à última visita agendada</p>
+            <small>Visita em: 20/06/2025 | Av. Principal, 456</small>
+            <div>
+              <span><i class="fas fa-phone"></i> (62) 99999-9999</span>
+            </div>
+          </div>
+          <div class="acoes-alerta">
+            <button class="botao botao-secundario botao-pequeno">Lembrar</button>
+            <button class="botao botao-primario botao-pequeno">Reagendar</button>
+          </div>
+        </div>
+
+        <div class="item-alerta alerta-alta">
           <div>
             <strong>Maria da Silva</strong>
-            <span class="alert-badge" style="background-color: var(--danger); color: white">Alta Prioridade</span>
+            <span class="badge-alerta" style="background-color: #e74c3c; color: white">Alta Prioridade</span>
             <p>Exame preventivo atrasado há 6 meses</p>
             <small>Último exame: 15/12/2024 | Rua das Flores, 123 | Área: Centro</small>
-            <div class="alert-meta">
+            <div>
               <span><i class="fas fa-phone"></i> (62) 99999-9999</span>
               <span><i class="fas fa-history"></i> 1 tentativas de contato</span>
             </div>
           </div>
-          <div class="alert-actions">
-            <button class="btn btn-secondary btn-small">
+          <div class="acoes-alerta">
+            <button class="botao botao-secundario botao-pequeno">
               Registrar Tentativa
             </button>
-            <button class="btn btn-primary btn-small">Agendar Visita</button>
+            <button class="botao botao-primario botao-pequeno">Agendar Visita</button>
           </div>
         </div>
       </div>
 
-      <div class="alert-section">
+      <div class="secao-alerta">
         <h2><i class="fas fa-calendar-exclamation"></i> Exames Pendentes</h2>
 
-        <div class="alert-item">
+        <div class="item-alerta">
           <div>
             <strong>5 pacientes</strong>
             <p>Nunca realizaram exame preventivo</p>
             <small>Última atualização: 18/06/2025</small>
           </div>
-          <button class="btn btn-primary">Ver Lista Completa</button>
+          <button class="botao botao-primario">Ver Lista Completa</button>
         </div>
 
-        <div class="alert-item">
+        <div class="item-alerta">
           <div>
             <strong>12 pacientes</strong>
             <p>Com exames atrasados (mais de 1 ano)</p>
             <small>Última atualização: 18/06/2025</small>
           </div>
-          <button class="btn btn-primary">Ver Lista Completa</button>
+          <button class="botao botao-primario">Ver Lista Completa</button>
         </div>
 
-        <div class="alert-item">
+        <div class="item-alerta">
           <div>
             <strong>8 pacientes</strong>
             <p>Com exames próximos do vencimento</p>
             <small>Última atualização: 18/06/2025</small>
           </div>
-          <button class="btn btn-primary">Ver Lista Completa</button>
+          <button class="botao botao-primario">Ver Lista Completa</button>
         </div>
       </div>
 
-      <div class="alert-section">
+      <div class="secao-alerta">
         <h2><i class="fas fa-clock"></i> Lembretes</h2>
 
-        <div class="alert-item alert-low">
+        <div class="item-alerta alerta-baixa">
           <div>
             <strong>Reunião mensal</strong>
             <p>Dia 25/06 às 14h na UBS Centro</p>
             <small>Participação obrigatória</small>
           </div>
-          <button class="btn btn-secondary">Confirmar Presença</button>
+          <button class="botao botao-secundario">Confirmar Presença</button>
         </div>
 
-        <div class="alert-item alert-low">
+        <div class="item-alerta alerta-baixa">
           <div>
             <strong>Entrega de relatórios</strong>
             <p>Prazo final: 30/06/2025</p>
             <small>Relatório mensal de atividades</small>
           </div>
-          <button class="btn btn-secondary">Iniciar Relatório</button>
+          <button class="botao botao-secundario">Iniciar Relatório</button>
         </div>
 
-        <div class="alert-item alert-low">
+        <div class="item-alerta alerta-baixa">
           <div>
             <strong>Atualização cadastral</strong>
             <p>Verificar dados de 23 pacientes desatualizados</p>
             <small>Última atualização: 15/05/2025</small>
           </div>
-          <button class="btn btn-primary">Verificar Cadastros</button>
+          <button class="botao botao-primario">Verificar Cadastros</button>
         </div>
       </div>
     </main>
