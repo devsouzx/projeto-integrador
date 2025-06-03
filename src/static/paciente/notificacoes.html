@@ -57,7 +57,11 @@
     .nav-item {
       margin-left: 1rem;
     }
-    
+
+    button {
+      transition: background-color 0.2s, filter 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
     .nav-link {
       color: white;
       text-decoration: none;
@@ -70,6 +74,49 @@
       gap: 0.5rem;
     }
     
+    /* HOVER para links do menu */
+    .nav-link:hover, .nav-link.active {
+      background-color: rgba(255,255,255,0.2);
+      filter: brightness(1.1);
+    }
+
+    /* HOVER para abas de notificações */
+    .tab {
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab:hover:not(.active) {
+      background: var(--light-gray);
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* HOVER para links de ação nas notificações */
+    .action-link {
+      transition: color 0.2s, text-decoration 0.2s;
+    }
+    .action-link:hover {
+      color: var(--secondary);
+      text-decoration: underline;
+    }
+
+    /* HOVER para botão de salvar configurações */
+    button:hover {
+      background-color: var(--secondary);
+      filter: brightness(1.05);
+      transform: translateY(-4px); /* move para cima no hover */
+      box-shadow: 0 6px 18px rgba(67, 206, 162, 0.15); /* leve sombra para efeito de elevação */
+    }
+
+    /* HOVER para "Marcar todas como lidas" */
+    .mark-all-read {
+      transition: color 0.2s, text-decoration 0.2s;
+    }
+    .mark-all-read:hover {
+      color: var(--secondary);
+      text-decoration: underline;
+    }
+
+      
     .nav-link:hover, .nav-link.active {
       background-color: rgba(255,255,255,0.2);
     }

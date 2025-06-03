@@ -24,6 +24,29 @@
       color: #333333;
     }
     
+    /* Botão secundário: hover */
+    .botao-secundario:hover {
+      background-color: #f0e5f5;
+      color: var(--secundaria);
+      border-color: var(--secundaria);
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(155, 89, 182, 0.08);
+    }
+
+    /* Botão pequeno: hover (aplica efeito para todos os botões pequenos) */
+    .botao-pequeno:hover {
+      filter: brightness(1.08);
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(155, 89, 182, 0.08);
+    }
+
+    /* Botão filtro: hover */
+    .botao-filtro:hover:not(.ativo) {
+      background-color: #f0e5f5;
+      color: var(--primaria);
+      border-color: var(--primaria);
+    }
+
     .navegacao-superior {
       background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
