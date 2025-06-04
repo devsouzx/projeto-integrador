@@ -92,6 +92,33 @@ func InitRoutes(r *gin.RouterGroup) {
 		})
 	}
 
+	paciente := r.Group("/paciente")
+	{
+		paciente.GET("/dashboard", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "dashboard-paciente.html", nil)
+		})
+
+		paciente.GET("/agendar", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "agendamento-paciente.html", nil)
+		})
+
+		paciente.GET("/historico_exames", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "historico-exames-paciente.html", nil)
+		})
+
+		paciente.GET("/localizar_ubs", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "localizar-ubs-paciente.html", nil)
+		})
+
+		paciente.GET("/notificacoes", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "notificacoes-paciente.html", nil)
+		})
+
+		paciente.GET("/orientacoes", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "orientacoes-paciente.html", nil)
+		})
+	}
+
 	gestor := r.Group("/gestor")
 	{
 		gestor.GET("/dashboard", func(c *gin.Context) {

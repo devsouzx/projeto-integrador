@@ -7,8 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primaria: #9b59b6;
-      --secundaria: #8e44ad;
+      --primary: #9b59b6;
+      --secondary: #8e44ad;
       --light-gray: #f5f7fa;
       --medium-gray: #e0e0e0;
       --dark-gray: #333333;
@@ -22,7 +22,7 @@
     }
     
     body {
-      background-color: var(--light-gray);
+      background: rgba(214, 174, 241, 0.15);
     }
     
     /* Top Navigation */
@@ -133,6 +133,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
+      background-color: #f0e5f5;
     }
     
     /* Main Content */
@@ -360,16 +361,16 @@
       <div class="logo">Área do Paciente</div>
       
       <ul class="nav-menu">
-        <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
-        <li class="nav-item"><a href="agendamento.html" class="nav-link"><i class="fas fa-calendar-check"></i> Agendar</a></li>
-        <li class="nav-item"><a href="localizar_ubs.html" class="nav-link"><i class="fas fa-map-marker-alt"></i> UBS</a></li>
-        <li class="nav-item"><a href="historico_exames.html" class="nav-link"><i class="fas fa-file-medical"></i> Exames</a></li>
-        <li class="nav-item"><a href="orientacoes.html" class="nav-link"><i class="fas fa-comment-medical"></i> Orientações</a></li>
-        <li class="nav-item"><a href="notificacoes.html" class="nav-link active"><i class="fas fa-bell"></i> Notificações</a></li>
+        <li class="nav-item"><a href="/paciente/dashboard" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
+        <li class="nav-item"><a href="/paciente/agendar" class="nav-link"><i class="fas fa-calendar-check"></i> Agendar</a></li>
+        <li class="nav-item"><a href="/paciente/localizar_ubs" class="nav-link"><i class="fas fa-map-marker-alt"></i> UBS</a></li>
+        <li class="nav-item"><a href="/paciente/historico_exames" class="nav-link"><i class="fas fa-file-medical"></i> Exames</a></li>
+        <li class="nav-item"><a href="/paciente/orientacoes" class="nav-link"><i class="fas fa-comment-medical"></i> Orientações</a></li>
+        <li class="nav-item"><a href="/paciente/notificacoes" class="nav-link active"><i class="fas fa-bell"></i> Notificações</a></li>
       </ul>
       
       <div class="user-info">
-        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Foto do paciente" class="user-avatar">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do paciente" class="user-avatar">
         <span>Maria da Silva</span>
       </div>
     </div>
