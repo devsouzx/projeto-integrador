@@ -26,7 +26,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		})
 	}
 
-	medico := r.Group("/medico") 
+	medico := r.Group("/medico")
 	{
 		medico.GET("/dashboard", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "dashboard-medico.html", nil)
@@ -63,7 +63,7 @@ func InitRoutes(r *gin.RouterGroup) {
 		medico.GET("/medicos/pacientes/123456", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "paciente-medico.html", nil)
 		})
-	}	
+	}
 
 	enfermeira := r.Group("/enfermeiro")
 	{
@@ -119,6 +119,29 @@ func InitRoutes(r *gin.RouterGroup) {
 		})
 	}
 
+	agente := r.Group("/agente")
+	{
+		agente.GET("/dashboard", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "dashboard-agente.html", nil)
+		})
+
+		agente.GET("/pacientes", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "cadastro-paciente-agente.html", nil)
+		})
+
+		agente.GET("/visitas", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "visitas-agente.html", nil)
+		})
+
+		agente.GET("/territorio", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "territorio-agente.html", nil)
+		})
+
+		agente.GET("/alertas", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "alertas-agente.html", nil)
+		})
+	}
+
 	gestor := r.Group("/gestor")
 	{
 		gestor.GET("/dashboard", func(c *gin.Context) {
@@ -129,7 +152,7 @@ func InitRoutes(r *gin.RouterGroup) {
 			c.HTML(http.StatusOK, "novo-usuario-gestor.html", nil)
 		})
 
-		gestor.GET("/usuarios", func(c *gin.Context) {	
+		gestor.GET("/usuarios", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "usuarios-gestor.html", nil)
 		})
 
