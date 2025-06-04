@@ -220,36 +220,27 @@
     /* Responsividade */
     @media (max-width: 768px) {
       .navegacao-superior {
-      padding: 0.5rem 0.5rem;
+        padding: 0.75rem 1rem;
       }
 
-      .logo {
-      font-size: 1rem;
-      white-space: nowrap;
-      margin-right: 0.5rem;
-      }
       .container-navegacao {
-        flex-direction: column;
-        align-items: stretch;
+        flex-wrap: wrap;
         gap: 1rem;
       }
+      
       .menu-navegacao {
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 0.25rem;
+        order: 3;
         width: 100%;
-        scrollbar-width: thin;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
       }
 
       .item-navegacao {
         margin-left: 0;
-        flex: 0 0 auto;
       }
       
       .info-usuario {
-        justify-content: center;
-        margin-top: 0.5rem;
+        margin-left: auto;
       }
       
       .opcoes-diagnostico {
@@ -266,7 +257,9 @@
 <body>
   <nav class="navegacao-superior">
     <div class="container-navegacao">
-      <div class="logo">Área do Médico</div>
+      <div class="logo">
+        <span>Área do Médico</span>
+      </div>
       
       <ul class="menu-navegacao">
         <li class="item-navegacao"><a href="/medico/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
@@ -352,12 +345,12 @@
         
         <div class="grupo-formulario">
           <label for="comentarios" class="rotulo-formulario">Comentários Adicionais</label>
-          <textarea id="comentarios" class="controle-formulario" rows="4">Paciente com resultado ASC-H em dois exames consecutivos (03/2025 e 06/2025), necessitando avaliação com colposcopia para descartar lesão de alto grau. Relata sangramento pós-coito ocasional. Teste HPV positivo para tipos 16/18.</textarea>
+          <textarea id="comentarios" class="controle-formulario" rows="4"></textarea>
         </div>
         
         <div class="grupo-formulario">
           <label for="recomendacoes" class="rotulo-formulario">Recomendações</label>
-          <textarea id="recomendacoes" class="controle-formulario" rows="4">Encaminhar para colposcopia com biópsia. Realizar teste de HPV genotipagem se não realizado anteriormente. Retorno em 3 meses independente do resultado.</textarea>
+          <textarea id="recomendacoes" class="controle-formulario" rows="4"></textarea>
         </div>
       </div>
       

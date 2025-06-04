@@ -352,42 +352,115 @@
     .link-acao:hover {
       text-decoration: underline;
     }
+    
+    .dados-clinicos {
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--primaria);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    .dados-clinicos h3 {
+      color: var(--primaria);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .dados-clinicos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    
+    .item-dado-clinico {
+      background-color: white;
+      padding: 0.75rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .item-dado-clinico strong {
+      display: block;
+      color: var(--primaria);
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .passo-encaminhamento {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px dashed #e0e0e0;
+    }
+    
+    .numero-passo {
+      background-color: var(--primaria);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: bold;
+    }
+    
+    .conteudo-passo {
+      flex-grow: 1;
+    }
+    
+    .arquivos-anexos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .arquivo-anexo {
+      background-color: #f8f9fa;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .remover-arquivo {
+      color: #e74c3c;
+      cursor: pointer;
+    }
 
     /* Responsividade */
     @media (max-width: 768px) {
       .navegacao-superior {
-        padding: 0.5rem 0.5rem;
+        padding: 0.75rem 1rem;
       }
 
-      .logo {
-        font-size: 1rem;
-        white-space: nowrap;
-        margin-right: 0.5rem;
-      }
-      
       .container-navegacao {
-        flex-direction: column;
-        align-items: stretch;
+        flex-wrap: wrap;
         gap: 1rem;
       }
       
       .menu-navegacao {
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 0.25rem;
+        order: 3;
         width: 100%;
-        scrollbar-width: thin;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
       }
 
       .item-navegacao {
         margin-left: 0;
-        flex: 0 0 auto;
       }
       
       .info-usuario {
-        justify-content: center;
-        margin-top: 0.5rem;
+        margin-left: auto;
       }
 
       .grade-especialidades {
@@ -423,6 +496,10 @@
       .link-acao {
         display: block;
         text-align: center;
+      }
+      
+      .dados-clinicos-grid {
+        grid-template-columns: 1fr;
       }
     }
     
@@ -479,7 +556,9 @@
 <body>
   <nav class="navegacao-superior">
     <div class="container-navegacao">
-      <div class="logo">Área do Médico</div>
+      <div class="logo">
+        <span>Área do Médico</span>
+      </div>
       
       <ul class="menu-navegacao">
         <li class="item-navegacao"><a href="/medico/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
@@ -509,76 +588,140 @@
       <div class="info-paciente">
         <strong>Paciente:</strong> Maria da Silva (38 anos) | <strong>Cartão SUS:</strong> 123 4567 8901 2345 | <strong>CID-10:</strong> R87.61 (ASC-H)
       </div>
-
-      <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-stethoscope"></i> Tipo de Encaminhamento</h2>
-
-      <div class="grade-especialidades">
-        <div class="card-especialidade selecionado" onclick="document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado')); this.classList.add('selecionado')">
-          <h3><i class="fas fa-microscope"></i> Colposcopia com Biópsia</h3>
-          <p>Exame detalhado do colo uterino com possibilidade de coleta de fragmentos para análise histopatológica</p>
-        </div>
-
-        <div class="card-especialidade" onclick="document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado')); this.classList.add('selecionado')">
-          <h3><i class="fas fa-user-md"></i> Oncologia Ginecológica</h3>
-          <p>Avaliação especializada para casos suspeitos de neoplasia maligna</p>
-        </div>
-
-        <div class="card-especialidade" onclick="document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado')); this.classList.add('selecionado')">
-          <h3><i class="fas fa-procedures"></i> Cirurgia Ginecológica</h3>
-          <p>Para casos que necessitem de intervenção cirúrgica (conização, LEEP, etc.)</p>
-        </div>
-      </div>
-
-      <h2 style="margin: 2rem 0 1rem;"><i class="fas fa-clock"></i> Nível de Urgência</h2>
-
-      <div class="niveis-urgencia">
-        <div class="opcao-urgencia" onclick="document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado')); this.classList.add('selecionado')">
-          <h3>Rotina</h3>
-          <p>Agendamento em até 60 dias</p>
-          <p style="margin-top: 0.5rem; color: var(--primaria); font-weight: 500;">Para acompanhamento</p>
-        </div>
-
-        <div class="opcao-urgencia selecionado" onclick="document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado')); this.classList.add('selecionado')">
-          <h3>Prioritário</h3>
-          <p>Agendamento em até 15 dias</p>
-          <p style="margin-top: 0.5rem; color: var(--primaria); font-weight: 500;">Para casos como ASC-H, LSIL</p>
-        </div>
-
-        <div class="opcao-urgencia" onclick="document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado')); this.classList.add('selecionado')">
-          <h3>Urgente</h3>
-          <p>Agendamento em até 72h</p>
-          <p style="margin-top: 0.5rem; color: var(--primaria); font-weight: 500;">Para HSIL ou suspeita de câncer</p>
+      
+      <div class="dados-clinicos">
+        <h3><i class="fas fa-clipboard-list"></i> Dados Clínicos Relevantes</h3>
+        <div class="dados-clinicos-grid">
+          <div class="item-dado-clinico">
+            <strong>Último Exame Preventivo</strong>
+            15/06/2025 - ASC-H
+          </div>
+          <div class="item-dado-clinico">
+            <strong>Exame Anterior</strong>
+            10/03/2025 - ASC-H
+          </div>
+          <div class="item-dado-clinico">
+            <strong>Teste HPV</strong>
+            Positivo (16/18)
+          </div>
+          <div class="item-dado-clinico">
+            <strong>Fatores de Risco</strong>
+            Tabagismo, 3 gestações
+          </div>
         </div>
       </div>
+      
+      <div class="passo-encaminhamento">
+        <div class="numero-passo">1</div>
+        <div class="conteudo-passo">
+          <h3>Tipo de Encaminhamento</h3>
+          <p>Selecione o tipo de especialidade ou procedimento necessário</p>
+          
+          <div class="grade-especialidades">
+            <div class="card-especialidade selecionado" onclick="document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado')); this.classList.add('selecionado')">
+              <h3><i class="fas fa-microscope"></i> Colposcopia com Biópsia</h3>
+              <p>Exame detalhado do colo uterino com possibilidade de coleta de fragmentos para análise histopatológica</p>
+            </div>
 
-      <div class="grupo-formulario">
-        <label class="rotulo-formulario">Justificativa Clínica</label>
-        <textarea class="controle-formulario" rows="5">Paciente com resultado ASC-H em dois exames consecutivos (03/2025 e 06/2025), necessitando avaliação com colposcopia para descartar lesão de alto grau. Relata sangramento pós-coito ocasional. Exame físico: colo uterino com ectopia, sem lesões visíveis. Teste HPV positivo para tipos 16/18.</textarea>
-      </div>
+            <div class="card-especialidade" onclick="document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado')); this.classList.add('selecionado')">
+              <h3><i class="fas fa-user-md"></i> Oncologia Ginecológica</h3>
+              <p>Avaliação especializada para casos suspeitos de neoplasia maligna</p>
+            </div>
 
-      <div class="grupo-formulario">
-        <label class="rotulo-formulario">Exames Anexos</label>
-        <div class="upload-arquivo">
-          <button type="button" class="botao botao-secundario" onclick="document.getElementById('entradaArquivo').click()">
-            <i class="fas fa-paperclip"></i> Anexar Arquivos
-          </button>
+            <div class="card-especialidade" onclick="document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado')); this.classList.add('selecionado')">
+              <h3><i class="fas fa-procedures"></i> Cirurgia Ginecológica</h3>
+              <p>Para casos que necessitem de intervenção cirúrgica (conização, LEEP, etc.)</p>
+            </div>
+          </div>
         </div>
       </div>
+      
+      <div class="passo-encaminhamento">
+        <div class="numero-passo">2</div>
+        <div class="conteudo-passo">
+          <h3>Nível de Urgência</h3>
+          <p>Defina a prioridade do encaminhamento conforme a situação clínica</p>
+          
+          <div class="niveis-urgencia">
+            <div class="opcao-urgencia" onclick="document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado')); this.classList.add('selecionado')">
+              <h3>Rotina</h3>
+              <p>Agendamento em até 60 dias</p>
+              <p style="margin-top: 0.5rem; color: var(--primaria); font-weight: 500;">Para acompanhamento</p>
+            </div>
 
-      <div class="grupo-formulario">
-        <label class="rotulo-formulario">Unidade de Referência</label>
-        <select class="controle-formulario">
-          <option>Hospital Central - Ambulatório de Colposcopia</option>
-          <option>Hospital da Mulher - Setor de Ginecologia</option>
-          <option selected>Centro de Oncologia Municipal</option>
-        </select>
+            <div class="opcao-urgencia selecionado" onclick="document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado')); this.classList.add('selecionado')">
+              <h3>Prioritário</h3>
+              <p>Agendamento em até 15 dias</p>
+              <p style="margin-top: 0.5rem; color: var(--primaria); font-weight: 500;">Para casos como ASC-H, LSIL</p>
+            </div>
+
+            <div class="opcao-urgencia" onclick="document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado')); this.classList.add('selecionado')">
+              <h3>Urgente</h3>
+              <p>Agendamento em até 72h</p>
+              <p style="margin-top: 0.5rem; color: var(--primaria); font-weight: 500;">Para HSIL ou suspeita de câncer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="passo-encaminhamento">
+        <div class="numero-passo">3</div>
+        <div class="conteudo-passo">
+          <h3>Justificativa Clínica</h3>
+          <p>Descreva os motivos do encaminhamento e informações relevantes</p>
+          
+          <div class="grupo-formulario">
+            <textarea class="controle-formulario" rows="5" placeholder="Descreva a justificativa clínica para este encaminhamento..."></textarea>
+          </div>
+        </div>
+      </div>
+      
+      <div class="passo-encaminhamento">
+        <div class="numero-passo">4</div>
+        <div class="conteudo-passo">
+          <h3>Exames Anexos</h3>
+          <p>Anexe os exames relevantes para avaliação do especialista</p>
+          
+          <div class="grupo-formulario">
+            <div class="upload-arquivo">
+              <button type="button" class="botao botao-secundario" onclick="document.getElementById('entradaArquivo').click()">
+                <i class="fas fa-paperclip"></i> Anexar Arquivos
+              </button>
+              <input type="file" id="entradaArquivo" style="display: none;" multiple>
+            </div>
+            
+            <div class="arquivos-anexos">
+              <div class="arquivo-anexo">
+                <i class="fas fa-file-pdf"></i> Citologia_06-2025.pdf
+                <span class="remover-arquivo" title="Remover arquivo">&times;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="passo-encaminhamento">
+        <div class="numero-passo">5</div>
+        <div class="conteudo-passo">
+          <h3>Unidade de Referência</h3>
+          <p>Selecione a unidade de saúde para onde o paciente será encaminhado</p>
+          
+          <div class="grupo-formulario">
+            <select class="controle-formulario">
+              <option>Selecione uma unidade...</option>
+              <option>Hospital Central - Ambulatório de Colposcopia</option>
+              <option>Hospital da Mulher - Setor de Ginecologia</option>
+              <option>Centro de Oncologia Municipal</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
         <button class="botao botao-secundario" onclick="alert('Rascunho salvo com sucesso!')">
           <i class="fas fa-save"></i> Salvar Rascunho
         </button>
-        <button class="botao botao-primario" onclick="if(!document.querySelector('.controle-formulario').value) { alert('Por favor, preencha a justificativa clínica'); return; } alert('Encaminhamento enviado com sucesso!'); window.location.href = '/medico/encaminhamentos';">
+        <button class="botao botao-primario" id="btnEnviarEncaminhamento">
           <i class="fas fa-paper-plane"></i> Enviar Encaminhamento
         </button>
       </div>
@@ -655,5 +798,45 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Validação do formulário
+    document.getElementById('btnEnviarEncaminhamento').addEventListener('click', function() {
+      const justificativa = document.querySelector('textarea.controle-formulario').value;
+      const especialidadeSelecionada = document.querySelector('.card-especialidade.selecionado');
+      const urgenciaSelecionada = document.querySelector('.opcao-urgencia.selecionado');
+      const unidadeSelecionada = document.querySelector('select.controle-formulario').value;
+      
+      if (!justificativa) {
+        alert('Por favor, preencha a justificativa clínica');
+        return;
+      }
+      
+      if (!especialidadeSelecionada) {
+        alert('Por favor, selecione um tipo de encaminhamento');
+        return;
+      }
+      
+      if (!urgenciaSelecionada) {
+        alert('Por favor, selecione um nível de urgência');
+        return;
+      }
+      
+      if (unidadeSelecionada === 'Selecione uma unidade...') {
+        alert('Por favor, selecione uma unidade de referência');
+        return;
+      }
+      
+      alert('Encaminhamento enviado com sucesso!');
+      window.location.href = '/medico/encaminhamentos';
+    });
+    
+    // Remover arquivos anexados
+    document.querySelectorAll('.remover-arquivo').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.parentElement.remove();
+      });
+    });
+  </script>
 </body>
 </html>
