@@ -91,4 +91,27 @@ func InitRoutes(r *gin.RouterGroup) {
 			c.HTML(http.StatusOK, "relatorios-enfermeira.html", nil)
 		})
 	}
+
+	gestor := r.Group("/gestor")
+	{
+		gestor.GET("/dashboard", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "dashboard-gestor.html", nil)
+		})
+
+		gestor.GET("/novo-usuario", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "novo-usuario-gestor.html", nil)
+		})
+
+		gestor.GET("/usuarios", func(c *gin.Context) {	
+			c.HTML(http.StatusOK, "usuarios-gestor.html", nil)
+		})
+
+		gestor.GET("/relatorios", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "relatorios-gestor.html", nil)
+		})
+
+		gestor.GET("/exames", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "exames-gestor.html", nil)
+		})
+	}
 }
