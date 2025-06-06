@@ -348,18 +348,18 @@
     </div>
     
     <div class="corpo-login">
-      <form id="formularioLogin">
+      <form id="formularioLogin" action="/login" method="POST">
         <div class="grupo-formulario">
-          <label for="usuario" class="rotulo-formulario">CPF ou E-mail</label>
+          <label for="cpf" class="rotulo-formulario">CPF ou E-mail</label>
           <i class="fas fa-user icone-input"></i>
-          <input type="text" id="usuario" class="controle-formulario" placeholder="Digite seu CPF ou e-mail" required>
+          <input type="text" name="identificador" id="usuario" class="controle-formulario" placeholder="Digite seu CPF ou e-mail" required>
           <div class="mensagem-erro">Por favor, insira seu CPF ou e-mail</div>
         </div>
         
         <div class="grupo-formulario">
-          <label for="senha" class="rotulo-formulario">Senha</label>
+          <label for="senha"class="rotulo-formulario">Senha</label>
           <i class="fas fa-lock icone-input"></i>
-          <input type="password" id="senha" class="controle-formulario" placeholder="Digite sua senha" required>
+          <input type="password" name="password" id="senha" class="controle-formulario" placeholder="Digite sua senha" required>
           <i class="fas fa-eye alternar-senha" onclick="alternarSenha()"></i>
           <div class="mensagem-erro">Por favor, insira sua senha</div>
         </div>

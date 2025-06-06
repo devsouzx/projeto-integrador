@@ -3,15 +3,19 @@ package routes
 import (
 	"net/http"
 
+	"github.com/devsouzx/projeto-integrador/src/controller"
+	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/gin-gonic/gin"
 )
 
-func InitRoutes(r *gin.RouterGroup) {
+func InitRoutes(r *gin.RouterGroup, userController controller.UserController) {
 	auth := r.Group("/")
 	{
 		auth.GET("/login", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "login-paciente.html", nil)
 		})
+
+		auth.POST("/login", userController.LoginUser)
 
 		auth.GET("/login-profissionais", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "login-profissionais.html", nil)
@@ -94,7 +98,7 @@ func InitRoutes(r *gin.RouterGroup) {
 
 	paciente := r.Group("/paciente")
 	{
-		paciente.GET("/dashboard", func(c *gin.Context) {
+		paciente.GET("/dashboard", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
 			c.HTML(http.StatusOK, "dashboard-paciente.html", nil)
 		})
 
