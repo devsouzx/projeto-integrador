@@ -26,7 +26,7 @@ type UserDomainService interface {
 
 func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.User, string, error) {
 	user, err := ud.userRepository.FindUserByIndetifierAndPassword(
-		loginRequest.Identificador,
+		loginRequest.Identifier,
 		loginRequest.Password,
 		loginRequest.Role,
 	)

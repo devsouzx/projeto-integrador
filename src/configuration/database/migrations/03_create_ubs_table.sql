@@ -1,5 +1,9 @@
-CREATE TABLE IF NOT EXISTS unidade_saude (
-    id UUID PRIMARY KEY,
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+DROP TABLE IF EXISTS unidade_saude;
+
+CREATE TABLE unidade_saude (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nome VARCHAR(100) NOT NULL,
     cnes VARCHAR(20) NOT NULL UNIQUE
 );

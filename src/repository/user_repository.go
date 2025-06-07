@@ -33,15 +33,12 @@ func (ur *userRepository) FindUserByIndetifierAndPassword(indetifier, password, 
 	var query string
 	var user model.User
 
-	fmt.Println("Finding user with identifier:", indetifier, "and role:", role)
-
 	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(indetifier, ".", ""), "-", ""), " ", "")
 
 	switch role {
 	case "paciente":
-		fmt.Println("Searching for paciente with email or cpf:", indetifier, cpfFormatado)
 		query = `
-			SELECT paciente_id, email, senha, nomecompleto, cpf
+			SELECT id, email, senha, nomecompleto, cpf
 			FROM paciente
 			WHERE email = $1 OR cpf = $2
 		`

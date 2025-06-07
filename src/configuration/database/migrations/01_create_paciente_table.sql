@@ -1,9 +1,19 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TABLE IF NOT EXISTS paciente (
-    paciente_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nomecompleto VARCHAR(50) NOT NULL,
-    cpf VARCHAR(11) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL,
-    senha VARCHAR(100) NOT NULL
+DROP TABLE IF EXISTS paciente;
+
+CREATE TABLE paciente (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    cpf CHAR(11) NOT NULL UNIQUE,
+    nomecompleto VARCHAR(100) NOT NULL,
+    cartaosus CHAR(15) NOT NULL,
+    nomecompletodamae VARCHAR(100) NOT NULL,
+    datadenascimento DATE NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    telefone VARCHAR(20) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    apelido VARCHAR(30),
+    raca VARCHAR(30),
+    nacionalidade VARCHAR(50),
+    escolaridade VARCHAR(50)
 );
