@@ -41,17 +41,17 @@
     }
     
     body::before {
-      width: 600px;
-      height: 600px;
-      top: -300px;
-      right: -200px;
+      width: 400px;
+      height: 400px;
+      top: -150px;
+      right: -100px;
     }
     
     body::after {
-      width: 800px;
-      height: 800px;
-      bottom: -400px;
-      left: -300px;
+      width: 500px;
+      height: 500px;
+      bottom: -200px;
+      left: -150px;
     }
     
     .onda {
@@ -61,8 +61,8 @@
     }
     
     .onda-1 {
-      width: 1000px;
-      height: 800px;
+      width: 700px;
+      height: 600px;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -70,8 +70,8 @@
     }
     
     .onda-2 {
-      width: 1200px;
-      height: 1000px;
+      width: 900px;
+      height: 800px;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -80,7 +80,7 @@
     
     .container-login {
       width: 100%;
-      max-width: 500px;
+      max-width: 450px;
       background-color: white;
       border-radius: 12px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.15);
@@ -97,39 +97,43 @@
     .cabecalho-login {
       background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
-      padding: 30px;
+      padding: 25px;
       text-align: center;
       position: relative;
     }
     
     .cabecalho-login h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    
+    .cabecalho-login p {
+      font-size: 14px;
     }
     
     .logo {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       background-color: white;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 0 auto 15px;
+      margin: 0 auto 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     
     .logo i {
       color: var(--primaria);
-      font-size: 36px;
+      font-size: 32px;
     }
     
     .corpo-login {
-      padding: 30px;
+      padding: 25px;
     }
     
     .grupo-formulario {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       position: relative;
     }
     
@@ -137,14 +141,15 @@
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
+      font-size: 14px;
     }
     
     .controle-formulario {
       width: 100%;
-      padding: 14px 14px 14px 40px;
+      padding: 12px 12px 12px 38px;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 14px;
       transition: all 0.3s;
     }
     
@@ -156,19 +161,20 @@
     
     .icone-input {
       position: absolute;
-      left: 15px;
-      top: 43px;
+      left: 14px;
+      top: 40px;
       color: #e0e0e0;
+      font-size: 14px;
     }
     
     .botao {
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
       cursor: pointer;
       margin-top: 10px;
@@ -195,7 +201,7 @@
     .rodape-login {
       text-align: center;
       margin-top: 20px;
-      font-size: 14px;
+      font-size: 13px;
     }
     
     .rodape-login a {
@@ -214,7 +220,7 @@
       display: flex;
       justify-content: space-between;
       margin-top: 10px;
-      font-size: 13px;
+      font-size: 12px;
     }
     
     .opcoes-login a {
@@ -229,7 +235,7 @@
     
     .mensagem-erro {
       color: #e74c3c;
-      font-size: 12px;
+      font-size: 11px;
       margin-top: 5px;
       display: none;
     }
@@ -248,31 +254,33 @@
     
     .alternar-senha {
       position: absolute;
-      right: 15px;
-      top: 14px;
+      right: 14px;
+      top: 12px;
       color: #e0e0e0;
       cursor: pointer;
+      font-size: 14px;
     }
     
     .tipo-profissional {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     
     .tipo-profissional label {
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
+      font-size: 14px;
     }
     
     .selecao-profissional {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
     
     .opcao-profissional {
       flex: 1;
-      min-width: 120px;
+      min-width: 100px;
       display: flex;
       flex-direction: column;
     }
@@ -285,14 +293,15 @@
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      padding: 12px;
+      padding: 10px;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s;
-      min-height: 100px;
+      min-height: 80px;
       justify-content: center;
+      font-size: 13px;
     }
     
     .opcao-profissional.gestor input[type="radio"] + label {
@@ -326,8 +335,8 @@
     }
     
     .icone-profissional {
-      font-size: 24px;
-      margin-bottom: 8px;
+      font-size: 20px;
+      margin-bottom: 6px;
     }
     
     .input-registro {
@@ -403,7 +412,9 @@
     </div>
     
     <div class="corpo-login">
-      <form id="formularioLoginProfissional" onsubmit="validarFormulario(event)">
+      <form id="formularioLoginProfissional" method="POST" action="/login" onsubmit="validarFormulario(event)">
+        <input type="hidden" id="role" name="role" value="enfermeiro">
+        
         <div class="tipo-profissional">
           <label>Tipo de Profissional</label>
           <div class="selecao-profissional" onclick="alternarCampos()">
@@ -439,31 +450,31 @@
         </div>
         
         <div class="grupo-formulario input-registro ativo" id="inputCoren">
-          <label for="coren" class="rotulo-formulario">COREN</label>
+          <label for="identificador" class="rotulo-formulario">COREN</label>
           <i class="fas fa-id-card icone-input"></i>
-          <input type="text" id="coren" class="controle-formulario" placeholder="Digite seu COREN" required>
+          <input type="text" id="identificador" name="identificador" class="controle-formulario" placeholder="Digite seu COREN" required>
           <div class="mensagem-erro">Por favor, insira seu COREN</div>
         </div>
         
         <div class="grupo-formulario input-registro" id="inputCrm">
-          <label for="crm" class="rotulo-formulario">CRM</label>
+          <label for="identificador" class="rotulo-formulario">CRM</label>
           <i class="fas fa-id-card icone-input"></i>
-          <input type="text" id="crm" class="controle-formulario" placeholder="Digite seu CRM" disabled>
+          <input type="text" id="identificador" name="identificador" class="controle-formulario" placeholder="Digite seu CRM" disabled>
           <div class="mensagem-erro">Por favor, insira seu CRM</div>
         </div>
         
         <div class="grupo-formulario input-registro" id="inputEmail">
-          <label for="emailProfissional" class="rotulo-formulario">E-mail Institucional</label>
+          <label for="identificador" class="rotulo-formulario">E-mail Institucional</label>
           <i class="fas fa-envelope icone-input"></i>
-          <input type="email" id="emailProfissional" class="controle-formulario" placeholder="seu.email@saude.gov.br" disabled>
+          <input type="email" id="identificador" name="identificador" class="controle-formulario" placeholder="seu.email@saude.gov.br" disabled>
           <div class="mensagem-erro">Por favor, insira seu e-mail institucional</div>
         </div>
         
         <div class="grupo-formulario">
-          <label for="senhaProfissional" class="rotulo-formulario">Senha</label>
+          <label for="password" class="rotulo-formulario">Senha</label>
           <i class="fas fa-lock icone-input"></i>
           <div class="container-senha">
-            <input type="password" id="senhaProfissional" class="controle-formulario" placeholder="Digite sua senha" required>
+            <input type="password" id="password" name="password" class="controle-formulario" placeholder="Digite sua senha" required>
             <i class="fas fa-eye alternar-senha" onclick="alternarSenha()"></i>
           </div>
           <div class="mensagem-erro">Por favor, insira sua senha</div>
@@ -471,7 +482,7 @@
         
         <div class="opcoes-login">
           <div>
-            <input type="checkbox" id="lembrarProfissional">
+            <input type="checkbox" id="lembrarProfissional" name="lembrar">
             <label for="lembrarProfissional">Lembrar-me</label>
           </div>
           <a href="/recuperar-senha">Esqueci minha senha</a>
@@ -489,7 +500,7 @@
 
   <script>
     function alternarSenha() {
-      const inputSenha = document.getElementById('senhaProfissional');
+      const inputSenha = document.getElementById('password');
       const icone = document.querySelector('.alternar-senha');
       
       if (inputSenha.type === 'password') {
@@ -508,71 +519,67 @@
         crm: document.getElementById('inputCrm'),
         email: document.getElementById('inputEmail')
       };
-      const inputs = {
-        coren: document.getElementById('coren'),
-        crm: document.getElementById('crm'),
-        email: document.getElementById('emailProfissional')
-      };
+      const inputs = document.querySelectorAll('input[name="identificador"]');
+      const roleInput = document.getElementById('role');
+      
+      roleInput.value = tipo;
       
       Object.values(campos).forEach(campo => campo.classList.remove('ativo'));
-      Object.values(inputs).forEach(input => {
+      inputs.forEach(input => {
         input.disabled = true;
         input.removeAttribute('required');
       });
       
       if (tipo === 'medico') {
         campos.crm.classList.add('ativo');
-        inputs.crm.disabled = false;
-        inputs.crm.setAttribute('required', '');
+        inputs[1].disabled = false;
+        inputs[1].setAttribute('required', '');
       } else if (tipo === 'enfermeiro') {
         campos.coren.classList.add('ativo');
-        inputs.coren.disabled = false;
-        inputs.coren.setAttribute('required', '');
+        inputs[0].disabled = false;
+        inputs[0].setAttribute('required', '');
       } else {
         campos.email.classList.add('ativo');
-        inputs.email.disabled = false;
-        inputs.email.setAttribute('required', '');
+        inputs[2].disabled = false;
+        inputs[2].setAttribute('required', '');
       }
     }
     
     function validarFormulario(event) {
       event.preventDefault();
       const tipo = document.querySelector('input[name="tipoProfissional"]:checked').value;
+      const identificador = document.querySelector('input[name="identificador"]:not([disabled])').value.trim();
+      const senha = document.getElementById('password').value.trim();
       let valido = true;
       
-      if (tipo === 'medico' && document.getElementById('crm').value.trim() === '') {
+      if (!identificador) {
         valido = false;
-        alert('Por favor, insira seu CRM');
-      } else if (tipo === 'enfermeiro' && document.getElementById('coren').value.trim() === '') {
-        valido = false;
-        alert('Por favor, insira seu COREN');
-      } else if ((tipo === 'agente' || tipo === 'gestor') && 
-                 document.getElementById('emailProfissional').value.trim() === '') {
-        valido = false;
-        alert('Por favor, insira seu e-mail institucional');
+        alert(`Por favor, insira seu ${tipo === 'medico' ? 'CRM' : tipo === 'enfermeiro' ? 'COREN' : 'e-mail institucional'}`);
       }
       
-      if (document.getElementById('senhaProfissional').value.trim() === '') {
+      if (!senha) {
         valido = false;
         alert('Por favor, insira sua senha');
       }
       
       if (valido) {
-        alert('Login enviado com sucesso!');
+        event.target.submit();
       }
     }
     
     // Formatar CRM/COREN
-    document.getElementById('coren').addEventListener('input', function() {
-      let valor = this.value.replace(/\D/g, '');
-      if (valor.length > 6) valor = valor.substring(0, 6) + '/' + valor.substring(6, 8);
-      this.value = valor.toUpperCase();
-    });
-    
-    document.getElementById('crm').addEventListener('input', function() {
-      let valor = this.value.replace(/\D/g, '');
-      if (valor.length > 5) valor = valor.substring(0, 5) + '/' + valor.substring(5, 7);
-      this.value = valor.toUpperCase();
+    document.querySelector('input[name="identificador"]').addEventListener('input', function() {
+      const tipo = document.querySelector('input[name="tipoProfissional"]:checked').value;
+      
+      if (tipo === 'enfermeiro') {
+        let valor = this.value.replace(/\D/g, '');
+        if (valor.length > 6) valor = valor.substring(0, 6) + '/' + valor.substring(6, 8);
+        this.value = valor.toUpperCase();
+      } else if (tipo === 'medico') {
+        let valor = this.value.replace(/\D/g, '');
+        if (valor.length > 5) valor = valor.substring(0, 5) + '/' + valor.substring(5, 7);
+        this.value = valor.toUpperCase();
+      }
     });
   </script>
 </body>
