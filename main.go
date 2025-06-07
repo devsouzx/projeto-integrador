@@ -17,6 +17,8 @@ func main() {
 
 	db := database.SetupDB()
 
+	database.ExecuteSQLMigrations(db)
+
 	_, err := db.Exec(
 		` 
 		DROP TABLE IF EXISTS users;
