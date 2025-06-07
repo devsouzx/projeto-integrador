@@ -3,9 +3,9 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
-	"github.com/devsouzx/projeto-integrador/src/repository/entity"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -22,50 +22,61 @@ type userRepository struct {
 }
 
 type UserRepository interface {
-	FindPacienteByEmailOrCPFAndPassword(
-		email string,
-		cpf string,
+	FindUserByIndetifierAndPassword(
+		indentifier string,
 		password string,
-	) (model.UserDomainInterface, error)
+		role string,
+	) (model.User, error)
 }
 
-func (ur *userRepository) FindPacienteByEmailOrCPFAndPassword(email string, cpf string, password string) (model.UserDomainInterface, error) {
-	query := `
-		SELECT id, email, cpf, name, user_password, role
-		FROM users
-		WHERE email = $1 OR cpf = $2
-	`
+func (ur *userRepository) FindUserByIndetifierAndPassword(indetifier, password, role string) (model.User, error) {
+	var query string
+	var user model.User
 
-	userEntity := &entity.UserEntity{}
-	err := ur.DB.QueryRow(query, email, cpf).Scan(
-		&userEntity.ID,
-		&userEntity.Email,
-		&userEntity.CPF,
-		&userEntity.Name,
-		&userEntity.Password,
-		&userEntity.Role,
-	)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("usuário ou senha inválidos")
+	fmt.Println("Finding user with identifier:", indetifier, "and role:", role)
+
+	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(indetifier, ".", ""), "-", ""), " ", "")
+
+	switch role {
+	case "paciente":
+		fmt.Println("Searching for paciente with email or cpf:", indetifier, cpfFormatado)
+		query = `
+			SELECT paciente_id, email, senha, nomecompleto, cpf
+			FROM paciente
+			WHERE email = $1 OR cpf = $2
+		`
+		var paciente model.Paciente
+
+		err := ur.DB.QueryRow(query, indetifier, cpfFormatado).Scan(
+			&paciente.ID,
+			&paciente.Email,
+			&paciente.Password,
+			&paciente.Name,
+			&paciente.CPF,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, fmt.Errorf("usuário ou senha inválidos")
+			}
+			return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
 		}
-		return nil, fmt.Errorf("erro ao buscar usuário: %w", err)
+
+		user = &paciente
+	case "medico":
+		query = `
+			SELECT id, email, cpf, nomecompleto, senha, crm
+			FROM medico
+			WHERE coren = $1 OR cpf = $2
+		`
+	default:
+		return nil, fmt.Errorf("tipo de usuário inválido")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(userEntity.Password), []byte(password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(user.GetPassword()), []byte(password)); err != nil {
 		return nil, fmt.Errorf("usuário ou senha inválidos")
 	}
 
-	domain := model.NewUserDomain(
-		userEntity.Email,
-		userEntity.CPF,
-		userEntity.Password,
-		userEntity.Name,
-		userEntity.Role,
-	)
+	user.SetRole(role)
 
-	domain.SetID(userEntity.ID)
-
-	return domain, nil
+	return user, nil
 }
-

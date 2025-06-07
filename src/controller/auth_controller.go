@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/model/request"
 	"github.com/devsouzx/projeto-integrador/src/service"
 	"github.com/gin-gonic/gin"
@@ -28,21 +27,15 @@ type UserController interface {
 }
 
 func (uc *userController) LoginUser(c *gin.Context) {
-	var userRequest request.UserLogin
-	fmt.Println("User Request:", userRequest)
+	var userRequest request.LoginRequest
 
 	if err := c.ShouldBind(&userRequest); err != nil {
 		c.String(http.StatusBadRequest, "Error trying to validate user info", err)
 		return
 	}
+	fmt.Println("User Request:", userRequest)
 
-	domain := model.NewUserLoginDomain(
-		userRequest.Identificador,
-		userRequest.Password,
-	)
-	fmt.Println("Domain User:", domain)
-
-	user, token, err := uc.service.LoginUserService(domain)
+	user, token, err := uc.service.LoginUserService(userRequest)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"Error trying to call loginUser service": err.Error()})
 		return

@@ -11,96 +11,73 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type userDomain struct {
+type BaseUser struct {
 	ID       string `json:"id"`
 	Email    string `json:"email"`
-	CPF    string `json:"cpf"`
-	Name     string `json:"name"`
 	Password string `json:"password"`
+	Name     string `json:"name"`
 	Role     string `json:"role"`
 }
 
-type UserDomainInterface interface {
+type User interface {
 	GenerateToken() (string, error)
 	EncryptPassword()
-	SetID(id string)
 	GetEmail() string
 	GetPassword() string
 	GetRole() string
+	SetRole(role string)
 	GetName() string
 	GetID() string
-	GetCPF() string
-}
-
-func NewUserDomain(
-	email, cpf, password, name, role string,
-) UserDomainInterface {
-	return &userDomain{
-		Email:    email,
-		CPF:    cpf,
-		Password: password,
-		Name:     name,
-		Role:     role,
-	}
 }
 
 func NewUserLoginDomain(
-	identificador, password string,
-) UserDomainInterface {
-	user := &userDomain{
+	identifier string,
+	password string,
+	role string,
+) User {
+	return &BaseUser{
+		Email:    identifier,
 		Password: password,
+		Role:     role,
 	}
-	
-	if strings.Contains(identificador, "@") {
-		user.Email = identificador
-	} else {
-		user.CPF = identificador
-	}
-
-	return user
 }
 
 var (
 	JWT_SECRET_KEY = "JWT_SECRET_KEY"
 )
 
-func (ud *userDomain) GetID() string {
-	return ud.ID
+func (u *BaseUser) GetID() string {
+	return u.ID
 }
 
-func (ud *userDomain) SetID(id string) {
-	ud.ID = id
+func (u *BaseUser) GetEmail() string {
+	return u.Email
 }
 
-func (ud *userDomain) GetEmail() string {
-	return ud.Email
+func (u *BaseUser) GetPassword() string {
+	return u.Password
 }
 
-func (ud *userDomain) GetPassword() string {
-	return ud.Password
+func (u *BaseUser) GetName() string {
+	return u.Name
 }
 
-func (ud *userDomain) GetCPF() string {
-	return ud.CPF
+func (u *BaseUser) GetRole() string {
+	return u.Role
 }
 
-func (ud *userDomain) GetName() string {
-	return ud.Name
+func (u *BaseUser) SetRole(role string) {
+	u.Role = role
 }
 
-func (ud *userDomain) GetRole() string {
-	return ud.Role
-}
-
-func (ud *userDomain) GenerateToken() (string, error) {
+func (u *BaseUser) GenerateToken() (string, error) {
 	secret := os.Getenv(JWT_SECRET_KEY)
 
 	claims := jwt.MapClaims{
-		"id":    ud.ID,
-		"email": ud.Email,
-		"cpf": ud.CPF,
-		"name":  ud.Name,
-		"role":  ud.Role,
+		"id":    u.ID,
+		"email": u.Email,
+		"name":  u.Name,
+		"role":  u.Role,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -142,10 +119,9 @@ func VerifyTokenMiddleware(c *gin.Context) {
 		return
 	}
 
-	user := userDomain{
+	user := BaseUser{
 		ID:    claims["id"].(string),
 		Email: claims["email"].(string),
-		CPF: claims["cpf"].(string),
 		Name:  claims["name"].(string),
 		Role:  claims["role"].(string),
 	}
@@ -163,7 +139,7 @@ func AuthorizeRole(allowedRoles ...string) gin.HandlerFunc {
 			return
 		}
 
-		role := user.(userDomain).Role
+		role := user.(BaseUser).Role
 		for _, allowed := range allowedRoles {
 			if role == allowed {
 				c.Next()
@@ -176,7 +152,7 @@ func AuthorizeRole(allowedRoles ...string) gin.HandlerFunc {
 	}
 }
 
-func VerifyToken(tokenValue string) (UserDomainInterface, error) {
+func VerifyToken(tokenValue string) (User, error) {
 	secret := os.Getenv(JWT_SECRET_KEY)
 
 	token, err := jwt.Parse(RemoveBearerPrefix(tokenValue), func(token *jwt.Token) (interface{}, error) {
@@ -195,10 +171,9 @@ func VerifyToken(tokenValue string) (UserDomainInterface, error) {
 		return nil, errors.New("invalid token")
 	}
 
-	return &userDomain{
+	return &BaseUser{
 		ID:    claims["id"].(string),
 		Email: claims["email"].(string),
-		CPF: claims["cpf"].(string),
 		Name:  claims["name"].(string),
 		Role:  claims["role"].(string),
 	}, nil
@@ -208,7 +183,7 @@ func RemoveBearerPrefix(token string) string {
 	return strings.TrimPrefix(token, "Bearer ")
 }
 
-func (ud *userDomain) EncryptPassword() {
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(ud.Password), bcrypt.DefaultCost)
-	ud.Password = string(hashedPassword)
+func (u *BaseUser) EncryptPassword() {
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	u.Password = string(hashedPassword)
 }

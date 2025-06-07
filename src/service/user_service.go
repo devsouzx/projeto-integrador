@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
+	"github.com/devsouzx/projeto-integrador/src/model/request"
 	"github.com/devsouzx/projeto-integrador/src/repository"
 )
 
@@ -19,15 +20,15 @@ type userDomainService struct {
 
 type UserDomainService interface {
 	LoginUserService(
-		userDomain model.UserDomainInterface,
-	) (model.UserDomainInterface, string, error)
+		loginRequest request.LoginRequest,
+	) (model.User, string, error)
 }
 
-func (ud *userDomainService)  LoginUserService(userDomain model.UserDomainInterface) (model.UserDomainInterface, string, error) {
-	user, err := ud.userRepository.FindPacienteByEmailOrCPFAndPassword(
-		userDomain.GetEmail(),
-		userDomain.GetCPF(),
-		userDomain.GetPassword(),
+func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.User, string, error) {
+	user, err := ud.userRepository.FindUserByIndetifierAndPassword(
+		loginRequest.Identificador,
+		loginRequest.Password,
+		loginRequest.Role,
 	)
 	fmt.Println("User found:", user)
 	if err != nil {

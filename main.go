@@ -19,36 +19,16 @@ func main() {
 
 	database.ExecuteSQLMigrations(db)
 
-	_, err := db.Exec(
-		` 
-		DROP TABLE IF EXISTS users;
-
-		CREATE EXTENSION IF NOT EXISTS pgcrypto; 
-		
-		CREATE TABLE IF NOT EXISTS users (
-			id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-			email VARCHAR(255) NOT NULL UNIQUE,
-			name VARCHAR(255),
-			user_password TEXT NOT NULL,
-			role VARCHAR(10) NOT NULL,
-			cpf VARCHAR(14) UNIQUE NOT NULL
-		);
-	`,
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	teste := model.NewUserDomain("teste@discente.ufg.br", "08153160389", "@Teste123", "Teste", "paciente")
+	teste := model.NewPaciente("teste@discente.ufg.br", "@Teste123", "Teste", "08153160389")
 	teste.EncryptPassword()
 
-	_, err = db.Exec(`
-	INSERT INTO users (email, cpf, name, user_password, role)
-	SELECT $1, $2, $3, $4,$5
-`, teste.GetEmail(), teste.GetCPF(), teste.GetName(), teste.GetPassword(), teste.GetRole())
+	_, err := db.Exec(`
+	INSERT INTO paciente (email, nomecompleto, senha, cpf)
+	SELECT $1, $2, $3, $4
+`, teste.GetEmail(), teste.GetName(), teste.GetPassword(), teste.GetCPF())
 
 	if err != nil {
-		panic("Erro ao inserir usuario teste: " + err.Error())
+		panic("Erro ao inserir paciente teste: " + err.Error())
 	}
 
 	defer db.Close()
