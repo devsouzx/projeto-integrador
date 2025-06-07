@@ -102,23 +102,23 @@ func InitRoutes(r *gin.RouterGroup, userController controller.UserController) {
 			c.HTML(http.StatusOK, "dashboard-paciente.html", nil)
 		})
 
-		paciente.GET("/agendar", func(c *gin.Context) {
+		paciente.GET("/agendar", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
 			c.HTML(http.StatusOK, "agendamento-paciente.html", nil)
 		})
 
-		paciente.GET("/historico_exames", func(c *gin.Context) {
+		paciente.GET("/historico_exames", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
 			c.HTML(http.StatusOK, "historico-exames-paciente.html", nil)
 		})
 
-		paciente.GET("/localizar_ubs", func(c *gin.Context) {
+		paciente.GET("/localizar_ubs", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
 			c.HTML(http.StatusOK, "localizar-ubs-paciente.html", nil)
 		})
 
-		paciente.GET("/notificacoes", func(c *gin.Context) {
+		paciente.GET("/notificacoes", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
 			c.HTML(http.StatusOK, "notificacoes-paciente.html", nil)
 		})
 
-		paciente.GET("/orientacoes", func(c *gin.Context) {
+		paciente.GET("/orientacoes", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
 			c.HTML(http.StatusOK, "orientacoes-paciente.html", nil)
 		})
 	}
