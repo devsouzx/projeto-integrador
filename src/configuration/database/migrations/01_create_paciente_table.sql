@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-DROP TABLE IF EXISTS paciente;
+DROP TABLE IF EXISTS paciente CASCADE;
 
 CREATE TABLE paciente (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

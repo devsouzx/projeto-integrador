@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-DROP TABLE IF EXISTS unidade_saude;
+DROP TABLE IF EXISTS unidade_saude CASCADE;
 
 CREATE TABLE unidade_saude (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

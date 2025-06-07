@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-DROP TABLE IF EXISTS medico;
+DROP TABLE IF EXISTS gestor;
 
 CREATE TABLE gestor (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
