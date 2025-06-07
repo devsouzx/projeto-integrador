@@ -1,4 +1,4 @@
-CREATE TABLE endereco (
+CREATE TABLE IF NOT EXISTS endereco (
     id UUID PRIMARY KEY,
     paciente_id UUID NOT NULL,
     cep CHAR(9),

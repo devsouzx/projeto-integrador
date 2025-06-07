@@ -1,4 +1,4 @@
-CREATE TABLE gestor (
+CREATE TABLE IF NOT EXISTS gestor (
     id UUID PRIMARY KEY,
     nomecompleto VARCHAR(100) NOT NULL,
     cpf CHAR(14) NOT NULL UNIQUE,

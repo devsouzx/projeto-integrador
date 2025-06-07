@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -36,7 +35,6 @@ func ExecuteSQLMigrations(db *sql.DB) {
 		if queries == "" {
 			continue
 		}
-		fmt.Printf("Executando SQL de %s:\n%s\n", file, queries)
 
 		// aqui executa o sql rresente no arquivo, caso de erro apresenta o erro e para a aplicacao
 		_, err = db.Exec(queries)

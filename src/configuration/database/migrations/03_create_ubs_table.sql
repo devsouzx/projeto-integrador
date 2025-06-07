@@ -1,4 +1,4 @@
-CREATE TABLE unidade_saude (
+CREATE TABLE IF NOT EXISTS unidade_saude (
     id UUID PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cnes VARCHAR(20) NOT NULL UNIQUE

@@ -35,6 +35,6 @@ func SetupDB() *sql.DB {
 	}
 
 	fmt.Println("Successfully connected to database")
-
+	
 	return dbConnection
 }

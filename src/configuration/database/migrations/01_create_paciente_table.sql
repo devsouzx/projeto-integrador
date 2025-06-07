@@ -1,4 +1,4 @@
-CREATE TABLE paciente (
+CREATE TABLE IF NOT EXISTS paciente (
     paciente_id UUID PRIMARY KEY,
     nomecompleto VARCHAR(50) NOT NULL,
     cartaosus CHAR(15) NOT NULL,
