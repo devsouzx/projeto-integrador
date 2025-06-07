@@ -33,7 +33,6 @@ func (uc *userController) LoginUser(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Error trying to validate user info", err)
 		return
 	}
-	fmt.Println("User Request:", userRequest)
 
 	user, token, err := uc.service.LoginUserService(userRequest)
 	if err != nil {

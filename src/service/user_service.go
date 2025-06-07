@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/model/request"
 	"github.com/devsouzx/projeto-integrador/src/repository"
@@ -25,12 +23,12 @@ type UserDomainService interface {
 }
 
 func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.User, string, error) {
-	user, err := ud.userRepository.FindUserByIndetifierAndPassword(
+	user, err := ud.userRepository.FindUserByIdentifierAndPassword(
 		loginRequest.Identifier,
 		loginRequest.Password,
 		loginRequest.Role,
 	)
-	fmt.Println("User found:", user)
+
 	if err != nil {
 		return nil, "", err
 	}

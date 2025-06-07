@@ -3,13 +3,14 @@ package model
 type Medico struct {
 	BaseUser
 	CRM             string `json:"crm"`
+	CPF             string `json:"cpf"`
 	Especialidade   string `json:"especialidade"`
 	Telefone        string `json:"telefone"`
 	DataNascimento  string `json:"data_nascimento"`
 	EnderecoConsulta string `json:"endereco_consulta"`
 }
 
-func NewMedico(email, password, name string) User {
+func NewMedico(email, password, name, crm, cpf string) User {
 	return &Medico{
 		BaseUser: BaseUser{
 			Email:    email,
@@ -17,5 +18,7 @@ func NewMedico(email, password, name string) User {
 			Name:     name,
 			Role:     "medico",
 		},
+		CRM: crm,
+		CPF: cpf,
 	}
 }

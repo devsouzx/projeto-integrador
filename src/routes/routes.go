@@ -31,6 +31,7 @@ func InitRoutes(r *gin.RouterGroup, userController controller.UserController) {
 	}
 
 	medico := r.Group("/medico")
+	medico.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("medico"))
 	{
 		medico.GET("/dashboard", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "dashboard-medico.html", nil)
@@ -97,28 +98,29 @@ func InitRoutes(r *gin.RouterGroup, userController controller.UserController) {
 	}
 
 	paciente := r.Group("/paciente")
+	medico.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"))
 	{
-		paciente.GET("/dashboard", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
+		paciente.GET("/dashboard", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "dashboard-paciente.html", nil)
 		})
 
-		paciente.GET("/agendar", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
+		paciente.GET("/agendar", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "agendamento-paciente.html", nil)
 		})
 
-		paciente.GET("/historico_exames", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
+		paciente.GET("/historico_exames", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "historico-exames-paciente.html", nil)
 		})
 
-		paciente.GET("/localizar_ubs", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
+		paciente.GET("/localizar_ubs", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "localizar-ubs-paciente.html", nil)
 		})
-
-		paciente.GET("/notificacoes", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
+		
+		paciente.GET("/notificacoes", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "notificacoes-paciente.html", nil)
 		})
 
-		paciente.GET("/orientacoes", model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"), func(c *gin.Context) {
+		paciente.GET("/orientacoes", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "orientacoes-paciente.html", nil)
 		})
 	}

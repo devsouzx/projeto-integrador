@@ -22,18 +22,18 @@ type userRepository struct {
 }
 
 type UserRepository interface {
-	FindUserByIndetifierAndPassword(
+	FindUserByIdentifierAndPassword(
 		indentifier string,
 		password string,
 		role string,
 	) (model.User, error)
 }
 
-func (ur *userRepository) FindUserByIndetifierAndPassword(indetifier, password, role string) (model.User, error) {
+func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.User, error) {
 	var query string
 	var user model.User
 
-	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(indetifier, ".", ""), "-", ""), " ", "")
+	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", ""), " ", "")
 
 	switch role {
 	case "paciente":
@@ -44,7 +44,7 @@ func (ur *userRepository) FindUserByIndetifierAndPassword(indetifier, password, 
 		`
 		var paciente model.Paciente
 
-		err := ur.DB.QueryRow(query, indetifier, cpfFormatado).Scan(
+		err := ur.DB.QueryRow(query, identifier, cpfFormatado).Scan(
 			&paciente.ID,
 			&paciente.Email,
 			&paciente.Password,
@@ -61,10 +61,28 @@ func (ur *userRepository) FindUserByIndetifierAndPassword(indetifier, password, 
 		user = &paciente
 	case "medico":
 		query = `
-			SELECT id, email, cpf, nomecompleto, senha, crm
+			SELECT id, email, senha, nomecompleto, cpf, crm
 			FROM medico
-			WHERE coren = $1 OR cpf = $2
+			WHERE crm = $1 OR cpf = $2
 		`
+		var medico model.Medico
+
+		err := ur.DB.QueryRow(query, identifier, cpfFormatado).Scan(
+			&medico.ID,
+			&medico.Email,
+			&medico.Password,
+			&medico.Name,
+			&medico.CRM,
+			&medico.CPF,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, fmt.Errorf("usuário ou senha inválidos")
+			}
+			return nil, fmt.Errorf("erro ao buscar médico: %w", err)
+		}
+
+		user = &medico
 	default:
 		return nil, fmt.Errorf("tipo de usuário inválido")
 	}
