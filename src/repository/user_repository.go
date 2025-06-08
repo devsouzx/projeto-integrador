@@ -163,6 +163,7 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 		return nil, fmt.Errorf("tipo de usuário inválido")
 	}
 
+	// 2a$10$MJsoWkTYzYBR1elzP13y8eR1cfOJ9KO7yXvErBzXPQW8MrnZTWR6q
 	if err := bcrypt.CompareHashAndPassword([]byte(user.GetPassword()), []byte(password)); err != nil {
 		return nil, fmt.Errorf("usuário ou senha inválidos")
 	}
