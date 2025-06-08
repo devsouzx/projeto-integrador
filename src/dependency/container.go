@@ -13,8 +13,9 @@ type Container struct {
 }
 
 func InitContainer(db *sql.DB) *Container {
+	emailService := service.NewEmailService()
 	userRepository := repository.NewUserRepository(db)
-	userService := service.NewUserDomainService(userRepository)
+	userService := service.NewUserDomainService(userRepository, emailService)
 	userController := controller.NewUserController(userService)
 
 	return &Container{

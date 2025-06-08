@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"golang.org/x/crypto/bcrypt"
@@ -27,6 +28,7 @@ type UserRepository interface {
 		password string,
 		role string,
 	) (model.UserInterface, error)
+	CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, error)
 }
 
 func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
@@ -171,4 +173,48 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 	user.SetRole(role)
 
 	return user, nil
+}
+
+func (ur *userRepository) CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, error) {
+    userEmail, err := ur.findUserEmail(identifier)
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return "", fmt.Errorf("usuário não encontrado")
+        }
+        return "", fmt.Errorf("erro ao buscar usuário: %w", err)
+    }
+
+    _, err = ur.DB.Exec(`
+        INSERT INTO password_recovery (identifier, code, expires_at)
+        VALUES ($1, $2, $3)
+        ON CONFLICT (identifier) 
+        DO UPDATE SET code = $2, expires_at = $3, created_at = NOW()
+    `, identifier, code, expiresAt)
+
+    if err != nil {
+        return "", fmt.Errorf("erro ao criar código de recuperação: %w", err)
+    }
+    
+    return userEmail, nil
+}
+
+func (ur *userRepository) findUserEmail(identifier string) (string, error) {
+    cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", "")
+    
+    tables := []string{"paciente", "medico", "enfermeiro", "agente_comunitario", "gestor"}
+    
+    for _, table := range tables {
+        var email string
+        err := ur.DB.QueryRow(fmt.Sprintf(`
+            SELECT email FROM %s WHERE email = $1 OR cpf = $2 LIMIT 1
+        `, table), identifier, cpfFormatado).Scan(&email)
+        
+        if err == nil {
+            return email, nil
+        } else if err != sql.ErrNoRows {
+            return "", err
+        }
+    }
+    
+    return "", sql.ErrNoRows
 }

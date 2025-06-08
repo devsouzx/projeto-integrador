@@ -42,5 +42,7 @@ func InitAuthRoutes(rg *gin.RouterGroup, userController controller.UserControlle
 		auth.GET("/recuperar-senha", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "recuperar-senha.html", nil)
 		})
+
+		auth.POST("/recuperar-senha", userController.SendCodeRecovey)
 	}
 }

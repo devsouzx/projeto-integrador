@@ -519,18 +519,38 @@
       const entradasCodigo = document.querySelectorAll('.codigo-verificacao input');
       const alternarSenhaBtns = document.querySelectorAll('.alternar-senha');
       
-      botaoContinuar.addEventListener('click', function(e) {
+      botaoContinuar.addEventListener('click', async function(e) {
         e.preventDefault();
         const valor = entradaEmail.value.trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const cpfRegex = /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/;
-        
+          
         if (!emailRegex.test(valor) && !cpfRegex.test(valor)) {
-          document.getElementById('erro-email').style.display = 'block';
-          entradaEmail.parentElement.classList.add('erro');
-          return;
+            document.getElementById('erro-email').style.display = 'block';
+            entradaEmail.parentElement.classList.add('erro');
+            return;
         }
         
+        // Mostrar loading
+        botaoContinuar.disabled = true;
+        botaoContinuar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        
+        try {
+        const response = await fetch('/recuperar-senha', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ identifier: valor })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Erro ao enviar código');
+        }
+        
+        // Transição imediata para a tela de código
         formularioRecuperacao.style.display = 'none';
         etapaVerificacao.style.display = 'block';
         document.getElementById('passo1').classList.remove('ativo');
@@ -538,48 +558,184 @@
         document.getElementById('passo2').classList.add('ativo');
         
         if (entradasCodigo.length > 0) {
-          entradasCodigo[0].focus();
+            entradasCodigo[0].focus();
         }
-      });
+            
+        // Iniciar contador para reenvio
+        iniciarContador();
+    } catch (error) {
+        document.getElementById('erro-email').textContent = error.message;
+        document.getElementById('erro-email').style.display = 'block';
+        entradaEmail.parentElement.classList.add('erro');
+    } finally {
+        // Restaurar botão
+        botaoContinuar.disabled = false;
+        botaoContinuar.textContent = 'Continuar';
+    }
+});
 
-      botaoVerificar.addEventListener('click', function() {
+    botaoVerificar.addEventListener('click', async function() {
         const codigo = Array.from(entradasCodigo).map(input => input.value).join('');
+        const identifier = entradaEmail.value.trim();
         
         if (codigo.length !== 6 || !/^\d+$/.test(codigo)) {
-          document.getElementById('erro-codigo').style.display = 'block';
-          return;
+            document.getElementById('erro-codigo').style.display = 'block';
+            return;
         }
         
-        etapaVerificacao.style.display = 'none';
-        etapaRedefinir.style.display = 'block';
-        document.getElementById('passo2').classList.remove('ativo');
-        document.getElementById('passo2').classList.add('concluido');
-        document.getElementById('passo3').classList.add('ativo');
-      });
-      
-      botaoRedefinir.addEventListener('click', function() {
+        try {
+            const response = await fetch('/verificar-codigo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    identifier: identifier,
+                    code: codigo 
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Código inválido');
+            }
+            
+            etapaVerificacao.style.display = 'none';
+            etapaRedefinir.style.display = 'block';
+            document.getElementById('passo2').classList.remove('ativo');
+            document.getElementById('passo2').classList.add('concluido');
+            document.getElementById('passo3').classList.add('ativo');
+        } catch (error) {
+            document.getElementById('erro-codigo').textContent = error.message;
+            document.getElementById('erro-codigo').style.display = 'block';
+        }
+    });
+    
+    botaoRedefinir.addEventListener('click', async function() {
         const novaSenha = document.getElementById('nova-senha').value;
         const confirmarSenha = document.getElementById('confirmar-senha').value;
+        const identifier = entradaEmail.value.trim();
+        const codigo = Array.from(entradasCodigo).map(input => input.value).join('');
         
         if (novaSenha !== confirmarSenha) {
-          document.getElementById('erro-senha').textContent = 'As senhas não coincidem';
-          document.getElementById('erro-senha').style.display = 'block';
-          return;
+            document.getElementById('erro-senha').textContent = 'As senhas não coincidem';
+            document.getElementById('erro-senha').style.display = 'block';
+            return;
         }
         
-        const container = document.querySelector('.container-recuperacao');
-        container.style.animation = 'none';
-        void container.offsetWidth;
-        container.style.animation = 'aparecer 0.5s ease-out';
-          
-        etapaRedefinir.innerHTML = `
-          <div class="mensagem-sucesso" style="display: block;">
-            <i class="fas fa-check-circle"></i>
-            <h3>Senha redefinida com sucesso!</h3>
-            <p>Sua senha foi atualizada com sucesso. Você será redirecionado para a página de login.</p>
-          </div>
-        `;
-      });
+        if (novaSenha.length < 8) {
+            document.getElementById('erro-senha').textContent = 'A senha deve ter pelo menos 8 caracteres';
+            document.getElementById('erro-senha').style.display = 'block';
+            return;
+        }
+        
+        try {
+            const response = await fetch('/redefinir-senha', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    identifier: identifier,
+                    code: codigo,
+                    new_password: novaSenha,
+                    confirm_password: confirmarSenha
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Erro ao redefinir senha');
+            }
+            
+            const container = document.querySelector('.container-recuperacao');
+            container.style.animation = 'none';
+            void container.offsetWidth;
+            container.style.animation = 'aparecer 0.5s ease-out';
+              
+            etapaRedefinir.innerHTML = `
+                <div class="mensagem-sucesso" style="display: block;">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Senha redefinida com sucesso!</h3>
+                    <p>Sua senha foi atualizada com sucesso. Você será redirecionado para a página de login.</p>
+                </div>
+            `;
+            
+            // Redirecionar após 3 segundos
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 3000);
+        } catch (error) {
+            document.getElementById('erro-senha').textContent = error.message;
+            document.getElementById('erro-senha').style.display = 'block';
+        }
+    });
+    
+    // Função para iniciar contador de reenvio
+    function iniciarContador() {
+        const contadorElement = document.getElementById('contador');
+        const tempoElement = document.getElementById('tempo-contador');
+        const linkReenviar = document.getElementById('link-reenviar');
+        
+        let tempo = 60;
+        contadorElement.style.display = 'block';
+        linkReenviar.style.display = 'none';
+        
+        const intervalo = setInterval(() => {
+            tempo--;
+            tempoElement.textContent = tempo;
+            
+            if (tempo <= 0) {
+                clearInterval(intervalo);
+                contadorElement.style.display = 'none';
+                linkReenviar.style.display = 'inline';
+            }
+        }, 1000);
+        
+        linkReenviar.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            const valor = entradaEmail.value.trim();
+            
+            try {
+                const response = await fetch('/recuperar-senha', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ identifier: valor })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erro ao reenviar código');
+                }
+                
+                // Reiniciar contador
+                iniciarContador();
+                
+                // Mostrar mensagem de sucesso
+                const mensagem = document.createElement('div');
+                mensagem.textContent = 'Código reenviado com sucesso!';
+                mensagem.style.color = 'green';
+                mensagem.style.textAlign = 'center';
+                mensagem.style.marginTop = '10px';
+                mensagem.style.fontSize = '13px';
+                
+                const parent = linkReenviar.parentElement;
+                parent.insertBefore(mensagem, linkReenviar);
+                
+                setTimeout(() => {
+                    parent.removeChild(mensagem);
+                }, 3000);
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+    }
       
       document.querySelectorAll('[id^="botao-cancelar"]').forEach(botao => {
         botao.addEventListener('click', function() {

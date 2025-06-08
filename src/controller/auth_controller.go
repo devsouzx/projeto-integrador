@@ -24,6 +24,7 @@ type userController struct {
 
 type UserController interface {
 	LoginUser(c *gin.Context)
+	SendCodeRecovey(c *gin.Context)
 }
 
 func (uc *userController) LoginUser(c *gin.Context) {
@@ -44,4 +45,21 @@ func (uc *userController) LoginUser(c *gin.Context) {
 	c.SetCookie("token", token, 3600, "/", "", false, true)
 	redirectPath := fmt.Sprintf("/%s/dashboard", strings.ToLower(user.GetRole()))
 	c.Redirect(http.StatusFound, redirectPath)
+}
+
+func (uc *userController) SendCodeRecovey(c *gin.Context) {
+	var recoveyRequest request.PasswordRecoveryRequest
+
+	if err := c.ShouldBindJSON(&recoveyRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados invalidos"})
+        return
+	}
+
+	err := uc.service.SendCodeRecoveryService(recoveyRequest)
+	if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+	c.JSON(http.StatusOK, gin.H{"message": "Código de recuperação enviado com sucesso"})
 }
