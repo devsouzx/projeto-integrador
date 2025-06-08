@@ -151,6 +151,7 @@ func InitRoutes(r *gin.RouterGroup, userController controller.UserController) {
 	}
 
 	gestor := r.Group("/gestor")
+	gestor.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("gestor"))
 	{
 		gestor.GET("/dashboard", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "dashboard-gestor.html", nil)

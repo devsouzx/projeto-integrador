@@ -134,6 +134,31 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 		}
 
 		user = &agente
+	case "gestor":
+		query = `
+			SELECT id, email, senha, nomecompleto, cpf, telefone, unidade_saude_id
+			FROM gestor
+			WHERE email = $1 OR cpf = $2
+		`
+		var gestor model.Gestor
+
+		err := ur.DB.QueryRow(query, identifier, cpfFormatado).Scan(
+			&gestor.ID,
+			&gestor.Email,
+			&gestor.Password,
+			&gestor.Name,
+			&gestor.CPF,
+			&gestor.Telefone,
+			&gestor.UnidadeID,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, fmt.Errorf("usuário ou senha inválidos")
+			}
+			return nil, fmt.Errorf("erro ao buscar gestor: %w", err)
+		}
+
+		user = &gestor
 	default:
 		return nil, fmt.Errorf("tipo de usuário inválido")
 	}
