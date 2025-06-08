@@ -127,6 +127,7 @@ func InitRoutes(r *gin.RouterGroup, userController controller.UserController) {
 	}
 
 	agente := r.Group("/agente")
+	agente.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("agente"))
 	{
 		agente.GET("/dashboard", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "dashboard-agente.html", nil)
