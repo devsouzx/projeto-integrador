@@ -26,12 +26,12 @@ type UserRepository interface {
 		indentifier string,
 		password string,
 		role string,
-	) (model.User, error)
+	) (model.UserInterface, error)
 }
 
-func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.User, error) {
+func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
 	var query string
-	var user model.User
+	var user model.UserInterface
 
 	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", ""), " ", "")
 	clean := strings.ToUpper(strings.ReplaceAll(identifier, "/", ""))

@@ -19,10 +19,10 @@ type userDomainService struct {
 type UserDomainService interface {
 	LoginUserService(
 		loginRequest request.LoginRequest,
-	) (model.User, string, error)
+	) (model.UserInterface, string, error)
 }
 
-func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.User, string, error) {
+func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.UserInterface, string, error) {
 	user, err := ud.userRepository.FindUserByIdentifierAndPassword(
 		loginRequest.Identifier,
 		loginRequest.Password,

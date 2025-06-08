@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
-
+	
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -19,7 +19,7 @@ type BaseUser struct {
 	Role     string `json:"role"`
 }
 
-type User interface {
+type UserInterface interface {
 	GenerateToken() (string, error)
 	EncryptPassword()
 	GetEmail() string
@@ -34,7 +34,7 @@ func NewUserLoginDomain(
 	identifier string,
 	password string,
 	role string,
-) User {
+) UserInterface {
 	return &BaseUser{
 		Email:    identifier,
 		Password: password,
@@ -134,7 +134,6 @@ func AuthorizeRole(allowedRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user, exists := c.Get("user")
 		if !exists {
-			c.Redirect(http.StatusFound, "/login")
 			c.Abort()
 			return
 		}
@@ -147,12 +146,12 @@ func AuthorizeRole(allowedRoles ...string) gin.HandlerFunc {
 			}
 		}
 
-		c.String(http.StatusForbidden, "Acesso não autorizado")
+		RedirectToDashboard(c, role)
 		c.Abort()
 	}
 }
 
-func VerifyToken(tokenValue string) (User, error) {
+func VerifyToken(tokenValue string) (UserInterface, error) {
 	secret := os.Getenv(JWT_SECRET_KEY)
 
 	token, err := jwt.Parse(RemoveBearerPrefix(tokenValue), func(token *jwt.Token) (interface{}, error) {
@@ -186,4 +185,21 @@ func RemoveBearerPrefix(token string) string {
 func (u *BaseUser) EncryptPassword() {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	u.Password = string(hashedPassword)
+}
+
+func RedirectToDashboard(c *gin.Context, role string) {
+	switch role {
+	case "medico":
+		c.Redirect(http.StatusFound, "/medico/dashboard")
+	case "enfermeiro":
+		c.Redirect(http.StatusFound, "/enfermeiro/dashboard")
+	case "agente":
+		c.Redirect(http.StatusFound, "/agente/dashboard")
+	case "gestor":
+		c.Redirect(http.StatusFound, "/gestor/dashboard")
+	case "paciente":
+		c.Redirect(http.StatusFound, "/paciente/dashboard")
+	default:
+		c.Redirect(http.StatusFound, "/login")
+	}
 }

@@ -10,7 +10,7 @@ type Medico struct {
 	EnderecoConsulta string `json:"endereco_consulta"`
 }
 
-func NewMedico(email, password, name, crm, cpf string) User {
+func NewMedico(email, password, name, crm, cpf string) UserInterface {
 	return &Medico{
 		BaseUser: BaseUser{
 			Email:    email,
