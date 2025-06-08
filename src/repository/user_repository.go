@@ -34,6 +34,7 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 	var user model.User
 
 	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", ""), " ", "")
+	clean := strings.ToUpper(strings.ReplaceAll(identifier, "/", ""))
 
 	switch role {
 	case "paciente":
@@ -67,7 +68,7 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 		`
 		var medico model.Medico
 
-		err := ur.DB.QueryRow(query, identifier, cpfFormatado).Scan(
+		err := ur.DB.QueryRow(query, clean, cpfFormatado).Scan(
 			&medico.ID,
 			&medico.Email,
 			&medico.Password,
@@ -83,6 +84,31 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 		}
 
 		user = &medico
+	case "enfermeiro":
+		query = `
+			SELECT id, email, senha, nomecompleto, cpf, coren, telefone
+			FROM enfermeiro
+		    WHERE coren = $1 OR cpf = $2
+	    `
+		var enfermeiro model.Enfermeiro
+
+		err := ur.DB.QueryRow(query, clean, cpfFormatado).Scan(
+			&enfermeiro.ID,
+			&enfermeiro.Email,
+			&enfermeiro.Password,
+			&enfermeiro.Name,
+			&enfermeiro.CPF,
+			&enfermeiro.COREN,
+			&enfermeiro.Telefone,
+		)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return nil, fmt.Errorf("usuário ou senha inválidos")
+			}
+			return nil, fmt.Errorf("erro ao buscar enfermeiro: %w", err)
+		}
+
+		user = &enfermeiro
 	default:
 		return nil, fmt.Errorf("tipo de usuário inválido")
 	}

@@ -71,6 +71,7 @@ func InitRoutes(r *gin.RouterGroup, userController controller.UserController) {
 	}
 
 	enfermeira := r.Group("/enfermeiro")
+	enfermeira.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("enfermeiro"))
 	{
 		enfermeira.GET("/dashboard", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "dashboard-enfermeira.html", nil)
@@ -98,7 +99,7 @@ func InitRoutes(r *gin.RouterGroup, userController controller.UserController) {
 	}
 
 	paciente := r.Group("/paciente")
-	medico.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"))
+	paciente.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"))
 	{
 		paciente.GET("/dashboard", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "dashboard-paciente.html", nil)

@@ -568,17 +568,32 @@
     }
     
     // Formatar CRM/COREN
-    document.querySelector('input[name="identificador"]').addEventListener('input', function() {
+    document.addEventListener('input', function(e) {
       const tipo = document.querySelector('input[name="tipoProfissional"]:checked').value;
-      
+      const inputAtivo = document.querySelector('.input-registro.ativo input[name="identificador"]');
+
+      if (e.target !== inputAtivo) return;
+
       if (tipo === 'enfermeiro') {
-        let valor = this.value.replace(/\D/g, '');
-        if (valor.length > 6) valor = valor.substring(0, 6) + '/' + valor.substring(6, 8);
-        this.value = valor.toUpperCase();
+        let valor = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      
+        const letras = valor.match(/[A-Z]+/g);
+        const numeros = valor.match(/\d+/g);
+      
+        const uf = letras ? letras[0].substring(0, 2) : '';
+        const numero = numeros ? numeros[0].substring(0, 6) : '';
+      
+        e.target.value = uf + (numero ? '/' + numero : '');
       } else if (tipo === 'medico') {
-        let valor = this.value.replace(/\D/g, '');
-        if (valor.length > 5) valor = valor.substring(0, 5) + '/' + valor.substring(5, 7);
-        this.value = valor.toUpperCase();
+        let valor = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        
+        const numeros = valor.match(/^\d{1,6}/);
+        const letras = valor.replace(numeros ? numeros[0] : '', '').match(/[A-Z]{0,2}/);
+
+        const num = numeros ? numeros[0] : '';
+        const uf = letras ? letras[0] : '';
+
+        e.target.value = num + (uf ? '/' + uf : '');
       }
     });
   </script>
