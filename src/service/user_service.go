@@ -9,6 +9,7 @@ import (
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/model/request"
 	"github.com/devsouzx/projeto-integrador/src/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func NewUserDomainService(
@@ -32,6 +33,7 @@ type UserDomainService interface {
 	) (model.UserInterface, string, error)
 	SendCodeRecoveryService(recoveyRequest request.PasswordRecoveryRequest) error
 	VerifyCode(VerifyCodeRequest request.VerifyCodeRequest) error
+	ResetPassword(resetPasswordRequest request.ResetPasswordRequest) error
 }
 
 func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.UserInterface, string, error) {
@@ -86,6 +88,33 @@ func (ud *userDomainService) VerifyCode(verifyCodeRequest request.VerifyCodeRequ
 	}
 
 	return nil
+}
+
+func (ud *userDomainService) ResetPassword(resetPasswordRequest request.ResetPasswordRequest) error {
+    if resetPasswordRequest.NewPassword != resetPasswordRequest.ConfirmPassword {
+        return fmt.Errorf("as senhas não coincidem")
+    }
+	
+    valid, err := ud.userRepository.VerifyRecoveryCode(resetPasswordRequest.Identifier, resetPasswordRequest.Code)
+    if err != nil {
+        return err
+    }
+    
+    if !valid {
+        return fmt.Errorf("código inválido ou expirado")
+    }
+	
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(resetPasswordRequest.NewPassword), bcrypt.DefaultCost)
+    if err != nil {
+        return fmt.Errorf("erro ao gerar hash da senha: %w", err)
+    }
+	
+    err = ud.userRepository.UpdatePassword(resetPasswordRequest.Identifier, string(hashedPassword))
+    if err != nil {
+        return err
+    }
+    
+    return nil
 }
 
 func generateCode(length int) (string, error) {

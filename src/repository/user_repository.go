@@ -30,6 +30,7 @@ type UserRepository interface {
 	) (model.UserInterface, error)
 	CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, error)
 	VerifyRecoveryCode(identifier string, code string) (bool, error)
+	UpdatePassword(identifier string, newPassword string) error
 }
 
 func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
@@ -215,6 +216,39 @@ func (ur *userRepository) VerifyRecoveryCode(identifier string, code string) (bo
     }
     
     return valid, nil
+}
+
+func (ur *userRepository) UpdatePassword(identifier string, newPassword string) error {
+    tables := []struct {
+        name  string
+        query string
+    } {
+        {"paciente", "UPDATE paciente SET senha = $1 WHERE email = $2 OR cpf = $3"},
+        {"medico", "UPDATE medico SET senha = $1 WHERE email = $2 OR cpf = $3"},
+        {"enfermeiro", "UPDATE enfermeiro SET senha = $1 WHERE email = $2 OR cpf = $3"},
+        {"agente_comunitario", "UPDATE agente_comunitario SET senha = $1 WHERE email = $2 OR cpf = $3"},
+        {"gestor", "UPDATE gestor SET senha = $1 WHERE email = $2 OR cpf = $3"},
+    }
+    
+    cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", ""), " ", "")
+    
+    for _, table := range tables {
+        result, err := ur.DB.Exec(table.query, newPassword, identifier, cpfFormatado)
+        if err != nil {
+            return fmt.Errorf("erro ao atualizar senha na tabela %s: %w", table.name, err)
+        }
+        
+        rowsAffected, _ := result.RowsAffected()
+        if rowsAffected > 0 {
+            _, err = ur.DB.Exec("DELETE FROM password_recovery WHERE identifier = $1", identifier)
+            if err != nil {
+                return fmt.Errorf("erro ao limpar código de recuperação: %w", err)
+            }
+            return nil
+        }
+    }
+    
+    return fmt.Errorf("usuário não foi encontrado em nenhuma tabela")
 }
 
 func (ur *userRepository) findUserEmail(identifier string) (string, error) {

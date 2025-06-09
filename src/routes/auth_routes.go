@@ -45,5 +45,6 @@ func InitAuthRoutes(rg *gin.RouterGroup, userController controller.UserControlle
 
 		auth.POST("/recuperar-senha", userController.SendCodeRecovey)
 		auth.POST("/verificar-codigo", userController.VerifyCode)
+		auth.POST("/redefinir-senha", userController.ResetPassword)
 	}
 }
