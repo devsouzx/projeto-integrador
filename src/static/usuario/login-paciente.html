@@ -348,7 +348,7 @@
     </div>
     
     <div class="corpo-login">
-      <form id="formularioLogin" action="/login" method="POST">
+      <form id="formularioLogin">
         <input type="hidden" name="role" value="paciente">
 
         <div class="grupo-formulario">
@@ -385,6 +385,44 @@
   </div>
 
   <script>
+    document.getElementById('formularioLogin').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const botaoLogin = document.getElementById('botaoLogin');
+        const formulario = e.target;
+        const formData = new FormData(formulario);
+        
+        try {
+            // Mostrar loading
+            botaoLogin.disabled = true;
+            botaoLogin.classList.add('botao-carregando');
+            botaoLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+            
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Erro ao realizar login');
+            }
+            
+            // Redirecionar após login bem-sucedido
+            window.location.href = data.redirect;
+            
+        } catch (error) {
+            // Restaurar botão
+            botaoLogin.disabled = false;
+            botaoLogin.classList.remove('botao-carregando');
+            botaoLogin.textContent = 'Entrar';
+            
+            // Mostrar mensagem de erro
+            alert(error.message);
+        }
+    });
+
     function alternarSenha() {
       const inputSenha = document.getElementById('senha');
       const icone = document.querySelector('.alternar-senha');

@@ -412,7 +412,7 @@
     </div>
     
     <div class="corpo-login">
-      <form id="formularioLoginProfissional" method="POST" action="/login" onsubmit="validarFormulario(event)">
+      <form id="formularioLoginProfissional" onsubmit="validarFormulario(event)">
         <input type="hidden" id="role" name="role" value="enfermeiro">
         
         <div class="tipo-profissional">
@@ -546,25 +546,45 @@
     }
     
     function validarFormulario(event) {
-      event.preventDefault();
-      const tipo = document.querySelector('input[name="tipoProfissional"]:checked').value;
-      const identificador = document.querySelector('input[name="identificador"]:not([disabled])').value.trim();
-      const senha = document.getElementById('password').value.trim();
-      let valido = true;
-      
-      if (!identificador) {
-        valido = false;
-        alert(`Por favor, insira seu ${tipo === 'medico' ? 'CRM' : tipo === 'enfermeiro' ? 'COREN' : 'e-mail institucional'}`);
-      }
-      
-      if (!senha) {
-        valido = false;
-        alert('Por favor, insira sua senha');
-      }
-      
-      if (valido) {
-        event.target.submit();
-      }
+        event.preventDefault();
+        const formulario = event.target;
+        const formData = new FormData(formulario);
+        
+        const botaoLogin = document.getElementById('botaoLoginProfissional');
+        
+        try {
+            // Mostrar loading
+            botaoLogin.disabled = true;
+            botaoLogin.classList.add('botao-carregando');
+            botaoLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+            
+            fetch('/login', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erro ao realizar login');
+                }
+                window.location.href = data.redirect;
+            })
+            .catch(error => {
+                // Restaurar botão
+                botaoLogin.disabled = false;
+                botaoLogin.classList.remove('botao-carregando');
+                botaoLogin.textContent = 'Entrar';
+                
+                alert(error.message);
+            });
+        } catch (error) {
+            // Restaurar botão
+            botaoLogin.disabled = false;
+            botaoLogin.classList.remove('botao-carregando');
+            botaoLogin.textContent = 'Entrar';
+            
+            alert(error.message);
+        }
     }
     
     // Formatar CRM/COREN

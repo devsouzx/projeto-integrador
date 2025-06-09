@@ -215,6 +215,12 @@
       color: #e0e0e0;
       font-size: 16px;
     }
+
+    .dica-validade {
+      font-size: 12px;
+      color: #e67e22;
+      margin-top: 5px;
+    }
     
     .botao {
       width: 100%;
@@ -470,6 +476,7 @@
         <div class="reenviar-codigo">
           Não recebeu o código? <a href="#" id="link-reenviar">Reenviar código</a>
           <div id="contador" style="display: none;">(Aguarde <span id="tempo-contador">60</span> segundos)</div>
+          <div class="dica-validade">O código expira em 10 minutos</div>
         </div>
         
         <button type="button" class="botao" id="botao-verificar">Verificar Código</button>
@@ -508,262 +515,394 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const formularioRecuperacao = document.getElementById('formulario-recuperacao');
-      const etapaVerificacao = document.getElementById('etapa-verificacao');
-      const etapaRedefinir = document.getElementById('etapa-redefinir');
-      const botaoContinuar = document.getElementById('botao-continuar');
-      const botaoVerificar = document.getElementById('botao-verificar');
-      const botaoRedefinir = document.getElementById('botao-redefinir');
-      const entradaEmail = document.getElementById('email');
-      const entradasCodigo = document.querySelectorAll('.codigo-verificacao input');
-      const alternarSenhaBtns = document.querySelectorAll('.alternar-senha');
+    // Constantes para as chaves do localStorage
+    const STATE_KEYS = {
+      STEP: 'passwordRecovery_step',
+      IDENTIFIER: 'passwordRecovery_identifier',
+      CODE: 'passwordRecovery_code',
+      TIMESTAMP: 'passwordRecovery_timestamp'
+    };
+
+    // Tempo de expiração do estado (1 hora em milissegundos)
+    const STATE_EXPIRATION = 10 * 60 * 1000;
+
+    // Função para salvar o estado atual
+    function saveRecoveryState(step, identifier = '', code = '') {
+      const timestamp = new Date().getTime();
+      localStorage.setItem(STATE_KEYS.STEP, step);
+      localStorage.setItem(STATE_KEYS.IDENTIFIER, identifier);
+      localStorage.setItem(STATE_KEYS.CODE, code);
+      localStorage.setItem(STATE_KEYS.TIMESTAMP, timestamp.toString());
+    }
+
+    // Função para carregar o estado salvo
+    function loadRecoveryState() {
+      const timestamp = localStorage.getItem(STATE_KEYS.TIMESTAMP);
+      const now = new Date().getTime();
+
+      // Verificar se o estado expirou
+      if (!timestamp || (now - parseInt(timestamp)) > STATE_EXPIRATION) {
+        clearRecoveryState();
+        return null;
+      }
+
+      return {
+        step: localStorage.getItem(STATE_KEYS.STEP),
+        identifier: localStorage.getItem(STATE_KEYS.IDENTIFIER),
+        code: localStorage.getItem(STATE_KEYS.CODE)
+      };
+    }
+
+    // Função para limpar o estado
+    function clearRecoveryState() {
+      Object.values(STATE_KEYS).forEach(key => {
+        localStorage.removeItem(key);
+      });
+    }
+
+    // Função para restaurar a interface com base no estado salvo
+    function restoreRecoveryUI(state) {
+      const recoveryForm = document.getElementById('formulario-recuperacao');
+      const verificationStep = document.getElementById('etapa-verificacao');
+      const resetStep = document.getElementById('etapa-redefinir');
+      const emailInput = document.getElementById('email');
+      const codeInputs = document.querySelectorAll('.codigo-verificacao input');
+
+      // Esconder todas as etapas primeiro
+      recoveryForm.style.display = 'none';
+      verificationStep.style.display = 'none';
+      resetStep.style.display = 'none';
+
+      // Restaurar o email/CPF se existir
+      if (state.identifier) {
+        emailInput.value = state.identifier;
+      }
+
+      // Determinar qual etapa mostrar
+      switch (state.step) {
+        case 'verification':
+          // Restaurar código se existir
+          if (state.code && state.code.length === 6) {
+            for (let i = 0; i < 6; i++) {
+              if (codeInputs[i]) {
+                codeInputs[i].value = state.code[i] || '';
+              }
+            }
+          }
+
+          verificationStep.style.display = 'block';
+          document.getElementById('passo1').classList.add('concluido');
+          document.getElementById('passo2').classList.add('ativo');
+          startCountdown();
+          break;
+
+        case 'reset':
+          resetStep.style.display = 'block';
+          document.getElementById('passo1').classList.add('concluido');
+          document.getElementById('passo2').classList.add('concluido');
+          document.getElementById('passo3').classList.add('ativo');
+          break;
+
+        default:
+          recoveryForm.style.display = 'block';
+      }
+    }
+
+    // Função para iniciar o contador de reenvio
+    function startCountdown() {
+      const countdownElement = document.getElementById('contador');
+      const timeElement = document.getElementById('tempo-contador');
+      const resendLink = document.getElementById('link-reenviar');
       
-      botaoContinuar.addEventListener('click', async function(e) {
+      let timeLeft = 60;
+      countdownElement.style.display = 'block';
+      resendLink.style.display = 'none';
+      
+      const interval = setInterval(() => {
+        timeLeft--;
+        timeElement.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          countdownElement.style.display = 'none';
+          resendLink.style.display = 'inline';
+        }
+      }, 1000);
+      
+      resendLink.addEventListener('click', async function(e) {
         e.preventDefault();
-        const valor = entradaEmail.value.trim();
+        const email = document.getElementById('email').value.trim();
+        
+        try {
+          const response = await fetch('/recuperar-senha', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ identifier: email })
+          });
+          
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.error || 'Erro ao reenviar código');
+          }
+          
+          // Reiniciar contador
+          startCountdown();
+          
+          // Mostrar mensagem de sucesso
+          const message = document.createElement('div');
+          message.textContent = 'Código reenviado com sucesso!';
+          message.style.color = 'green';
+          message.style.textAlign = 'center';
+          message.style.marginTop = '10px';
+          message.style.fontSize = '13px';
+          
+          const parent = resendLink.parentElement;
+          parent.insertBefore(message, resendLink);
+          
+          setTimeout(() => {
+            parent.removeChild(message);
+          }, 3000);
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const recoveryForm = document.getElementById('formulario-recuperacao');
+      const verificationStep = document.getElementById('etapa-verificacao');
+      const resetStep = document.getElementById('etapa-redefinir');
+      const continueBtn = document.getElementById('botao-continuar');
+      const verifyBtn = document.getElementById('botao-verificar');
+      const resetBtn = document.getElementById('botao-redefinir');
+      const emailInput = document.getElementById('email');
+      const codeInputs = document.querySelectorAll('.codigo-verificacao input');
+      const togglePasswordBtns = document.querySelectorAll('.alternar-senha');
+      
+      // Carregar estado salvo e restaurar a interface
+      const savedState = loadRecoveryState();
+      if (savedState) {
+        restoreRecoveryUI(savedState);
+      }
+      
+      // Evento para o botão Continuar (etapa 1)
+      continueBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        const identifier = emailInput.value.trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const cpfRegex = /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/;
           
-        if (!emailRegex.test(valor) && !cpfRegex.test(valor)) {
-            document.getElementById('erro-email').style.display = 'block';
-            entradaEmail.parentElement.classList.add('erro');
-            return;
+        if (!emailRegex.test(identifier)) {
+          document.getElementById('erro-email').style.display = 'block';
+          emailInput.parentElement.classList.add('erro');
+          return;
         }
         
         // Mostrar loading
-        botaoContinuar.disabled = true;
-        botaoContinuar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        continueBtn.disabled = true;
+        continueBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
         
         try {
-        const response = await fetch('/recuperar-senha', {
+          const response = await fetch('/recuperar-senha', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ identifier: valor })
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error || 'Erro ao enviar código');
-        }
-        
-        // Transição imediata para a tela de código
-        formularioRecuperacao.style.display = 'none';
-        etapaVerificacao.style.display = 'block';
-        document.getElementById('passo1').classList.remove('ativo');
-        document.getElementById('passo1').classList.add('concluido');
-        document.getElementById('passo2').classList.add('ativo');
-        
-        if (entradasCodigo.length > 0) {
-            entradasCodigo[0].focus();
-        }
-            
-        // Iniciar contador para reenvio
-        iniciarContador();
-    } catch (error) {
-        document.getElementById('erro-email').textContent = error.message;
-        document.getElementById('erro-email').style.display = 'block';
-        entradaEmail.parentElement.classList.add('erro');
-    } finally {
-        // Restaurar botão
-        botaoContinuar.disabled = false;
-        botaoContinuar.textContent = 'Continuar';
-    }
-});
+            body: JSON.stringify({ identifier })
+          });
 
-    botaoVerificar.addEventListener('click', async function() {
-        const codigo = Array.from(entradasCodigo).map(input => input.value).join('');
-        const identifier = entradaEmail.value.trim();
-        
-        if (codigo.length !== 6 || !/^\d+$/.test(codigo)) {
-            document.getElementById('erro-codigo').style.display = 'block';
-            return;
-        }
-        
-        try {
-            const response = await fetch('/verificar-codigo', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    identifier: identifier,
-                    code: codigo 
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.error || 'Código inválido');
-            }
-            
-            etapaVerificacao.style.display = 'none';
-            etapaRedefinir.style.display = 'block';
-            document.getElementById('passo2').classList.remove('ativo');
-            document.getElementById('passo2').classList.add('concluido');
-            document.getElementById('passo3').classList.add('ativo');
-        } catch (error) {
-            document.getElementById('erro-codigo').textContent = error.message;
-            document.getElementById('erro-codigo').style.display = 'block';
-        }
-    });
-    
-    botaoRedefinir.addEventListener('click', async function() {
-        const novaSenha = document.getElementById('nova-senha').value;
-        const confirmarSenha = document.getElementById('confirmar-senha').value;
-        const identifier = entradaEmail.value.trim();
-        const codigo = Array.from(entradasCodigo).map(input => input.value).join('');
-        
-        if (novaSenha !== confirmarSenha) {
-            document.getElementById('erro-senha').textContent = 'As senhas não coincidem';
-            document.getElementById('erro-senha').style.display = 'block';
-            return;
-        }
-        
-        if (novaSenha.length < 8) {
-            document.getElementById('erro-senha').textContent = 'A senha deve ter pelo menos 8 caracteres';
-            document.getElementById('erro-senha').style.display = 'block';
-            return;
-        }
-        
-        try {
-            const response = await fetch('/redefinir-senha', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    identifier: identifier,
-                    code: codigo,
-                    new_password: novaSenha,
-                    confirm_password: confirmarSenha
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.error || 'Erro ao redefinir senha');
-            }
-            
-            const container = document.querySelector('.container-recuperacao');
-            container.style.animation = 'none';
-            void container.offsetWidth;
-            container.style.animation = 'aparecer 0.5s ease-out';
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.error || 'Erro ao enviar código');
+          }
+          
+          // Salvar estado
+          saveRecoveryState('verification', identifier);
+          
+          // Transição para a tela de código
+          recoveryForm.style.display = 'none';
+          verificationStep.style.display = 'block';
+          document.getElementById('passo1').classList.remove('ativo');
+          document.getElementById('passo1').classList.add('concluido');
+          document.getElementById('passo2').classList.add('ativo');
+          
+          if (codeInputs.length > 0) {
+            codeInputs[0].focus();
+          }
               
-            etapaRedefinir.innerHTML = `
-                <div class="mensagem-sucesso" style="display: block;">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Senha redefinida com sucesso!</h3>
-                    <p>Sua senha foi atualizada com sucesso. Você será redirecionado para a página de login.</p>
-                </div>
-            `;
-            
-            // Redirecionar após 3 segundos
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 3000);
+          // Iniciar contador para reenvio
+          startCountdown();
         } catch (error) {
-            document.getElementById('erro-senha').textContent = error.message;
-            document.getElementById('erro-senha').style.display = 'block';
+          document.getElementById('erro-email').textContent = error.message;
+          document.getElementById('erro-email').style.display = 'block';
+          emailInput.parentElement.classList.add('erro');
+        } finally {
+          // Restaurar botão
+          continueBtn.disabled = false;
+          continueBtn.textContent = 'Continuar';
         }
-    });
-    
-    // Função para iniciar contador de reenvio
-    function iniciarContador() {
-        const contadorElement = document.getElementById('contador');
-        const tempoElement = document.getElementById('tempo-contador');
-        const linkReenviar = document.getElementById('link-reenviar');
+      });
+
+      // Evento para o botão Verificar Código (etapa 2)
+      verifyBtn.addEventListener('click', async function() {
+        const code = Array.from(codeInputs).map(input => input.value).join('');
+        const identifier = emailInput.value.trim();
         
-        let tempo = 60;
-        contadorElement.style.display = 'block';
-        linkReenviar.style.display = 'none';
+        if (code.length !== 6 || !/^\d+$/.test(code)) {
+          document.getElementById('erro-codigo').style.display = 'block';
+          return;
+        }
         
-        const intervalo = setInterval(() => {
-            tempo--;
-            tempoElement.textContent = tempo;
-            
-            if (tempo <= 0) {
-                clearInterval(intervalo);
-                contadorElement.style.display = 'none';
-                linkReenviar.style.display = 'inline';
-            }
-        }, 1000);
-        
-        linkReenviar.addEventListener('click', async function(e) {
-            e.preventDefault();
-            
-            const valor = entradaEmail.value.trim();
-            
-            try {
-                const response = await fetch('/recuperar-senha', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ identifier: valor })
-                });
-                
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error || 'Erro ao reenviar código');
-                }
-                
-                // Reiniciar contador
-                iniciarContador();
-                
-                // Mostrar mensagem de sucesso
-                const mensagem = document.createElement('div');
-                mensagem.textContent = 'Código reenviado com sucesso!';
-                mensagem.style.color = 'green';
-                mensagem.style.textAlign = 'center';
-                mensagem.style.marginTop = '10px';
-                mensagem.style.fontSize = '13px';
-                
-                const parent = linkReenviar.parentElement;
-                parent.insertBefore(mensagem, linkReenviar);
-                
-                setTimeout(() => {
-                    parent.removeChild(mensagem);
-                }, 3000);
-            } catch (error) {
-                alert(error.message);
-            }
-        });
-    }
-      
-      document.querySelectorAll('[id^="botao-cancelar"]').forEach(botao => {
-        botao.addEventListener('click', function() {
-          window.location.href = '/login';
-        });
+        try {
+          const response = await fetch('/verificar-codigo', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+              identifier: identifier,
+              code: code 
+            })
+          });
+          
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.error || 'Código inválido');
+          }
+          
+          // Salvar estado
+          saveRecoveryState('reset', identifier, code);
+          
+          verificationStep.style.display = 'none';
+          resetStep.style.display = 'block';
+          document.getElementById('passo2').classList.remove('ativo');
+          document.getElementById('passo2').classList.add('concluido');
+          document.getElementById('passo3').classList.add('ativo');
+        } catch (error) {
+          document.getElementById('erro-codigo').textContent = error.message;
+          document.getElementById('erro-codigo').style.display = 'block';
+        }
       });
       
-      alternarSenhaBtns.forEach(icone => {
-        icone.addEventListener('click', function() {
-          const entrada = this.parentElement.querySelector('input');
-          const tipo = entrada.getAttribute('type') === 'password' ? 'text' : 'password';
-          entrada.setAttribute('type', tipo);
+      // Evento para o botão Redefinir Senha (etapa 3)
+      // Evento para o botão Redefinir Senha (etapa 3)
+      resetBtn.addEventListener('click', async function() {
+          const new_password = document.getElementById('nova-senha').value;
+          const confirm_password = document.getElementById('confirmar-senha').value;
+          const identifier = emailInput.value.trim();
+          const code = Array.from(codeInputs).map(input => input.value).join('');
+          const errorElement = document.getElementById('erro-senha');
+          
+          // Resetar mensagens de erro
+          errorElement.style.display = 'none';
+          
+          // Validações
+          if (new_password !== confirm_password) {
+              errorElement.textContent = 'As senhas não coincidem';
+              errorElement.style.display = 'block';
+              return;
+          }
+          
+          if (new_password.length < 8) {
+              errorElement.textContent = 'A senha deve ter pelo menos 8 caracteres';
+              errorElement.style.display = 'block';
+              return;
+          }
+          
+          try {
+              // Mostrar loading
+              resetBtn.disabled = true;
+              resetBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redefinindo...';
+              
+              const response = await fetch('/redefinir-senha', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ 
+                      identifier: identifier,
+                      code: code,
+                      new_password: new_password,
+                      confirm_password: confirm_password // Corrigido o nome da variável
+                  })
+              });
+            
+              const data = await response.json();
+              
+              if (!response.ok) {
+                  throw new Error(data.error || 'Erro ao redefinir senha');
+              }
+              
+              // Limpar estado após redefinição bem-sucedida
+              clearRecoveryState();
+              
+              // Mostrar mensagem de sucesso
+              const container = document.querySelector('.container-recuperacao');
+              container.style.animation = 'none';
+              void container.offsetWidth; // Forçar reflow
+              container.style.animation = 'aparecer 0.5s ease-out';
+              
+              // Substituir o conteúdo da etapa de redefinição pela mensagem de sucesso
+              resetStep.innerHTML = `
+                  <div class="mensagem-sucesso" style="display: block;">
+                      <i class="fas fa-check-circle"></i>
+                      <h3>Senha redefinida com sucesso!</h3>
+                      <p>Sua senha foi atualizada com sucesso. Você será redirecionado para a página de login.</p>
+                  </div>
+              `;
+                
+              // Redirecionar após 3 segundos
+              setTimeout(() => {
+                  window.location.href = '/login';
+              }, 3000);
+              
+          } catch (error) {
+              errorElement.textContent = error.message;
+              errorElement.style.display = 'block';
+          } finally {
+              // Restaurar botão mesmo em caso de erro
+              if (resetBtn) {
+                  resetBtn.disabled = false;
+                  resetBtn.textContent = 'Redefinir Senha';
+              }
+          }
+      });
+      // Eventos para alternar visibilidade da senha
+      togglePasswordBtns.forEach(icon => {
+        icon.addEventListener('click', function() {
+          const input = this.parentElement.querySelector('input');
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
           this.classList.toggle('fa-eye');
           this.classList.toggle('fa-eye-slash');
         });
       });
       
-      entradasCodigo.forEach((entrada, indice) => {
-        entrada.addEventListener('input', function() {
-          if (this.value.length === 1 && indice < entradasCodigo.length - 1) {
-            entradasCodigo[indice + 1].focus();
+      // Eventos para navegação entre os inputs do código
+      codeInputs.forEach((input, index) => {
+        input.addEventListener('input', function() {
+          if (this.value.length === 1 && index < codeInputs.length - 1) {
+            codeInputs[index + 1].focus();
           }
         });
         
-        entrada.addEventListener('keydown', function(e) {
-          if (e.key === 'Backspace' && this.value.length === 0 && indice > 0) {
-            entradasCodigo[indice - 1].focus();
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+            codeInputs[index - 1].focus();
           }
+        });
+      });
+      
+      // Eventos para os botões Cancelar
+      document.querySelectorAll('[id^="botao-cancelar"]').forEach(button => {
+        button.addEventListener('click', function() {
+          clearRecoveryState();
+          window.location.href = '/login';
         });
       });
     });
