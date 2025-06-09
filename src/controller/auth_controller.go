@@ -32,21 +32,35 @@ type UserController interface {
 func (uc *userController) LoginUser(c *gin.Context) {
 	var userRequest request.LoginRequest
 
-	if err := c.ShouldBind(&userRequest); err != nil {
-		c.String(http.StatusBadRequest, "Error trying to validate user info", err)
-		return
-	}
-	fmt.Println(userRequest)
+    if err := c.ShouldBind(&userRequest); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": "Erro ao validar dados do usuário",
+            "details": err.Error(),
+        })
+        return
+    }
 
-	user, token, err := uc.service.LoginUserService(userRequest)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"Error trying to call loginUser service": err.Error()})
-		return
-	}
+    user, token, err := uc.service.LoginUserService(userRequest)
+    if err != nil {
+        c.JSON(http.StatusUnauthorized, gin.H{
+            "error": "Login/senha invalidos!",
+            "details": err.Error(),
+        })
+        return
+    }
 
-	c.SetCookie("token", token, 3600, "/", "", false, true)
-	redirectPath := fmt.Sprintf("/%s/dashboard", strings.ToLower(user.GetRole()))
-	c.Redirect(http.StatusFound, redirectPath)
+    c.SetCookie("token", token, 3600, "/", "", false, true)
+    c.JSON(http.StatusOK, gin.H{
+        "message": "Login realizado com sucesso",
+        "token": token,
+        "user": gin.H{
+            "id": user.GetID(),
+            "name": user.GetName(),
+            "email": user.GetEmail(),
+            "role": user.GetRole(),
+        },
+        "redirect": fmt.Sprintf("/%s/dashboard", strings.ToLower(user.GetRole())),
+    })
 }
 
 func (uc *userController) SendCodeRecovey(c *gin.Context) {
