@@ -29,6 +29,7 @@ type UserRepository interface {
 		role string,
 	) (model.UserInterface, error)
 	CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, error)
+	VerifyRecoveryCode(identifier string, code string) (bool, error)
 }
 
 func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
@@ -196,6 +197,24 @@ func (ur *userRepository) CreateRecoveryCode(identifier string, code string, exp
     }
     
     return userEmail, nil
+}
+
+func (ur *userRepository) VerifyRecoveryCode(identifier string, code string) (bool, error) {
+	var valid bool
+	err := ur.DB.QueryRow(`
+        SELECT code = $2 AND expires_at > NOW()
+        FROM password_recovery
+        WHERE identifier = $1
+    `, identifier, code).Scan(&valid)
+
+	if err != nil {
+        if err == sql.ErrNoRows {
+            return false, nil
+        }
+        return false, fmt.Errorf("erro ao verificar código: %w", err)
+    }
+    
+    return valid, nil
 }
 
 func (ur *userRepository) findUserEmail(identifier string) (string, error) {

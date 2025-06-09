@@ -25,6 +25,7 @@ type userController struct {
 type UserController interface {
 	LoginUser(c *gin.Context)
 	SendCodeRecovey(c *gin.Context)
+	VerifyCode(c *gin.Context)
 }
 
 func (uc *userController) LoginUser(c *gin.Context) {
@@ -62,4 +63,21 @@ func (uc *userController) SendCodeRecovey(c *gin.Context) {
     }
 
 	c.JSON(http.StatusOK, gin.H{"message": "Código de recuperação enviado com sucesso"})
+}
+
+func (uc *userController) VerifyCode(c *gin.Context) {
+	var verifyCodeRequest request.VerifyCodeRequest
+
+	if err := c.ShouldBindJSON(&verifyCodeRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
+        return
+	}
+
+	err := uc.service.VerifyCode(verifyCodeRequest)
+	if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+	c.JSON(http.StatusOK, gin.H{"message": "Código verificado com sucesso"})
 }

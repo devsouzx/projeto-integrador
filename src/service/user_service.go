@@ -31,6 +31,7 @@ type UserDomainService interface {
 		loginRequest request.LoginRequest,
 	) (model.UserInterface, string, error)
 	SendCodeRecoveryService(recoveyRequest request.PasswordRecoveryRequest) error
+	VerifyCode(VerifyCodeRequest request.VerifyCodeRequest) error
 }
 
 func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.UserInterface, string, error) {
@@ -68,6 +69,20 @@ func (ud *userDomainService) SendCodeRecoveryService(recoveyRequest request.Pass
 	err = ud.emailService.SendRecoveryEmail(userEmail, code)
 	if err != nil {
 		return fmt.Errorf("erro ao enviar e-mail: %w", err)
+	}
+
+	return nil
+}
+
+func (ud *userDomainService) VerifyCode(verifyCodeRequest request.VerifyCodeRequest) error {
+	valid, err := ud.userRepository.VerifyRecoveryCode(verifyCodeRequest.Identifier, verifyCodeRequest.Code)
+
+	if err != nil {
+		return err
+	}
+
+	if !valid {
+		return fmt.Errorf("código inválido ou expirado")
 	}
 
 	return nil
