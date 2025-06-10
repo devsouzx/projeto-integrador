@@ -7,13 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #9b59b6;
-      --secondary: #8e44ad;
-      --danger: #e74c3c;
-      --warning: #f39c12;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e0e0e0;
-      --dark-gray: #333333;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
     }
     
     * {
@@ -25,12 +25,12 @@
     
     body {
       background: rgba(214, 174, 241, 0.15);
-      color: var(--dark-gray);
+      color: var(--cinza-escuro);
     }
     
-    /* Top Navigation */
-    .top-nav {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    /* Navegação Superior */
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 0.75rem 1.5rem;
       position: sticky;
@@ -39,7 +39,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    .nav-container {
+    .container-navegacao {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -52,16 +52,16 @@
       font-size: 1.25rem;
     }
     
-    .nav-menu {
+    .menu-navegacao {
       display: flex;
       list-style: none;
     }
     
-    .nav-item {
+    .item-navegacao {
       margin-left: 1rem;
     }
     
-    .nav-link {
+    .link-navegacao {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -73,17 +73,54 @@
       gap: 0.5rem;
     }
     
-    .nav-link:hover, .nav-link.active {
+    .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
     }
     
-    .user-info {
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .info-usuario:hover .menu-usuario {
+      display: block;
+    }
+
+    .menu-usuario {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      min-width: 200px;
+      z-index: 10;
+    }
+
+    .menu-usuario a {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: #333333;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+
+    .menu-usuario a:hover {
+      background-color: #f5f5f5;
+      color: var(--primaria);
+    }
+
+    .menu-usuario a i {
+      margin-right: 0.5rem;
+      width: 20px;
+      text-align: center;
     }
     
-    .user-avatar {
+    .avatar-usuario {
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -92,36 +129,36 @@
       background-color: #f0e5f5;
     }
     
-    /* Main Content */
-    .main-content {
+    /* Conteúdo Principal */
+    .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
     
-    .header {
+    .cabecalho {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
     }
     
-    .page-title {
+    .titulo-pagina {
       font-size: 1.75rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .notification-bell {
+    .sino-notificacao {
       position: relative;
       font-size: 1.25rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .notification-badge {
+    .badge-notificacao {
       position: absolute;
       top: -5px;
       right: -5px;
-      background-color: var(--danger);
+      background-color: var(--perigo);
       color: white;
       border-radius: 50%;
       width: 18px;
@@ -133,21 +170,21 @@
     }
     
     /* Filtros e Busca */
-    .search-bar {
+    .barra-busca {
       display: flex;
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
     
-    .search-input {
+    .entrada-busca {
       flex: 1;
       padding: 0.75rem 1rem;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid var(--cinza-medio);
       border-radius: 6px;
       font-size: 1rem;
     }
     
-    .btn {
+    .botao {
       display: inline-block;
       padding: 0.75rem 1.5rem;
       border-radius: 6px;
@@ -158,26 +195,26 @@
       transition: all 0.3s;
     }
     
-    .btn-primary {
-      background-color: var(--primary);
+    .botao-primario {
+      background-color: var(--primaria);
       color: white;
     }
     
-    .btn-primary:hover {
+    .botao-primario:hover {
       background-color: #134a80;
     }
     
-    .btn-secondary {
-      background-color: var(--secondary);
+    .botao-secundario {
+      background-color: var(--secundaria);
       color: white;
     }
     
-    .btn-secondary:hover {
+    .botao-secundario:hover {
       background-color: #38b48b;
     }
     
     /* Tabela de Exames */
-    .exams-table {
+    .tabela-exames {
       width: 100%;
       border-collapse: collapse;
       background-color: white;
@@ -186,23 +223,23 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .exams-table th {
-      background-color: var(--primary);
+    .tabela-exames th {
+      background-color: var(--primaria);
       color: white;
       padding: 1rem;
       text-align: left;
     }
     
-    .exams-table td {
+    .tabela-exames td {
       padding: 1rem;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid var(--cinza-medio);
     }
     
-    .exams-table tr:last-child td {
+    .tabela-exames tr:last-child td {
       border-bottom: none;
     }
     
-    .exam-status {
+    .status-exame {
       display: inline-block;
       padding: 0.25rem 0.75rem;
       border-radius: 20px;
@@ -210,59 +247,59 @@
       font-weight: 500;
     }
     
-    .status-pending {
+    .status-pendente {
       background-color: #fff3cd;
-      color: var(--warning);
+      color: var(--aviso);
     }
     
-    .status-completed {
+    .status-concluido {
       background-color: #e8f5e9;
       color: #2e7d32;
     }
     
-    .status-rejected {
+    .status-rejeitado {
       background-color: #f8d7da;
-      color: var(--danger);
+      color: var(--perigo);
     }
     
-    .status-urgent {
+    .status-urgente {
       background-color: #fce4ec;
       color: #c2185b;
     }
     
-    .action-btn {
+    .botao-acao {
       background: none;
       border: none;
-      color: var(--primary);
+      color: var(--primaria);
       cursor: pointer;
       margin: 0 0.25rem;
     }
     
     /* Paginação */
-    .pagination {
+    .paginacao {
       display: flex;
       justify-content: center;
       margin-top: 2rem;
       gap: 0.5rem;
     }
     
-    .page-link {
+    .link-pagina {
       padding: 0.5rem 1rem;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid var(--cinza-medio);
       border-radius: 6px;
       text-decoration: none;
-      color: var(--dark-gray);
+      color: var(--cinza-escuro);
     }
     
-    .page-link.active {
-      background-color: var(--primary);
+    .link-pagina.ativo {
+      background-color: var(--primaria);
       color: white;
-      border-color: var(--primary);
+      border-color: var(--primaria);
     }
     
     /* Responsividade */
     @media (max-width: 768px) {
-      .top-nav {
+      .navegacao-superior {
       padding: 0.5rem 0.5rem;
       }
 
@@ -271,12 +308,12 @@
       white-space: nowrap;
       margin-right: 0.5rem;
       }
-      .nav-container {
+      .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
-      .nav-menu {
+      .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
         white-space: nowrap;
@@ -285,21 +322,21 @@
         scrollbar-width: thin; /* Firefox */
       }
 
-      .nav-item {
+      .item-navegacao {
         margin-left: 0;
         flex: 0 0 auto;
       }
       
-      .user-info {
+      .info-usuario {
         justify-content: center;
         margin-top: 0.5rem;
       }
       
-      .search-bar {
+      .barra-busca {
         flex-direction: column;
       }
       
-      .exams-table {
+      .tabela-exames {
         display: block;
         overflow-x: auto;
       }
@@ -308,64 +345,70 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <nav class="top-nav">
-    <div class="nav-container">
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
       <div class="logo">Área do Gestor</div>
       
-      <ul class="nav-menu">
-        <li class="nav-item"><a href="/gestor/dashboard" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="/gestor/usuarios" class="nav-link"><i class="fas fa-users"></i> Usuários</a></li>
-        <li class="nav-item"><a href="/gestor/relatorios" class="nav-link"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
-        <li class="nav-item"><a href="/gestor/exames" class="nav-link active"><i class="fas fa-file-medical"></i> Exames</a></li>
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/gestor/dashboard" class="link-navegacao"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li class="item-navegacao"><a href="/gestor/usuarios" class="link-navegacao"><i class="fas fa-users"></i> Usuários</a></li>
+        <li class="item-navegacao"><a href="/gestor/relatorios" class="link-navegacao"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+        <li class="item-navegacao"><a href="/gestor/exames" class="link-navegacao ativo"><i class="fas fa-file-medical"></i> Exames</a></li>
       </ul>
       
-      <div class="user-info">
-        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do gestor" class="user-avatar">
-        <span>Carlos Oliveira</span>
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
+        <span>Dr. Carlos Silva</span>
+        
+        <div class="menu-usuario">
+          <a href="/medico/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
+          <a href="/medico/configuracoes"><i class="fas fa-cog"></i> Configurações</a>
+          <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
       </div>
     </div>
   </nav>
   
-  <main class="main-content">
-    <div class="header">
-      <h1 class="page-title">Gestão de Exames</h1>
-      <div class="notification-bell">
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Gestão de Exames</h1>
+      <div class="sino-notificacao">
         <i class="fas fa-bell"></i>
-        <span class="notification-badge">7</span>
+        <span class="badge-notificacao">7</span>
       </div>
     </div>
     
-    <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Buscar por nome, CPF ou número do exame">
-      <select class="search-input" style="max-width: 200px;">
+    <div class="barra-busca">
+      <input type="text" class="entrada-busca" placeholder="Buscar por nome, CPF ou número do exame">
+      <select class="entrada-busca" style="max-width: 200px;">
         <option>Todos os status</option>
         <option>Pendentes</option>
         <option>Concluídos</option>
         <option>Rejeitados</option>
         <option>Urgentes</option>
       </select>
-      <select class="search-input" style="max-width: 200px;">
+      <select class="entrada-busca" style="max-width: 200px;">
         <option>Todas as unidades</option>
         <option>UBS Centro</option>
         <option>UBS Norte</option>
         <option>UBS Sul</option>
         <option>UBS Leste</option>
       </select>
-      <button class="btn btn-primary">
+      <button class="botao botao-primario">
         <i class="fas fa-search"></i> Buscar
       </button>
     </div>
     
     <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-      <button class="btn btn-primary">
+      <button class="botao botao-primario">
         <i class="fas fa-plus"></i> Novo Exame
       </button>
-      <button class="btn btn-secondary">
+      <button class="botao botao-secundario">
         <i class="fas fa-file-import"></i> Importar Lote
       </button>
     </div>
     
-    <table class="exams-table">
+    <table class="tabela-exames">
       <thead>
         <tr>
           <th>Nº Exame</th>
@@ -384,11 +427,11 @@
           <td>123.456.789-00</td>
           <td>15/05/2023</td>
           <td>UBS Centro</td>
-          <td><span class="exam-status status-urgent">Urgente</span></td>
+          <td><span class="status-exame status-urgente">Urgente</span></td>
           <td>
-            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
-            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
-            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+            <button class="botao-acao" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="botao-acao" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="botao-acao" title="Exportar"><i class="fas fa-file-export"></i></button>
           </td>
         </tr>
         <tr>
@@ -397,11 +440,11 @@
           <td>987.654.321-00</td>
           <td>14/05/2023</td>
           <td>UBS Norte</td>
-          <td><span class="exam-status status-completed">Concluído</span></td>
+          <td><span class="status-exame status-concluido">Concluído</span></td>
           <td>
-            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
-            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
-            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+            <button class="botao-acao" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="botao-acao" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="botao-acao" title="Exportar"><i class="fas fa-file-export"></i></button>
           </td>
         </tr>
         <tr>
@@ -410,11 +453,11 @@
           <td>456.789.123-00</td>
           <td>13/05/2023</td>
           <td>UBS Sul</td>
-          <td><span class="exam-status status-pending">Pendente</span></td>
+          <td><span class="status-exame status-pendente">Pendente</span></td>
           <td>
-            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
-            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
-            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+            <button class="botao-acao" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="botao-acao" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="botao-acao" title="Exportar"><i class="fas fa-file-export"></i></button>
           </td>
         </tr>
         <tr>
@@ -423,11 +466,11 @@
           <td>321.654.987-00</td>
           <td>12/05/2023</td>
           <td>UBS Leste</td>
-          <td><span class="exam-status status-rejected">Rejeitado</span></td>
+          <td><span class="status-exame status-rejeitado">Rejeitado</span></td>
           <td>
-            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
-            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
-            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+            <button class="botao-acao" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="botao-acao" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="botao-acao" title="Exportar"><i class="fas fa-file-export"></i></button>
           </td>
         </tr>
         <tr>
@@ -436,22 +479,22 @@
           <td>654.321.987-00</td>
           <td>11/05/2023</td>
           <td>UBS Centro</td>
-          <td><span class="exam-status status-completed">Concluído</span></td>
+          <td><span class="status-exame status-concluido">Concluído</span></td>
           <td>
-            <button class="action-btn" title="Visualizar"><i class="fas fa-eye"></i></button>
-            <button class="action-btn" title="Editar"><i class="fas fa-edit"></i></button>
-            <button class="action-btn" title="Exportar"><i class="fas fa-file-export"></i></button>
+            <button class="botao-acao" title="Visualizar"><i class="fas fa-eye"></i></button>
+            <button class="botao-acao" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="botao-acao" title="Exportar"><i class="fas fa-file-export"></i></button>
           </td>
         </tr>
       </tbody>
     </table>
     
-    <div class="pagination">
-      <a href="#" class="page-link"><i class="fas fa-angle-left"></i></a>
-      <a href="#" class="page-link active">1</a>
-      <a href="#" class="page-link">2</a>
-      <a href="#" class="page-link">3</a>
-      <a href="#" class="page-link"><i class="fas fa-angle-right"></i></a>
+    <div class="paginacao">
+      <a href="#" class="link-pagina"><i class="fas fa-angle-left"></i></a>
+      <a href="#" class="link-pagina ativo">1</a>
+      <a href="#" class="link-pagina">2</a>
+      <a href="#" class="link-pagina">3</a>
+      <a href="#" class="link-pagina"><i class="fas fa-angle-right"></i></a>
     </div>
   </main>
 </body>

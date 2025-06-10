@@ -7,13 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #9b59b6;
-      --secondary: #8e44ad;
-      --danger: #e74c3c;
-      --warning: #f39c12;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e0e0e0;
-      --dark-gray: #333333;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
     }
     
     * {
@@ -25,12 +25,12 @@
     
     body {
       background: rgba(214, 174, 241, 0.15);
-      color: var(--dark-gray);
+      color: var(--cinza-escuro);
     }
     
-    /* Top Navigation */
-    .top-nav {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    /* Navegação Superior */
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 0.75rem 1.5rem;
       position: sticky;
@@ -39,7 +39,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    .nav-container {
+    .container-navegacao {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -52,16 +52,16 @@
       font-size: 1.25rem;
     }
     
-    .nav-menu {
+    .menu-navegacao {
       display: flex;
       list-style: none;
     }
     
-    .nav-item {
+    .item-navegacao {
       margin-left: 1rem;
     }
     
-    .nav-link {
+    .link-navegacao {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -73,17 +73,54 @@
       gap: 0.5rem;
     }
     
-    .nav-link:hover, .nav-link.active {
+    .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
     }
     
-    .user-info {
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .info-usuario:hover .menu-usuario {
+      display: block;
+    }
+
+    .menu-usuario {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      min-width: 200px;
+      z-index: 10;
+    }
+
+    .menu-usuario a {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: #333333;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+
+    .menu-usuario a:hover {
+      background-color: #f5f5f5;
+      color: var(--primaria);
+    }
+
+    .menu-usuario a i {
+      margin-right: 0.5rem;
+      width: 20px;
+      text-align: center;
     }
     
-    .user-avatar {
+    .avatar-usuario {
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -92,36 +129,36 @@
       background-color: #f0e5f5;
     }
     
-    /* Main Content */
-    .main-content {
+    /* Conteúdo Principal */
+    .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
     
-    .header {
+    .cabecalho {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
     }
     
-    .page-title {
+    .titulo-pagina {
       font-size: 1.75rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .notification-bell {
+    .sino-notificacao {
       position: relative;
       font-size: 1.25rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .notification-badge {
+    .badge-notificacao {
       position: absolute;
       top: -5px;
       right: -5px;
-      background-color: var(--danger);
+      background-color: var(--perigo);
       color: white;
       border-radius: 50%;
       width: 18px;
@@ -133,7 +170,7 @@
     }
     
     /* Filtros de Relatório */
-    .report-filters {
+    .filtros-relatorio {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
@@ -141,30 +178,30 @@
       margin-bottom: 2rem;
     }
     
-    .filter-row {
+    .linha-filtro {
       display: flex;
       gap: 1.5rem;
       margin-bottom: 1rem;
     }
     
-    .filter-group {
+    .grupo-filtro {
       flex: 1;
     }
     
-    .filter-label {
+    .rotulo-filtro {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
     }
     
-    .filter-control {
+    .controle-filtro {
       width: 100%;
       padding: 0.75rem;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid var(--cinza-medio);
       border-radius: 6px;
     }
     
-    .btn {
+    .botao {
       display: inline-block;
       padding: 0.75rem 1.5rem;
       border-radius: 6px;
@@ -175,46 +212,46 @@
       transition: all 0.3s;
     }
     
-    .btn-primary {
-      background-color: var(--primary);
+    .botao-primario {
+      background-color: var(--primaria);
       color: white;
     }
     
-    .btn-primary:hover {
+    .botao-primario:hover {
       background-color: #134a80;
     }
     
     /* Conteúdo do Relatório */
-    .report-container {
+    .container-relatorio {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .report-tabs {
+    .abas-relatorio {
       display: flex;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid var(--cinza-medio);
       margin-bottom: 1.5rem;
     }
     
-    .report-tab {
+    .aba-relatorio {
       padding: 0.75rem 1.5rem;
       cursor: pointer;
       border-bottom: 2px solid transparent;
     }
     
-    .report-tab.active {
-      border-bottom-color: var(--primary);
-      color: var(--primary);
+    .aba-relatorio.ativa {
+      border-bottom-color: var(--primaria);
+      color: var(--primaria);
       font-weight: 500;
     }
     
-    .report-content {
+    .conteudo-relatorio {
       min-height: 400px;
     }
     
-    .chart-container {
+    .container-grafico {
       height: 350px;
       background-color: #f8f9fa;
       border-radius: 8px;
@@ -225,51 +262,51 @@
       color: #666;
     }
     
-    .table-container {
+    .container-tabela {
       overflow-x: auto;
     }
     
-    .data-table {
+    .tabela-dados {
       width: 100%;
       border-collapse: collapse;
     }
     
-    .data-table th {
+    .tabela-dados th {
       background-color: #f8f9fa;
       padding: 1rem;
       text-align: left;
     }
     
-    .data-table td {
+    .tabela-dados td {
       padding: 1rem;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid var(--cinza-medio);
     }
     
-    .export-options {
+    .opcoes-exportacao {
       display: flex;
       gap: 1rem;
       margin-top: 1.5rem;
     }
     
-    .export-btn {
+    .botao-exportar {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       padding: 0.75rem 1.5rem;
       background-color: white;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid var(--cinza-medio);
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.3s;
     }
     
-    .export-btn:hover {
+    .botao-exportar:hover {
       background-color: #f8f9fa;
     }
     
     /* Responsividade */
     @media (max-width: 768px) {
-      .top-nav {
+      .navegacao-superior {
       padding: 0.5rem 0.5rem;
       }
 
@@ -278,12 +315,12 @@
       white-space: nowrap;
       margin-right: 0.5rem;
       }
-      .nav-container {
+      .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
-      .nav-menu {
+      .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
         white-space: nowrap;
@@ -292,22 +329,22 @@
         scrollbar-width: thin; /* Firefox */
       }
 
-      .nav-item {
+      .item-navegacao {
         margin-left: 0;
         flex: 0 0 auto;
       }
       
-      .user-info {
+      .info-usuario {
         justify-content: center;
         margin-top: 0.5rem;
       }
       
-      .filter-row {
+      .linha-filtro {
         flex-direction: column;
         gap: 1rem;
       }
       
-      .report-tabs {
+      .abas-relatorio {
         overflow-x: auto;
         white-space: nowrap;
       }
@@ -316,38 +353,44 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <nav class="top-nav">
-    <div class="nav-container">
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
       <div class="logo">Área do Gestor</div>
       
-      <ul class="nav-menu">
-        <li class="nav-item"><a href="/gestor/dashboard" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="/gestor/usuarios" class="nav-link"><i class="fas fa-users"></i> Usuários</a></li>
-        <li class="nav-item"><a href="/gestor/relatorios" class="nav-link active"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
-        <li class="nav-item"><a href="/gestor/exames" class="nav-link"><i class="fas fa-file-medical"></i> Exames</a></li>
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/gestor/dashboard" class="link-navegacao"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li class="item-navegacao"><a href="/gestor/usuarios" class="link-navegacao"><i class="fas fa-users"></i> Usuários</a></li>
+        <li class="item-navegacao"><a href="/gestor/relatorios" class="link-navegacao ativo"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+        <li class="item-navegacao"><a href="/gestor/exames" class="link-navegacao"><i class="fas fa-file-medical"></i> Exames</a></li>
       </ul>
       
-      <div class="user-info">
-        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do gestor" class="user-avatar">
-        <span>Carlos Oliveira</span>
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
+        <span>Dr. Carlos Silva</span>
+        
+        <div class="menu-usuario">
+          <a href="/medico/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
+          <a href="/medico/configuracoes"><i class="fas fa-cog"></i> Configurações</a>
+          <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
       </div>
     </div>
   </nav>
   
-  <main class="main-content">
-    <div class="header">
-      <h1 class="page-title">Relatórios Epidemiológicos</h1>
-      <div class="notification-bell">
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Relatórios Epidemiológicos</h1>
+      <div class="sino-notificacao">
         <i class="fas fa-bell"></i>
-        <span class="notification-badge">3</span>
+        <span class="badge-notificacao">3</span>
       </div>
     </div>
     
-    <div class="report-filters">
-      <div class="filter-row">
-        <div class="filter-group">
-          <label class="filter-label">Período</label>
-          <select class="filter-control">
+    <div class="filtros-relatorio">
+      <div class="linha-filtro">
+        <div class="grupo-filtro">
+          <label class="rotulo-filtro">Período</label>
+          <select class="controle-filtro">
             <option>Últimos 30 dias</option>
             <option>Últimos 3 meses</option>
             <option>Últimos 6 meses</option>
@@ -355,9 +398,9 @@
             <option>Personalizado</option>
           </select>
         </div>
-        <div class="filter-group">
-          <label class="filter-label">Unidade de Saúde</label>
-          <select class="filter-control">
+        <div class="grupo-filtro">
+          <label class="rotulo-filtro">Unidade de Saúde</label>
+          <select class="controle-filtro">
             <option>Todas as unidades</option>
             <option>UBS Centro</option>
             <option>UBS Norte</option>
@@ -366,10 +409,10 @@
           </select>
         </div>
       </div>
-      <div class="filter-row">
-        <div class="filter-group">
-          <label class="filter-label">Faixa Etária</label>
-          <select class="filter-control">
+      <div class="linha-filtro">
+        <div class="grupo-filtro">
+          <label class="rotulo-filtro">Faixa Etária</label>
+          <select class="controle-filtro">
             <option>Todas as idades</option>
             <option>15-24 anos</option>
             <option>25-34 anos</option>
@@ -378,9 +421,9 @@
             <option>60+ anos</option>
           </select>
         </div>
-        <div class="filter-group">
-          <label class="filter-label">Resultado do Exame</label>
-          <select class="filter-control">
+        <div class="grupo-filtro">
+          <label class="rotulo-filtro">Resultado do Exame</label>
+          <select class="controle-filtro">
             <option>Todos os resultados</option>
             <option>Normal</option>
             <option>Alterações benignas</option>
@@ -390,36 +433,36 @@
           </select>
         </div>
       </div>
-      <button class="btn btn-primary">
+      <button class="botao botao-primario">
         <i class="fas fa-filter"></i> Aplicar Filtros
       </button>
     </div>
     
-    <div class="report-container">
-      <div class="report-tabs">
-        <div class="report-tab active">Visão Geral</div>
-        <div class="report-tab">Taxa de Retorno</div>
-        <div class="report-tab">Casos Suspeitos</div>
-        <div class="report-tab">Detalhado</div>
+    <div class="container-relatorio">
+      <div class="abas-relatorio">
+        <div class="aba-relatorio ativa">Visão Geral</div>
+        <div class="aba-relatorio">Taxa de Retorno</div>
+        <div class="aba-relatorio">Casos Suspeitos</div>
+        <div class="aba-relatorio">Detalhado</div>
       </div>
       
-      <div class="report-content">
-        <div class="chart-container">
+      <div class="conteudo-relatorio">
+        <div class="container-grafico">
           <div style="text-align: center;">
             <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 1rem;"></i>
             <p>Gráfico de exames realizados por mês</p>
           </div>
         </div>
         
-        <div class="chart-container">
+        <div class="container-grafico">
           <div style="text-align: center;">
             <i class="fas fa-chart-pie" style="font-size: 2rem; margin-bottom: 1rem;"></i>
             <p>Distribuição por resultado de exame</p>
           </div>
         </div>
         
-        <div class="table-container">
-          <table class="data-table">
+        <div class="container-tabela">
+          <table class="tabela-dados">
             <thead>
               <tr>
                 <th>Unidade</th>
@@ -469,14 +512,14 @@
           </table>
         </div>
         
-        <div class="export-options">
-          <button class="export-btn">
+        <div class="opcoes-exportacao">
+          <button class="botao-exportar">
             <i class="fas fa-file-pdf"></i> Exportar PDF
           </button>
-          <button class="export-btn">
+          <button class="botao-exportar">
             <i class="fas fa-file-excel"></i> Exportar Excel
           </button>
-          <button class="export-btn">
+          <button class="botao-exportar">
             <i class="fas fa-chart-bar"></i> Exportar para Power BI
           </button>
         </div>
