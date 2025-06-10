@@ -7,11 +7,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #9b59b6;
-      --secondary: #8e44ad;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e0e0e0;
-      --dark-gray: #333333;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
     }
     
     * {
@@ -25,9 +25,9 @@
       background: rgba(214, 174, 241, 0.15);
     }
     
-    /* Top Navigation */
-    .top-nav {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    /* Navegação Superior */
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 0.75rem 1.5rem;
       position: sticky;
@@ -36,7 +36,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    .nav-container {
+    .container-navegacao {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -49,12 +49,12 @@
       font-size: 1.25rem;
     }
     
-    .nav-menu {
+    .menu-navegacao {
       display: flex;
       list-style: none;
     }
     
-    .nav-item {
+    .item-navegacao {
       margin-left: 1rem;
     }
 
@@ -62,7 +62,7 @@
       transition: background-color 0.2s, filter 0.2s, transform 0.2s, box-shadow 0.2s;
     }
 
-    .nav-link {
+    .link-navegacao {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -75,59 +75,96 @@
     }
     
     /* HOVER para links do menu */
-    .nav-link:hover, .nav-link.active {
+    .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
       filter: brightness(1.1);
     }
 
     /* HOVER para abas de notificações */
-    .tab {
+    .aba {
       transition: background 0.2s, color 0.2s;
     }
-    .tab:hover:not(.active) {
-      background: var(--light-gray);
-      color: var(--primary);
+    .aba:hover:not(.ativo) {
+      background: var(--cinza-claro);
+      color: var(--primaria);
       cursor: pointer;
     }
 
     /* HOVER para links de ação nas notificações */
-    .action-link {
+    .link-acao {
       transition: color 0.2s, text-decoration 0.2s;
     }
-    .action-link:hover {
-      color: var(--secondary);
+    .link-acao:hover {
+      color: var(--secundaria);
       text-decoration: underline;
     }
 
     /* HOVER para botão de salvar configurações */
     button:hover {
-      background-color: var(--secondary);
+      background-color: var(--secundaria);
       filter: brightness(1.05);
-      transform: translateY(-4px); /* move para cima no hover */
-      box-shadow: 0 6px 18px rgba(67, 206, 162, 0.15); /* leve sombra para efeito de elevação */
+      transform: translateY(-4px);
+      box-shadow: 0 6px 18px rgba(67, 206, 162, 0.15);
     }
 
     /* HOVER para "Marcar todas como lidas" */
-    .mark-all-read {
+    .marcar-todas-lidas {
       transition: color 0.2s, text-decoration 0.2s;
     }
-    .mark-all-read:hover {
-      color: var(--secondary);
+    .marcar-todas-lidas:hover {
+      color: var(--secundaria);
       text-decoration: underline;
     }
 
       
-    .nav-link:hover, .nav-link.active {
+    .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
     }
     
-    .user-info {
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .info-usuario:hover .menu-usuario {
+      display: block;
+    }
+
+    .menu-usuario {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      min-width: 200px;
+      z-index: 10;
+    }
+
+    .menu-usuario a {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: #333333;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+
+    .menu-usuario a:hover {
+      background-color: #f5f5f5;
+      color: var(--primaria);
+    }
+
+    .menu-usuario a i {
+      margin-right: 0.5rem;
+      width: 20px;
+      text-align: center;
     }
     
-    .user-avatar {
+    .avatar-usuario {
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -136,27 +173,27 @@
       background-color: #f0e5f5;
     }
     
-    /* Main Content */
-    .main-content {
+    /* Conteúdo Principal */
+    .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
     
-    .page-header {
+    .cabecalho-pagina {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
     }
     
-    .page-title {
+    .titulo-pagina {
       font-size: 1.75rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .mark-all-read {
-      color: var(--primary);
+    .marcar-todas-lidas {
+      color: var(--primaria);
       text-decoration: none;
       font-weight: 500;
       display: flex;
@@ -165,41 +202,41 @@
     }
     
     /* Notificações */
-    .notifications-container {
+    .container-notificacoes {
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
       overflow: hidden;
     }
     
-    .notification-tabs {
+    .abas-notificacoes {
       display: flex;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid var(--cinza-medio);
     }
     
-    .tab {
+    .aba {
       padding: 1rem 1.5rem;
       cursor: pointer;
       font-weight: 500;
       position: relative;
     }
     
-    .tab.active {
-      color: var(--primary);
+    .aba.ativo {
+      color: var(--primaria);
     }
     
-    .tab.active::after {
+    .aba.ativo::after {
       content: '';
       position: absolute;
       bottom: -1px;
       left: 0;
       right: 0;
       height: 2px;
-      background-color: var(--primary);
+      background-color: var(--primaria);
     }
     
-    .tab-badge {
-      background-color: var(--primary);
+    .contador-aba {
+      background-color: var(--primaria);
       color: white;
       border-radius: 10px;
       padding: 0.15rem 0.5rem;
@@ -207,26 +244,26 @@
       margin-left: 0.5rem;
     }
     
-    .notification-list {
+    .lista-notificacoes {
       list-style: none;
     }
     
-    .notification-item {
+    .item-notificacao {
       padding: 1.5rem;
-      border-bottom: 1px solid var(--medium-gray);
+      border-bottom: 1px solid var(--cinza-medio);
       display: flex;
       gap: 1rem;
     }
     
-    .notification-item:last-child {
+    .item-notificacao:last-child {
       border-bottom: none;
     }
     
-    .notification-item.unread {
+    .item-notificacao.nao-lida {
       background-color: #f0f7ff;
     }
     
-    .notification-icon {
+    .icone-notificacao {
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -234,37 +271,37 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--primary);
+      color: var(--primaria);
       flex-shrink: 0;
     }
     
-    .notification-content {
+    .conteudo-notificacao {
       flex: 1;
     }
     
-    .notification-title {
+    .titulo-notificacao {
       font-weight: 500;
       margin-bottom: 0.25rem;
     }
     
-    .notification-message {
+    .mensagem-notificacao {
       color: #666;
       margin-bottom: 0.5rem;
     }
     
-    .notification-time {
+    .hora-notificacao {
       font-size: 0.85rem;
       color: #999;
     }
     
-    .notification-actions {
+    .acoes-notificacao {
       display: flex;
       gap: 1rem;
       margin-top: 0.5rem;
     }
     
-    .action-link {
-      color: var(--primary);
+    .link-acao {
+      color: var(--primaria);
       text-decoration: none;
       font-size: 0.9rem;
       display: flex;
@@ -272,7 +309,7 @@
       gap: 0.25rem;
     }
     
-    .notification-settings {
+    .configuracoes-notificacoes {
       margin-top: 2rem;
       background-color: white;
       border-radius: 10px;
@@ -280,29 +317,29 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    .settings-title {
+    .titulo-configuracoes {
       font-size: 1.2rem;
-      color: var(--primary);
+      color: var(--primaria);
       margin-bottom: 1rem;
     }
     
-    .settings-group {
+    .grupo-configuracoes {
       margin-bottom: 1.5rem;
     }
     
-    .settings-label {
+    .rotulo-configuracoes {
       display: block;
       margin-bottom: 0.75rem;
       font-weight: 500;
     }
     
-    .checkbox-group {
+    .grupo-checkbox {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
     }
     
-    .checkbox-item {
+    .item-checkbox {
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -310,44 +347,44 @@
     
     /* Responsividade */
     @media (max-width: 768px) {
-      .top-nav {
+      .navegacao-superior {
       padding: 0.5rem 0.5rem;
       }
 
       .logo {
-      font-size: 1rem; /* diminui o tamanho da logo */
+      font-size: 1rem;
       white-space: nowrap;
       margin-right: 0.5rem;
       }
-      .nav-container {
+      .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
-      .nav-menu {
+      .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
         white-space: nowrap;
         gap: 0.25rem;
         width: 100%;
-        scrollbar-width: thin; /* Firefox */
+        scrollbar-width: thin;
       }
 
-      .nav-item {
+      .item-navegacao {
         margin-left: 0;
         flex: 0 0 auto;
       }
       
-      .user-info {
+      .info-usuario {
         justify-content: center;
         margin-top: 0.5rem;
       }
 
-      .notification-item {
+      .item-notificacao {
         flex-direction: column;
       }
       
-      .notification-actions {
+      .acoes-notificacao {
         justify-content: flex-end;
       }
     }
@@ -355,142 +392,148 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <!-- Top Navigation -->
-  <nav class="top-nav">
-    <div class="nav-container">
+  <!-- Navegação Superior -->
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
       <div class="logo">Área do Paciente</div>
       
-      <ul class="nav-menu">
-        <li class="nav-item"><a href="/paciente/dashboard" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
-        <li class="nav-item"><a href="/paciente/agendar" class="nav-link"><i class="fas fa-calendar-check"></i> Agendar</a></li>
-        <li class="nav-item"><a href="/paciente/localizar_ubs" class="nav-link"><i class="fas fa-map-marker-alt"></i> UBS</a></li>
-        <li class="nav-item"><a href="/paciente/historico_exames" class="nav-link"><i class="fas fa-file-medical"></i> Exames</a></li>
-        <li class="nav-item"><a href="/paciente/orientacoes" class="nav-link"><i class="fas fa-comment-medical"></i> Orientações</a></li>
-        <li class="nav-item"><a href="/paciente/notificacoes" class="nav-link active"><i class="fas fa-bell"></i> Notificações</a></li>
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/paciente/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/paciente/agendar" class="link-navegacao"><i class="fas fa-calendar-check"></i> Agendar</a></li>
+        <li class="item-navegacao"><a href="/paciente/localizar_ubs" class="link-navegacao"><i class="fas fa-map-marker-alt"></i> UBS</a></li>
+        <li class="item-navegacao"><a href="/paciente/historico_exames" class="link-navegacao"><i class="fas fa-file-medical"></i> Exames</a></li>
+        <li class="item-navegacao"><a href="/paciente/orientacoes" class="link-navegacao"><i class="fas fa-comment-medical"></i> Orientações</a></li>
+        <li class="item-navegacao"><a href="/paciente/notificacoes" class="link-navegacao ativo"><i class="fas fa-bell"></i> Notificações</a></li>
       </ul>
       
-      <div class="user-info">
-        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do paciente" class="user-avatar">
-        <span>Maria da Silva</span>
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
+        <span>Dr. Carlos Silva</span>
+        
+        <div class="menu-usuario">
+          <a href="/medico/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
+          <a href="/medico/configuracoes"><i class="fas fa-cog"></i> Configurações</a>
+          <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
       </div>
     </div>
   </nav>
   
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="page-header">
-      <h1 class="page-title">Notificações</h1>
-      <a href="#" class="mark-all-read">
+  <!-- Conteúdo Principal -->
+  <main class="conteudo-principal">
+    <div class="cabecalho-pagina">
+      <h1 class="titulo-pagina">Notificações</h1>
+      <a href="#" class="marcar-todas-lidas">
         <i class="fas fa-check-double"></i> Marcar todas como lidas
       </a>
     </div>
     
-    <div class="notifications-container">
-      <div class="notification-tabs">
-        <div class="tab active">Todas</div>
-        <div class="tab">Exames <span class="tab-badge">3</span></div>
-        <div class="tab">Lembretes</div>
-        <div class="tab">Orientações</div>
+    <div class="container-notificacoes">
+      <div class="abas-notificacoes">
+        <div class="aba ativo">Todas</div>
+        <div class="aba">Exames <span class="contador-aba">3</span></div>
+        <div class="aba">Lembretes</div>
+        <div class="aba">Orientações</div>
       </div>
       
-      <ul class="notification-list">
-        <li class="notification-item unread">
-          <div class="notification-icon">
+      <ul class="lista-notificacoes">
+        <li class="item-notificacao nao-lida">
+          <div class="icone-notificacao">
             <i class="fas fa-calendar-exclamation"></i>
           </div>
-          <div class="notification-content">
-            <div class="notification-title">Lembrete de exame agendado</div>
-            <div class="notification-message">Você tem um exame preventivo agendado para amanhã às 14:30 na UBS Centro de Saúde</div>
-            <div class="notification-time">Hoje, 08:30</div>
-            <div class="notification-actions">
-              <a href="#" class="action-link"><i class="fas fa-calendar-check"></i> Ver agendamento</a>
-              <a href="#" class="action-link"><i class="fas fa-map-marker-alt"></i> Ver localização</a>
+          <div class="conteudo-notificacao">
+            <div class="titulo-notificacao">Lembrete de exame agendado</div>
+            <div class="mensagem-notificacao">Você tem um exame preventivo agendado para amanhã às 14:30 na UBS Centro de Saúde</div>
+            <div class="hora-notificacao">Hoje, 08:30</div>
+            <div class="acoes-notificacao">
+              <a href="#" class="link-acao"><i class="fas fa-calendar-check"></i> Ver agendamento</a>
+              <a href="#" class="link-acao"><i class="fas fa-map-marker-alt"></i> Ver localização</a>
             </div>
           </div>
         </li>
         
-        <li class="notification-item unread">
-          <div class="notification-icon">
+        <li class="item-notificacao nao-lida">
+          <div class="icone-notificacao">
             <i class="fas fa-file-medical"></i>
           </div>
-          <div class="notification-content">
-            <div class="notification-title">Resultado de exame disponível</div>
-            <div class="notification-message">O resultado do seu exame preventivo de 15/03/2025 já está disponível</div>
-            <div class="notification-time">Ontem, 16:45</div>
-            <div class="notification-actions">
-              <a href="#" class="action-link"><i class="fas fa-file-pdf"></i> Ver resultado</a>
-              <a href="#" class="action-link"><i class="fas fa-comment-medical"></i> Orientações</a>
+          <div class="conteudo-notificacao">
+            <div class="titulo-notificacao">Resultado de exame disponível</div>
+            <div class="mensagem-notificacao">O resultado do seu exame preventivo de 15/03/2025 já está disponível</div>
+            <div class="hora-notificacao">Ontem, 16:45</div>
+            <div class="acoes-notificacao">
+              <a href="#" class="link-acao"><i class="fas fa-file-pdf"></i> Ver resultado</a>
+              <a href="#" class="link-acao"><i class="fas fa-comment-medical"></i> Orientações</a>
             </div>
           </div>
         </li>
         
-        <li class="notification-item">
-          <div class="notification-icon">
+        <li class="item-notificacao">
+          <div class="icone-notificacao">
             <i class="fas fa-info-circle"></i>
           </div>
-          <div class="notification-content">
-            <div class="notification-title">Campanha de prevenção</div>
-            <div class="notification-message">Participe da palestra sobre prevenção do câncer de colo do útero no dia 20/06 às 14h na UBS Centro</div>
-            <div class="notification-time">15/05/2025</div>
-            <div class="notification-actions">
-              <a href="#" class="action-link"><i class="fas fa-calendar-plus"></i> Adicionar à agenda</a>
+          <div class="conteudo-notificacao">
+            <div class="titulo-notificacao">Campanha de prevenção</div>
+            <div class="mensagem-notificacao">Participe da palestra sobre prevenção do câncer de colo do útero no dia 20/06 às 14h na UBS Centro</div>
+            <div class="hora-notificacao">15/05/2025</div>
+            <div class="acoes-notificacao">
+              <a href="#" class="link-acao"><i class="fas fa-calendar-plus"></i> Adicionar à agenda</a>
             </div>
           </div>
         </li>
         
-        <li class="notification-item">
-          <div class="notification-icon">
+        <li class="item-notificacao">
+          <div class="icone-notificacao">
             <i class="fas fa-comment-medical"></i>
           </div>
-          <div class="notification-content">
-            <div class="notification-title">Orientações pós-exame</div>
-            <div class="notification-message">Confira as orientações importantes para o período após a realização do exame preventivo</div>
-            <div class="notification-time">10/05/2025</div>
-            <div class="notification-actions">
-              <a href="#" class="action-link"><i class="fas fa-book-open"></i> Ler orientações</a>
+          <div class="conteudo-notificacao">
+            <div class="titulo-notificacao">Orientações pós-exame</div>
+            <div class="mensagem-notificacao">Confira as orientações importantes para o período após a realização do exame preventivo</div>
+            <div class="hora-notificacao">10/05/2025</div>
+            <div class="acoes-notificacao">
+              <a href="#" class="link-acao"><i class="fas fa-book-open"></i> Ler orientações</a>
             </div>
           </div>
         </li>
       </ul>
     </div>
     
-    <div class="notification-settings">
-      <h2 class="settings-title">Configurações de Notificação</h2>
+    <div class="configuracoes-notificacoes">
+      <h2 class="titulo-configuracoes">Configurações de Notificação</h2>
       
-      <div class="settings-group">
-        <label class="settings-label">Receber notificações por:</label>
-        <div class="checkbox-group">
-          <label class="checkbox-item">
+      <div class="grupo-configuracoes">
+        <label class="rotulo-configuracoes">Receber notificações por:</label>
+        <div class="grupo-checkbox">
+          <label class="item-checkbox">
             <input type="checkbox" checked> E-mail
           </label>
-          <label class="checkbox-item">
+          <label class="item-checkbox">
             <input type="checkbox"> SMS
           </label>
-          <label class="checkbox-item">
+          <label class="item-checkbox">
             <input type="checkbox" checked> Notificações do sistema
           </label>
         </div>
       </div>
       
-      <div class="settings-group">
-        <label class="settings-label">Tipos de notificação:</label>
-        <div class="checkbox-group">
-          <label class="checkbox-item">
+      <div class="grupo-configuracoes">
+        <label class="rotulo-configuracoes">Tipos de notificação:</label>
+        <div class="grupo-checkbox">
+          <label class="item-checkbox">
             <input type="checkbox" checked> Lembretes de exames
           </label>
-          <label class="checkbox-item">
+          <label class="item-checkbox">
             <input type="checkbox" checked> Resultados disponíveis
           </label>
-          <label class="checkbox-item">
+          <label class="item-checkbox">
             <input type="checkbox" checked> Orientações de saúde
           </label>
-          <label class="checkbox-item">
+          <label class="item-checkbox">
             <input type="checkbox"> Campanhas e eventos
           </label>
         </div>
       </div>
       
-      <button style="background-color: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 500; cursor: pointer;">
+      <button style="background-color: var(--primaria); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 500; cursor: pointer;">
         <i class="fas fa-save"></i> Salvar configurações
       </button>
     </div>

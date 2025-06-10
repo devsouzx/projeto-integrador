@@ -7,11 +7,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #9b59b6;
-      --secondary: #8e44ad;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e0e0e0;
-      --dark-gray: #333333;
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
     }
     
     * {
@@ -25,10 +25,9 @@
       background: rgba(214, 174, 241, 0.15);
     }
     
-    /* Top Navigation (mesmo estilo da dashboard) */
-    /* Top Navigation */
-    .top-nav {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    /* Navegação Superior (mesmo estilo do painel) */
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 0.75rem 1.5rem;
       position: sticky;
@@ -37,7 +36,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    .nav-container {
+    .container-navegacao {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -50,16 +49,16 @@
       font-size: 1.25rem;
     }
     
-    .nav-menu {
+    .menu-navegacao {
       display: flex;
       list-style: none;
     }
     
-    .nav-item {
+    .item-navegacao {
       margin-left: 1rem;
     }
     
-    .nav-link {
+    .link-navegacao {
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -71,17 +70,54 @@
       gap: 0.5rem;
     }
     
-    .nav-link:hover, .nav-link.active {
+    .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
     }
     
-    .user-info {
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .info-usuario:hover .menu-usuario {
+      display: block;
+    }
+
+    .menu-usuario {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      min-width: 200px;
+      z-index: 10;
+    }
+
+    .menu-usuario a {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: #333333;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+
+    .menu-usuario a:hover {
+      background-color: #f5f5f5;
+      color: var(--primaria);
+    }
+
+    .menu-usuario a i {
+      margin-right: 0.5rem;
+      width: 20px;
+      text-align: center;
     }
     
-    .user-avatar {
+    .avatar-usuario {
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -90,42 +126,42 @@
       background-color: #f0e5f5;
     }
     
-    /* Main Content */
-    .main-content {
+    /* Conteúdo Principal */
+    .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
     
-    .page-header {
+    .cabecalho-pagina {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
     }
     
-    .page-title {
+    .titulo-pagina {
       font-size: 1.75rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .back-button {
+    .botao-voltar {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: var(--primary);
+      color: var(--primaria);
       text-decoration: none;
       font-weight: 500;
     }
     
     /* Conteúdo da Localização */
-    .location-container {
+    .container-localizacao {
       display: grid;
       grid-template-columns: 1fr;
       gap: 2rem;
     }
     
-    .search-box {
+    .caixa-busca {
       background-color: white;
       border-radius: 10px;
       padding: 1.5rem;
@@ -133,47 +169,47 @@
       width: 100%;
     }
     
-    .search-title {
+    .titulo-busca {
       font-size: 1.2rem;
       margin-bottom: 1rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .search-form {
+    .formulario-busca {
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
     
-    .form-group {
+    .grupo-formulario {
       margin-bottom: 1rem;
     }
     
-    .form-label {
+    .rotulo-formulario {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
     }
     
-    .form-control {
+    .controle-formulario {
       width: 100%;
       padding: 0.75rem 1rem;
-      border: 1px solid var(--medium-gray);
+      border: 1px solid var(--cinza-medio);
       border-radius: 6px;
       font-size: 1rem;
     }
     
-    .ubs-list {
+    .lista-ubs {
       margin-top: 1.5rem;
     }
     
-    .ubs-list-title {
+    .titulo-lista-ubs {
       font-size: 1rem;
       font-weight: 600;
       margin-bottom: 1rem;
     }
     
-    .ubs-item {
+    .item-ubs {
       padding: 1rem;
       margin-bottom: 0.75rem;
       background-color: white;
@@ -183,30 +219,30 @@
       transition: all 0.3s;
     }
     
-    .ubs-item:hover {
+    .item-ubs:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     
-    .ubs-name {
+    .nome-ubs {
       font-weight: 600;
       margin-bottom: 0.25rem;
-      color: var(--primary);
+      color: var(--primaria);
     }
     
-    .ubs-address {
+    .endereco-ubs {
       font-size: 0.9rem;
       color: #666;
       margin-bottom: 0.25rem;
     }
     
-    .ubs-distance {
+    .distancia-ubs {
       font-size: 0.85rem;
-      color: var(--secondary);
+      color: var(--secundaria);
       font-weight: 500;
     }
     
-    .btn {
+    .botao {
       display: inline-block;
       padding: 0.75rem 1.5rem;
       border-radius: 6px;
@@ -217,16 +253,16 @@
       transition: all 0.3s;
     }
     
-    .btn-primary {
-      background-color: var(--primary);
+    .botao-primario {
+      background-color: var(--primaria);
       color: white;
     }
     
-    .btn-primary:hover {
+    .botao-primario:hover {
       background-color: #134a80;
     }
     
-    .btn-block {
+    .botao-bloco {
       display: block;
       width: 100%;
       text-align: center;
@@ -234,35 +270,35 @@
     
     /* Responsividade */
     @media (max-width: 768px) {
-      .top-nav {
+      .navegacao-superior {
       padding: 0.5rem 0.5rem;
       }
 
       .logo {
-      font-size: 1rem; /* diminui o tamanho da logo */
+      font-size: 1rem;
       white-space: nowrap;
       margin-right: 0.5rem;
       }
-      .nav-container {
+      .container-navegacao {
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
       }
-      .nav-menu {
+      .menu-navegacao {
         flex-direction: row;
         overflow-x: auto;
         white-space: nowrap;
         gap: 0.25rem;
         width: 100%;
-        scrollbar-width: thin; /* Firefox */
+        scrollbar-width: thin;
       }
 
-      .nav-item {
+      .item-navegacao {
         margin-left: 0;
         flex: 0 0 auto;
       }
       
-      .user-info {
+      .info-usuario {
         justify-content: center;
         margin-top: 0.5rem;
       }
@@ -271,48 +307,54 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <!-- Top Navigation -->
-  <nav class="top-nav">
-    <div class="nav-container">
+  <!-- Navegação Superior -->
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
       <div class="logo">Área do Paciente</div>
       
-      <ul class="nav-menu">
-        <li class="nav-item"><a href="/paciente/dashboard" class="nav-link"><i class="fas fa-home"></i> Início</a></li>
-        <li class="nav-item"><a href="/paciente/agendar" class="nav-link"><i class="fas fa-calendar-check"></i> Agendar</a></li>
-        <li class="nav-item"><a href="/paciente/localizar_ubs" class="nav-link active"><i class="fas fa-map-marker-alt"></i> UBS</a></li>
-        <li class="nav-item"><a href="/paciente/historico_exames" class="nav-link"><i class="fas fa-file-medical"></i> Exames</a></li>
-        <li class="nav-item"><a href="/paciente/orientacoes" class="nav-link"><i class="fas fa-comment-medical"></i> Orientações</a></li>
-        <li class="nav-item"><a href="/paciente/notificacoes" class="nav-link"><i class="fas fa-bell"></i> Notificações</a></li>
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/paciente/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/paciente/agendar" class="link-navegacao"><i class="fas fa-calendar-check"></i> Agendar</a></li>
+        <li class="item-navegacao"><a href="/paciente/localizar_ubs" class="link-navegacao ativo"><i class="fas fa-map-marker-alt"></i> UBS</a></li>
+        <li class="item-navegacao"><a href="/paciente/historico_exames" class="link-navegacao"><i class="fas fa-file-medical"></i> Exames</a></li>
+        <li class="item-navegacao"><a href="/paciente/orientacoes" class="link-navegacao"><i class="fas fa-comment-medical"></i> Orientações</a></li>
+        <li class="item-navegacao"><a href="/paciente/notificacoes" class="link-navegacao"><i class="fas fa-bell"></i> Notificações</a></li>
       </ul>
       
-      <div class="user-info">
-        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do paciente" class="user-avatar">
-        <span>Maria da Silva</span>
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
+        <span>Dr. Carlos Silva</span>
+        
+        <div class="menu-usuario">
+          <a href="/medico/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
+          <a href="/medico/configuracoes"><i class="fas fa-cog"></i> Configurações</a>
+          <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
       </div>
     </div>
   </nav>
   
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="page-header">
-      <h1 class="page-title">Localizar UBS</h1>
-      <a href="#" class="back-button">
+  <!-- Conteúdo Principal -->
+  <main class="conteudo-principal">
+    <div class="cabecalho-pagina">
+      <h1 class="titulo-pagina">Localizar UBS</h1>
+      <a href="#" class="botao-voltar">
         <i class="fas fa-arrow-left"></i> Voltar
       </a>
     </div>
     
-    <div class="location-container">
-      <div class="search-box">
-        <h2 class="search-title">Encontre a UBS mais próxima</h2>
-        <form class="search-form">
-          <div class="form-group">
-            <label for="address" class="form-label">Digite seu endereço:</label>
-            <input type="text" id="address" class="form-control" placeholder="Rua, número, bairro">
+    <div class="container-localizacao">
+      <div class="caixa-busca">
+        <h2 class="titulo-busca">Encontre a UBS mais próxima</h2>
+        <form class="formulario-busca">
+          <div class="grupo-formulario">
+            <label for="address" class="rotulo-formulario">Digite seu endereço:</label>
+            <input type="text" id="address" class="controle-formulario" placeholder="Rua, número, bairro">
           </div>
           
-          <div class="form-group">
-            <label for="radius" class="form-label">Raio de busca:</label>
-            <select id="radius" class="form-control">
+          <div class="grupo-formulario">
+            <label for="radius" class="rotulo-formulario">Raio de busca:</label>
+            <select id="radius" class="controle-formulario">
               <option value="1">Até 1 km</option>
               <option value="3" selected>Até 3 km</option>
               <option value="5">Até 5 km</option>
@@ -320,30 +362,30 @@
             </select>
           </div>
           
-          <button type="submit" class="btn btn-primary btn-block">
+          <button type="submit" class="botao botao-primario botao-bloco">
             <i class="fas fa-search"></i> Buscar
           </button>
         </form>
         
-        <div class="ubs-list">
-          <h3 class="ubs-list-title">Unidades próximas</h3>
+        <div class="lista-ubs">
+          <h3 class="titulo-lista-ubs">Unidades próximas</h3>
           
-          <div class="ubs-item">
-            <div class="ubs-name">UBS Centro de Saúde</div>
-            <div class="ubs-address">Rua Principal, 123 - Centro</div>
-            <div class="ubs-distance">0.8 km de distância</div>
+          <div class="item-ubs">
+            <div class="nome-ubs">UBS Centro de Saúde</div>
+            <div class="endereco-ubs">Rua Principal, 123 - Centro</div>
+            <div class="distancia-ubs">0.8 km de distância</div>
           </div>
           
-          <div class="ubs-item">
-            <div class="ubs-name">UBS Vila Nova</div>
-            <div class="ubs-address">Av. das Flores, 456 - Vila Nova</div>
-            <div class="ubs-distance">1.2 km de distância</div>
+          <div class="item-ubs">
+            <div class="nome-ubs">UBS Vila Nova</div>
+            <div class="endereco-ubs">Av. das Flores, 456 - Vila Nova</div>
+            <div class="distancia-ubs">1.2 km de distância</div>
           </div>
           
-          <div class="ubs-item">
-            <div class="ubs-name">UBS Jardim das Palmeiras</div>
-            <div class="ubs-address">Rua das Acácias, 789 - Jardim</div>
-            <div class="ubs-distance">2.5 km de distância</div>
+          <div class="item-ubs">
+            <div class="nome-ubs">UBS Jardim das Palmeiras</div>
+            <div class="endereco-ubs">Rua das Acácias, 789 - Jardim</div>
+            <div class="distancia-ubs">2.5 km de distância</div>
           </div>
         </div>
       </div>
