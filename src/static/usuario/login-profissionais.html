@@ -545,12 +545,12 @@
       }
     }
     
-    function validarFormulario(event) {
-        event.preventDefault();
-        const formulario = event.target;
-        const formData = new FormData(formulario);
+    document.getElementById('formularioLoginProfissional').addEventListener('submit', async function(e) {
+        e.preventDefault();
         
         const botaoLogin = document.getElementById('botaoLoginProfissional');
+        const formulario = e.target;
+        const formData = new FormData(formulario);
         
         try {
             // Mostrar loading
@@ -558,34 +558,30 @@
             botaoLogin.classList.add('botao-carregando');
             botaoLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
             
-            fetch('/login', {
+            const response = await fetch('/login', {
                 method: 'POST',
                 body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (!response.ok) {
-                    throw new Error(data.error || 'Erro ao realizar login');
-                }
-                window.location.href = data.redirect;
-            })
-            .catch(error => {
-                // Restaurar botão
-                botaoLogin.disabled = false;
-                botaoLogin.classList.remove('botao-carregando');
-                botaoLogin.textContent = 'Entrar';
-                
-                alert(error.message);
             });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Erro ao realizar login');
+            }
+            
+            // Redirecionar após login bem-sucedido
+            window.location.href = data.redirect;
+            
         } catch (error) {
             // Restaurar botão
             botaoLogin.disabled = false;
             botaoLogin.classList.remove('botao-carregando');
             botaoLogin.textContent = 'Entrar';
             
+            // Mostrar mensagem de erro
             alert(error.message);
         }
-    }
+    });
     
     // Formatar CRM/COREN
     document.addEventListener('input', function(e) {

@@ -192,22 +192,6 @@
       transform: translateY(0);
     }
     
-    .botao-carregando::after {
-      content: "";
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      margin: auto;
-      border: 3px solid transparent;
-      border-top-color: white;
-      border-radius: 50%;
-      animation: girar-carregamento 1s ease infinite;
-    }
-    
     @keyframes girar-carregamento {
       from { transform: rotate(0turn); }
       to { transform: rotate(1turn); }
