@@ -3,12 +3,12 @@ package routes
 import (
 	"net/http"
 
-	"github.com/devsouzx/projeto-integrador/src/controller"
+	userController "github.com/devsouzx/projeto-integrador/src/controller/user"
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/gin-gonic/gin"
 )
 
-func InitAuthRoutes(rg *gin.RouterGroup, userController controller.UserController) {
+func InitAuthRoutes(rg *gin.RouterGroup, userController userController.UserController) {
 	auth := rg.Group("/")
 	{
 		auth.GET("/login", func(c *gin.Context) {

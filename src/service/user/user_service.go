@@ -1,4 +1,4 @@
-package service
+package user
 
 import (
 	"crypto/rand"
@@ -8,13 +8,14 @@ import (
 
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/model/request"
-	"github.com/devsouzx/projeto-integrador/src/repository"
+	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
+	emailService"github.com/devsouzx/projeto-integrador/src/service/email"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func NewUserDomainService(
-	userRepository repository.UserRepository,
-	emailService EmailService,
+	userRepository userRepository.UserRepository,
+	emailService emailService.EmailService,
 ) UserDomainService {
 	return &userDomainService{
 		userRepository: userRepository,
@@ -23,8 +24,8 @@ func NewUserDomainService(
 }
 
 type userDomainService struct {
-	userRepository repository.UserRepository
-	emailService   EmailService
+	userRepository userRepository.UserRepository
+	emailService   emailService.EmailService
 }
 
 type UserDomainService interface {

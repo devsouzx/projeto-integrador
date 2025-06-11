@@ -12,7 +12,15 @@ func InitPacienteRoutes(rg *gin.RouterGroup) {
 	paciente.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"))
 	{
 		paciente.GET("/dashboard", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "dashboard-paciente.html", nil)
+			user, exists := c.Get("user")
+			if !exists {
+				c.Redirect(http.StatusFound, "/login")
+				return
+			}
+
+			c.HTML(http.StatusOK, "dashboard-paciente.html", gin.H{
+				"Paciente": user,
+			})
 		})
 
 		paciente.GET("/agendar", func(c *gin.Context) {
@@ -26,7 +34,7 @@ func InitPacienteRoutes(rg *gin.RouterGroup) {
 		paciente.GET("/localizar_ubs", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "localizar-ubs-paciente.html", nil)
 		})
-		
+
 		paciente.GET("/notificacoes", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "notificacoes-paciente.html", nil)
 		})

@@ -1,4 +1,4 @@
-package controller
+package user
 
 import (
 	"fmt"
@@ -6,12 +6,12 @@ import (
 	"strings"
 
 	"github.com/devsouzx/projeto-integrador/src/model/request"
-	"github.com/devsouzx/projeto-integrador/src/service"
+	userService "github.com/devsouzx/projeto-integrador/src/service/user"
 	"github.com/gin-gonic/gin"
 )
 
 func NewUserController(
-	userService service.UserDomainService,
+	userService userService.UserDomainService,
 ) UserController {
 	return &userController{
 		service: userService,
@@ -19,7 +19,7 @@ func NewUserController(
 }
 
 type userController struct {
-	service service.UserDomainService
+	service userService.UserDomainService
 }
 
 type UserController interface {

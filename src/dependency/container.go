@@ -3,20 +3,21 @@ package dependency
 import (
 	"database/sql"
 
-	"github.com/devsouzx/projeto-integrador/src/controller"
-	"github.com/devsouzx/projeto-integrador/src/repository"
-	"github.com/devsouzx/projeto-integrador/src/service"
+	userController "github.com/devsouzx/projeto-integrador/src/controller/user"
+	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
+	emailService"github.com/devsouzx/projeto-integrador/src/service/email"
+	userService"github.com/devsouzx/projeto-integrador/src/service/user"
 )
 
 type Container struct {
-	UserController controller.UserController
+	UserController userController.UserController
 }
 
 func InitContainer(db *sql.DB) *Container {
-	emailService := service.NewEmailService()
-	userRepository := repository.NewUserRepository(db)
-	userService := service.NewUserDomainService(userRepository, emailService)
-	userController := controller.NewUserController(userService)
+	emailService := emailService.NewEmailService()
+	userRepository := userRepository.NewUserRepository(db)
+	userService := userService.NewUserDomainService(userRepository, emailService)
+	userController := userController.NewUserController(userService)
 
 	return &Container{
 		UserController: userController,
