@@ -31,7 +31,7 @@ func (mr *medicoRepository) FindMedicoByIdentifier(identifier string) (model.Use
 	query := `
 			SELECT id, email, senha, nomecompleto, cpf, crm
 			FROM medico
-			WHERE id = $1 OR cpf = $2 OR crm = $3 
+			WHERE id = $1 OR cpf = $2 OR crm = $3
 		`
 
 	var medico model.Medico
@@ -41,8 +41,8 @@ func (mr *medicoRepository) FindMedicoByIdentifier(identifier string) (model.Use
 		&medico.Email,
 		&medico.Password,
 		&medico.Name,
-		&medico.CRM,
 		&medico.CPF,
+		&medico.CRM,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
