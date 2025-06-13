@@ -27,6 +27,7 @@ type UserController interface {
 	SendCodeRecovey(c *gin.Context)
 	VerifyCode(c *gin.Context)
 	ResetPassword(c *gin.Context)
+    Logout(c *gin.Context)
 }
 
 func (uc *userController) LoginUser(c *gin.Context) {
@@ -112,4 +113,10 @@ func (uc *userController) ResetPassword(c *gin.Context) {
     }
     
     c.JSON(http.StatusOK, gin.H{"message": "Senha redefinida com sucesso"})
+}
+
+func (uc *userController) Logout(c *gin.Context) {
+    c.SetCookie("token", "", -1, "/", "", false, true)
+    
+    c.Redirect(http.StatusFound, "/login")
 }
