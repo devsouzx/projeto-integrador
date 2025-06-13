@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Encaminhamentos - Sistema de Saúde</title>
+  <title>Laudos - Sistema de Saúde</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
@@ -22,7 +22,6 @@
     body {
       background: rgba(214, 174, 241, 0.15);
       color: #333333;
-      line-height: 1.6;
     }
     
     .navegacao-superior {
@@ -46,23 +45,37 @@
     .logo {
       font-weight: 600;
       font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .logo i {
-      font-size: 1.1em;
     }
 
     .menu-navegacao {
       display: flex;
       list-style: none;
-      gap: 0.5rem;
     }
 
-    .item-navegacao {
-      margin-left: 0.5rem;
+    .botao-primario:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .botao-secundario:hover {
+      background-color: #f0e5f5;
+      color: var(--primaria);
+      border-color: var(--primaria);
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(155, 89, 182, 0.08);
+    }
+
+    .botao-ccu:hover {
+      background-color: #e0c4eb;
+      color: var(--primaria);
+      border-color: var(--primaria);
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(155, 89, 182, 0.08);
+    }
+
+    .botao-pequeno:hover {
+      filter: brightness(1.08);
     }
 
     .link-navegacao {
@@ -70,7 +83,7 @@
       text-decoration: none;
       padding: 0.5rem 1rem;
       border-radius: 6px;
-      transition: all 0.3s;
+      transition: background-color 0.3s;
       font-size: 0.95rem;
       display: flex;
       align-items: center;
@@ -79,7 +92,6 @@
 
     .link-navegacao:hover, .link-navegacao.ativo {
       background-color: rgba(255,255,255,0.2);
-      transform: translateY(-1px);
     }
 
     .info-usuario {
@@ -133,7 +145,7 @@
       border: 2px solid white;
       background-color: #f0e5f5;
     }
-    
+
     .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
@@ -145,26 +157,11 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
-      flex-wrap: wrap;
-      gap: 1rem;
     }
 
     .titulo-pagina {
       font-size: 1.75rem;
-      color: var(--secundaria);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .titulo-pagina i {
-      font-size: 1.5em;
-    }
-
-    .controles-pagina {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
+      color: var(--primaria);
     }
 
     .botao {
@@ -179,12 +176,8 @@
       gap: 0.5rem;
     }
 
-    .botao i {
-      font-size: 0.9em;
-    }
-
     .botao-primario {
-      background-color: var(--secundaria);
+      background-color: var(--primaria);
       color: white;
     }
 
@@ -201,24 +194,14 @@
 
     .botao-secundario {
       background-color: white;
-      color: var(--secundaria);
-      border: 1px solid var(--secundaria);
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
     }
 
     .botao-secundario:hover {
       background-color: #f0e5f5;
     }
 
-    .botao-perigo {
-      background-color: white;
-      color: #dc3545;
-      border: 1px solid #dc3545;
-    }
-
-    .botao-perigo:hover {
-      background-color: #f8d7da;
-    }
-    
     .filtros-busca {
       background-color: white;
       border-radius: 10px;
@@ -239,12 +222,6 @@
       border: 1px solid #e0e0e0;
       border-radius: 6px;
       font-size: 1rem;
-      transition: border-color 0.3s;
-    }
-
-    .campo-busca:focus {
-      outline: none;
-      border-color: var(--primaria);
     }
 
     .botoes-filtro {
@@ -262,27 +239,22 @@
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.3s;
-      font-size: 0.85rem;
-    }
-
-    .botao-filtro:hover {
-      background-color: #f5f5f5;
     }
 
     .botao-filtro.ativo {
-      background-color: var(--secundaria);
+      background-color: var(--primaria);
       color: white;
-      border-color: var(--secundaria);
+      border-color: var(--primaria);
     }
-    
-    .lista-encaminhamentos {
+
+    .lista-laudos {
       background-color: white;
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
 
-    .cabecalho-lista {
+    .cabecalho-lista-laudos {
       display: grid;
       grid-template-columns: 1.5fr 1fr 1fr 1fr auto;
       padding: 1rem 1.5rem;
@@ -293,30 +265,31 @@
       font-size: 0.9rem;
     }
 
-    .item-encaminhamento {
+    .item-laudo {
       display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr auto;
+      grid-template-columns: 1fr 1fr 1fr 1fr auto;
       padding: 1rem 1.5rem;
       align-items: center;
       border-bottom: 1px solid #f5f7fa;
       transition: background-color 0.2s;
+      cursor: pointer;
     }
 
-    .item-encaminhamento:last-child {
+    .item-laudo:last-child {
       border-bottom: none;
     }
 
-    .item-encaminhamento:hover {
-      background-color: #f9f0ff;
+    .item-laudo:hover {
+      background-color: #f0e5f5;
     }
 
-    .info-encaminhamento {
+    .info-laudo {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
 
-    .icone-encaminhamento {
+    .icone-laudo {
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -327,23 +300,11 @@
       color: var(--primaria);
     }
 
-    .detalhes-paciente {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .nome-paciente {
+    .paciente-laudo {
       font-weight: 500;
-      color: #333333;
     }
 
-    .info-adicional {
-      font-size: 0.85rem;
-      color: #666666;
-    }
-
-    .acoes-encaminhamento {
+    .acoes-laudo {
       display: flex;
       gap: 0.5rem;
       justify-content: flex-end;
@@ -372,28 +333,6 @@
       color: #721c24;
     }
 
-    .prioritario {
-      background-color: #fff7e6;
-      color: #d46b08;
-    }
-    
-    .rotina {
-      background-color: #f6ffed;
-      color: #389e0d;
-    }
-
-    .nenhum-resultado {
-      padding: 2rem;
-      text-align: center;
-      color: #666666;
-    }
-
-    .nenhum-resultado i {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      color: var(--primaria);
-    }
-
     /* Responsividade */
     @media (max-width: 768px) {
       .navegacao-superior {
@@ -420,70 +359,184 @@
         margin-left: auto;
       }
 
-      .cabecalho {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .controles-pagina {
-        width: 100%;
-        justify-content: flex-end;
-      }
-
       .container-busca {
         flex-direction: column;
       }
 
-      .cabecalho-lista {
+      .cabecalho-lista-laudos {
         display: none;
       }
 
-      .item-encaminhamento {
+      .item-laudo {
         grid-template-columns: 1fr;
-        gap: 0.75rem;
-        padding: 1.25rem;
-        position: relative;
+        gap: 0.5rem;
+        padding: 1rem;
       }
 
-      .acoes-encaminhamento {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        gap: 0.25rem;
+      .acoes-laudo {
+        justify-content: flex-start;
+        margin-top: 0.5rem;
       }
+    }
 
-      .info-encaminhamento {
-        margin-bottom: 0.5rem;
-      }
+    .etiqueta-asch {
+      background-color: #f0e5f5;
+      color: #8e44ad;
+      border: 1px solid #8e44ad;
+    }
+    .etiqueta-lsil {
+      background-color: #e8d4f0;
+      color: #7d3c98;
+      border: 1px solid #7d3c98;
+    }
+    .etiqueta-hsil {
+      background-color: #e0c4eb;
+      color: #6c3483;
+      border: 1px solid #6c3483;
+    }
+    .etiqueta-normal {
+      background-color: #f6f0fa;
+      color: #5b2c6f;
+      border: 1px solid #5b2c6f;
+    }
+    .botao-ccu {
+      background-color: #f0e5f5;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+    .botao-ccu:hover {
+      background-color: #e0c4eb;
+    }
 
-      .detalhes-paciente {
-        flex: 1;
-      }
+    /* Modal de seleção de paciente */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
 
-      .item-encaminhamento > div:not(:first-child)::before {
-        content: attr(data-label);
-        display: block;
-        font-size: 0.8rem;
-        color: #666666;
-        margin-bottom: 0.25rem;
-      }
+    .conteudo-modal {
+      background-color: white;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
 
-      .item-encaminhamento > div {
-        width: 100%;
-      }
+    .cabecalho-modal {
+      padding: 1.5rem;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-      .botao-pequeno {
-        padding: 0.4rem;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-  
-      .botao-pequeno i {
-        margin-right: 0;
-      }
+    .titulo-modal {
+      font-size: 1.5rem;
+      color: var(--primaria);
+    }
+
+    .fechar-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .corpo-modal {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    .rodape-modal {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    .busca-paciente {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .campo-busca-modal {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .lista-pacientes {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .item-paciente {
+      padding: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .item-paciente:last-child {
+      border-bottom: none;
+    }
+
+    .item-paciente:hover {
+      background-color: #f9f0ff;
+    }
+
+    .item-paciente.selecionado {
+      background-color: #f0e5f5;
+      border-left: 4px solid var(--primaria);
+    }
+
+    .info-paciente-modal {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar-paciente {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #f0e5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primaria);
+    }
+
+    .detalhes-paciente-modal {
+      flex: 1;
+    }
+
+    .nome-paciente-modal {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .dados-paciente-modal {
+      font-size: 0.85rem;
+      color: #666;
     }
   </style>
 </head>
@@ -497,15 +550,15 @@
       <ul class="menu-navegacao">
         <li class="item-navegacao"><a href="/medico/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
         <li class="item-navegacao"><a href="/medico/nova-ficha" class="link-navegacao"><i class="fas fa-file-medical"></i> Fichas</a></li>
-        <li class="item-navegacao"><a href="/medico/laudos" class="link-navegacao"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
+        <li class="item-navegacao"><a href="/medico/laudos" class="link-navegacao ativo"><i class="fas fa-file-medical-alt"></i> Laudos</a></li>
         <li class="item-navegacao"><a href="/medico/pacientes" class="link-navegacao"><i class="fas fa-user-injured"></i> Pacientes</a></li>
-        <li class="item-navegacao"><a href="/medico/encaminhamentos" class="link-navegacao ativo"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
+        <li class="item-navegacao"><a href="/medico/encaminhamentos" class="link-navegacao"><i class="fas fa-exchange-alt"></i> Encaminhamentos</a></li>
         <li class="item-navegacao"><a href="/medico/estatisticas" class="link-navegacao"><i class="fas fa-chart-line"></i> Estatísticas</a></li>
       </ul>
       
       <div class="info-usuario">
         <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
-        <span>Dr. {{.Medico.Name}}</span>
+        <span>{{.Medico.Name}}</span>
         
         <div class="menu-usuario">
           <a href="/medico/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
@@ -518,20 +571,17 @@
 
   <main class="conteudo-principal">
     <div class="cabecalho">
-      <h1 class="titulo-pagina">
-        Encaminhamentos Ginecológicos
-      </h1>
-      
-      <div class="controles-pagina">
-        <button class="botao botao-primario" onclick="location.href='/medico/encaminhamentos/novo'">
-          <i class="fas fa-plus"></i> Novo Encaminhamento
+      <h1 class="titulo-pagina">Laudos Citopatológicos</h1>
+      <div>
+        <button class="botao botao-primario" id="btnNovoLaudo">
+          <i class="fas fa-plus"></i> Novo Laudo
         </button>
       </div>
     </div>
 
     <div class="filtros-busca">
       <div class="container-busca">
-        <input type="text" placeholder="Buscar por paciente, especialidade ou CID..." class="campo-busca" id="campoBusca">
+        <input type="text" placeholder="Buscar por paciente, CID ou resultado..." class="campo-busca" id="campoBusca">
         <button class="botao botao-primario">
           <i class="fas fa-search"></i> Buscar
         </button>
@@ -539,159 +589,234 @@
 
       <div class="botoes-filtro">
         <button class="botao-filtro ativo">Todos</button>
-        <button class="botao-filtro">Colposcopia</button>
-        <button class="botao-filtro">Oncologia</button>
-        <button class="botao-filtro">Cirurgia</button>
-        <button class="botao-filtro">Urgentes</button>
-        <button class="botao-filtro">Pendentes</button>
-        <button class="botao-filtro">Concluídos</button>
+        <button class="botao-filtro">ASC-H</button>
+        <button class="botao-filtro">LSIL</button>
+        <button class="botao-filtro">HSIL</button>
+        <button class="botao-filtro">Normais</button>
       </div>
     </div>
 
-    <div class="lista-encaminhamentos">
-      <div class="cabecalho-lista">
+    <div class="lista-laudos">
+      <div class="cabecalho-lista-laudos">
         <div>Paciente</div>
-        <div>Especialidade</div>
         <div>Data</div>
-        <div>Status</div>
+        <div>Resultado</div>
+        <div>CID-10</div>
         <div>Ações</div>
       </div>
       
-      <div class="item-encaminhamento">
-        <div class="info-encaminhamento">
-          <div class="icone-encaminhamento">
-            <i class="fas fa-exchange-alt"></i>
+      <div class="item-laudo">
+        <div class="info-laudo">
+          <div class="icone-laudo">
+            <i class="fas fa-file-medical-alt"></i>
           </div>
-          <div class="detalhes-paciente">
-            <div class="nome-paciente">Maria da Silva</div>
-            <div class="info-adicional">CID: R87.61 (ASC-H) • 35 anos</div>
+          <div>
+            <div class="paciente-laudo">Maria da Silva</div>
+            <div class="texto-pequeno">Cartão SUS: 123 4567 8901 2345</div>
           </div>
         </div>
-        <div data-label="Especialidade">Colposcopia</div>
-        <div data-label="Data">15/06/2025</div>
-        <div data-label="Status"><span class="etiqueta prioritario">Prioritário</span></div>
-        <div class="acoes-encaminhamento">
-          <button class="botao botao-pequeno botao-primario" title="Editar">
+        <div>15/06/2025</div>
+        <div><span class="etiqueta etiqueta-asch">ASC-H</span></div>
+        <div>R87.61</div>
+        <div class="acoes-laudo">
+          <button class="botao botao-pequeno botao-primario">
             <i class="fas fa-edit"></i>
           </button>
-          <button class="botao botao-pequeno botao-secundario" title="Imprimir">
-            <i class="fas fa-print"></i>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-download"></i>
           </button>
-          <button class="botao botao-pequeno botao-perigo" title="Cancelar">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="item-encaminhamento">
-        <div class="info-encaminhamento">
-          <div class="icone-encaminhamento">
+          <button class="botao botao-pequeno botao-ccu">
             <i class="fas fa-exchange-alt"></i>
-          </div>
-          <div class="detalhes-paciente">
-            <div class="nome-paciente">Ana Oliveira</div>
-            <div class="info-adicional">CID: R87.61 (LSIL) • 42 anos</div>
-          </div>
-        </div>
-        <div data-label="Especialidade">Oncologia</div>
-        <div data-label="Data">10/06/2025</div>
-        <div data-label="Status"><span class="etiqueta rotina">Rotina</span></div>
-        <div class="acoes-encaminhamento">
-          <button class="botao botao-pequeno botao-primario" title="Editar">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="botao botao-pequeno botao-secundario" title="Imprimir">
-            <i class="fas fa-print"></i>
-          </button>
-          <button class="botao botao-pequeno botao-perigo" title="Cancelar">
-            <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
       
-      <div class="item-encaminhamento">
-        <div class="info-encaminhamento">
-          <div class="icone-encaminhamento">
-            <i class="fas fa-exchange-alt"></i>
+      <div class="item-laudo">
+        <div class="info-laudo">
+          <div class="icone-laudo">
+            <i class="fas fa-file-medical-alt"></i>
           </div>
-          <div class="detalhes-paciente">
-            <div class="nome-paciente">Fernanda Costa</div>
-            <div class="info-adicional">CID: D06.9 (HSIL) • 28 anos</div>
+          <div>
+            <div class="paciente-laudo">Ana Oliveira</div>
+            <div class="texto-pequeno">Cartão SUS: 987 6543 2109 8765</div>
           </div>
         </div>
-        <div data-label="Especialidade">Cirurgia</div>
-        <div data-label="Data">05/06/2025</div>
-        <div data-label="Status"><span class="etiqueta urgente">Urgente</span></div>
-        <div class="acoes-encaminhamento">
-          <button class="botao botao-pequeno botao-primario" title="Editar">
+        <div>10/06/2025</div>
+        <div><span class="etiqueta etiqueta-lsil">LSIL</span></div>
+        <div>R87.61</div>
+        <div class="acoes-laudo">
+          <button class="botao botao-pequeno botao-primario">
             <i class="fas fa-edit"></i>
           </button>
-          <button class="botao botao-pequeno botao-secundario" title="Imprimir">
-            <i class="fas fa-print"></i>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-download"></i>
           </button>
-          <button class="botao botao-pequeno botao-perigo" title="Cancelar">
-            <i class="fas fa-times"></i>
+          <button class="botao botao-pequeno botao-ccu">
+            <i class="fas fa-exchange-alt"></i>
           </button>
         </div>
       </div>
-
-      <div class="item-encaminhamento">
-        <div class="info-encaminhamento">
-          <div class="icone-encaminhamento">
-            <i class="fas fa-exchange-alt"></i>
+      
+      <div class="item-laudo">
+        <div class="info-laudo">
+          <div class="icone-laudo">
+            <i class="fas fa-file-medical-alt"></i>
           </div>
-          <div class="detalhes-paciente">
-            <div class="nome-paciente">Juliana Santos</div>
-            <div class="info-adicional">CID: N87.0 (Displasia leve) • 31 anos</div>
-          </div>
-        </div>
-        <div data-label="Especialidade">Colposcopia</div>
-        <div data-label="Data">01/06/2025</div>
-        <div data-label="Status"><span class="etiqueta concluido">Concluído</span></div>
-        <div class="acoes-encaminhamento">
-          <button class="botao botao-pequeno botao-secundario" title="Visualizar">
-            <i class="fas fa-eye"></i>
-          </button>
-          <button class="botao botao-pequeno botao-secundario" title="Imprimir">
-            <i class="fas fa-print"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="item-encaminhamento">
-        <div class="info-encaminhamento">
-          <div class="icone-encaminhamento">
-            <i class="fas fa-exchange-alt"></i>
-          </div>
-          <div class="detalhes-paciente">
-            <div class="nome-paciente">Patrícia Mendes</div>
-            <div class="info-adicional">CID: R87.61 (ASC-US) • 45 anos</div>
+          <div>
+            <div class="paciente-laudo">Fernanda Costa</div>
+            <div class="texto-pequeno">Cartão SUS: 456 7890 1234 5678</div>
           </div>
         </div>
-        <div data-label="Especialidade">Colposcopia</div>
-        <div data-label="Data">28/05/2025</div>
-        <div data-label="Status"><span class="etiqueta pendente">Pendente</span></div>
-        <div class="acoes-encaminhamento">
-          <button class="botao botao-pequeno botao-primario" title="Editar">
+        <div>05/06/2025</div>
+        <div><span class="etiqueta etiqueta-normal">Normal</span></div>
+        <div>Z01.4</div>
+        <div class="acoes-laudo">
+          <button class="botao botao-pequeno botao-primario">
             <i class="fas fa-edit"></i>
           </button>
-          <button class="botao botao-pequeno botao-secundario" title="Imprimir">
-            <i class="fas fa-print"></i>
+          <button class="botao botao-pequeno botao-secundario">
+            <i class="fas fa-download"></i>
           </button>
-          <button class="botao botao-pequeno botao-perigo" title="Cancelar">
-            <i class="fas fa-times"></i>
+          <button class="botao botao-pequeno botao-ccu">
+            <i class="fas fa-exchange-alt"></i>
           </button>
         </div>
       </div>
     </div>
   </main>
 
+  <!-- Modal de seleção de paciente -->
+  <div class="modal" id="modalSelecaoPaciente">
+    <div class="conteudo-modal">
+      <div class="cabecalho-modal">
+        <h2 class="titulo-modal">Selecionar Paciente</h2>
+        <button class="fechar-modal" id="fecharModal">&times;</button>
+      </div>
+      
+      <div class="corpo-modal">
+        <div class="busca-paciente">
+          <input type="text" placeholder="Digite o nome do paciente ou número do SUS..." class="campo-busca-modal" id="buscaPaciente">
+          <button class="botao botao-primario">
+            <i class="fas fa-search"></i> Buscar
+          </button>
+        </div>
+        
+        <div class="lista-pacientes">
+          <div class="item-paciente">
+            <div class="info-paciente-modal">
+              <div class="avatar-paciente">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="detalhes-paciente-modal">
+                <div class="nome-paciente-modal">Maria da Silva</div>
+                <div class="dados-paciente-modal">
+                  <span>38 anos</span> • 
+                  <span>Cartão SUS: 123 4567 8901 2345</span> • 
+                  <span>CID: R87.61 (ASC-H)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="item-paciente">
+            <div class="info-paciente-modal">
+              <div class="avatar-paciente">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="detalhes-paciente-modal">
+                <div class="nome-paciente-modal">Ana Oliveira</div>
+                <div class="dados-paciente-modal">
+                  <span>42 anos</span> • 
+                  <span>Cartão SUS: 987 6543 2109 8765</span> • 
+                  <span>CID: R87.61 (LSIL)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="item-paciente">
+            <div class="info-paciente-modal">
+              <div class="avatar-paciente">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="detalhes-paciente-modal">
+                <div class="nome-paciente-modal">Fernanda Costa</div>
+                <div class="dados-paciente-modal">
+                  <span>28 anos</span> • 
+                  <span>Cartão SUS: 456 7890 1234 5678</span> • 
+                  <span>CID: D06.9 (HSIL)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="rodape-modal">
+        <button class="botao botao-secundario" id="cancelarSelecao">
+          Cancelar
+        </button>
+        <button class="botao botao-primario" id="confirmarSelecao">
+          Confirmar e Continuar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    document.addEventListener('click', function(e) {
-      const infoUsuario = document.querySelector('.info-usuario');
-      if (!infoUsuario.contains(e.target)) {
-        document.querySelector('.menu-usuario').style.display = 'none';
-      }
+    document.addEventListener('DOMContentLoaded', function() {
+      // Filter buttons functionality
+      const botoesFiltro = document.querySelectorAll('.botao-filtro');
+      botoesFiltro.forEach(botao => {
+        botao.addEventListener('click', function() {
+          botoesFiltro.forEach(btn => btn.classList.remove('ativo'));
+          this.classList.add('ativo');
+        });
+      });
+
+      // Patient selection modal
+      const modalSelecao = document.getElementById('modalSelecaoPaciente');
+      const btnNovoLaudo = document.getElementById('btnNovoLaudo');
+      const fecharModal = document.getElementById('fecharModal');
+      const cancelarSelecao = document.getElementById('cancelarSelecao');
+      const confirmarSelecao = document.getElementById('confirmarSelecao');
+      const itensPaciente = document.querySelectorAll('.item-paciente');
+
+      // Open modal when clicking New Report
+      btnNovoLaudo.addEventListener('click', function() {
+        modalSelecao.style.display = 'flex';
+      });
+
+      // Close modal
+      fecharModal.addEventListener('click', function() {
+        modalSelecao.style.display = 'none';
+      });
+
+      cancelarSelecao.addEventListener('click', function() {
+        modalSelecao.style.display = 'none';
+      });
+
+      // Select patient
+      itensPaciente.forEach(item => {
+        item.addEventListener('click', function() {
+          document.querySelectorAll('.item-paciente').forEach(i => {
+            i.classList.remove('selecionado');
+          });
+          this.classList.add('selecionado');
+        });
+      });
+
+      // Confirm selection and redirect
+      confirmarSelecao.addEventListener('click', function() {
+        const pacienteSelecionado = document.querySelector('.item-paciente.selecionado');
+        if (pacienteSelecionado) {
+          modalSelecao.style.display = 'none';
+          // Here you can redirect to the new report page with the patient ID
+          window.location.href = '/medico/laudos/novo?paciente=1';
+        } else {
+          alert('Por favor, selecione um paciente');
+        }
+      });
     });
   </script>
 </body>

@@ -31,9 +31,121 @@ type UserRepository interface {
 	CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, error)
 	VerifyRecoveryCode(identifier string, code string) (bool, error)
 	UpdatePassword(identifier string, newPassword string) error
+	FindUserByIdentifier(identifier string, role string) (model.UserInterface, error)
 }
 
 func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
+	user, err := ur.FindUserByIdentifier(identifier, role)
+	if err != nil {
+		return nil, fmt.Errorf("Erro ao buscar usuario: %s", err)
+	}
+
+	// 2a$10$MJsoWkTYzYBR1elzP13y8eR1cfOJ9KO7yXvErBzXPQW8MrnZTWR6q
+	if err := bcrypt.CompareHashAndPassword([]byte(user.GetPassword()), []byte(password)); err != nil {
+		return nil, fmt.Errorf("usuário ou senha inválidos")
+	}
+
+	user.SetRole(role)
+
+	return user, nil
+}
+
+func (ur *userRepository) CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, error) {
+    userEmail, err := ur.findUserEmail(identifier)
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return "", fmt.Errorf("usuário não encontrado")
+        }
+        return "", fmt.Errorf("erro ao buscar usuário: %w", err)
+    }
+
+    _, err = ur.DB.Exec(`
+        INSERT INTO password_recovery (identifier, code, expires_at)
+        VALUES ($1, $2, $3)
+        ON CONFLICT (identifier) 
+        DO UPDATE SET code = $2, expires_at = $3, created_at = NOW()
+    `, identifier, code, expiresAt)
+
+    if err != nil {
+        return "", fmt.Errorf("erro ao criar código de recuperação: %w", err)
+    }
+    
+    return userEmail, nil
+}
+
+func (ur *userRepository) VerifyRecoveryCode(identifier string, code string) (bool, error) {
+	var valid bool
+	err := ur.DB.QueryRow(`
+        SELECT code = $2 AND expires_at > NOW()
+        FROM password_recovery
+        WHERE identifier = $1
+    `, identifier, code).Scan(&valid)
+
+	if err != nil {
+        if err == sql.ErrNoRows {
+            return false, nil
+        }
+        return false, fmt.Errorf("erro ao verificar código: %w", err)
+    }
+    
+    return valid, nil
+}
+
+func (ur *userRepository) UpdatePassword(identifier string, newPassword string) error {
+    tables := []struct {
+        name  string
+        query string
+    } {
+        {"paciente", "UPDATE paciente SET senha = $1 WHERE email = $2 OR cpf = $3"},
+        {"medico", "UPDATE medico SET senha = $1 WHERE email = $2 OR cpf = $3"},
+        {"enfermeiro", "UPDATE enfermeiro SET senha = $1 WHERE email = $2 OR cpf = $3"},
+        {"agente_comunitario", "UPDATE agente_comunitario SET senha = $1 WHERE email = $2 OR cpf = $3"},
+        {"gestor", "UPDATE gestor SET senha = $1 WHERE email = $2 OR cpf = $3"},
+    }
+    
+    cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", ""), " ", "")
+    
+    for _, table := range tables {
+        result, err := ur.DB.Exec(table.query, newPassword, identifier, cpfFormatado)
+        if err != nil {
+            return fmt.Errorf("erro ao atualizar senha na tabela %s: %w", table.name, err)
+        }
+        
+        rowsAffected, _ := result.RowsAffected()
+        if rowsAffected > 0 {
+            _, err = ur.DB.Exec("DELETE FROM password_recovery WHERE identifier = $1", identifier)
+            if err != nil {
+                return fmt.Errorf("erro ao limpar código de recuperação: %w", err)
+            }
+            return nil
+        }
+    }
+    
+    return fmt.Errorf("usuário não foi encontrado em nenhuma tabela")
+}
+
+func (ur *userRepository) findUserEmail(identifier string) (string, error) {
+    cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", "")
+    
+    tables := []string{"paciente", "medico", "enfermeiro", "agente_comunitario", "gestor"}
+    
+    for _, table := range tables {
+        var email string
+        err := ur.DB.QueryRow(fmt.Sprintf(`
+            SELECT email FROM %s WHERE email = $1 OR cpf = $2 LIMIT 1
+        `, table), identifier, cpfFormatado).Scan(&email)
+        
+        if err == nil {
+            return email, nil
+        } else if err != sql.ErrNoRows {
+            return "", err
+        }
+    }
+    
+    return "", sql.ErrNoRows
+}
+
+func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (model.UserInterface, error) {
 	var query string
 	var user model.UserInterface
 
@@ -45,7 +157,7 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 		query = `
 			SELECT id, email, senha, nomecompleto, cpf
 			FROM paciente
-			WHERE email = $1 OR cpf = $2
+			WHERE email = $2 OR cpf = $3
 		`
 		var paciente model.Paciente
 
@@ -167,107 +279,5 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 		return nil, fmt.Errorf("tipo de usuário inválido")
 	}
 
-	// 2a$10$MJsoWkTYzYBR1elzP13y8eR1cfOJ9KO7yXvErBzXPQW8MrnZTWR6q
-	if err := bcrypt.CompareHashAndPassword([]byte(user.GetPassword()), []byte(password)); err != nil {
-		return nil, fmt.Errorf("usuário ou senha inválidos")
-	}
-
-	user.SetRole(role)
-
 	return user, nil
-}
-
-func (ur *userRepository) CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, error) {
-    userEmail, err := ur.findUserEmail(identifier)
-    if err != nil {
-        if err == sql.ErrNoRows {
-            return "", fmt.Errorf("usuário não encontrado")
-        }
-        return "", fmt.Errorf("erro ao buscar usuário: %w", err)
-    }
-
-    _, err = ur.DB.Exec(`
-        INSERT INTO password_recovery (identifier, code, expires_at)
-        VALUES ($1, $2, $3)
-        ON CONFLICT (identifier) 
-        DO UPDATE SET code = $2, expires_at = $3, created_at = NOW()
-    `, identifier, code, expiresAt)
-
-    if err != nil {
-        return "", fmt.Errorf("erro ao criar código de recuperação: %w", err)
-    }
-    
-    return userEmail, nil
-}
-
-func (ur *userRepository) VerifyRecoveryCode(identifier string, code string) (bool, error) {
-	var valid bool
-	err := ur.DB.QueryRow(`
-        SELECT code = $2 AND expires_at > NOW()
-        FROM password_recovery
-        WHERE identifier = $1
-    `, identifier, code).Scan(&valid)
-
-	if err != nil {
-        if err == sql.ErrNoRows {
-            return false, nil
-        }
-        return false, fmt.Errorf("erro ao verificar código: %w", err)
-    }
-    
-    return valid, nil
-}
-
-func (ur *userRepository) UpdatePassword(identifier string, newPassword string) error {
-    tables := []struct {
-        name  string
-        query string
-    } {
-        {"paciente", "UPDATE paciente SET senha = $1 WHERE email = $2 OR cpf = $3"},
-        {"medico", "UPDATE medico SET senha = $1 WHERE email = $2 OR cpf = $3"},
-        {"enfermeiro", "UPDATE enfermeiro SET senha = $1 WHERE email = $2 OR cpf = $3"},
-        {"agente_comunitario", "UPDATE agente_comunitario SET senha = $1 WHERE email = $2 OR cpf = $3"},
-        {"gestor", "UPDATE gestor SET senha = $1 WHERE email = $2 OR cpf = $3"},
-    }
-    
-    cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", ""), " ", "")
-    
-    for _, table := range tables {
-        result, err := ur.DB.Exec(table.query, newPassword, identifier, cpfFormatado)
-        if err != nil {
-            return fmt.Errorf("erro ao atualizar senha na tabela %s: %w", table.name, err)
-        }
-        
-        rowsAffected, _ := result.RowsAffected()
-        if rowsAffected > 0 {
-            _, err = ur.DB.Exec("DELETE FROM password_recovery WHERE identifier = $1", identifier)
-            if err != nil {
-                return fmt.Errorf("erro ao limpar código de recuperação: %w", err)
-            }
-            return nil
-        }
-    }
-    
-    return fmt.Errorf("usuário não foi encontrado em nenhuma tabela")
-}
-
-func (ur *userRepository) findUserEmail(identifier string) (string, error) {
-    cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", "")
-    
-    tables := []string{"paciente", "medico", "enfermeiro", "agente_comunitario", "gestor"}
-    
-    for _, table := range tables {
-        var email string
-        err := ur.DB.QueryRow(fmt.Sprintf(`
-            SELECT email FROM %s WHERE email = $1 OR cpf = $2 LIMIT 1
-        `, table), identifier, cpfFormatado).Scan(&email)
-        
-        if err == nil {
-            return email, nil
-        } else if err != sql.ErrNoRows {
-            return "", err
-        }
-    }
-    
-    return "", sql.ErrNoRows
 }

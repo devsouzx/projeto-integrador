@@ -3,17 +3,16 @@ package routes
 import (
 	"net/http"
 
+	medicoController "github.com/devsouzx/projeto-integrador/src/controller/medico"
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/gin-gonic/gin"
 )
 
-func InitMedicoRoutes(rg *gin.RouterGroup) {
+func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.MedicoControllerInterface) {
 	medico := rg.Group("/medico")
 	medico.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("medico"))
 	{
-		medico.GET("/dashboard", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "dashboard-medico.html", nil)
-		})
+		medico.GET("/dashboard", medicoController.GetDashboard)
 
 		medico.GET("/nova-ficha", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "nova-ficha-medico.html", nil)
@@ -43,7 +42,7 @@ func InitMedicoRoutes(rg *gin.RouterGroup) {
 			c.HTML(http.StatusOK, "laudo-medico.html", nil)
 		})
 
-		medico.GET("/medicos/pacientes/123456", func(c *gin.Context) {
+		medico.GET("/pacientes/123456", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "paciente-medico.html", nil)
 		})
 	}

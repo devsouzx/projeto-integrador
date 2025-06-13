@@ -52,10 +52,6 @@
       list-style: none;
     }
 
-    .item-navegacao {
-      margin-left: 1rem;
-    }
-
     .botao-primario:hover {
       background-color: #7d3c98;
       transform: translateY(-2px);
@@ -149,7 +145,7 @@
       border: 2px solid white;
       background-color: #f0e5f5;
     }
-    
+
     .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
@@ -205,7 +201,7 @@
     .botao-secundario:hover {
       background-color: #f0e5f5;
     }
-    
+
     .filtros-busca {
       background-color: white;
       border-radius: 10px;
@@ -250,7 +246,7 @@
       color: white;
       border-color: var(--primaria);
     }
-    
+
     .lista-laudos {
       background-color: white;
       border-radius: 10px;
@@ -382,7 +378,7 @@
         margin-top: 0.5rem;
       }
     }
-    
+
     .etiqueta-asch {
       background-color: #f0e5f5;
       color: #8e44ad;
@@ -411,6 +407,137 @@
     .botao-ccu:hover {
       background-color: #e0c4eb;
     }
+
+    /* Modal de seleção de paciente */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .conteudo-modal {
+      background-color: white;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .cabecalho-modal {
+      padding: 1.5rem;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .titulo-modal {
+      font-size: 1.5rem;
+      color: var(--primaria);
+    }
+
+    .fechar-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .corpo-modal {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    .rodape-modal {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    .busca-paciente {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .campo-busca-modal {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .lista-pacientes {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .item-paciente {
+      padding: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .item-paciente:last-child {
+      border-bottom: none;
+    }
+
+    .item-paciente:hover {
+      background-color: #f9f0ff;
+    }
+
+    .item-paciente.selecionado {
+      background-color: #f0e5f5;
+      border-left: 4px solid var(--primaria);
+    }
+
+    .info-paciente-modal {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar-paciente {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #f0e5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primaria);
+    }
+
+    .detalhes-paciente-modal {
+      flex: 1;
+    }
+
+    .nome-paciente-modal {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .dados-paciente-modal {
+      font-size: 0.85rem;
+      color: #666;
+    }
   </style>
 </head>
 <body>
@@ -431,7 +558,7 @@
       
       <div class="info-usuario">
         <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
-        <span>Dr. {{.Medico.Name}}</span>
+        <span>{{.Medico.Name}}</span>
         
         <div class="menu-usuario">
           <a href="/medico/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
@@ -441,17 +568,17 @@
       </div>
     </div>
   </nav>
-
+  
   <main class="conteudo-principal">
     <div class="cabecalho">
       <h1 class="titulo-pagina">Laudos Citopatológicos</h1>
       <div>
-        <button class="botao botao-primario" onclick="location.href='/medico/laudos/novo'">
+        <button class="botao botao-primario" id="btnNovoLaudo">
           <i class="fas fa-plus"></i> Novo Laudo
         </button>
       </div>
     </div>
-
+    
     <div class="filtros-busca">
       <div class="container-busca">
         <input type="text" placeholder="Buscar por paciente, CID ou resultado..." class="campo-busca" id="campoBusca">
@@ -557,17 +684,139 @@
       </div>
     </div>
   </main>
-
+  
+  <!-- Modal de seleção de paciente -->
+  <div class="modal" id="modalSelecaoPaciente">
+    <div class="conteudo-modal">
+      <div class="cabecalho-modal">
+        <h2 class="titulo-modal">Selecionar Paciente</h2>
+        <button class="fechar-modal" id="fecharModal">&times;</button>
+      </div>
+      
+      <div class="corpo-modal">
+        <div class="busca-paciente">
+          <input type="text" placeholder="Digite o nome do paciente ou número do SUS..." class="campo-busca-modal" id="buscaPaciente">
+          <button class="botao botao-primario">
+            <i class="fas fa-search"></i> Buscar
+          </button>
+        </div>
+        
+        <div class="lista-pacientes">
+          <div class="item-paciente">
+            <div class="info-paciente-modal">
+              <div class="avatar-paciente">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="detalhes-paciente-modal">
+                <div class="nome-paciente-modal">Maria da Silva</div>
+                <div class="dados-paciente-modal">
+                  <span>38 anos</span> • 
+                  <span>Cartão SUS: 123 4567 8901 2345</span> • 
+                  <span>CID: R87.61 (ASC-H)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="item-paciente">
+            <div class="info-paciente-modal">
+              <div class="avatar-paciente">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="detalhes-paciente-modal">
+                <div class="nome-paciente-modal">Ana Oliveira</div>
+                <div class="dados-paciente-modal">
+                  <span>42 anos</span> • 
+                  <span>Cartão SUS: 987 6543 2109 8765</span> • 
+                  <span>CID: R87.61 (LSIL)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="item-paciente">
+            <div class="info-paciente-modal">
+              <div class="avatar-paciente">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="detalhes-paciente-modal">
+                <div class="nome-paciente-modal">Fernanda Costa</div>
+                <div class="dados-paciente-modal">
+                  <span>28 anos</span> • 
+                  <span>Cartão SUS: 456 7890 1234 5678</span> • 
+                  <span>CID: D06.9 (HSIL)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="rodape-modal">
+        <button class="botao botao-secundario" id="cancelarSelecao">
+          Cancelar
+        </button>
+        <button class="botao botao-primario" id="confirmarSelecao">
+          Confirmar e Continuar
+        </button>
+      </div>
+    </div>
+  </div>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const botoesFiltro = document.querySelectorAll('.botao-filtro');
-      botoesFiltro.forEach(botao => {
-        botao.addEventListener('click', function() {
-          botoesFiltro.forEach(btn => btn.classList.remove('ativo'));
-          this.classList.add('ativo');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter buttons functionality
+            const botoesFiltro = document.querySelectorAll('.botao-filtro');
+            botoesFiltro.forEach(botao => {
+                botao.addEventListener('click', function() {
+                    botoesFiltro.forEach(btn => btn.classList.remove('ativo'));
+                    this.classList.add('ativo');
+                });
+            });
+
+            // Patient selection modal
+            const modalSelecao = document.getElementById('modalSelecaoPaciente');
+            const btnNovoLaudo = document.getElementById('btnNovoLaudo');
+            const fecharModal = document.getElementById('fecharModal');
+            const cancelarSelecao = document.getElementById('cancelarSelecao');
+            const confirmarSelecao = document.getElementById('confirmarSelecao');
+            const itensPaciente = document.querySelectorAll('.item-paciente');
+
+            // Open modal when clicking New Report
+            btnNovoLaudo.addEventListener('click', function() {
+                modalSelecao.style.display = 'flex';
+            });
+
+            // Close modal
+            fecharModal.addEventListener('click', function() {
+                modalSelecao.style.display = 'none';
+            });
+
+            cancelarSelecao.addEventListener('click', function() {
+                modalSelecao.style.display = 'none';
+            });
+
+            // Select patient
+            itensPaciente.forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.item-paciente').forEach(i => {
+                        i.classList.remove('selecionado');
+                    });
+                    this.classList.add('selecionado');
+                });
+            });
+
+            // Confirm selection and redirect
+            confirmarSelecao.addEventListener('click', function() {
+                const pacienteSelecionado = document.querySelector('.item-paciente.selecionado');
+                if (pacienteSelecionado) {
+                    modalSelecao.style.display = 'none';
+                    // Here you can redirect to the new report page with the patient ID
+                    window.location.href = '/medico/laudos/novo?paciente=1';
+                } else {
+                    alert('Por favor, selecione um paciente');
+                }
+            });
         });
-      });
-    });
-  </script>
+    </script>
 </body>
 </html>
