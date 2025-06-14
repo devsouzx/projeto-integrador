@@ -3,16 +3,21 @@ package model
 import "time"
 
 type Paciente struct {
-	BaseUser
-	CPF                 string    `json:"cpf"`
-	CartaoSUS           string    `json:"cartaosus"`
-	NomeCompletoDaMae   string    `json:"nomecompletodamae"`
-	DataDeNascimento    time.Time `json:"datadenascimento"`
-	Telefone            string    `json:"telefone"`
-	Apelido             string    `json:"apelido,omitempty"`
-	Raca                string    `json:"raca,omitempty"`
-	Nacionalidade       string    `json:"nacionalidade,omitempty"`
-	Escolaridade        string    `json:"escolaridade,omitempty"`
+    BaseUser
+    ID             string    `json:"id" db:"id"`
+    Apelido        string    `json:"apelido" db:"apelido"`
+    NomeMae        string    `json:"mae" db:"nome_mae"`
+    CNS            string    `json:"cns" db:"cns"`
+    CPF            string    `json:"cpf" db:"cpf"`
+    DataNascimento string    `json:"nascimento" db:"-"`
+    NascimentoTime time.Time `json:"-" db:"data_nascimento"`
+    Nacionalidade  string    `json:"nacionalidade" db:"nacionalidade"`
+    RacaCor        string    `json:"cor" db:"raca_cor"`
+    Escolaridade   string    `json:"escolaridade" db:"escolaridade"`
+    Endereco       Endereco  `json:"-"`
+    Telefone       string    `json:"telefone" db:"telefone"`
+    CreatedAt      time.Time `json:"created_at" db:"created_at"`
+    UpdatedAt      time.Time `json:"updated_at" db:"updated_at"`
 }
 
 func NewPaciente(
@@ -27,12 +32,12 @@ func NewPaciente(
 			Role:     "paciente",
 		},
 		CPF:               cpf,
-		CartaoSUS:         cartaoSUS,
-		NomeCompletoDaMae: nomeMae,
-		DataDeNascimento:  nascimento,
+		CNS:         cartaoSUS,
+		NomeMae: nomeMae,
+		NascimentoTime:  nascimento,
 		Telefone:          telefone,
 		Apelido:           apelido,
-		Raca:              raca,
+		RacaCor:              raca,
 		Nacionalidade:     nacionalidade,
 		Escolaridade:      escolaridade,
 	}
@@ -40,4 +45,8 @@ func NewPaciente(
 
 func (p *Paciente) GetCPF() string {
 	return p.CPF
+}
+
+func (p *Paciente) GetID() string {
+	return p.ID
 }

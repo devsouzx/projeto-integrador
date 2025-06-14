@@ -1,9 +1,9 @@
 INSERT INTO paciente (
     cpf,
-    nomecompleto,
-    cartaosus,
-    nomecompletodamae,
-    datadenascimento,
+    nome,
+    cns,
+    nome_mae,
+    data_nascimento,
     email,
     telefone,
     senha,

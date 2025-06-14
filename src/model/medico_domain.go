@@ -10,6 +10,7 @@ type Medico struct {
 	Telefone         string `json:"telefone"`
 	DataNascimento   time.Time `json:"data_nascimento"`
 	EnderecoConsulta string `json:"endereco_consulta"`
+	Avatar       []byte `json:"avatar"`
 }
 
 func NewMedico(email, password, name, crm, cpf string) UserInterface {

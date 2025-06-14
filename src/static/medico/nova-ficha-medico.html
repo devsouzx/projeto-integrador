@@ -9,6 +9,10 @@
     :root {
       --primaria: #9b59b6;
       --secundaria: #8e44ad;
+      --lilas-claro: #f0e5f5;
+      --sucesso: #27ae60;
+      --erro: #e74c3c;
+      --info: #3498db;
     }
     
     * {
@@ -120,7 +124,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid white;
-      background-color: #f0e5f5;
+      background-color: var(--lilas-claro);
     }
     
     .conteudo-principal {
@@ -201,7 +205,7 @@
     
     .campo-obrigatorio::after {
       content: " *";
-      color: #e74c3c;
+      color: var(--erro);
     }
     
     .acoes-formulario {
@@ -242,18 +246,55 @@
     }
     
     .mensagem-erro {
-      color: #e74c3c;
+      color: var(--erro);
       font-size: 0.8rem;
       margin-top: 0.25rem;
       display: none;
     }
     
     .tem-erro .controle-formulario {
-      border-color: #e74c3c;
+      border-color: var(--erro);
     }
     
     .tem-erro .mensagem-erro {
       display: block;
+    }
+    
+    .mensagem-busca {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .mensagem-busca .icone {
+      font-size: 1rem;
+    }
+    
+    .sucesso {
+      color: var(--sucesso);
+    }
+    
+    .erro {
+      color: var(--erro);
+    }
+    
+    .info {
+      color: var(--info);
+    }
+    
+    .grupo-busca {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .grupo-busca input {
+      flex: 1;
+    }
+    
+    .grupo-busca button {
+      white-space: nowrap;
     }
     
     @media (max-width: 768px) {
@@ -289,6 +330,10 @@
       .conteudo-principal {
         padding: 0 1rem;
       }
+      
+      .grupo-busca {
+        flex-direction: column;
+      }
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -311,7 +356,7 @@
       
       <div class="info-usuario">
         <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
-        <span>{{.Medico.Name}}</span>
+        <span>Dr. João Silva</span>
         
         <div class="menu-usuario">
           <a href="/medico/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
@@ -395,7 +440,41 @@
       </div>
       
       <div class="secao-formulario">
+        <h2 class="titulo-secao">Buscar Paciente</h2>
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="busca_cpf" class="rotulo-formulario">Buscar por CPF</label>
+            <div class="grupo-busca">
+              <input type="text" id="busca_cpf" class="controle-formulario" placeholder="Digite o CPF do paciente">
+              <button type="button" id="botao_buscar" class="botao botao-primario">
+                <i class="fas fa-search"></i> Buscar
+              </button>
+              <button type="button" id="botao_limpar" class="botao botao-secundario">
+                <i class="fas fa-times"></i> Limpar
+              </button>
+            </div>
+            <div id="mensagem_busca" class="mensagem-busca">
+              <i class="fas fa-info-circle icone info"></i>
+              <span class="texto-busca">Digite um CPF e clique em Buscar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="secao-formulario">
         <h2 class="titulo-secao">Dados da Paciente</h2>
+        
+        <div class="linha-formulario">
+          <div class="grupo-formulario">
+            <label for="cpf" class="rotulo-formulario">CPF</label>
+            <input type="text" id="cpf" class="controle-formulario">
+          </div>
+          <div class="grupo-formulario">
+            <label for="cns" class="rotulo-formulario campo-obrigatorio">Cartão SUS (CNS)</label>
+            <input type="text" id="cns" class="controle-formulario" required>
+            <span class="mensagem-erro">Por favor, informe o número do Cartão SUS</span>
+          </div>
+        </div>
         
         <div class="linha-formulario">
           <div class="grupo-formulario">
@@ -453,18 +532,6 @@
               <option value="medio_completo">Ensino Médio Completo</option>
               <option value="superior_completo">Ensino Superior Completo</option>
             </select>
-          </div>
-        </div>
-        
-        <div class="linha-formulario">
-          <div class="grupo-formulario">
-            <label for="cns" class="rotulo-formulario campo-obrigatorio">Cartão SUS (CNS)</label>
-            <input type="text" id="cns" class="controle-formulario" required>
-            <span class="mensagem-erro">Por favor, informe o número do Cartão SUS</span>
-          </div>
-          <div class="grupo-formulario">
-            <label for="cpf" class="rotulo-formulario">CPF</label>
-            <input type="text" id="cpf" class="controle-formulario">
           </div>
         </div>
       </div>
@@ -736,45 +803,247 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Gerar número de protocolo automático
-      const protocolo = 'BR' + new Date().getFullYear() + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-      document.getElementById('protocolo').value = protocolo;
+      // Elementos do DOM
+      const buscaCpf = document.getElementById('busca_cpf');
+      const botaoBuscar = document.getElementById('botao_buscar');
+      const botaoLimpar = document.getElementById('botao_limpar');
+      const cpfField = document.getElementById('cpf');
+      const mensagemBusca = document.getElementById('mensagem_busca');
+      const iconeBusca = mensagemBusca.querySelector('.icone');
+      const textoBusca = mensagemBusca.querySelector('.texto-busca');
+      const form = document.getElementById('formularioCitopatologico');
+          
+      // Inicialização
+      document.getElementById('protocolo').value = 'BR' + new Date().getFullYear() + 
+        Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+          
+      // Funções auxiliares
+      function atualizarMensagemBusca(mensagem, tipo) {
+        textoBusca.textContent = mensagem;
+        iconeBusca.className = `fas ${tipo === 'info' ? 'fa-info-circle' : 
+                              tipo === 'sucesso' ? 'fa-check-circle' : 
+                              'fa-exclamation-circle'} icone ${tipo}`;
+        textoBusca.className = `texto-busca ${tipo}`;
+      }
       
-      // Habilitar/desabilitar campos condicionais
-      const menopausaRadios = document.querySelectorAll('input[name="hormonio_menopausa"]');
-      menopausaRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-          document.getElementById('idade_menopausa').disabled = this.value !== 'sim';
+      function limparCampos(ids) {
+        ids.forEach(id => {
+          const campo = document.getElementById(id);
+          if(campo) campo.value = '';
         });
-      });
+      }
       
-      // Desabilitar data DUM se não lembra
+      function limparErros() {
+        document.querySelectorAll('.tem-erro').forEach(el => {
+          el.classList.remove('tem-erro');
+        });
+      }
+      
+      function preencherFormulario(dados) {
+        Object.entries(dados).forEach(([campo, valor]) => {
+          const elemento = document.getElementById(campo);
+          if(elemento) {
+            elemento.value = valor;
+            if(elemento.required) elemento.dispatchEvent(new Event('change'));
+          }
+        });
+      }
+      
+      function validarCPF(cpf) {
+        cpf = cpf.replace(/\D/g, '');
+        if(cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+        
+        const validarDigito = (slice, factor) => {
+          let soma = 0;
+          for(let i = 0; i < slice; i++) {
+            soma += parseInt(cpf.charAt(i)) * (factor - i);
+          }
+          let resto = (soma * 10) % 11;
+          return (resto === 10 || resto === 11 ? 0 : resto) === parseInt(cpf.charAt(slice));
+        };
+        
+        return validarDigito(9, 10) && validarDigito(10, 11);
+      }
+      
+      // Funções principais
+      function limparBusca() {
+        clearTimeout(window.buscaTimeout);
+        buscaCpf.value = '';
+        cpfField.value = '';
+        atualizarMensagemBusca('Digite um CPF e clique em Buscar', 'info');
+        botaoBuscar.disabled = false;
+        
+        limparCampos([
+          'nome', 'apelido', 'mae', 'nascimento', 'idade', 'nacionalidade',
+          'logradouro', 'numero', 'complemento', 'bairro', 'codigo_municipio',
+          'municipio_residencia', 'cep', 'referencia', 'telefone', 'cns'
+        ]);
+        
+        limparErros();
+      }
+      
+      function buscarPacientePorCPF() {
+        clearTimeout(window.buscaTimeout);
+        
+        const cpf = buscaCpf.value || cpfField.value;
+        const cpfNumeros = cpf.replace(/\D/g, '');
+        
+        if(!cpfNumeros || cpfNumeros.length !== 11 || !validarCPF(cpfNumeros)) {
+          atualizarMensagemBusca('Por favor, informe um CPF válido', 'erro');
+          return;
+        }
+        
+        atualizarMensagemBusca('Buscando paciente...', 'info');
+        iconeBusca.classList.add('fa-spin', 'fa-circle-notch');
+        botaoBuscar.disabled = true;
+        
+        window.buscaTimeout = setTimeout(() => {
+          // Simulação de dados do paciente (sempre retorna sucesso para demonstração)
+          const paciente = {
+            nome: "Maria da Silva",
+            apelido: "Mari",
+            mae: "Joana da Silva",
+            nascimento: "1985-05-15",
+            idade: 38,
+            nacionalidade: "Brasileira",
+            cor: "parda",
+            escolaridade: "medio_completo",
+            cns: "123456789012345",
+            cpf: cpf,
+            logradouro: "Rua das Flores",
+            numero: "123",
+            complemento: "Apto 101",
+            bairro: "Centro",
+            codigo_municipio: "1234567",
+            municipio_residencia: "São Paulo",
+            cep: "01001000",
+            referencia: "Próximo ao mercado",
+            telefone: "(11) 99999-9999"
+          };
+          
+          preencherFormulario(paciente);
+          if(buscaCpf.value && !cpfField.value) cpfField.value = cpf;
+          atualizarMensagemBusca('Paciente encontrado! Dados carregados.', 'sucesso');
+          botaoBuscar.disabled = false;
+        }, 1000);
+      }
+      
+      // Event listeners
+      botaoBuscar.addEventListener('click', buscarPacientePorCPF);
+      botaoLimpar.addEventListener('click', limparBusca);
+      cpfField.addEventListener('blur', () => cpfField.value && buscarPacientePorCPF());
+      
       document.getElementById('nao_lembra_dum').addEventListener('change', function() {
-        document.getElementById('dum').disabled = this.checked;
-        if(this.checked) document.getElementById('dum').value = '';
+        const dumField = document.getElementById('dum');
+        dumField.disabled = this.checked;
+        if(this.checked) dumField.value = '';
       });
       
-      // Validar formulário
-      document.getElementById('formularioCitopatologico').addEventListener('submit', function(e) {
+      form.addEventListener('submit', function(e) {
         e.preventDefault();
         let isValid = true;
         
         document.querySelectorAll('[required]').forEach(field => {
+          const container = field.closest('.grupo-formulario') || 
+                           field.closest('div').previousElementSibling?.closest('.grupo-formulario');
+          
           if ((field.type === 'radio' && !document.querySelector(`input[name="${field.name}"]:checked`)) || 
               (field.type !== 'radio' && !field.value)) {
-            const container = field.closest('.grupo-formulario') || field.closest('div').previousElementSibling?.closest('.grupo-formulario');
             if(container) container.classList.add('tem-erro');
             isValid = false;
-          } else {
-            const container = field.closest('.grupo-formulario') || field.closest('div').previousElementSibling?.closest('.grupo-formulario');
-            if(container) container.classList.remove('tem-erro');
+          } else if(container) {
+            container.classList.remove('tem-erro');
           }
         });
         
         if (isValid) {
-          alert('Ficha cadastrada com sucesso!');
-          this.reset();
-          document.getElementById('protocolo').value = 'BR' + new Date().getFullYear() + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+          // Montar objeto com todos os dados do formulário
+          const formData = {
+            ficha: {
+              protocolo: document.getElementById('protocolo').value,
+              cnes: document.getElementById('cnes').value,
+              unidade_saude: document.getElementById('unidade').value,
+              municipio: document.getElementById('municipio').value,
+              uf: document.getElementById('uf').value,
+              data_coleta: "2023-06-15T00:00:00Z",
+              responsavel_coleta: document.getElementById('responsavel').value,
+              motivo_exame: document.getElementById('motivo_exame').value,
+              observacoes: document.getElementById('observacoes').value
+            },
+            paciente: {
+              nome: document.getElementById('nome').value,
+              cpf: document.getElementById('cpf').value,
+              cns: document.getElementById('cns').value,
+              apelido: document.getElementById('apelido').value,
+              mae: document.getElementById('mae').value,
+              nascimento:"1985-05-20",
+              idade: parseInt(document.getElementById('idade').value),
+              nacionalidade: document.getElementById('nacionalidade').value,
+              cor: document.getElementById('cor').value,
+              escolaridade: document.getElementById('escolaridade').value
+            },
+            dados_residenciais: {
+              logradouro: document.getElementById('logradouro').value,
+              numero: document.getElementById('numero').value,
+              complemento: document.getElementById('complemento').value,
+              bairro: document.getElementById('bairro').value,
+              codigo_municipio: document.getElementById('codigo_municipio').value,
+              municipio: document.getElementById('municipio_residencia').value,
+              cep: document.getElementById('cep').value,
+              uf: "GO",
+              referencia: document.getElementById('referencia').value,
+              telefone: document.getElementById('telefone').value
+            },
+            anamnese: {
+              motivo_exame: document.querySelector('input[name="motivo_exame"]:checked')?.value,
+              fez_exame: document.querySelector('input[name="fez_exame"]:checked')?.value,
+              ultimo_exame_ano: document.getElementById('ultimo_exame_ano').value,
+              usa_diu: document.querySelector('input[name="usa_diu"]:checked')?.value,
+              gravida: document.querySelector('input[name="gravida"]:checked')?.value,
+              anticoncepcional: document.querySelector('input[name="anticoncepcional"]:checked')?.value,
+              hormonio_menopausa: document.querySelector('input[name="hormonio_menopausa"]:checked')?.value,
+              radioterapia: document.querySelector('input[name="radioterapia"]:checked')?.value,
+              dum: document.getElementById('dum').value,
+              nao_lembra_dum: document.getElementById('nao_lembra_dum').checked,
+              sangramento_pos_coito: document.querySelector('input[name="sangramento_pos_coito"]:checked')?.value,
+              sangramento_pos_menopausa: document.querySelector('input[name="sangramento_pos_menopausa"]:checked')?.value
+            },
+            exame_clinico: {
+              inspecao_colo: document.querySelector('input[name="inspecao_colo"]:checked')?.value,
+              sinais_dst: document.querySelector('input[name="sinais_dst"]:checked')?.value,
+              observacoes: document.getElementById('observacoes').value
+            }
+          };
+          
+          // Enviar para o backend
+          fetch('/medico/nova-ficha', {
+            method: 'POST',
+             headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + localStorage.getItem('token') // ou onde você armazena o token
+  },
+            body: JSON.stringify(formData)
+          })
+          .then(response => {
+  if (response.status === 401) {
+    window.location.href = '/login';
+    return;
+  }
+  if (!response.ok) {
+    throw new Error('Erro ao salvar ficha');
+  }
+  return response.json();
+})
+          .then(data => {
+            alert('Ficha cadastrada com sucesso!');
+            form.reset();
+            limparBusca();
+            document.getElementById('protocolo').value = 'BR' + new Date().getFullYear() + 
+              Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+          })
+          .catch(error => {
+            alert('Erro ao salvar ficha: ' + error.message);
+          });
         } else {
           alert('Por favor, preencha todos os campos obrigatórios.');
         }

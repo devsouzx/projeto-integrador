@@ -32,6 +32,7 @@ type UserRepository interface {
 	VerifyRecoveryCode(identifier string, code string) (bool, error)
 	UpdatePassword(identifier string, newPassword string) error
 	FindUserByIdentifier(identifier string, role string) (model.UserInterface, error)
+	CreatePaciente(paciente *model.Paciente) (*model.Paciente, error)
 }
 
 func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
@@ -280,4 +281,45 @@ func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (
 	}
 
 	return user, nil
+}
+
+func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Paciente, error) {
+    if paciente.DataNascimento != "" {
+        nascimento, err := time.Parse("2006-01-02", paciente.DataNascimento)
+        if err != nil {
+            return nil, fmt.Errorf("formato de data inválido: %v", err)
+        }
+        paciente.NascimentoTime = nascimento
+    }
+
+    query := `
+    INSERT INTO paciente (
+        email, senha, nome, 
+        apelido, nome_mae, cns, cpf, 
+        data_nascimento, nacionalidade, 
+        raca, escolaridade, telefone
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    RETURNING id, created_at, updated_at`
+
+    err := r.DB.QueryRow(
+        query,
+        paciente.Email,
+        paciente.Password,
+        paciente.Name,
+        paciente.Apelido,
+        paciente.NomeMae,
+        paciente.CNS,
+        paciente.CPF,
+        paciente.NascimentoTime,
+        paciente.Nacionalidade,
+        paciente.RacaCor,
+        paciente.Escolaridade,
+        paciente.Telefone,
+    ).Scan(&paciente.ID, &paciente.CreatedAt, &paciente.UpdatedAt)
+
+    if err != nil {
+        return nil, fmt.Errorf("erro ao criar paciente: %v", err)
+    }
+
+    return paciente, nil
 }
