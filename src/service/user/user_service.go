@@ -2,6 +2,7 @@ package user
 
 import (
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"math/big"
 	"time"
@@ -9,7 +10,7 @@ import (
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/model/request"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
-	emailService"github.com/devsouzx/projeto-integrador/src/service/email"
+	emailService "github.com/devsouzx/projeto-integrador/src/service/email"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -35,6 +36,8 @@ type UserDomainService interface {
 	SendCodeRecoveryService(recoveyRequest request.PasswordRecoveryRequest) error
 	VerifyCode(VerifyCodeRequest request.VerifyCodeRequest) error
 	ResetPassword(resetPasswordRequest request.ResetPasswordRequest) error
+	VerifyUserToken(token string) (model.UserInterface, error)
+	UpdateUser(user model.UserInterface) error
 }
 
 func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.UserInterface, string, error) {
@@ -131,4 +134,35 @@ func generateCode(length int) (string, error) {
 	}
 
 	return string(code), nil
+}
+
+func (us *userDomainService) VerifyUserToken(token string) (model.UserInterface, error) {
+	user, err := us.userRepository.FindByVerificationToken(token)
+	if err != nil {
+		return nil, errors.New("token inválido")
+	}
+
+    if user.GetTokenExpiresAt().Before(time.Now().UTC()) {
+        return nil, fmt.Errorf("token expirado")
+    }
+
+	return user, nil
+}
+
+func (us *userDomainService) UpdateUser(user model.UserInterface) error {
+    if user.GetID() == "" {
+        return errors.New("ID do usuário é obrigatório")
+    }
+	
+    userExistente, err := us.userRepository.FindByID(user.GetID(), "paciente")
+    if err != nil {
+        return fmt.Errorf("usuário não encontrado: %w", err)
+    }
+	fmt.Println("exsi", userExistente)
+    
+    userExistente.SetVerified(user.IsVerified())
+    userExistente.SetVerifyToken(user.GetVerifyToken())
+    userExistente.SetTokenExpiresAt(user.GetTokenExpiresAt())
+
+    return us.userRepository.UpdateUser(userExistente)
 }

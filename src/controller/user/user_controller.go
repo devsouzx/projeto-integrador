@@ -4,22 +4,27 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/model/request"
+	"github.com/devsouzx/projeto-integrador/src/service/email"
 	userService "github.com/devsouzx/projeto-integrador/src/service/user"
 	"github.com/gin-gonic/gin"
 )
 
 func NewUserController(
 	userService userService.UserDomainService,
+    emailService email.EmailService,
 ) UserController {
 	return &userController{
 		service: userService,
+        emailService: emailService,
 	}
 }
 
 type userController struct {
 	service userService.UserDomainService
+    emailService email.EmailService
 }
 
 type UserController interface {
@@ -28,6 +33,7 @@ type UserController interface {
 	VerifyCode(c *gin.Context)
 	ResetPassword(c *gin.Context)
     Logout(c *gin.Context)
+    VerifyAccount(c *gin.Context)
 }
 
 func (uc *userController) LoginUser(c *gin.Context) {
@@ -46,6 +52,40 @@ func (uc *userController) LoginUser(c *gin.Context) {
         c.JSON(http.StatusUnauthorized, gin.H{
             "error": "Login/senha invalidos!",
             "details": err.Error(),
+        })
+        return
+    }
+    fmt.Println(user)
+
+    if !user.IsVerified() {
+        if user.GetVerifyToken() != "" && user.GetTokenExpiresAt().Before(time.Now().UTC()) {
+            newToken, err := user.GenerateVerifyToken()
+            if err != nil {
+                c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao gerar token"})
+                return
+            }
+            
+            if err := uc.service.UpdateUser(user); err != nil {
+                c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao atualizar usuário"})
+                return
+            }
+            
+            verificationLink := fmt.Sprintf("https://localhost:80800/verify?token=%s", newToken)
+            if err := uc.emailService.SendVerificationEmail(user.GetEmail(), user.GetName(), verificationLink, newToken); err != nil {
+                c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao enviar email"})
+                return
+            }
+
+            c.JSON(http.StatusForbidden, gin.H{
+                "error": "Seu link de verificação expirou. Enviamos um novo email para ativação",
+                "code":  "new_verification_sent",
+            })
+            return
+        }
+
+        c.JSON(http.StatusForbidden, gin.H{
+            "error": "Conta não verificada. Por favor, verifique seu email",
+            "code":  "account_not_verified",
         })
         return
     }
@@ -119,4 +159,29 @@ func (uc *userController) Logout(c *gin.Context) {
     c.SetCookie("token", "", -1, "/", "", false, true)
     
     c.Redirect(http.StatusFound, "/login")
+}
+
+func (uc *userController) VerifyAccount(c *gin.Context) {
+	token := c.Query("token")
+	if token == "" {
+		c.Redirect(http.StatusFound, "/login?error=token_required")
+		return
+	}
+    
+	user, err := uc.service.VerifyUserToken(token)
+	if err != nil {
+		c.Redirect(http.StatusFound, "/login?error=invalid_token")
+		return
+	}
+    
+	user.SetVerified(true)
+	user.SetVerifyToken("")
+	user.SetTokenExpiresAt(time.Time{})
+
+	if err := uc.service.UpdateUser(user); err != nil {
+		c.Redirect(http.StatusFound, "/login?error=verification_failed")
+		return
+	}
+    
+	c.Redirect(http.StatusFound, "/login?verified=true")
 }

@@ -332,6 +332,13 @@
     </div>
     
     <div class="corpo-login">
+      <div id="mensagem-verificacao" class="mensagem-sucesso" style="display: none;">
+        <div style="background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center;">
+          <i class="fas fa-check-circle" style="margin-right: 10px; font-size: 18px;"></i>
+          <span id="texto-mensagem"></span>
+        </div>
+      </div>
+
       <form id="formularioLogin">
         <input type="hidden" name="role" value="paciente">
 
@@ -421,6 +428,43 @@
     }
     
     document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const verified = urlParams.get('verified');
+      const error = urlParams.get('error');
+
+      const mensagemDiv = document.getElementById('mensagem-verificacao');
+      const textoMensagem = document.getElementById('texto-mensagem');
+
+      if (verified === 'true') {
+        mensagemDiv.style.display = 'block';
+        textoMensagem.textContent = 'Conta verificada com sucesso! Agora você pode fazer login.';
+      } else if (error) {
+        mensagemDiv.style.display = 'block';
+        mensagemDiv.firstElementChild.style.background = '#ffebee';
+        mensagemDiv.firstElementChild.style.color = '#c62828';
+        
+        switch(error) {
+          case 'token_required':
+            textoMensagem.textContent = 'Token de verificação é necessário.';
+            break;
+          case 'invalid_token':
+            textoMensagem.textContent = 'Token inválido ou expirado. Por favor, solicite um novo link de verificação.';
+            break;
+          case 'verification_failed':
+            textoMensagem.textContent = 'Falha ao verificar conta. Por favor, tente novamente.';
+            break;
+          case 'account_not_verified':
+            textoMensagem.textContent = 'Conta não verificada. Por favor, verifique seu email para ativar sua conta.';
+            break;
+          default:
+            textoMensagem.textContent = 'Ocorreu um erro durante a verificação.';
+        }
+      }
+      
+      if (verified || error) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
       const inputUsuario = document.getElementById('usuario');
       inputUsuario.addEventListener('input', function() {
         if (this.value.replace(/\D/g, '').length === 11) {

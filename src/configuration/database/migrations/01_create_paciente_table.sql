@@ -17,5 +17,8 @@ CREATE TABLE paciente (
     nacionalidade VARCHAR(50) DEFAULT 'Brasileira',
     escolaridade VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_verified BOOLEAN DEFAULT FALSE,
+    verification_token VARCHAR(255),
+    token_expires_at TIMESTAMP
 );
