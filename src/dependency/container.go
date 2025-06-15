@@ -28,7 +28,7 @@ func InitContainer(db *sql.DB) *Container {
 	emailService := emailService.NewEmailService()
 	userRepository := userRepository.NewUserRepository(db)
 	userService := userService.NewUserDomainService(userRepository, emailService)
-	userController := userController.NewUserController(userService, emailService)
+	userController := userController.NewUserController(userService)
 
 	medicoRepository := medicoRepository.NewMedicoRepository(db)
 	medicoService := medicoService.NewMedicoService(medicoRepository)
@@ -38,8 +38,11 @@ func InitContainer(db *sql.DB) *Container {
 	fichaService := fichaService.NewFichaService(fichRepository, userRepository)
 	fichaController := fichaController.NewFichaController(fichaService)
 
+<<<<<<< HEAD
 	unidadeService := datasus.NewCNESService()
 	unidadeController := unidadeController.NewUnidadeController(unidadeService)
+=======
+>>>>>>> 39ea0293fdb20b02625eb72f3014a59f434cd31a
 
 	return &Container{
 		UserController: userController,
