@@ -38,11 +38,8 @@ func InitContainer(db *sql.DB) *Container {
 	fichaService := fichaService.NewFichaService(fichRepository, userRepository)
 	fichaController := fichaController.NewFichaController(fichaService)
 
-<<<<<<< HEAD
 	unidadeService := datasus.NewCNESService()
 	unidadeController := unidadeController.NewUnidadeController(unidadeService)
-=======
->>>>>>> 39ea0293fdb20b02625eb72f3014a59f434cd31a
 
 	return &Container{
 		UserController: userController,
