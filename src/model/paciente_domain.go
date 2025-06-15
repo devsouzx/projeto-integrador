@@ -6,6 +6,9 @@ type Paciente struct {
 	BaseUser
 	ID             string    `json:"id" db:"id"`
 	Apelido        string    `json:"apelido" db:"apelido"`
+	NomeCompleto   string    `json:"nome_completo" db:"nome_completo"`
+	Email          string    `json:"email" db:"email"`
+	Senha          string    `json:"-" db:"senha"`
 	NomeMae        string    `json:"mae" db:"nome_mae"`
 	CNS            string    `json:"cns" db:"cns"`
 	CPF            string    `json:"cpf" db:"cpf"`
@@ -49,8 +52,4 @@ func (p *Paciente) GetCPF() string {
 
 func (p *Paciente) GetID() string {
 	return p.ID
-}
-
-func (p *Paciente) GetEmail() string { 
-	return p.Email 
 }

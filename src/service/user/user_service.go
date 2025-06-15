@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
+
 	"github.com/devsouzx/projeto-integrador/src/model/request"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
 	emailService "github.com/devsouzx/projeto-integrador/src/service/email"
@@ -36,8 +37,7 @@ type UserDomainService interface {
 	SendCodeRecoveryService(recoveyRequest request.PasswordRecoveryRequest) error
 	VerifyCode(VerifyCodeRequest request.VerifyCodeRequest) error
 	ResetPassword(resetPasswordRequest request.ResetPasswordRequest) error
-	VerifyUserToken(token string) (model.UserInterface, error)
-	UpdateUser(user model.UserInterface) error
+	CadastrarUsuario(req request.CadastroRequest) (request.CadastroResponse, error)
 }
 
 func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.UserInterface, string, error) {
@@ -95,30 +95,30 @@ func (ud *userDomainService) VerifyCode(verifyCodeRequest request.VerifyCodeRequ
 }
 
 func (ud *userDomainService) ResetPassword(resetPasswordRequest request.ResetPasswordRequest) error {
-    if resetPasswordRequest.NewPassword != resetPasswordRequest.ConfirmPassword {
-        return fmt.Errorf("as senhas não coincidem")
-    }
-	
-    valid, err := ud.userRepository.VerifyRecoveryCode(resetPasswordRequest.Identifier, resetPasswordRequest.Code)
-    if err != nil {
-        return err
-    }
-    
-    if !valid {
-        return fmt.Errorf("código inválido ou expirado")
-    }
-	
-    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(resetPasswordRequest.NewPassword), bcrypt.DefaultCost)
-    if err != nil {
-        return fmt.Errorf("erro ao gerar hash da senha: %w", err)
-    }
-	
-    err = ud.userRepository.UpdatePassword(resetPasswordRequest.Identifier, string(hashedPassword))
-    if err != nil {
-        return err
-    }
-    
-    return nil
+	if resetPasswordRequest.NewPassword != resetPasswordRequest.ConfirmPassword {
+		return fmt.Errorf("as senhas não coincidem")
+	}
+
+	valid, err := ud.userRepository.VerifyRecoveryCode(resetPasswordRequest.Identifier, resetPasswordRequest.Code)
+	if err != nil {
+		return err
+	}
+
+	if !valid {
+		return fmt.Errorf("código inválido ou expirado")
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(resetPasswordRequest.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return fmt.Errorf("erro ao gerar hash da senha: %w", err)
+	}
+
+	err = ud.userRepository.UpdatePassword(resetPasswordRequest.Identifier, string(hashedPassword))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func generateCode(length int) (string, error) {
@@ -136,33 +136,41 @@ func generateCode(length int) (string, error) {
 	return string(code), nil
 }
 
-func (us *userDomainService) VerifyUserToken(token string) (model.UserInterface, error) {
-	user, err := us.userRepository.FindByVerificationToken(token)
-	if err != nil {
-		return nil, errors.New("token inválido")
+func (s *userDomainService) CadastrarUsuario(req request.CadastroRequest) (request.CadastroResponse, error) {
+	if req.Email == "" || req.Senha == "" {
+		return request.CadastroResponse{}, errors.New("dados obrigatórios ausentes")
 	}
 
-    if user.GetTokenExpiresAt().Before(time.Now().UTC()) {
-        return nil, fmt.Errorf("token expirado")
-    }
+	exists, err := s.userRepository.FindUserByIdentifier(req.Email, "paciente")
+	if exists != nil {
+		return request.CadastroResponse{}, errors.New("e-mail já cadastrado")
+	}
 
-	return user, nil
-}
+	usuario := &model.Paciente{
+		NomeCompleto:      req.NomeCompleto,
+		Email:             req.Email,
+		CPF:               req.Cpf,
+		CNS:         req.Cartaosus,
+		NomeMae: req.NomeCompletoDaMae,
+		DataNascimento:  req.DataDeNascimento,
+		Telefone:          req.Telefone,
+	}
 
-func (us *userDomainService) UpdateUser(user model.UserInterface) error {
-    if user.GetID() == "" {
-        return errors.New("ID do usuário é obrigatório")
-    }
-	
-    userExistente, err := us.userRepository.FindByID(user.GetID(), "paciente")
-    if err != nil {
-        return fmt.Errorf("usuário não encontrado: %w", err)
-    }
-	fmt.Println("exsi", userExistente)
-    
-    userExistente.SetVerified(user.IsVerified())
-    userExistente.SetVerifyToken(user.GetVerifyToken())
-    userExistente.SetTokenExpiresAt(user.GetTokenExpiresAt())
+	usuario, err = s.userRepository.CreatePaciente(usuario)
+	if err != nil {
+		return request.CadastroResponse{}, err
+	}
 
-    return us.userRepository.UpdateUser(userExistente)
+	response := &request.CadastroResponse{
+		ID:                usuario.ID,
+		NomeCompleto:      usuario.NomeCompleto,
+		Email:             usuario.Email,
+		Cpf:               usuario.CPF,
+		Cartaosus:         usuario.CNS,
+		NomeCompletoDaMae: usuario.NomeMae,
+		DataDeNascimento:  usuario.DataNascimento,
+		Telefone:          usuario.Telefone,
+	}
+
+	return *response, nil
 }

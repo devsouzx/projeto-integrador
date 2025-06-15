@@ -5,8 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
-
+	
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -18,9 +17,6 @@ type BaseUser struct {
 	Password string `json:"password"`
 	Name     string `json:"name"`
 	Role     string `json:"role"`
-	Verified       bool      `json:"is_verified"`
-	VerifyToken    string    `json:"verify_token"`
-	TokenExpiresAt time.Time `json:"token_expires_at"`
 }
 
 type UserInterface interface {
@@ -32,13 +28,6 @@ type UserInterface interface {
 	SetRole(role string)
 	GetName() string
 	GetID() string
-	IsVerified() bool
-	SetVerified(status bool)
-	GetVerifyToken() string
-	SetVerifyToken(token string)
-	GetTokenExpiresAt() time.Time
-	SetTokenExpiresAt(expiry time.Time)
-	GenerateVerifyToken() (string, error)
 }
 
 func NewUserLoginDomain(
@@ -135,13 +124,6 @@ func VerifyTokenMiddleware(c *gin.Context) {
 		Email: claims["email"].(string),
 		Name:  claims["name"].(string),
 		Role:  claims["role"].(string),
-		Verified: claims["verified"].(bool),
-	}
-	
-	if !user.Verified {
-		c.Redirect(http.StatusFound, "/verify-account")
-		c.Abort()
-		return
 	}
 
 	c.Set("user", user)
@@ -220,52 +202,4 @@ func RedirectToDashboard(c *gin.Context, role string) {
 	default:
 		c.Redirect(http.StatusFound, "/login")
 	}
-}
-
-func (u *BaseUser) IsVerified() bool {
-	return u.Verified
-}
-
-func (u *BaseUser) SetVerified(status bool) {
-	u.Verified = status
-}
-
-func (u *BaseUser) GetVerifyToken() string {
-	return u.VerifyToken
-}
-
-func (u *BaseUser) SetVerifyToken(token string) {
-	u.VerifyToken = token
-}
-
-func (u *BaseUser) GetTokenExpiresAt() time.Time {
-	return u.TokenExpiresAt
-}
-
-func (u *BaseUser) SetTokenExpiresAt(expiry time.Time) {
-	u.TokenExpiresAt = expiry
-}
-
-func (u *BaseUser) GenerateVerifyToken() (string, error) {
-	secret := os.Getenv(JWT_SECRET_KEY)
-
-	expirationTime := time.Now().UTC().Add(1 * time.Hour)
-	
-	claims := jwt.MapClaims{
-		"id":    u.ID,
-		"email": u.Email,
-		"exp":   expirationTime.Unix(),
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := token.SignedString([]byte(secret))
-	if err != nil {
-		return "", err
-	}
-	
-	u.VerifyToken = tokenString
-	u.TokenExpiresAt = expirationTime
-
-	return tokenString, nil
 }
