@@ -22,7 +22,7 @@ type fichaRepository struct {
 type FichaRepositoryInterface interface {
 	Create(ficha *model.FichaCitopatologica) (*model.FichaCitopatologica, error)
 	FindByID(id string) (*model.FichaCitopatologica, error)
-	CreateEndereco(endereco *model.Endereco) error
+	CreateEndereco(endereco *model.Endereco, pacienteId string) error
 	// FindByID(id string) (*model.FichaCitopatologica, error)
 	// FindByPacienteID(pacienteID string) ([]*model.FichaCitopatologica, error)
 	// Update(ficha *model.FichaCitopatologica) error
@@ -66,16 +66,16 @@ func (fr *fichaRepository) FindByID(id string) (*model.FichaCitopatologica, erro
 	return &ficha, nil
 }
 
-func (fr *fichaRepository) CreateEndereco(endereco *model.Endereco) error {
-	if endereco.PacienteID == "" {
+func (fr *fichaRepository) CreateEndereco(endereco *model.Endereco, pacienteId string) error {
+	if pacienteId == "" {
         return fmt.Errorf("ID do paciente é obrigatório")
     }
 
 	err := fr.DB.QueryRow(`INSERT INTO endereco (cep, logradouro, complemento, numero, bairro, cidade, 
-	          uf, referencia, codigo_municipio, paciente_id) 
-	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+	          uf, paciente_id) 
+	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
 	          RETURNING id`, 
-		endereco.CEP, endereco.Logradouro, endereco.Complemento, endereco.Numero, endereco.Bairro, endereco.Municipio, endereco.UF, endereco.Referencia, endereco.CodigoMunicipio, endereco.PacienteID).Scan(&endereco.ID)
+		endereco.CEP, endereco.Logradouro, endereco.Complemento, endereco.Numero, endereco.Bairro, endereco.Cidade, endereco.UF, pacienteId).Scan(&endereco.ID)
 	if err != nil {
 		return fmt.Errorf("erro ao criar dados residenciais: %v", err)
 	}

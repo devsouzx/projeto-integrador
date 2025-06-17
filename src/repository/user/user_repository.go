@@ -38,7 +38,7 @@ type UserRepository interface {
 func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
 	user, err := ur.FindUserByIdentifier(identifier, role)
 	if err != nil {
-		return nil, fmt.Errorf("Erro ao buscar usuario: %s", err)
+		return nil, fmt.Errorf("erro ao buscar usuario: %s", err)
 	}
 
 	// 2a$10$MJsoWkTYzYBR1elzP13y8eR1cfOJ9KO7yXvErBzXPQW8MrnZTWR6q
@@ -292,6 +292,8 @@ func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Pacien
 		paciente.NascimentoTime = nascimento
 	}
 
+	paciente.EncryptPassword()
+
 	query := `
     INSERT INTO paciente (
         email, senha, nome, 
@@ -305,7 +307,7 @@ func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Pacien
 		query,
 		paciente.Email,
 		paciente.Password,
-		paciente.Name,
+		paciente.NomeCompleto,
 		paciente.Apelido,
 		paciente.NomeMae,
 		paciente.CNS,
@@ -320,6 +322,35 @@ func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Pacien
 	if err != nil {
 		return nil, fmt.Errorf("erro ao criar paciente: %v", err)
 	}
+
+	if paciente.Endereco != nil {
+        queryEndereco := `
+        INSERT INTO endereco (
+            cep, logradouro, numero, complemento, 
+            bairro, cidade, uf, paciente_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING id, created_at, updated_at`
+
+        err = r.DB.QueryRow(
+            queryEndereco,
+            paciente.Endereco.CEP,
+            paciente.Endereco.Logradouro,
+            paciente.Endereco.Numero,
+            paciente.Endereco.Complemento,
+            paciente.Endereco.Bairro,
+            paciente.Endereco.Cidade,
+            paciente.Endereco.UF,
+            paciente.ID,
+        ).Scan(
+            &paciente.Endereco.ID,
+            &paciente.Endereco.CreatedAt,
+            &paciente.Endereco.UpdatedAt,
+        )
+
+        if err != nil {
+            return nil, fmt.Errorf("erro ao criar endereço: %v", err)
+        }
+    }
 
 	return paciente, nil
 }

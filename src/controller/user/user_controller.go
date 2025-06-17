@@ -124,26 +124,50 @@ func (uc *userController) Logout(c *gin.Context) {
 
 // cadastro de usuário
 func (uc *userController) CadastrarUsuario(c *gin.Context) {
-	var cadRequest request.CadastroRequest
+    var cadRequest request.CadastroRequest
 
-	if err := c.ShouldBind(&cadRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error":   "Erro ao validar dados do usuário",
-			"details": err.Error(),
-		})
-		return
-	}
-	
-	usuario, err := uc.service.CadastrarUsuario(cadRequest)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error":   "Erro ao cadastar usuario!",
-			"details": err.Error(),
-		})
-		return
-	}
+    if err := c.ShouldBind(&cadRequest); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error":   "Erro ao validar dados do usuário",
+            "details": err.Error(),
+        })
+        return
+    }
 
-	c.JSON(http.StatusCreated, usuario)
+    usuario, err := uc.service.CadastrarUsuario(cadRequest)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "error":   err.Error(),
+            "details": err.Error(),
+        })
+        return
+    }
+
+    response := gin.H{
+        "message": "Usuario cadastrado com sucesso",
+        "data": gin.H{
+            "id":                usuario.ID,
+            "nomecompleto":      usuario.NomeCompleto,
+            "cpf":               usuario.CPF,
+            "cartaosus":         usuario.CNS,
+            "nomecompletodamae": usuario.NomeMae,
+            "datadenascimento":   usuario.DataNascimento,
+            "email":             usuario.Email,
+            "telefone":          usuario.Telefone,
+        },
+    }
+
+    if usuario.Endereco != nil {
+        response["data"].(gin.H)["endereco"] = gin.H{
+            "cep":         usuario.Endereco.CEP,
+            "logradouro":  usuario.Endereco.Logradouro,
+            "numero":      usuario.Endereco.Numero,
+            "complemento": usuario.Endereco.Complemento,
+            "bairro":      usuario.Endereco.Bairro,
+            "cidade":      usuario.Endereco.Cidade,
+            "uf":          usuario.Endereco.UF,
+        }
+    }
+
+    c.JSON(http.StatusCreated, response)
 }
-
-//cadastro de usuário

@@ -37,7 +37,7 @@ type UserDomainService interface {
 	SendCodeRecoveryService(recoveyRequest request.PasswordRecoveryRequest) error
 	VerifyCode(VerifyCodeRequest request.VerifyCodeRequest) error
 	ResetPassword(resetPasswordRequest request.ResetPasswordRequest) error
-	CadastrarUsuario(req request.CadastroRequest) (request.CadastroResponse, error)
+	CadastrarUsuario(req request.CadastroRequest) (*model.Paciente, error)
 }
 
 func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.UserInterface, string, error) {
@@ -136,41 +136,48 @@ func generateCode(length int) (string, error) {
 	return string(code), nil
 }
 
-func (s *userDomainService) CadastrarUsuario(req request.CadastroRequest) (request.CadastroResponse, error) {
-	if req.Email == "" || req.Senha == "" {
-		return request.CadastroResponse{}, errors.New("dados obrigatórios ausentes")
-	}
+func (s *userDomainService) CadastrarUsuario(req request.CadastroRequest) (*model.Paciente, error) {
+	if req.Email == "" || req.Senha == "" || req.Cpf == "" || req.Cartaosus == "" {
+        return nil, errors.New("todos os campos obrigatórios devem ser preenchidos")
+    }
 
-	exists, err := s.userRepository.FindUserByIdentifier(req.Email, "paciente")
+	exists, _ := s.userRepository.FindUserByIdentifier(req.Email, "paciente")
 	if exists != nil {
-		return request.CadastroResponse{}, errors.New("e-mail já cadastrado")
+		return nil, errors.New("e-mail já cadastrado")
+	}
+	exists, _ = s.userRepository.FindUserByIdentifier(req.Cpf, "paciente")
+	if exists != nil {
+		return nil, errors.New("cpf já cadastrado")
 	}
 
 	usuario := &model.Paciente{
-		NomeCompleto:      req.NomeCompleto,
-		Email:             req.Email,
-		CPF:               req.Cpf,
-		CNS:         req.Cartaosus,
-		NomeMae: req.NomeCompletoDaMae,
-		DataNascimento:  req.DataDeNascimento,
-		Telefone:          req.Telefone,
-	}
+        NomeCompleto:      req.NomeCompleto,
+        Email:             req.Email,
+        CPF:              req.Cpf,
+        CNS:              req.Cartaosus,
+        NomeMae:          req.NomeCompletoDaMae,
+        DataNascimento:   req.DataDeNascimento,
+        Telefone:         req.Telefone,
+        Senha:         req.Senha,
+    }
 
-	usuario, err = s.userRepository.CreatePaciente(usuario)
-	if err != nil {
-		return request.CadastroResponse{}, err
-	}
+	if req.Endereco.Cep != "" || req.Endereco.Logradouro != "" || req.Endereco.Numero != "" {
+        usuario.Endereco = &model.Endereco{
+            CEP:         req.Endereco.Cep,
+            Logradouro:  req.Endereco.Logradouro,
+            Numero:      req.Endereco.Numero,
+            Complemento: req.Endereco.Complemento,
+            Bairro:      req.Endereco.Bairro,
+            Cidade:      req.Endereco.Cidade,
+            UF:          req.Endereco.Uf,
+        }
+    }
 
-	response := &request.CadastroResponse{
-		ID:                usuario.ID,
-		NomeCompleto:      usuario.NomeCompleto,
-		Email:             usuario.Email,
-		Cpf:               usuario.CPF,
-		Cartaosus:         usuario.CNS,
-		NomeCompletoDaMae: usuario.NomeMae,
-		DataDeNascimento:  usuario.DataNascimento,
-		Telefone:          usuario.Telefone,
-	}
+	usuario, err := s.userRepository.CreatePaciente(usuario)
+	fmt.Println("name", usuario.GetName())
+    if err != nil {
+        return nil, fmt.Errorf("erro ao cadastrar paciente: %w", err)
+    }
 
-	return *response, nil
+    return usuario, nil
 }

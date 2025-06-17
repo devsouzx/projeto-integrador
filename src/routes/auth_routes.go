@@ -38,6 +38,7 @@ func InitAuthRoutes(rg *gin.RouterGroup, userController userController.UserContr
 		auth.GET("/cadastro", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "cadastro-paciente.html", nil)
 		})
+		auth.POST("/cadastro", userController.CadastrarUsuario)
 
 		auth.GET("/recuperar-senha", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "recuperar-senha.html", nil)

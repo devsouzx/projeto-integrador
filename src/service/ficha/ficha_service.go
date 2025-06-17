@@ -39,8 +39,8 @@ func (fs *fichaService) CreateFicha(request *model.FichaRequest) (*model.FichaCi
 		}
 	}
 
-	request.DadosResidenciais.PacienteID = paciente.GetID()
-	err = fs.fichaRepository.CreateEndereco(&request.DadosResidenciais)
+	pacienteId := paciente.GetID()
+	err = fs.fichaRepository.CreateEndereco(&request.DadosResidenciais, pacienteId)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao criar dados residenciais: %v", err)
 	}
