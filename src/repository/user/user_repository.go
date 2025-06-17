@@ -33,6 +33,9 @@ type UserRepository interface {
 	UpdatePassword(identifier string, newPassword string) error
 	FindUserByIdentifier(identifier string, role string) (model.UserInterface, error)
 	CreatePaciente(paciente *model.Paciente) (*model.Paciente, error)
+	FindByVerificationToken(token string) (model.UserInterface, error)
+	UpdateUser(user model.UserInterface) error
+	FindByID(id string, role string) (model.UserInterface, error)
 }
 
 func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
@@ -156,9 +159,9 @@ func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (
 	switch role {
 	case "paciente":
 		query = `
-			SELECT id, email, senha, nomecompleto, cpf
+			SELECT id, email, senha, nome, cpf, is_verified
 			FROM paciente
-			WHERE email = $2 OR cpf = $3
+			WHERE email = $1 OR cpf = $2
 		`
 		var paciente model.Paciente
 
@@ -168,6 +171,7 @@ func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (
 			&paciente.Password,
 			&paciente.Name,
 			&paciente.CPF,
+			&paciente.Verified,
 		)
 		if err != nil {
 			if err == sql.ErrNoRows {
@@ -307,7 +311,7 @@ func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Pacien
 		query,
 		paciente.Email,
 		paciente.Password,
-		paciente.NomeCompleto,
+		paciente.Name,
 		paciente.Apelido,
 		paciente.NomeMae,
 		paciente.CNS,
@@ -354,3 +358,73 @@ func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Pacien
 
 	return paciente, nil
 }
+
+func (ur *userRepository) FindByID(id string, role string) (model.UserInterface, error) {
+	var paciente model.Paciente
+	err := ur.DB.QueryRow(`
+            SELECT id, email, senha, nome
+            FROM paciente 
+            WHERE id = $1
+        `, id).Scan(
+		&paciente.ID,
+		&paciente.Email,
+		&paciente.Password,
+		&paciente.Name,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("paciente não encontrado")
+		}
+		return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
+	}
+	
+	return &paciente, nil
+}
+
+func (ur *userRepository) FindByVerificationToken(token string) (model.UserInterface, error) {
+	var user model.BaseUser
+    err := ur.DB.QueryRow(`
+        SELECT id, email, nome, is_verified, verification_token, token_expires_at AT TIME ZONE 'UTC'
+        FROM paciente 
+        WHERE verification_token = $1
+    `, token).Scan(
+        &user.ID,
+        &user.Email,
+        &user.Name,
+        &user.Verified,
+        &user.VerifyToken,
+        &user.TokenExpiresAt,
+    )
+
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return nil, fmt.Errorf("token não encontrado")
+        }
+        return nil, fmt.Errorf("erro ao buscar usuário: %w", err)
+    }
+
+    return &user, nil
+}
+
+func (ur *userRepository) UpdateUser(user model.UserInterface) error {
+	_, err := ur.DB.Exec(`
+        UPDATE paciente SET
+            is_verified = $1,
+            verification_token = $2,
+            token_expires_at = $3,
+            updated_at = NOW()
+        WHERE id = $4
+    `,
+		user.IsVerified(),
+		user.GetVerifyToken(),
+		user.GetTokenExpiresAt(),
+		user.GetID(),
+	)
+	if err != nil {
+		return fmt.Errorf("erro ao atualizar usuário: %w", err)
+	}
+
+	return nil
+}
+

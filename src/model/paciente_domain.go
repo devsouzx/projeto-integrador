@@ -6,9 +6,6 @@ type Paciente struct {
 	BaseUser
 	ID             string    `json:"id" db:"id"`
 	Apelido        string    `json:"apelido" db:"apelido"`
-	NomeCompleto   string    `json:"nome_completo" db:"nome"`
-	Email          string    `json:"email" db:"email"`
-	Senha          string    `json:"-" db:"senha"`
 	NomeMae        string    `json:"mae" db:"nome_mae"`
 	CNS            string    `json:"cns" db:"cns"`
 	CPF            string    `json:"cpf" db:"cpf"`
@@ -17,7 +14,7 @@ type Paciente struct {
 	Nacionalidade  string    `json:"nacionalidade" db:"nacionalidade"`
 	RacaCor        string    `json:"cor" db:"raca_cor"`
 	Escolaridade   string    `json:"escolaridade" db:"escolaridade"`
-	Endereco       *Endereco `json:"endereco,omitempty"`
+	Endereco       *Endereco  `json:"endereco"`
 	Telefone       string    `json:"telefone" db:"telefone"`
 	CreatedAt      time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at" db:"updated_at"`
@@ -52,4 +49,8 @@ func (p *Paciente) GetCPF() string {
 
 func (p *Paciente) GetID() string {
 	return p.ID
+}
+
+func (p *Paciente) GetEmail() string { 
+	return p.Email 
 }

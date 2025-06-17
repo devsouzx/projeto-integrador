@@ -4,22 +4,27 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/model/request"
+	"github.com/devsouzx/projeto-integrador/src/service/email"
 	userService "github.com/devsouzx/projeto-integrador/src/service/user"
 	"github.com/gin-gonic/gin"
 )
 
 func NewUserController(
 	userService userService.UserDomainService,
+	emailService email.EmailService,
 ) UserController {
 	return &userController{
-		service: userService,
+		service:      userService,
+		emailService: emailService,
 	}
 }
 
 type userController struct {
-	service userService.UserDomainService
+	service      userService.UserDomainService
+	emailService email.EmailService
 }
 
 type UserController interface {
@@ -29,6 +34,7 @@ type UserController interface {
 	ResetPassword(c *gin.Context)
 	Logout(c *gin.Context)
 	CadastrarUsuario(c *gin.Context) //cadastro de usuário
+	VerifyAccount(c *gin.Context)
 }
 
 func (uc *userController) LoginUser(c *gin.Context) {
@@ -47,6 +53,39 @@ func (uc *userController) LoginUser(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error":   "Login/senha invalidos!",
 			"details": err.Error(),
+		})
+		return
+	}
+
+	if !user.IsVerified() {
+		if user.GetVerifyToken() != "" && user.GetTokenExpiresAt().Before(time.Now().UTC()) {
+			newToken, err := user.GenerateVerifyToken()
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao gerar token"})
+				return
+			}
+
+			if err := uc.service.UpdateUser(user); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao atualizar usuário"})
+				return
+			}
+
+			verificationLink := fmt.Sprintf("https://localhost:8080/verify?token=%s", newToken)
+			if err := uc.emailService.SendVerificationEmail(user.GetEmail(), user.GetName(), verificationLink, newToken); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao enviar email"})
+				return
+			}
+
+			c.JSON(http.StatusForbidden, gin.H{
+				"error": "Seu link de verificação expirou. Enviamos um novo email para ativação",
+				"code":  "new_verification_sent",
+			})
+			return
+		}
+
+		c.JSON(http.StatusForbidden, gin.H{
+			"error": "Conta não verificada. Por favor, verifique seu email",
+			"code":  "account_not_verified",
 		})
 		return
 	}
@@ -124,50 +163,92 @@ func (uc *userController) Logout(c *gin.Context) {
 
 // cadastro de usuário
 func (uc *userController) CadastrarUsuario(c *gin.Context) {
-    var cadRequest request.CadastroRequest
+	var cadRequest request.CadastroRequest
 
-    if err := c.ShouldBind(&cadRequest); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{
-            "error":   "Erro ao validar dados do usuário",
-            "details": err.Error(),
-        })
-        return
-    }
+	if err := c.ShouldBind(&cadRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Erro ao validar dados do usuário",
+			"details": err.Error(),
+		})
+		return
+	}
 
-    usuario, err := uc.service.CadastrarUsuario(cadRequest)
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error":   err.Error(),
-            "details": err.Error(),
-        })
-        return
-    }
+	usuario, err := uc.service.CadastrarUsuario(cadRequest)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":   err.Error(),
+			"details": err.Error(),
+		})
+		return
+	}
 
-    response := gin.H{
-        "message": "Usuario cadastrado com sucesso",
-        "data": gin.H{
-            "id":                usuario.ID,
-            "nomecompleto":      usuario.NomeCompleto,
-            "cpf":               usuario.CPF,
-            "cartaosus":         usuario.CNS,
-            "nomecompletodamae": usuario.NomeMae,
-            "datadenascimento":   usuario.DataNascimento,
-            "email":             usuario.Email,
-            "telefone":          usuario.Telefone,
-        },
-    }
+	newToken, err := usuario.GenerateVerifyToken()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao gerar token"})
+		return
+	}
 
-    if usuario.Endereco != nil {
-        response["data"].(gin.H)["endereco"] = gin.H{
-            "cep":         usuario.Endereco.CEP,
-            "logradouro":  usuario.Endereco.Logradouro,
-            "numero":      usuario.Endereco.Numero,
-            "complemento": usuario.Endereco.Complemento,
-            "bairro":      usuario.Endereco.Bairro,
-            "cidade":      usuario.Endereco.Cidade,
-            "uf":          usuario.Endereco.UF,
-        }
-    }
+	if err := uc.service.UpdateUser(usuario); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao atualizar usuário"})
+		return
+	}
 
-    c.JSON(http.StatusCreated, response)
+	verificationLink := fmt.Sprintf("http://localhost:8080/verify?token=%s", newToken)
+	if err := uc.emailService.SendVerificationEmail(usuario.GetEmail(), usuario.GetName(), verificationLink, newToken); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao enviar email"})
+		return
+	}
+
+	response := gin.H{
+		"message": "Usuario cadastrado com sucesso",
+		"data": gin.H{
+			"id":                usuario.ID,
+			"nomecompleto":      usuario.Name,
+			"cpf":               usuario.CPF,
+			"cartaosus":         usuario.CNS,
+			"nomecompletodamae": usuario.NomeMae,
+			"datadenascimento":  usuario.DataNascimento,
+			"email":             usuario.Email,
+			"telefone":          usuario.Telefone,
+		},
+	}
+
+	if usuario.Endereco != nil {
+		response["data"].(gin.H)["endereco"] = gin.H{
+			"cep":         usuario.Endereco.CEP,
+			"logradouro":  usuario.Endereco.Logradouro,
+			"numero":      usuario.Endereco.Numero,
+			"complemento": usuario.Endereco.Complemento,
+			"bairro":      usuario.Endereco.Bairro,
+			"cidade":      usuario.Endereco.Cidade,
+			"uf":          usuario.Endereco.UF,
+		}
+	}
+
+	c.JSON(http.StatusCreated, response)
+}
+
+func (uc *userController) VerifyAccount(c *gin.Context) {
+	token := c.Query("token")
+	if token == "" {
+		c.Redirect(http.StatusFound, "/login?error=token_required")
+		return
+	}
+
+	user, err := uc.service.VerifyUserToken(token)
+	if err != nil {
+		c.Redirect(http.StatusFound, "/login?error=invalid_token")
+		return
+	}
+
+	user.SetVerified(true)
+	user.SetVerifyToken("")
+	user.SetTokenExpiresAt(time.Time{})
+
+	if err := uc.service.UpdateUser(user); err != nil {
+		c.Redirect(http.StatusFound, "/login?error=verification_failed")
+		return
+	}
+
+	c.Redirect(http.StatusFound, "/login?verified=true")
 }

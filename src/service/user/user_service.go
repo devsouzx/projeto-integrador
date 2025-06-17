@@ -38,6 +38,8 @@ type UserDomainService interface {
 	VerifyCode(VerifyCodeRequest request.VerifyCodeRequest) error
 	ResetPassword(resetPasswordRequest request.ResetPasswordRequest) error
 	CadastrarUsuario(req request.CadastroRequest) (*model.Paciente, error)
+	VerifyUserToken(token string) (model.UserInterface, error)
+	UpdateUser(user model.UserInterface) error
 }
 
 func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.UserInterface, string, error) {
@@ -138,8 +140,8 @@ func generateCode(length int) (string, error) {
 
 func (s *userDomainService) CadastrarUsuario(req request.CadastroRequest) (*model.Paciente, error) {
 	if req.Email == "" || req.Senha == "" || req.Cpf == "" || req.Cartaosus == "" {
-        return nil, errors.New("todos os campos obrigatórios devem ser preenchidos")
-    }
+		return nil, errors.New("todos os campos obrigatórios devem ser preenchidos")
+	}
 
 	exists, _ := s.userRepository.FindUserByIdentifier(req.Email, "paciente")
 	if exists != nil {
@@ -151,33 +153,64 @@ func (s *userDomainService) CadastrarUsuario(req request.CadastroRequest) (*mode
 	}
 
 	usuario := &model.Paciente{
-        NomeCompleto:      req.NomeCompleto,
-        Email:             req.Email,
-        CPF:              req.Cpf,
-        CNS:              req.Cartaosus,
-        NomeMae:          req.NomeCompletoDaMae,
-        DataNascimento:   req.DataDeNascimento,
-        Telefone:         req.Telefone,
-        Senha:         req.Senha,
-    }
+		BaseUser: model.BaseUser{
+			Email:    req.Email,
+			Password: req.Senha,
+			Name:     req.NomeCompleto,
+		},
+		CPF:            req.Cpf,
+		CNS:            req.Cartaosus,
+		NomeMae:        req.NomeCompletoDaMae,
+		DataNascimento: req.DataDeNascimento,
+		Telefone:       req.Telefone,
+	}
 
 	if req.Endereco.Cep != "" || req.Endereco.Logradouro != "" || req.Endereco.Numero != "" {
-        usuario.Endereco = &model.Endereco{
-            CEP:         req.Endereco.Cep,
-            Logradouro:  req.Endereco.Logradouro,
-            Numero:      req.Endereco.Numero,
-            Complemento: req.Endereco.Complemento,
-            Bairro:      req.Endereco.Bairro,
-            Cidade:      req.Endereco.Cidade,
-            UF:          req.Endereco.Uf,
-        }
-    }
+		usuario.Endereco = &model.Endereco{
+			CEP:         req.Endereco.Cep,
+			Logradouro:  req.Endereco.Logradouro,
+			Numero:      req.Endereco.Numero,
+			Complemento: req.Endereco.Complemento,
+			Bairro:      req.Endereco.Bairro,
+			Cidade:      req.Endereco.Cidade,
+			UF:          req.Endereco.Uf,
+		}
+	}
 
 	usuario, err := s.userRepository.CreatePaciente(usuario)
-	fmt.Println("name", usuario.GetName())
-    if err != nil {
-        return nil, fmt.Errorf("erro ao cadastrar paciente: %w", err)
-    }
+	if err != nil {
+		return nil, fmt.Errorf("erro ao cadastrar paciente: %w", err)
+	}
 
-    return usuario, nil
+	return usuario, nil
+}
+
+func (us *userDomainService) VerifyUserToken(token string) (model.UserInterface, error) {
+	user, err := us.userRepository.FindByVerificationToken(token)
+	if err != nil {
+		return nil, errors.New("token inválido")
+	}
+
+	if user.GetTokenExpiresAt().Before(time.Now().UTC()) {
+		return nil, fmt.Errorf("token expirado")
+	}
+
+	return user, nil
+}
+
+func (us *userDomainService) UpdateUser(user model.UserInterface) error {
+	if user.GetID() == "" {
+		return errors.New("ID do usuário é obrigatório")
+	}
+
+	userExistente, err := us.userRepository.FindByID(user.GetID(), "paciente")
+	if err != nil {
+		return fmt.Errorf("usuário não encontrado: %w", err)
+	}
+
+	userExistente.SetVerified(user.IsVerified())
+	userExistente.SetVerifyToken(user.GetVerifyToken())
+	userExistente.SetTokenExpiresAt(user.GetTokenExpiresAt())
+
+	return us.userRepository.UpdateUser(userExistente)
 }
