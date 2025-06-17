@@ -48,16 +48,17 @@ func (uc *userController) LoginUser(c *gin.Context) {
 		return
 	}
 
+	fmt.Println("req", userRequest)
 	user, token, err := uc.service.LoginUserService(userRequest)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error":   "Login/senha invalidos!",
+			"error":   err.Error(),
 			"details": err.Error(),
 		})
 		return
 	}
 
-	if !user.IsVerified() {
+	if user.GetRole() == "paciente" && !user.IsVerified() {
 		if user.GetVerifyToken() != "" && user.GetTokenExpiresAt().Before(time.Now().UTC()) {
 			newToken, err := user.GenerateVerifyToken()
 			if err != nil {

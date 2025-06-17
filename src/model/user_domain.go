@@ -89,7 +89,7 @@ func (u *BaseUser) GenerateToken() (string, error) {
 		"email": u.Email,
 		"name":  u.Name,
 		"role":  u.Role,
-		"verified": u.Verified,
+		"verified": u.Role == "paciente" && u.Verified,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -139,8 +139,8 @@ func VerifyTokenMiddleware(c *gin.Context) {
 		Verified: claims["verified"].(bool),
 	}
 
-	if !user.Verified {
-		c.Redirect(http.StatusFound, "/verify-account")
+	if user.Role == "paciente" && !user.Verified {
+		c.Redirect(http.StatusFound, "/login")
 		c.Abort()
 		return
 	}
