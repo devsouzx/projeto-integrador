@@ -16,5 +16,5 @@ VALUES (
   '12345GO',
   'Ginecologista',
   crypt('@Teste123', gen_salt('bf')),
-  (SELECT id FROM unidade_saude WHERE cnes = '1234567')
+  5915120
 );

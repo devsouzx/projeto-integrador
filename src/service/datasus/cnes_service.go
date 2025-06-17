@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -53,10 +55,34 @@ type Municipio struct {
 
 type ResponseAPI struct {
 	Estabelecimentos []UnidadeSaude `json:"estabelecimentos"`
+	Total            int            `json:"total"`
 }
 
-func (s *CNESService) BuscarUnidadesPorMunicipio(codigoIBGE string) ([]UnidadeSaude, error) {
-    url := fmt.Sprintf("%sestabelecimentos?codigo_municipio=%s&status=2&limit=100000&offset=0", s.BaseURL, codigoIBGE)
+func (s *CNESService) BuscarUnidadesPorMunicipio(codigoIBGE string, limit, offset int) ([]UnidadeSaude, int, error) {
+    url := fmt.Sprintf("%sestabelecimentos?codigo_municipio=%s&codigo_tipo_unidade=2&limit=%d&offset=%d", 
+        s.BaseURL, codigoIBGE, limit, offset)
+    
+    resp, err := s.Client.Get(url)
+    if err != nil {
+        return nil, 0, fmt.Errorf("erro na requisição: %v", err)
+    }
+    defer resp.Body.Close()
+
+    body, err := io.ReadAll(resp.Body)
+    if err != nil {
+        return nil, 0, fmt.Errorf("erro ao ler resposta: %v", err)
+    }
+
+    var apiResponse ResponseAPI
+    if err := json.Unmarshal(body, &apiResponse); err != nil {
+        return nil, 0, fmt.Errorf("erro ao decodificar JSON: %v", err)
+    }
+
+    return apiResponse.Estabelecimentos, apiResponse.Total, nil
+}
+
+func (s *CNESService) BuscarUnidadePorCNES(codigoCNES int) (*UnidadeSaude, error) {
+    url := fmt.Sprintf("%sestabelecimentos/%d", s.BaseURL, codigoCNES)
     
     resp, err := s.Client.Get(url)
     if err != nil {
@@ -64,18 +90,77 @@ func (s *CNESService) BuscarUnidadesPorMunicipio(codigoIBGE string) ([]UnidadeSa
     }
     defer resp.Body.Close()
 
+    if resp.StatusCode == http.StatusNotFound {
+        return nil, fmt.Errorf("unidade com CNES %d não encontrada", codigoCNES)
+    }
+
     body, err := io.ReadAll(resp.Body)
     if err != nil {
         return nil, fmt.Errorf("erro ao ler resposta: %v", err)
     }
 
-    // Debug: logue a resposta bruta
-    fmt.Printf("Resposta da API: %s\n", string(body))
-
-    var apiResponse ResponseAPI
-    if err := json.Unmarshal(body, &apiResponse); err != nil {
+    var unidade UnidadeSaude
+    if err := json.Unmarshal(body, &unidade); err != nil {
         return nil, fmt.Errorf("erro ao decodificar JSON: %v", err)
     }
 
-    return apiResponse.Estabelecimentos, nil
+    return &unidade, nil
+}
+
+func (s *CNESService) BuscarUnidadeMaisProxima(codigoIBGE string, lat, long float64) (*UnidadeSaude, error) {
+    codigoMunicipio, err := strconv.Atoi(codigoIBGE)
+    if err != nil {
+        return nil, fmt.Errorf("código IBGE inválido: %v", err)
+    }
+
+    const pageSize = 100
+    var unidadesValidas []UnidadeSaude
+	
+    for offset := 0; ; offset += pageSize {
+        unidades, total, err := s.BuscarUnidadesPorMunicipio(codigoIBGE, pageSize, offset)
+        if err != nil {
+            return nil, fmt.Errorf("erro ao buscar unidades: %v", err)
+        }
+		
+        for _, u := range unidades {
+            if u.CodigoMunicipio == codigoMunicipio && u.Latitude != 0 && u.Longitude != 0 {
+                unidadesValidas = append(unidadesValidas, u)
+            }
+        }
+        
+        if offset+pageSize >= total {
+            break
+        }
+    }
+
+    if len(unidadesValidas) == 0 {
+        return nil, fmt.Errorf("nenhuma unidade válida encontrada para o município %s", codigoIBGE)
+    }
+	
+    var maisProxima *UnidadeSaude
+    menorDistancia := math.MaxFloat64
+
+    for i, u := range unidadesValidas {
+        dist := calcularDistancia(lat, long, u.Latitude, u.Longitude)
+        if dist < menorDistancia {
+            menorDistancia = dist
+            maisProxima = &unidadesValidas[i]
+        }
+    }
+
+    return maisProxima, nil
+}
+
+func calcularDistancia(lat1, lon1, lat2, lon2 float64) float64 {
+    const R = 6371.0
+	
+    dLat := (lat2 - lat1) * math.Pi / 180
+    dLon := (lon2 - lon1) * math.Pi / 180
+	
+    a := math.Sin(dLat/2)*math.Sin(dLat/2) +
+        math.Cos(lat1*math.Pi/180)*math.Cos(lat2*math.Pi/180)*
+            math.Sin(dLon/2)*math.Sin(dLon/2)
+    c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+
+    return R * c
 }

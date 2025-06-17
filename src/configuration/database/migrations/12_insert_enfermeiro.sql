@@ -14,5 +14,5 @@ VALUES (
     '62999994444',
     'GO123456',
     crypt('@Teste123', gen_salt('bf')),
-    (SELECT id FROM unidade_saude WHERE cnes = '1234567')
+    5915120
 );

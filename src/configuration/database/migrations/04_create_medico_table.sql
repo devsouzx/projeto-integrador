@@ -11,10 +11,5 @@ CREATE TABLE medico (
     crm VARCHAR(15) NOT NULL,
     especialidade VARCHAR(50),
     senha VARCHAR(255) NOT NULL,
-    unidade_saude_id UUID,
-
-    CONSTRAINT fk_medico_unidade
-        FOREIGN KEY (unidade_saude_id)
-        REFERENCES unidade_saude(id)
-        ON DELETE SET NULL
+    unidade_saude_id INTEGER
 );

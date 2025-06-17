@@ -12,5 +12,5 @@ VALUES (
     '62989990000',
     'agente@ufg.br',
     crypt('@Teste123', gen_salt('bf')),
-    (SELECT id FROM unidade_saude WHERE cnes = '1234567')
+    5915120
 );

@@ -10,10 +10,5 @@ CREATE TABLE enfermeiro (
     telefone VARCHAR(20) NOT NULL,
     coren VARCHAR(20) NOT NULL,
     senha VARCHAR(255) NOT NULL,
-    unidade_saude_id UUID,
-
-    CONSTRAINT fk_enfermeiro_unidade
-        FOREIGN KEY (unidade_saude_id)
-        REFERENCES unidade_saude(id)
-        ON DELETE SET NULL
+    unidade_saude_id INTEGER
 );

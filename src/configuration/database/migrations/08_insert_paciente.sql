@@ -10,7 +10,8 @@ INSERT INTO paciente (
     apelido,
     raca,
     nacionalidade,
-    escolaridade
+    escolaridade, 
+    is_verified
 ) VALUES (
     '12345678901',
     'Paciente Teste',
@@ -23,5 +24,6 @@ INSERT INTO paciente (
     'PaciTest',
     'Pardo',
     'Brasileiro',
-    'Ensino Superior Incompleto'
+    'Ensino Superior Incompleto',
+    true
 );
