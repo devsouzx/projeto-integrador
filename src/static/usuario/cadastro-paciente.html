@@ -319,12 +319,15 @@
       display: none;
     }
     
-    .grupo-formulario.erro .controle-formulario {
-      border-color: #e74c3c;
-    }
-    
     .grupo-formulario.erro .mensagem-erro {
-      display: block;
+      display: block !important;
+      color: #e74c3c;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .grupo-formulario.erro .controle-formulario {
+      border-color: #e74c3c !important;
     }
     
     .grupo-formulario.sucesso .controle-formulario {
@@ -489,7 +492,7 @@
     </div>
     
     <div class="corpo-cadastro">
-      <form id="formularioCadastro" onsubmit="return validarFormulario()">
+      <form id="formularioCadastro">
         <!-- PASSO 1 - DADOS PESSOAIS -->
         <div class="passo-formulario ativo" id="form-passo1">
           <div class="linha-formulario">
@@ -743,7 +746,7 @@
           
           <div class="botoes-navegacao">
             <button type="button" class="botao botao-secundario" onclick="avancarParaPasso(2)">Voltar</button>
-            <button type="submit" class="botao botao-primario" onclick="alert('Cadastro realizado com sucesso!')">Confirmar Cadastro</button>
+            <button type="submit" class="botao botao-primario" onclick="enviarFormulario()">Confirmar Cadastro</button>
           </div>
           
           <div class="rodape-cadastro">
@@ -755,13 +758,229 @@
   </div>
 
   <script>
+    const API_URL = 'http://localhost:8080';
+    
+    // Função para formatar CPF
+    function formatarCPF(cpf) {
+      cpf = cpf.replace(/\D/g, '');
+      if (cpf.length > 11) cpf = cpf.substring(0, 11);
+      
+      if (cpf.length > 9) {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      } else if (cpf.length > 6) {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
+      } else if (cpf.length > 3) {
+        cpf = cpf.replace(/(\d{3})(\d{3})/, '$1.$2');
+      }
+      
+      return cpf;
+    }
+    
+    // Função para formatar telefone
+    function formatarTelefone(telefone) {
+      telefone = telefone.replace(/\D/g, '');
+      if (telefone.length > 11) telefone = telefone.substring(0, 11);
+      
+      if (telefone.length > 10) {
+        telefone = telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+      } else if (telefone.length > 6) {
+        telefone = telefone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+      } else if (telefone.length > 2) {
+        telefone = telefone.replace(/(\d{2})(\d{4})/, '($1) $2');
+      }
+      
+      return telefone;
+    }
+    
+    // Função para validar CPF
+    function validarCPF(cpf) {
+      cpf = cpf.replace(/\D/g, '');
+      
+      if (cpf.length !== 11) return false;
+      
+      // Verifica se todos os dígitos são iguais
+      if (/^(\d)\1{10}$/.test(cpf)) return false;
+      
+      // Validação dos dígitos verificadores
+      let soma = 0;
+      for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.charAt(9))) return false;
+      
+      soma = 0;
+      for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.charAt(10))) return false;
+      
+      return true;
+    }
+    
+    // Função para validar CNS (Cartão SUS)
+    function validarCNS(cns) {
+      cns = cns.replace(/\D/g, '');
+      
+      if (cns.length !== 15) return false;
+      
+      // Validação para CNS iniciados com 1 ou 2
+      if (/^[12]/.test(cns)) {
+        let soma = 0;
+        for (let i = 0; i < 15; i++) {
+          soma += parseInt(cns.charAt(i)) * (15 - i);
+        }
+        return soma % 11 === 0;
+      }
+      
+      // Validação para CNS iniciados com 7, 8 ou 9
+      if (/^[789]/.test(cns)) {
+        let soma = 0;
+        for (let i = 0; i < 15; i++) {
+          soma += parseInt(cns.charAt(i)) * (15 - i);
+        }
+        return soma % 11 === 0;
+      }
+      
+      return false;
+    }
+    
+    // Função para validar senha
+    function validarSenha(senha) {
+      // Mínimo 8 caracteres, 1 letra maiúscula, 1 número e 1 caractere especial
+      const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+      return regex.test(senha);
+    }
+    
+    // Função para validar e-mail
+    function validarEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+    
+    // Função para validar data de nascimento
+    function validarDataNascimento(data) {
+      if (!data) return false;
+      
+      const hoje = new Date();
+      const nascimento = new Date(data);
+      const idade = hoje.getFullYear() - nascimento.getFullYear();
+      
+      // Ajuste para meses/dias
+      const mesAtual = hoje.getMonth();
+      const mesNascimento = nascimento.getMonth();
+      if (mesNascimento > mesAtual || 
+          (mesNascimento === mesAtual && hoje.getDate() < nascimento.getDate())) {
+        idade--;
+      }
+      
+      return idade >= 0 && idade <= 120;
+    }
+    
+    // Função para validar formulário
+    function validarPasso(passo) {
+      let valido = true;
+      
+      if (passo === 1) {
+        const campos = [
+          { id: 'nome', mensagem: 'Por favor, insira seu nome completo' },
+          { id: 'cpf', validador: validarCPF, mensagem: 'CPF inválido' },
+          { id: 'sus', validador: validarCNS, mensagem: 'Cartão SUS inválido' },
+          { id: 'dataNascimento', validador: validarDataNascimento, mensagem: 'Data de nascimento inválida' },
+          { id: 'nomeMae', mensagem: 'Por favor, insira o nome da mãe' },
+          { id: 'email', validador: validarEmail, mensagem: 'E-mail inválido' },
+          { id: 'telefone', mensagem: 'Telefone inválido' },
+          { id: 'senha', validador: validarSenha, mensagem: 'Senha muito fraca' },
+          { id: 'confirmarSenha', comparador: 'senha', mensagem: 'As senhas não coincidem' }
+        ];
+
+        campos.forEach(campo => {
+          const elemento = document.getElementById(campo.id);
+          const grupo = elemento.closest('.grupo-formulario');
+          const valor = elemento.value.trim();
+          
+          // Validar campo vazio
+          if (!valor && !campo.validador) {
+            grupo.classList.add('erro');
+            grupo.querySelector('.mensagem-erro').textContent = campo.mensagem;
+            valido = false;
+            return;
+          }
+          
+          // Validar com função específica
+          if (campo.validador && !campo.validador(valor)) {
+            grupo.classList.add('erro');
+            grupo.querySelector('.mensagem-erro').textContent = campo.mensagem;
+            valido = false;
+            return;
+          }
+          
+          // Validar comparação (senhas)
+          if (campo.comparador) {
+            const compararCom = document.getElementById(campo.comparador).value;
+            if (valor !== compararCom) {
+              grupo.classList.add('erro');
+              grupo.querySelector('.mensagem-erro').textContent = campo.mensagem;
+              valido = false;
+              return;
+            }
+          }
+          
+          // Se passou em todas as validações
+          grupo.classList.remove('erro');
+        });
+
+        // Validar termos
+        const termos = document.getElementById('termos');
+        const grupoTermos = termos.closest('.grupo-formulario');
+        if (!termos.checked) {
+          grupoTermos.classList.add('erro');
+          grupoTermos.querySelector('.mensagem-erro').textContent = 'Você deve aceitar os termos';
+          valido = false;
+        } else {
+          grupoTermos.classList.remove('erro');
+        }
+      }
+
+      if (passo === 3) {
+        const confirmacao = document.getElementById('confirmacao');
+        const grupoConfirmacao = confirmacao.closest('.grupo-formulario');
+        if (!confirmacao.checked) {
+          grupoConfirmacao.classList.add('erro');
+          grupoConfirmacao.querySelector('.mensagem-erro').textContent = 'Você deve confirmar os dados';
+          confirmacao.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return false;
+        }
+        grupoConfirmacao.classList.remove('erro');
+        return true;
+      }
+      
+      return valido;
+    }
+    
+    // Função para avançar para o próximo passo
     function avancarParaPasso(passo) {
+      // Validar o passo atual antes de avançar
+      if (passo > 1 && !validarPasso(passo - 1)) {
+        return false;
+      }
+
+      // Esconder todos os passos
       document.querySelectorAll('.passo-formulario').forEach(el => {
         el.classList.remove('ativo');
       });
       
       // Mostrar o passo atual
-      document.getElementById(`form-passo${passo}`).classList.add('ativo');
+      const passoAtual = document.getElementById(`form-passo${passo}`);
+      if (passoAtual) {
+        passoAtual.classList.add('ativo');
+      } else {
+        console.error(`Elemento form-passo${passo} não encontrado`);
+        return false;
+      }
       
       // Atualizar a barra de progresso
       document.querySelectorAll('.passo').forEach((el, index) => {
@@ -773,11 +992,16 @@
         }
       });
       
-      document.getElementById(`passo${passo}`).classList.add('ativo');
-      
+      const passoElement = document.getElementById(`passo${passo}`);
+      if (passoElement) {
+        passoElement.classList.add('ativo');
+      }
+
       if (passo === 3) {
         preencherResumo();
       }
+
+      return true;
     }
     
     // Função para preencher o resumo no passo 3
@@ -785,7 +1009,11 @@
       document.getElementById('resumo-nome').textContent = document.getElementById('nome').value;
       document.getElementById('resumo-cpf').textContent = document.getElementById('cpf').value;
       document.getElementById('resumo-sus').textContent = document.getElementById('sus').value;
-      document.getElementById('resumo-nascimento').textContent = document.getElementById('dataNascimento').value;
+      
+      // Formatar data de nascimento para exibição
+      const dataNascimento = new Date(document.getElementById('dataNascimento').value);
+      document.getElementById('resumo-nascimento').textContent = dataNascimento.toLocaleDateString('pt-BR');
+      
       document.getElementById('resumo-mae').textContent = document.getElementById('nomeMae').value;
       document.getElementById('resumo-email').textContent = document.getElementById('email').value;
       document.getElementById('resumo-telefone').textContent = document.getElementById('telefone').value;
@@ -817,7 +1045,187 @@
       }
       
       input.value = valor;
+      
+      // Buscar endereço via API quando CEP estiver completo
+      if (valor.length === 9) {
+        buscarEnderecoPorCEP(valor.replace('-', ''));
+      }
     }
+    
+    // Função para buscar endereço via CEP
+    function buscarEnderecoPorCEP(cep) {
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(data => {
+          if (!data.erro) {
+            document.getElementById('logradouro').value = data.logradouro || '';
+            document.getElementById('bairro').value = data.bairro || '';
+            document.getElementById('cidade').value = data.localidade || '';
+            document.getElementById('uf').value = data.uf || '';
+            
+            // Focar no campo número após preencher automaticamente
+            document.getElementById('numero').focus();
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao buscar CEP:', error);
+        });
+    }
+    
+    // Função para enviar o formulário
+    async function enviarFormulario() {
+      // Validar todos os passos antes de enviar
+      if (!validarPasso(3)) {
+        return false;
+      }
+      
+      // Coletar dados do formulário
+      const formData = {
+        nomecompleto: document.getElementById('nome').value,
+        cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
+        cartaosus: document.getElementById('sus').value,
+        nomecompletodamae: document.getElementById('nomeMae').value,
+        datadenascimento: document.getElementById('dataNascimento').value,
+        email: document.getElementById('email').value,
+        telefone: document.getElementById('telefone').value.replace(/\D/g, ''),
+        senha: document.getElementById('senha').value,
+        endereco: {
+          cep: document.getElementById('cep').value.replace(/\D/g, ''),
+          logradouro: document.getElementById('logradouro').value,
+          numero: document.getElementById('numero').value,
+          complemento: document.getElementById('complemento').value,
+          bairro: document.getElementById('bairro').value,
+          cidade: document.getElementById('cidade').value,
+          uf: document.getElementById('uf').value,
+        }
+      };
+      
+      try {
+        // Mostrar estado de carregamento
+        const botaoSubmit = document.querySelector('#form-passo3 button[type="submit"]');
+        const textoOriginal = botaoSubmit.textContent;
+        botaoSubmit.disabled = true;
+        botaoSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        
+        // Enviar dados para a API
+        const response = await fetch(`${API_URL}/cadastro`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Cadastro realizado com sucesso
+          alert('Cadastro realizado com sucesso!');
+          window.location.href = '/login'; // Redirecionar para login
+        } else {
+          // Exibir mensagem de erro da API
+          alert(`Erro ao cadastrar: ${data.error || 'Erro desconhecido'}`);
+        }
+      } catch (error) {
+        console.error('Erro ao enviar formulário:', error);
+        alert('Erro ao conectar com o servidor. Tente novamente mais tarde.');
+      } finally {
+        // Restaurar botão
+        const botaoSubmit = document.querySelector('#form-passo3 button[type="submit"]');
+        if (botaoSubmit) {
+          botaoSubmit.disabled = false;
+          botaoSubmit.textContent = 'Confirmar Cadastro';
+        }
+      }
+      
+      return false;
+    }
+    
+    // Configurar eventos ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configurar máscaras enquanto digita
+      document.getElementById('cpf').addEventListener('input', function(e) {
+        this.value = formatarCPF(this.value);
+      });
+      
+      document.getElementById('telefone').addEventListener('input', function(e) {
+        this.value = formatarTelefone(this.value);
+      });
+      
+      document.getElementById('sus').addEventListener('input', function(e) {
+        this.value = this.value.replace(/\D/g, '');
+      });
+      
+      // Configurar validações ao sair do campo
+      document.getElementById('cpf').addEventListener('blur', function() {
+        const grupo = this.closest('.grupo-formulario');
+        if (!validarCPF(this.value)) {
+          grupo.classList.add('erro');
+          grupo.querySelector('.mensagem-erro').textContent = 'CPF inválido';
+        } else {
+          grupo.classList.remove('erro');
+        }
+      });
+      
+      document.getElementById('sus').addEventListener('blur', function() {
+        const grupo = this.closest('.grupo-formulario');
+        if (!validarCNS(this.value)) {
+          grupo.classList.add('erro');
+          grupo.querySelector('.mensagem-erro').textContent = 'Cartão SUS inválido';
+        } else {
+          grupo.classList.remove('erro');
+        }
+      });
+      
+      document.getElementById('email').addEventListener('blur', function() {
+        const grupo = this.closest('.grupo-formulario');
+        if (!validarEmail(this.value)) {
+          grupo.classList.add('erro');
+          grupo.querySelector('.mensagem-erro').textContent = 'E-mail inválido';
+        } else {
+          grupo.classList.remove('erro');
+        }
+      });
+      
+      document.getElementById('senha').addEventListener('blur', function() {
+        const grupo = this.closest('.grupo-formulario');
+        if (!validarSenha(this.value)) {
+          grupo.classList.add('erro');
+          grupo.querySelector('.mensagem-erro').textContent = 'Senha muito fraca';
+        } else {
+          grupo.classList.remove('erro');
+        }
+      });
+      
+      document.getElementById('confirmarSenha').addEventListener('blur', function() {
+        const grupo = this.closest('.grupo-formulario');
+        const senha = document.getElementById('senha').value;
+        if (this.value !== senha) {
+          grupo.classList.add('erro');
+          grupo.querySelector('.mensagem-erro').textContent = 'As senhas não coincidem';
+        } else {
+          grupo.classList.remove('erro');
+        }
+      });
+      
+      // Configurar evento de submit do formulário
+      document.getElementById('formularioCadastro').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Verifica se está no último passo
+        const passoAtual = document.querySelector('.passo-formulario.ativo').id.replace('form-passo', '');
+        
+        if (passoAtual === '3') {
+          // Valida o último passo antes de enviar
+          if (validarPasso(3)) {
+            enviarFormulario();
+          }
+        } else {
+          // Se não estiver no último passo, avança para o próximo
+          avancarParaPasso(parseInt(passoAtual) + 1);
+        }
+      });
+    });
   </script>
 </body>
 </html>
