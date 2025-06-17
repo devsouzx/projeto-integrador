@@ -7,8 +7,8 @@ import (
 
 func InitRoutes(rg *gin.RouterGroup, container *dependency.Container) {
 	InitAuthRoutes(rg, container.UserController)
-	InitPacienteRoutes(rg)
-	InitMedicoRoutes(rg, container.MedicoController, container.FichaController)
+	InitPacienteRoutes(rg, container.PacienteController)
+	InitMedicoRoutes(rg, container.MedicoController, container.FichaController, container.PacienteController)
 	InitEnfermeiroRoutes(rg)
 	InitAgenteRoutes(rg)
 	InitGestorRoutes(rg)

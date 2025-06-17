@@ -881,54 +881,106 @@
         
         limparErros();
       }
-      
+
       function buscarPacientePorCPF() {
-        clearTimeout(window.buscaTimeout);
-        
-        const cpf = buscaCpf.value || cpfField.value;
-        const cpfNumeros = cpf.replace(/\D/g, '');
-        
-        if(!cpfNumeros || cpfNumeros.length !== 11 || !validarCPF(cpfNumeros)) {
-          atualizarMensagemBusca('Por favor, informe um CPF válido', 'erro');
-          return;
-        }
-        
-        atualizarMensagemBusca('Buscando paciente...', 'info');
-        iconeBusca.classList.add('fa-spin', 'fa-circle-notch');
-        botaoBuscar.disabled = true;
-        
-        window.buscaTimeout = setTimeout(() => {
-          // Simulação de dados do paciente (sempre retorna sucesso para demonstração)
-          const paciente = {
-            nome: "Maria da Silva",
-            apelido: "Mari",
-            mae: "Joana da Silva",
-            nascimento: "1985-05-15",
-            idade: 38,
-            nacionalidade: "Brasileira",
-            cor: "parda",
-            escolaridade: "medio_completo",
-            cns: "123456789012345",
-            cpf: cpf,
-            logradouro: "Rua das Flores",
-            numero: "123",
-            complemento: "Apto 101",
-            bairro: "Centro",
-            codigo_municipio: "1234567",
-            municipio_residencia: "São Paulo",
-            cep: "01001000",
-            referencia: "Próximo ao mercado",
-            telefone: "(11) 99999-9999"
-          };
-          
-          preencherFormulario(paciente);
-          if(buscaCpf.value && !cpfField.value) cpfField.value = cpf;
-          atualizarMensagemBusca('Paciente encontrado! Dados carregados.', 'sucesso');
-          botaoBuscar.disabled = false;
-        }, 1000);
-      }
+  clearTimeout(window.buscaTimeout);
+  
+  const cpf = buscaCpf.value || cpfField.value;
+  const cpfNumeros = cpf.replace(/\D/g, '');
+  
+  if(!cpfNumeros || cpfNumeros.length !== 11 || !validarCPF(cpfNumeros)) {
+    atualizarMensagemBusca('Por favor, informe um CPF válido', 'erro');
+    return;
+  }
+  
+  atualizarMensagemBusca('Buscando paciente...', 'info');
+  iconeBusca.classList.add('fa-spin', 'fa-circle-notch');
+  botaoBuscar.disabled = true;
+  
+  // Chamada real para a API
+  fetch(`/medico/buscar-paciente?cpf=${cpfNumeros}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+  .then(response => {
+    if (response.status === 401) {
+      window.location.href = '/login';
+      return;
+    }
+    if (!response.ok) {
+      throw new Error('Paciente não encontrado');
+    }
+    return response.json();
+  })
+  .then(paciente => {
+    // Mapear os dados do paciente para o formulário
+    const dadosPaciente = {
+      nome: paciente.Name,
+      apelido: paciente.Apelido || '',
+      mae: paciente.NomeMae,
+      nascimento: paciente.DataNascimento,
+      idade: calcularIdade(paciente.DataNascimento),
+      nacionalidade: "Brasileira", // ou pegar do backend se existir
+      cns: paciente.CNS,
+      cpf: formatarCPF(paciente.CPF),
+      logradouro: paciente.Endereco?.Logradouro || '',
+      numero: paciente.Endereco?.Numero || '',
+      complemento: paciente.Endereco?.Complemento || '',
+      bairro: paciente.Endereco?.Bairro || '',
+      municipio_residencia: paciente.Endereco?.Cidade || '',
+      cep: formatarCEP(paciente.Endereco?.CEP || ''),
+      telefone: formatarTelefone(paciente.Telefone || '')
+    };
+    
+    preencherFormulario(dadosPaciente);
+    if(buscaCpf.value && !cpfField.value) cpfField.value = formatarCPF(paciente.CPF);
+    atualizarMensagemBusca('Paciente encontrado! Dados carregados.', 'sucesso');
+  })
+  .catch(error => {
+    atualizarMensagemBusca(error.message, 'erro');
+  })
+  .finally(() => {
+    iconeBusca.classList.remove('fa-spin', 'fa-circle-notch');
+    botaoBuscar.disabled = false;
+  });
+}
+
+function formatarCPF(cpf) {
+  if (!cpf) return '';
+  cpf = cpf.replace(/\D/g, '');
+  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+}
+
+function formatarCEP(cep) {
+  if (!cep) return '';
+  cep = cep.replace(/\D/g, '');
+  return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+}
+
+function formatarTelefone(telefone) {
+  if (!telefone) return '';
+  telefone = telefone.replace(/\D/g, '');
+  if (telefone.length === 11) {
+    return telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+  }
+  return telefone;
+}
+
+function calcularIdade(dataNascimento) {
+  if (!dataNascimento) return 0;
+  const nascimento = new Date(dataNascimento);
+  const hoje = new Date();
+  let idade = hoje.getFullYear() - nascimento.getFullYear();
+  const mes = hoje.getMonth() - nascimento.getMonth();
+  if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+    idade--;
+  }
+  return idade;
+}
       
-      // Event listeners
       botaoBuscar.addEventListener('click', buscarPacientePorCPF);
       botaoLimpar.addEventListener('click', limparBusca);
       cpfField.addEventListener('blur', () => cpfField.value && buscarPacientePorCPF());

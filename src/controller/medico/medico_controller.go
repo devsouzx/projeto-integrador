@@ -48,7 +48,7 @@ func (mc *medicoController) getMedicoLogado(c *gin.Context) (model.UserInterface
 
 	medico, err := mc.service.FindMedicoByIdentifier(baseUser.ID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Erro ao carregar dados do médico"})
+		c.Redirect(http.StatusFound, "/login-profissionais")
 		return nil, false
 	}
 

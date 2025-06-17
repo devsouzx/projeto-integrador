@@ -159,7 +159,21 @@ func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (
 	switch role {
 	case "paciente":
 		query = `
-			SELECT id, email, senha, nome, cpf, is_verified
+			SELECT id, 
+            email, 
+            senha, 
+            nome AS name,
+            cpf, 
+            cns, 
+            nome_mae, 
+            data_nascimento,
+            telefone, 
+            apelido, 
+            raca AS raca_cor, 
+            nacionalidade,
+            escolaridade,
+            created_at, 
+            updated_at
 			FROM paciente
 			WHERE email = $1 OR cpf = $2
 		`
@@ -171,13 +185,29 @@ func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (
 			&paciente.Password,
 			&paciente.Name,
 			&paciente.CPF,
-			&paciente.Verified,
+			&paciente.CNS,
+			&paciente.NomeMae,
+			&paciente.NascimentoTime,
+			&paciente.Telefone,
+			&paciente.Apelido,
+			&paciente.RacaCor,
+			&paciente.Nacionalidade,
+			&paciente.Escolaridade,
+			&paciente.CreatedAt,
+			&paciente.UpdatedAt,
 		)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				return nil, fmt.Errorf("usuário ou senha inválidos")
 			}
 			return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
+		}
+
+		endereco, err := ur.buscarEnderecoPorPacienteID(paciente.ID)
+		if err == nil {
+			paciente.Endereco = endereco
+		} else {
+			fmt.Printf("Erro ao buscar endereço: %v\n", err)
 		}
 
 		user = &paciente
@@ -328,33 +358,33 @@ func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Pacien
 	}
 
 	if paciente.Endereco != nil {
-        queryEndereco := `
+		queryEndereco := `
         INSERT INTO endereco (
             cep, logradouro, numero, complemento, 
             bairro, cidade, uf, paciente_id
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING id, created_at, updated_at`
 
-        err = r.DB.QueryRow(
-            queryEndereco,
-            paciente.Endereco.CEP,
-            paciente.Endereco.Logradouro,
-            paciente.Endereco.Numero,
-            paciente.Endereco.Complemento,
-            paciente.Endereco.Bairro,
-            paciente.Endereco.Cidade,
-            paciente.Endereco.UF,
-            paciente.ID,
-        ).Scan(
-            &paciente.Endereco.ID,
-            &paciente.Endereco.CreatedAt,
-            &paciente.Endereco.UpdatedAt,
-        )
+		err = r.DB.QueryRow(
+			queryEndereco,
+			paciente.Endereco.CEP,
+			paciente.Endereco.Logradouro,
+			paciente.Endereco.Numero,
+			paciente.Endereco.Complemento,
+			paciente.Endereco.Bairro,
+			paciente.Endereco.Cidade,
+			paciente.Endereco.UF,
+			paciente.ID,
+		).Scan(
+			&paciente.Endereco.ID,
+			&paciente.Endereco.CreatedAt,
+			&paciente.Endereco.UpdatedAt,
+		)
 
-        if err != nil {
-            return nil, fmt.Errorf("erro ao criar endereço: %v", err)
-        }
-    }
+		if err != nil {
+			return nil, fmt.Errorf("erro ao criar endereço: %v", err)
+		}
+	}
 
 	return paciente, nil
 }
@@ -378,33 +408,33 @@ func (ur *userRepository) FindByID(id string, role string) (model.UserInterface,
 		}
 		return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
 	}
-	
+
 	return &paciente, nil
 }
 
 func (ur *userRepository) FindByVerificationToken(token string) (model.UserInterface, error) {
 	var user model.BaseUser
-    err := ur.DB.QueryRow(`
+	err := ur.DB.QueryRow(`
         SELECT id, email, nome, is_verified, verification_token, token_expires_at AT TIME ZONE 'UTC'
         FROM paciente 
         WHERE verification_token = $1
     `, token).Scan(
-        &user.ID,
-        &user.Email,
-        &user.Name,
-        &user.Verified,
-        &user.VerifyToken,
-        &user.TokenExpiresAt,
-    )
+		&user.ID,
+		&user.Email,
+		&user.Name,
+		&user.Verified,
+		&user.VerifyToken,
+		&user.TokenExpiresAt,
+	)
 
-    if err != nil {
-        if err == sql.ErrNoRows {
-            return nil, fmt.Errorf("token não encontrado")
-        }
-        return nil, fmt.Errorf("erro ao buscar usuário: %w", err)
-    }
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("token não encontrado")
+		}
+		return nil, fmt.Errorf("erro ao buscar usuário: %w", err)
+	}
 
-    return &user, nil
+	return &user, nil
 }
 
 func (ur *userRepository) UpdateUser(user model.UserInterface) error {
@@ -428,3 +458,30 @@ func (ur *userRepository) UpdateUser(user model.UserInterface) error {
 	return nil
 }
 
+func (r *userRepository) buscarEnderecoPorPacienteID(pacienteID string) (*model.Endereco, error) {
+	query := `
+        SELECT 
+            id, cep, logradouro, numero, complemento,
+            bairro, cidade, uf
+        FROM endereco
+        WHERE paciente_id = $1
+    `
+
+	var endereco model.Endereco
+	err := r.DB.QueryRow(query, pacienteID).Scan(
+		&endereco.ID,
+		&endereco.CEP,
+		&endereco.Logradouro,
+		&endereco.Numero,
+		&endereco.Complemento,
+		&endereco.Bairro,
+		&endereco.Cidade,
+		&endereco.UF,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("erro ao buscar endereço: %w", err)
+	}
+
+	return &endereco, nil
+}

@@ -3,11 +3,12 @@ package routes
 import (
 	"net/http"
 
+	pacienteController "github.com/devsouzx/projeto-integrador/src/controller/paciente"
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/gin-gonic/gin"
 )
 
-func InitPacienteRoutes(rg *gin.RouterGroup) {
+func InitPacienteRoutes(rg *gin.RouterGroup, pacienteController pacienteController.PacienteControllerInterface) {
 	paciente := rg.Group("/paciente")
 	paciente.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"))
 	{

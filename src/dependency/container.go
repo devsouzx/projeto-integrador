@@ -3,9 +3,10 @@ package dependency
 import (
 	"database/sql"
 
-	unidadeController "github.com/devsouzx/projeto-integrador/src/controller/unidade"
 	fichaController "github.com/devsouzx/projeto-integrador/src/controller/ficha"
 	medicoController "github.com/devsouzx/projeto-integrador/src/controller/medico"
+	pacienteController "github.com/devsouzx/projeto-integrador/src/controller/paciente"
+	unidadeController "github.com/devsouzx/projeto-integrador/src/controller/unidade"
 	userController "github.com/devsouzx/projeto-integrador/src/controller/user"
 	fichaRepository "github.com/devsouzx/projeto-integrador/src/repository/ficha"
 	medicoRepository "github.com/devsouzx/projeto-integrador/src/repository/medico"
@@ -22,6 +23,7 @@ type Container struct {
 	MedicoController medicoController.MedicoControllerInterface
 	FichaController fichaController.FichaController
 	UnidadeController unidadeController.UnidadeController
+	PacienteController pacienteController.PacienteControllerInterface
 }
 
 func InitContainer(db *sql.DB) *Container {
@@ -41,10 +43,13 @@ func InitContainer(db *sql.DB) *Container {
 	unidadeService := datasus.NewCNESService()
 	unidadeController := unidadeController.NewUnidadeController(unidadeService)
 
+	pacienteController := pacienteController.NewPacienteController(userRepository)
+
 	return &Container{
 		UserController: userController,
 		MedicoController: medicoController,
 		FichaController: fichaController,
 		UnidadeController: *unidadeController,
+		PacienteController: pacienteController,
 	}
 }
