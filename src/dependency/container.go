@@ -29,19 +29,20 @@ type Container struct {
 func InitContainer(db *sql.DB) *Container {
 	emailService := emailService.NewEmailService()
 	userRepository := userRepository.NewUserRepository(db)
+	
 	userService := userService.NewUserDomainService(userRepository, emailService)
 	userController := userController.NewUserController(userService, emailService)
 
+	unidadeService := datasus.NewCNESService()
+	unidadeController := unidadeController.NewUnidadeController(unidadeService)
+
 	medicoRepository := medicoRepository.NewMedicoRepository(db)
 	medicoService := medicoService.NewMedicoService(medicoRepository)
-	medicoController := medicoController.NewMedicoController(medicoService)
+	medicoController := medicoController.NewMedicoController(medicoService, *unidadeService)
 
 	fichRepository := fichaRepository.NewFichaRepository(db)
 	fichaService := fichaService.NewFichaService(fichRepository, userRepository)
 	fichaController := fichaController.NewFichaController(fichaService)
-
-	unidadeService := datasus.NewCNESService()
-	unidadeController := unidadeController.NewUnidadeController(unidadeService)
 
 	pacienteController := pacienteController.NewPacienteController(userRepository)
 

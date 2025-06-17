@@ -11,6 +11,7 @@ type Medico struct {
 	DataNascimento   time.Time `json:"data_nascimento"`
 	EnderecoConsulta string `json:"endereco_consulta"`
 	Avatar       []byte `json:"avatar"`
+	UnidadeID int    `json:"unidade_saude_id"`
 }
 
 func NewMedico(email, password, name, crm, cpf string) UserInterface {
@@ -24,4 +25,8 @@ func NewMedico(email, password, name, crm, cpf string) UserInterface {
 		CRM: crm,
 		CPF: cpf,
 	}
+}
+
+func (m *Medico) GetUnidadeID() int {
+	return m.UnidadeID
 }

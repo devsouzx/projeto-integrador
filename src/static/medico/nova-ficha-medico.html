@@ -812,7 +812,70 @@
       const iconeBusca = mensagemBusca.querySelector('.icone');
       const textoBusca = mensagemBusca.querySelector('.texto-busca');
       const form = document.getElementById('formularioCitopatologico');
+      buscarUnidadeMedico();
+
+    function buscarUnidadeMedico() {
+      fetch('/medico/minha-unidade', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      })
+      .then(response => {
+        if (response.status === 401) {
+          window.location.href = '/login';
+          return;
+        }
+        if (!response.ok) {
+          throw new Error('Erro ao buscar unidade');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.error) {
+          console.error('Erro ao buscar unidade:', data.error);
+          return;
+        }
+        
+        // Mapear os dados da unidade para os campos do formulário
+        if (data.unidade) {
+          const unidade = data.unidade;
           
+          // Preencher campos da unidade
+          document.getElementById('cnes').value = unidade.CodigoCNES || '';
+          document.getElementById('unidade').value = unidade.NomeFantasia || unidade.NomeRazaoSocial || '';
+          
+          // Buscar município e UF pelo código (pode precisar de outra chamada API)
+          // Aqui estamos assumindo que o backend já retorna esses dados
+          document.getElementById('municipio').value = unidade.Endereco || '';
+          document.getElementById('uf').value = unidade.CodigoUF ? getSiglaUF(unidade.CodigoUF) : '';
+          
+          // Disparar eventos de change para validação
+          document.getElementById('cnes').dispatchEvent(new Event('change'));
+          document.getElementById('unidade').dispatchEvent(new Event('change'));
+          document.getElementById('municipio').dispatchEvent(new Event('change'));
+          document.getElementById('uf').dispatchEvent(new Event('change'));
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao buscar unidade:', error);
+        // Pode exibir uma mensagem para o usuário se necessário
+      });
+    }
+
+    // Função auxiliar para converter código UF em sigla
+    function getSiglaUF(codigoUF) {
+      const ufs = {
+        12: 'AC', 27: 'AL', 16: 'AP', 13: 'AM', 29: 'BA',
+        23: 'CE', 53: 'DF', 32: 'ES', 52: 'GO', 21: 'MA',
+        51: 'MT', 50: 'MS', 31: 'MG', 15: 'PA', 25: 'PB',
+        41: 'PR', 26: 'PE', 22: 'PI', 33: 'RJ', 24: 'RN',
+        43: 'RS', 11: 'RO', 14: 'RR', 42: 'SC', 35: 'SP',
+        28: 'SE', 17: 'TO'
+      };
+      return ufs[codigoUF] || '';
+    }
       // Inicialização
       document.getElementById('protocolo').value = 'BR' + new Date().getFullYear() + 
         Math.floor(Math.random() * 1000000).toString().padStart(6, '0');

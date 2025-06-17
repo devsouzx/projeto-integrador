@@ -29,7 +29,7 @@ func (mr *medicoRepository) FindMedicoByIdentifier(identifier string) (model.Use
 	clean := strings.ToUpper(strings.ReplaceAll(identifier, "/", ""))
 
 	query := `
-			SELECT id, email, senha, nomecompleto, cpf, crm
+			SELECT id, email, senha, nomecompleto, cpf, crm, unidade_saude_id
 			FROM medico
 			WHERE id = $1 OR cpf = $2 OR crm = $3
 		`
@@ -43,6 +43,7 @@ func (mr *medicoRepository) FindMedicoByIdentifier(identifier string) (model.Use
 		&medico.Name,
 		&medico.CPF,
 		&medico.CRM,
+		&medico.UnidadeID,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {

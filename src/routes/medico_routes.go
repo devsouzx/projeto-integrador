@@ -25,5 +25,6 @@ func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.Med
 		medico.POST("/nova-ficha", fichaController.Create)
 
 		medico.GET("/buscar-paciente", pacienteController.BuscarPacientePorCPF)
+		medico.GET("/minha-unidade", medicoController.GetUnidadeMedico)
 	}
 }
