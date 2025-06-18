@@ -36,6 +36,7 @@ type UserRepository interface {
 	FindByVerificationToken(token string) (model.UserInterface, error)
 	UpdateUser(user model.UserInterface) error
 	FindByID(id string, role string) (model.UserInterface, error)
+	UpdatePaciente(paciente *model.Paciente) error
 }
 
 func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
@@ -389,6 +390,26 @@ func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Pacien
 	return paciente, nil
 }
 
+func (r *userRepository) UpdatePaciente(paciente *model.Paciente) error {
+    query := `UPDATE paciente SET nome = $1, 
+        apelido = $2, nome_mae = $3, cns = $4, cpf = $5, 
+        data_nascimento = $6, nacionalidade = $7, 
+        raca = $8, escolaridade = $9, telefone = $10 WHERE id = $11`
+    _, err := r.DB.Exec(query, 
+		paciente.Name,
+		paciente.Apelido,
+		paciente.NomeMae,
+		paciente.CNS,
+		paciente.CPF,
+		paciente.NascimentoTime,
+		paciente.Nacionalidade,
+		paciente.RacaCor,
+		paciente.Escolaridade,
+		paciente.Telefone,
+        paciente.ID)
+    return err
+}
+
 func (ur *userRepository) FindByID(id string, role string) (model.UserInterface, error) {
 	var paciente model.Paciente
 	err := ur.DB.QueryRow(`
@@ -459,7 +480,7 @@ func (ur *userRepository) UpdateUser(user model.UserInterface) error {
 }
 
 func (r *userRepository) buscarEnderecoPorPacienteID(pacienteID string) (*model.Endereco, error) {
-	query := `
+    query := `
         SELECT 
             id, cep, logradouro, numero, complemento,
             bairro, cidade, uf
@@ -467,21 +488,24 @@ func (r *userRepository) buscarEnderecoPorPacienteID(pacienteID string) (*model.
         WHERE paciente_id = $1
     `
 
-	var endereco model.Endereco
-	err := r.DB.QueryRow(query, pacienteID).Scan(
-		&endereco.ID,
-		&endereco.CEP,
-		&endereco.Logradouro,
-		&endereco.Numero,
-		&endereco.Complemento,
-		&endereco.Bairro,
-		&endereco.Cidade,
-		&endereco.UF,
-	)
+    var endereco model.Endereco
+    err := r.DB.QueryRow(query, pacienteID).Scan(
+        &endereco.ID,
+        &endereco.CEP,
+        &endereco.Logradouro,
+        &endereco.Numero,
+        &endereco.Complemento,
+        &endereco.Bairro,
+        &endereco.Cidade,
+        &endereco.UF,
+    )
 
-	if err != nil {
-		return nil, fmt.Errorf("erro ao buscar endereço: %w", err)
-	}
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return &model.Endereco{}, nil
+        }
+        return nil, fmt.Errorf("erro ao buscar endereço: %w", err)
+    }
 
-	return &endereco, nil
+    return &endereco, nil
 }

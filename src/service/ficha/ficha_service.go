@@ -33,16 +33,27 @@ type FichaServiceInterface interface {
 func (fs *fichaService) CreateFicha(request *model.FichaRequest) (*model.FichaCitopatologica, error) {
 	paciente, err := fs.userRepository.FindUserByIdentifier(request.Paciente.CPF, "paciente")
 	if err != nil {
+		fmt.Println("CRIANDO")
 		paciente, err = fs.userRepository.CreatePaciente(&request.Paciente)
 		if err != nil {
 			return nil, fmt.Errorf("erro ao criar paciente: %v", err)
 		}
+	} else {
+		fmt.Println("ATUALIZANDO")
+		if pacienteModel, ok := paciente.(*model.Paciente); ok {
+			err := fs.userRepository.UpdatePaciente(pacienteModel)
+			if err != nil {
+				return nil, fmt.Errorf("erro ao atualizar paciente: %v", err)
+			}
+		} else {
+			return nil, fmt.Errorf("erro ao converter paciente para *model.Paciente")
+		}
 	}
 
 	pacienteId := paciente.GetID()
-	err = fs.fichaRepository.CreateEndereco(&request.DadosResidenciais, pacienteId)
+	err = fs.fichaRepository.UpsertEndereco(&request.DadosResidenciais, pacienteId)
 	if err != nil {
-		return nil, fmt.Errorf("erro ao criar dados residenciais: %v", err)
+		return nil, fmt.Errorf("erro ao criar/atualizar dados residenciais: %v", err)
 	}
 
 	request.Ficha.PacienteID = paciente.GetID()

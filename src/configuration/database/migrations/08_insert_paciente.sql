@@ -13,7 +13,7 @@ INSERT INTO paciente (
     escolaridade, 
     is_verified
 ) VALUES (
-    '12345678901',
+    '08153160389',
     'Paciente Teste',
     '123456789012345',
     'Mae do Paciente',

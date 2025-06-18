@@ -812,7 +812,15 @@
       const iconeBusca = mensagemBusca.querySelector('.icone');
       const textoBusca = mensagemBusca.querySelector('.texto-busca');
       const form = document.getElementById('formularioCitopatologico');
+
+      function formatarDataParaBackend(dateString) {
+        if (!dateString) return null;
+        // Converte para o formato ISO com timezone UTC
+        return new Date(dateString).toISOString();
+    }
       buscarUnidadeMedico();
+
+
 
     function buscarUnidadeMedico() {
       fetch('/medico/minha-unidade', {
@@ -1054,25 +1062,216 @@ function calcularIdade(dataNascimento) {
         if(this.checked) dumField.value = '';
       });
       
-      form.addEventListener('submit', function(e) {
+      form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Validate form
+    let isValid = true;
+    
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        let isValid = true;
         
-        document.querySelectorAll('[required]').forEach(field => {
-          const container = field.closest('.grupo-formulario') || 
-                           field.closest('div').previousElementSibling?.closest('.grupo-formulario');
-          
-          if ((field.type === 'radio' && !document.querySelector(`input[name="${field.name}"]:checked`)) || 
-              (field.type !== 'radio' && !field.value)) {
-            if(container) container.classList.add('tem-erro');
-            isValid = false;
-          } else if(container) {
-            container.classList.remove('tem-erro');
-          }
+        // Validação dos campos obrigatórios
+        let isValid = true;
+        form.querySelectorAll('[required]').forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                const container = field.closest('.grupo-formulario');
+                if (container) container.classList.add('tem-erro');
+            }
         });
         
+        if (!isValid) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+            return;
+        }
+
+        // Montagem do payload com as datas formatadas corretamente
+        const payload = {
+            ficha: {
+                protocolo: document.getElementById('protocolo').value,
+                unidade_id: document.getElementById('cnes').value,
+                data_coleta: formatarDataParaBackend(document.getElementById('data_coleta').value),
+                responsavel_coleta: document.getElementById('responsavel').value,
+                motivo_exame: document.querySelector('input[name="motivo_exame"]:checked')?.value,
+                observacoes: document.getElementById('observacoes').value
+            },
+            paciente: {
+                name: document.getElementById('nome').value,
+                cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
+                cns: document.getElementById('cns').value,
+                apelido: document.getElementById('apelido').value,
+                nome_mae: document.getElementById('mae').value,
+                data_nascimento: formatarDataParaBackend(document.getElementById('nascimento').value),
+                idade: parseInt(document.getElementById('idade').value),
+                nacionalidade: document.getElementById('nacionalidade').value,
+                raca: document.getElementById('cor').value,
+                escolaridade: document.getElementById('escolaridade').value,
+                telefone: document.getElementById('telefone').value.replace(/\D/g, '')
+            },
+            dados_residenciais: {
+                cep: document.getElementById('cep').value.replace(/\D/g, ''),
+                logradouro: document.getElementById('logradouro').value,
+                numero: document.getElementById('numero').value,
+                complemento: document.getElementById('complemento').value,
+                bairro: document.getElementById('bairro').value,
+                cidade: document.getElementById('municipio_residencia').value,
+                uf: document.getElementById('uf').value,
+                codigo_municipio: document.getElementById('codigo_municipio').value,
+                referencia: document.getElementById('referencia').value
+            },
+            anamnese: {
+                fez_exame: document.querySelector('input[name="fez_exame"]:checked')?.value,
+                ultimo_exame_ano: document.getElementById('ultimo_exame_ano').value,
+                usa_diu: document.querySelector('input[name="usa_diu"]:checked')?.value,
+                gravida: document.querySelector('input[name="gravida"]:checked')?.value,
+                anticoncepcional: document.querySelector('input[name="anticoncepcional"]:checked')?.value,
+                hormonio_menopausa: document.querySelector('input[name="hormonio_menopausa"]:checked')?.value,
+                radioterapia: document.querySelector('input[name="radioterapia"]:checked')?.value,
+                dum: formatarDataParaBackend(document.getElementById('dum').value),
+                nao_lembra_dum: document.getElementById('nao_lembra_dum').checked,
+                sangramento_pos_coito: document.querySelector('input[name="sangramento_pos_coito"]:checked')?.value,
+                sangramento_pos_menopausa: document.querySelector('input[name="sangramento_pos_menopausa"]:checked')?.value
+            },
+            exame_clinico: {
+                inspecao_colo: document.querySelector('input[name="inspecao_colo"]:checked')?.value,
+                sinais_dst: document.querySelector('input[name="sinais_dst"]:checked')?.value,
+                observacoes: document.getElementById('observacoes').value
+            }
+        };
+
+        console.log("Dados sendo enviados:", payload); // Para debug
+
+        try {
+            const response = await fetch('/medico/nova-ficha', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Erro ao salvar ficha');
+            }
+
+            const data = await response.json();
+            alert('Ficha cadastrada com sucesso!');
+            form.reset();
+            limparBusca();
+            document.getElementById('protocolo').value = 'BR' + new Date().getFullYear() + 
+                Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao salvar ficha: ' + error.message);
+        }
+    });
+
+    if (!isValid) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+
+    // Format dates properly
+    const formatDate = (dateStr) => {
+        if (!dateStr) return null;
+        const date = new Date(dateStr);
+        return date.toISOString().split('T')[0];
+    };
+
+    // Prepare data payload
+    const payload = {
+        ficha: {
+            protocolo: document.getElementById('protocolo').value,
+            cnes: document.getElementById('cnes').value,
+            unidade_saude: document.getElementById('unidade').value,
+            municipio: document.getElementById('municipio').value,
+            uf: document.getElementById('uf').value,
+            data_coleta: formatDate(document.getElementById('data_coleta').value),
+            responsavel_coleta: document.getElementById('responsavel').value,
+            motivo_exame: document.querySelector('input[name="motivo_exame"]:checked')?.value,
+            observacoes: document.getElementById('observacoes').value
+        },
+        paciente: {
+            name: document.getElementById('nome').value,
+            cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
+            cns: document.getElementById('cns').value,
+            apelido: document.getElementById('apelido').value,
+            nome_mae: document.getElementById('mae').value,
+            data_nascimento: formatDate(document.getElementById('nascimento').value),
+            nacionalidade: document.getElementById('nacionalidade').value,
+            raca: document.getElementById('cor').value,
+            escolaridade: document.getElementById('escolaridade').value,
+            telefone: document.getElementById('telefone').value.replace(/\D/g, '')
+        },
+        dados_residenciais: {
+            cep: document.getElementById('cep').value.replace(/\D/g, ''),
+            logradouro: document.getElementById('logradouro').value,
+            numero: document.getElementById('numero').value,
+            complemento: document.getElementById('complemento').value,
+            bairro: document.getElementById('bairro').value,
+            cidade: document.getElementById('municipio_residencia').value,
+            uf: document.getElementById('uf').value,
+            codigo_municipio: document.getElementById('codigo_municipio').value,
+            referencia: document.getElementById('referencia').value
+        },
+        anamnese: {
+            fez_exame: document.querySelector('input[name="fez_exame"]:checked')?.value,
+            ultimo_exame_ano: document.getElementById('ultimo_exame_ano').value,
+            usa_diu: document.querySelector('input[name="usa_diu"]:checked')?.value,
+            gravida: document.querySelector('input[name="gravida"]:checked')?.value,
+            anticoncepcional: document.querySelector('input[name="anticoncepcional"]:checked')?.value,
+            hormonio_menopausa: document.querySelector('input[name="hormonio_menopausa"]:checked')?.value,
+            radioterapia: document.querySelector('input[name="radioterapia"]:checked')?.value,
+            dum: formatDate(document.getElementById('dum').value),
+            nao_lembra_dum: document.getElementById('nao_lembra_dum').checked,
+            sangramento_pos_coito: document.querySelector('input[name="sangramento_pos_coito"]:checked')?.value,
+            sangramento_pos_menopausa: document.querySelector('input[name="sangramento_pos_menopausa"]:checked')?.value
+        },
+        exame_clinico: {
+            inspecao_colo: document.querySelector('input[name="inspecao_colo"]:checked')?.value,
+            sinais_dst: document.querySelector('input[name="sinais_dst"]:checked')?.value,
+            observacoes: document.getElementById('observacoes').value
+        }
+    };
+
+    console.log("Submitting payload:", payload);
+
+    try {
+        const response = await fetch('/medico/nova-ficha', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Erro ao salvar ficha');
+        }
+
+        const data = await response.json();
+        alert('Ficha cadastrada com sucesso!');
+        form.reset();
+        limparBusca();
+        document.getElementById('protocolo').value = 'BR' + new Date().getFullYear() + 
+            Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Erro ao salvar ficha: ' + error.message);
+    }
+});
+
+  if (!isValid) {
+    alert('Por favor, preencha todos os campos obrigatórios.');
+    return;
+  }
+        
         if (isValid) {
-          // Montar objeto com todos os dados do formulário
           const formData = {
             ficha: {
               protocolo: document.getElementById('protocolo').value,
@@ -1163,7 +1362,6 @@ function calcularIdade(dataNascimento) {
           alert('Por favor, preencha todos os campos obrigatórios.');
         }
       });
-    });
   </script>
 </body>
 </html>

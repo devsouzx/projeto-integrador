@@ -10,14 +10,10 @@ CREATE TABLE ficha (
     motivo_exame VARCHAR(50) NOT NULL,
     observacoes TEXT,
     responsavel_id UUID NOT NULL,
-    unidade_id UUID,
+    unidade_id INTEGER,
     paciente_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_ficha_unidade
-        FOREIGN KEY (unidade_id)
-        REFERENCES unidade_saude(id)
-        ON DELETE CASCADE,
     CONSTRAINT fk_ficha_paciente
         FOREIGN KEY (paciente_id)
         REFERENCES paciente(id)
