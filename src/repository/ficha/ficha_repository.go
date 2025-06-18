@@ -23,6 +23,6 @@ type FichaRepositoryInterface interface {
 	FindByID(id string) (*model.FichaCitopatologica, error)
 	CreateEndereco(endereco *model.Endereco, pacienteId string) error
 	UpdateEndereco(endereco *model.Endereco, pacienteId string) error
-	EnderecoExists(pacienteId string) (bool, error)
 	UpsertEndereco(endereco *model.Endereco, pacienteId string) error
+	UpsertAnamnase(anamnase *model.Anamnese, pacienteId string) error
 }

@@ -356,7 +356,7 @@
       
       <div class="info-usuario">
         <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
-        <span>Dr. João Silva</span>
+        <span>{{.Medico.Name}}</span>
         
         <div class="menu-usuario">
           <a href="/medico/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
@@ -750,7 +750,7 @@
           </div>
           <div class="grupo-formulario">
             <label for="responsavel" class="rotulo-formulario campo-obrigatorio">Responsável pela Coleta</label>
-            <input type="text" id="responsavel" class="controle-formulario" value="Enf. Ana Oliveira" readonly required>
+            <input type="text" id="responsavel" class="controle-formulario" value="{{.Medico.Name}}" readonly required>
           </div>
         </div>
         
@@ -814,9 +814,15 @@
       const form = document.getElementById('formularioCitopatologico');
 
       function formatarDataParaBackend(dateString) {
-        if (!dateString) return null;
-        // Converte para o formato ISO com timezone UTC
-        return new Date(dateString).toISOString();
+        if (!dateString || dateString.trim() === "") {
+    return null; // Retorna null para valores vazios
+  }
+  try {
+    return new Date(dateString).toISOString();
+  } catch (e) {
+    console.error("Erro ao formatar data:", e);
+    return null;
+  }
     }
       buscarUnidadeMedico();
 
@@ -1086,6 +1092,9 @@ function calcularIdade(dataNascimento) {
             return;
         }
 
+        const dumValue = document.getElementById('nao_lembra_dum').checked ? 
+  null : 
+  formatarDataParaBackend(document.getElementById('dum').value);
         // Montagem do payload com as datas formatadas corretamente
         const payload = {
             ficha: {
@@ -1128,7 +1137,7 @@ function calcularIdade(dataNascimento) {
                 anticoncepcional: document.querySelector('input[name="anticoncepcional"]:checked')?.value,
                 hormonio_menopausa: document.querySelector('input[name="hormonio_menopausa"]:checked')?.value,
                 radioterapia: document.querySelector('input[name="radioterapia"]:checked')?.value,
-                dum: formatarDataParaBackend(document.getElementById('dum').value),
+                dum: dumValue,
                 nao_lembra_dum: document.getElementById('nao_lembra_dum').checked,
                 sangramento_pos_coito: document.querySelector('input[name="sangramento_pos_coito"]:checked')?.value,
                 sangramento_pos_menopausa: document.querySelector('input[name="sangramento_pos_menopausa"]:checked')?.value
@@ -1256,6 +1265,7 @@ function calcularIdade(dataNascimento) {
 
         const data = await response.json();
         alert('Ficha cadastrada com sucesso!');
+        window.location.href = "/medico/pacientes";
         form.reset();
         limparBusca();
         document.getElementById('protocolo').value = 'BR' + new Date().getFullYear() + 

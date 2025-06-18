@@ -24,7 +24,7 @@ type Anamnese struct {
 	FezExame                string `json:"fez_exame" db:"fez_exame"`
 	UltimoExameAno          string `json:"ultimo_exame_ano" db:"ultimo_exame_ano"`
 	UsaDIU                  string `json:"usa_diu" db:"usa_diu"`
-	Graviada                string `json:"gravida" db:"gravida"`
+	Gravida                string `json:"gravida" db:"gravida"`
 	Anticoncepcional        string `json:"anticoncepcional" db:"anticoncepcional"`
 	HormonioMenopausa       string `json:"hormonio_menopausa" db:"hormonio_menopausa"`
 	Radioterapia            string `json:"radioterapia" db:"radioterapia"`

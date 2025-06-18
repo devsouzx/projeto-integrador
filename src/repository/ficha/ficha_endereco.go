@@ -49,16 +49,6 @@ func (fr *fichaRepository) UpsertEndereco(endereco *model.Endereco, pacienteId s
 	return err
 }
 
-func (fr *fichaRepository) EnderecoExists(pacienteId string) (bool, error) {
-	var exists bool
-	query := `SELECT EXISTS(SELECT 1 FROM endereco WHERE paciente_id = $1)`
-	err := fr.DB.QueryRow(query, pacienteId).Scan(&exists)
-	if err != nil {
-		return false, fmt.Errorf("erro ao verificar endereço: %v", err)
-	}
-	return exists, nil
-}
-
 func (fr *fichaRepository) UpdateEndereco(endereco *model.Endereco, pacienteId string) error {
 	query := `UPDATE endereco 
               SET cep = $1, logradouro = $2, complemento = $3, numero = $4, 

@@ -1,8 +1,8 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-DROP TABLE IF EXISTS anamnase;
+DROP TABLE IF EXISTS anamnese;
 
-CREATE TABLE anamnase (
+CREATE TABLE anamnese (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     motivo_exame VARCHAR(50),
     fez_exame VARCHAR(20),

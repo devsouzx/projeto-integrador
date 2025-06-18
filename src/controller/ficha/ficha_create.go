@@ -21,9 +21,6 @@ func (fc *fichaController) Create(c *gin.Context) {
 		return
 	}
 
-	fmt.Printf("Incoming request data:\nFicha: %+v\nPaciente: %+v\nDadosResidenciais: %+v\n",
-		request.Ficha, request.Paciente, request.DadosResidenciais)
-
 	if request.Paciente.Name == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Nome do paciente é obrigatório"})
 		return
