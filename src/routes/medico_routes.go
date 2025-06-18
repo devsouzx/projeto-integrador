@@ -12,7 +12,7 @@ func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.Med
 	medico := rg.Group("/medico")
 	medico.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("medico"))
 	{
-		medico.GET("/dashboard", medicoController.GetDashboard)
+		medico.GET("/dashboard", medicoController.RenderDashboard)
 		medico.GET("/nova-ficha", medicoController.RenderNovaFichaPage)
 		medico.GET("/pacientes", medicoController.ExibirListaPacientes)
 		medico.GET("/laudos", medicoController.ExibirLaudos)

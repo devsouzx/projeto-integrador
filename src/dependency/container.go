@@ -50,7 +50,7 @@ func InitContainer(db *sql.DB) *Container {
 		UserController: userController,
 		MedicoController: medicoController,
 		FichaController: fichaController,
-		UnidadeController: *unidadeController,
+		UnidadeController: unidadeController,
 		PacienteController: pacienteController,
 	}
 }

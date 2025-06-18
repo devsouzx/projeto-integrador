@@ -21,7 +21,6 @@ func (uc *userController) LoginUser(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("req", userRequest)
 	user, token, err := uc.service.LoginUserService(userRequest)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{

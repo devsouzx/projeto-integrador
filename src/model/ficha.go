@@ -35,24 +35,3 @@ type Anamnese struct {
 	PacienteID              string `json:"paciente_id" db:"paciente_id"`
 	FichaID                 string `json:"ficha_id" db:"ficha_id"`
 }
-
-type Endereco struct {
-	ID          string    `json:"id"`
-	CEP         string    `json:"cep"`
-	Logradouro  string    `json:"logradouro"`
-	Numero      string    `json:"numero"`
-	Complemento string    `json:"complemento"`
-	Bairro      string    `json:"bairro"`
-	Cidade      string    `json:"cidade"`
-	UF          string    `json:"uf"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-}
-
-type FichaRequest struct {
-	Ficha             FichaCitopatologica `json:"ficha"`
-	Paciente          Paciente            `json:"paciente"`
-	DadosResidenciais Endereco            `json:"dados_residenciais"`
-	Anamnese          Anamnese            `json:"anamnese"`
-	ExameClinico      ExameClinico        `json:"exame_clinico"`
-}

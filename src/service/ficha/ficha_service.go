@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
+	"github.com/devsouzx/projeto-integrador/src/model/request"
 	fichaRepository "github.com/devsouzx/projeto-integrador/src/repository/ficha"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
 )
@@ -24,13 +25,10 @@ type fichaService struct {
 }
 
 type FichaServiceInterface interface {
-	CreateFicha(request *model.FichaRequest) (*model.FichaCitopatologica, error)
-	// GetFichaByID(id string) (*model.Ficha, error)
-	// GetFichasByPaciente(pacienteID string) ([]*model.Ficha, error)
-	// UpdateFicha(ficha *model.Ficha) error
+	CreateFicha(request *request.FichaRequest) (*model.FichaCitopatologica, error)
 }
 
-func (fs *fichaService) CreateFicha(request *model.FichaRequest) (*model.FichaCitopatologica, error) {
+func (fs *fichaService) CreateFicha(request *request.FichaRequest) (*model.FichaCitopatologica, error) {
 	paciente, err := fs.userRepository.FindUserByIdentifier(request.Paciente.CPF, "paciente")
 	if err != nil {
 		fmt.Println("CRIANDO")
