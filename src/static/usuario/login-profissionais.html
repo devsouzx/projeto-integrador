@@ -498,6 +498,10 @@
     </div>
   </div>
 
+  <div id="cookie-popup" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #fff; color: #333; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.12); padding: 18px 24px; z-index: 9999; display: none; align-items: center; gap: 1rem; min-width: 280px; max-width: 90vw;">
+    <span style="font-size: 15px;">Ao usar este site, você concorda com o uso de cookies para melhorar sua experiência.</span>
+    <button id="btn-cookies" style="background: #9b59b6; color: #fff; border: none; border-radius: 5px; padding: 8px 18px; font-weight: 500; cursor: pointer;">Concordo</button>
+  </div>
   <script>
     function alternarSenha() {
       const inputSenha = document.getElementById('password');
@@ -612,6 +616,14 @@
         e.target.value = num + (uf ? '/' + uf : '');
       }
     });
+
+    if (!localStorage.getItem('cookiesAccepted')) {
+      document.getElementById('cookie-popup').style.display = 'flex';
+    }
+    document.getElementById('btn-cookies').onclick = function() {
+      localStorage.setItem('cookiesAccepted', 'true');
+      document.getElementById('cookie-popup').style.display = 'none';
+    };
   </script>
 </body>
 </html>
