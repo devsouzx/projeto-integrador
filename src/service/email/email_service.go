@@ -51,7 +51,7 @@ func (es *emailService) emailWorker() {
     for job := range es.jobQueue {
         m := gomail.NewMessage()
         m.SetHeader("From", os.Getenv("SMTP_FROM"))
-        m.SetHeader("To", "joaoemanuel2215@gmail.com")
+        m.SetHeader("To", job.Email)
         
         switch job.EmailType {
         case "recovery":

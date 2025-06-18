@@ -174,7 +174,8 @@ func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (
             nacionalidade,
             escolaridade,
             created_at, 
-            updated_at
+            updated_at,
+			is_verified
 			FROM paciente
 			WHERE email = $1 OR cpf = $2
 		`
@@ -196,6 +197,7 @@ func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (
 			&paciente.Escolaridade,
 			&paciente.CreatedAt,
 			&paciente.UpdatedAt,
+			&paciente.Verified,
 		)
 		if err != nil {
 			if err == sql.ErrNoRows {
@@ -328,6 +330,7 @@ func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Pacien
 	}
 
 	paciente.EncryptPassword()
+	apelido := strings.Split(paciente.Name, " ")[0]
 
 	query := `
     INSERT INTO paciente (
@@ -343,7 +346,7 @@ func (r *userRepository) CreatePaciente(paciente *model.Paciente) (*model.Pacien
 		paciente.Email,
 		paciente.Password,
 		paciente.Name,
-		paciente.Apelido,
+		apelido,
 		paciente.NomeMae,
 		paciente.CNS,
 		paciente.CPF,

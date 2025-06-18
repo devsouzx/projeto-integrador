@@ -8,6 +8,7 @@ import (
 	pacienteController "github.com/devsouzx/projeto-integrador/src/controller/paciente"
 	unidadeController "github.com/devsouzx/projeto-integrador/src/controller/unidade"
 	userController "github.com/devsouzx/projeto-integrador/src/controller/user"
+	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	fichaRepository "github.com/devsouzx/projeto-integrador/src/repository/ficha"
 	medicoRepository "github.com/devsouzx/projeto-integrador/src/repository/medico"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
@@ -15,6 +16,7 @@ import (
 	emailService "github.com/devsouzx/projeto-integrador/src/service/email"
 	fichaService "github.com/devsouzx/projeto-integrador/src/service/ficha"
 	medicoService "github.com/devsouzx/projeto-integrador/src/service/medico"
+	pacienteService "github.com/devsouzx/projeto-integrador/src/service/paciente"
 	userService "github.com/devsouzx/projeto-integrador/src/service/user"
 )
 
@@ -44,7 +46,9 @@ func InitContainer(db *sql.DB) *Container {
 	fichaService := fichaService.NewFichaService(fichRepository, userRepository)
 	fichaController := fichaController.NewFichaController(fichaService)
 
-	pacienteController := pacienteController.NewPacienteController(userRepository)
+	pacienteRepository := paciente.NewPacienteRepository(db)
+	pacienteService := pacienteService.NewPacienteService(pacienteRepository)
+	pacienteController := pacienteController.NewPacienteController(pacienteService, userRepository)
 
 	return &Container{
 		UserController: userController,

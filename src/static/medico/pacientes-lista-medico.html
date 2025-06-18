@@ -384,6 +384,29 @@
       color: #666666;
     }
 
+    /* Paginação */
+    .paginacao {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    #infoPagina {
+        font-weight: 500;
+        color: #555;
+    }
+
+    .disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
     /* Responsividade */
     @media (max-width: 768px) {
       .navegacao-superior {
@@ -441,6 +464,11 @@
       .acoes-paciente {
         justify-content: flex-start;
         margin-top: 0.5rem;
+      }
+
+      .paginacao {
+        flex-direction: column;
+        gap: 0.5rem;
       }
     }
     
@@ -682,6 +710,190 @@
         </div>
       </div>
     </div>
+
+    <!-- Área de Paginação -->
+    <div class="paginacao">
+      <button id="btnAnterior" class="botao botao-secundario" disabled>
+        <i class="fas fa-chevron-left"></i> Anterior
+      </button>
+      <span id="infoPagina">Página 1 de 1</span>
+      <button id="btnProximo" class="botao botao-secundario" disabled>
+        Próximo <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
   </main>
+  
+  <script>
+// Variáveis de estado
+let currentPage = 1;
+let totalPages = 1;
+let currentSearch = '';
+let currentFilter = '';
+
+document.addEventListener('DOMContentLoaded', function() {
+    const campoBusca = document.getElementById('campoBusca');
+    
+    // Evento de busca
+    campoBusca.addEventListener('input', function() {
+        const search = this.value.trim();
+        const activeFilter = document.querySelector('.botao-filtro.ativo')?.textContent;
+        currentPage = 1; // Resetar para a primeira página ao buscar
+        carregarPacientes(search, activeFilter === 'Todos' ? '' : activeFilter);
+    });
+    
+    // Eventos para os botões de filtro
+    document.querySelectorAll('.botao-filtro').forEach(botao => {
+        botao.addEventListener('click', function() {
+            document.querySelectorAll('.botao-filtro').forEach(b => b.classList.remove('ativo'));
+            this.classList.add('ativo');
+            const filter = this.textContent === 'Todos' ? '' : this.textContent;
+            currentPage = 1; // Resetar para a primeira página ao filtrar
+            carregarPacientes(campoBusca.value.trim(), filter);
+        });
+    });
+    
+    // Eventos de paginação
+    document.getElementById('btnAnterior').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            carregarPacientes(currentSearch, currentFilter);
+        }
+    });
+    
+    document.getElementById('btnProximo').addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            carregarPacientes(currentSearch, currentFilter);
+        }
+    });
+    
+    // Carregar pacientes inicialmente
+    carregarPacientes();
+});
+
+function carregarPacientes(search = '', filter = '') {
+    currentSearch = search;
+    currentFilter = filter;
+    
+    let url = `/medico/pacientes-lista?page=${currentPage}&pageSize=10`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (filter) url += `&filter=${encodeURIComponent(filter)}`;
+    
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('Erro na requisição');
+            return response.json();
+        })
+        .then(data => {
+            // Atualizar estado de paginação
+            totalPages = data.pagination.totalPages;
+            
+            // Atualizar controles de paginação
+            atualizarControlesPaginacao();
+            
+            // Atualizar informação da página
+            document.getElementById('infoPagina').textContent = 
+                `Página ${data.pagination.currentPage} de ${data.pagination.totalPages}`;
+            
+            // Limpar e reconstruir lista de pacientes
+            const listaPacientes = document.querySelector('.lista-pacientes');
+            while (listaPacientes.children.length > 1) {
+                listaPacientes.removeChild(listaPacientes.lastChild);
+            }
+            
+            // Adicionar novos pacientes
+            data.data.forEach(paciente => {
+                const itemPaciente = document.createElement('div');
+                itemPaciente.className = 'item-paciente';
+                itemPaciente.onclick = () => window.location.href = `/medico/paciente/${paciente.id}`;
+                
+                itemPaciente.innerHTML = `
+                    <div class="info-paciente">
+                        <div class="avatar-paciente">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="detalhes-paciente">
+                            <div class="nome-paciente">${paciente.nome}</div>
+                            <div class="cns-paciente">CPF: ${formatarCPF(paciente.cpf)}</div>
+                            <div>
+                                <span class="etiqueta ${getEtiquetaClasse(paciente)}">${getEtiquetaTexto(paciente)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>${paciente.idade} anos</div>
+                    <div class="cns-paciente">${formatarCNS(paciente.cns)}</div>
+                    <div class="ultima-consulta">
+                        <span class="data-consulta">--/--/----</span>
+                        <span class="status-consulta">Nenhuma consulta registrada</span>
+                    </div>
+                    <div class="acoes-paciente">
+                        <button class="botao botao-pequeno botao-primario tooltip" onclick="event.stopPropagation(); abrirFicha('${paciente.id}')">
+                            <i class="fas fa-file-medical"></i>
+                            <span class="tooltiptext">Abrir Ficha</span>
+                        </button>
+                        <button class="botao botao-pequeno botao-secundario tooltip" onclick="event.stopPropagation(); encaminharPaciente('${paciente.id}')">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="tooltiptext">Encaminhar</span>
+                        </button>
+                    </div>
+                `;
+                
+                listaPacientes.appendChild(itemPaciente);
+            });
+        })
+        .catch(error => {
+            console.error('Erro ao carregar pacientes:', error);
+            alert('Erro ao carregar pacientes. Por favor, tente novamente.');
+        });
+}
+
+function atualizarControlesPaginacao() {
+    const btnAnterior = document.getElementById('btnAnterior');
+    const btnProximo = document.getElementById('btnProximo');
+    
+    btnAnterior.disabled = currentPage <= 1;
+    btnProximo.disabled = currentPage >= totalPages;
+    
+    // Estilização adicional para botões desabilitados
+    if (btnAnterior.disabled) {
+        btnAnterior.classList.add('disabled');
+    } else {
+        btnAnterior.classList.remove('disabled');
+    }
+    
+    if (btnProximo.disabled) {
+        btnProximo.classList.add('disabled');
+    } else {
+        btnProximo.classList.remove('disabled');
+    }
+}
+
+// Funções auxiliares
+function formatarCPF(cpf) {
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+}
+
+function formatarCNS(cns) {
+    return cns.replace(/(\d{3})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
+}
+
+function getEtiquetaClasse(paciente) {
+    // Implemente sua lógica para determinar a classe da etiqueta
+    return 'normal';
+}
+
+function getEtiquetaTexto(paciente) {
+    // Implemente sua lógica para determinar o texto da etiqueta
+    return 'Normal';
+}
+
+function abrirFicha(pacienteId) {
+    window.location.href = `/medico/paciente/${pacienteId}/ficha`;
+}
+
+function encaminharPaciente(pacienteId) {
+    window.location.href = `/medico/paciente/${pacienteId}/encaminhamento`;
+}
+</script>
 </body>
 </html>
