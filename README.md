@@ -7,9 +7,7 @@ O **SobreVidas** é um sistema desenvolvido por estudantes do curso de Engenhari
 - Profissionais da saúde (médicos, enfermeiros, técnicos)
 - Unidades Básicas de Saúde (UBS)
 - Clínicas, hospitais e laboratórios
-- Programas de prevenção ao câncer
-- Gestores de saúde
-- Pacientes
+- Mulheres entre 25 e 64 anos
 
 ## ✅ Funcionalidades Implementadas
 
@@ -17,7 +15,7 @@ O **SobreVidas** é um sistema desenvolvido por estudantes do curso de Engenhari
 - Login de profissionais da saúde
 - Cadastro de pacientes
 - Recuperação de senha e envio de e-mail de ativação de conta
-- Área do profissional de saúde
+- Áreas do profissionais de saúde
 
 ## 🛠️ Tecnologias e Dependências
 
