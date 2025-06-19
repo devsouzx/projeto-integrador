@@ -402,72 +402,72 @@
       }
 
       .cabecalho {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
 
-  .cabecalho-perfil {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-  }
+      .cabecalho-perfil {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
 
-  .grade-dados-paciente {
-    grid-template-columns: 1fr;
-  }
+      .grade-dados-paciente {
+        grid-template-columns: 1fr;
+      }
 
-  .container-abas {
-    overflow-x: auto;
-    white-space: nowrap;
-    padding-bottom: 0.5rem;
-    scrollbar-width: none;
-  }
+      .container-abas {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 0.5rem;
+        scrollbar-width: none;
+      }
 
-  .container-abas::-webkit-scrollbar {
-    display: none;
-  }
+      .container-abas::-webkit-scrollbar {
+        display: none;
+      }
 
-  .aba {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
+      .aba {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
 
-  .item-linha-tempo {
-    flex-direction: column;
-  }
+      .item-linha-tempo {
+        flex-direction: column;
+      }
 
-  .data-linha-tempo {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
+      .data-linha-tempo {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
 
-  .conteudo-linha-tempo {
-    padding-left: 1rem;
-    border-left: none;
-    border-top: 2px solid var(--secundaria);
-    padding-top: 1rem;
-  }
+      .conteudo-linha-tempo {
+        padding-left: 1rem;
+        border-left: none;
+        border-top: 2px solid var(--secundaria);
+        padding-top: 1rem;
+      }
 
-  .conteudo-linha-tempo::before {
-    left: 50%;
-    top: -6px;
-    transform: translateX(-50%);
-  }
-  
-  .conteudo-modal {
-    width: 95%;
-    padding: 1rem;
-  }
+      .conteudo-linha-tempo::before {
+        left: 50%;
+        top: -6px;
+        transform: translateX(-50%);
+      }
+      
+      .conteudo-modal {
+        width: 95%;
+        padding: 1rem;
+      }
 
-  .titulo-modal {
-    font-size: 1.2rem;
-  }
-  
-  .botao {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
+      .titulo-modal {
+        font-size: 1.2rem;
+      }
+      
+      .botao {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -513,8 +513,6 @@
     <div class="container-abas">
       <div class="aba ativa" data-tab="overview">Resumo</div>
       <div class="aba" data-tab="exams">Exames</div>
-      <div class="aba" data-tab="prescriptions">Prescrições</div>
-      <div class="aba" data-tab="referrals">Encaminhamentos</div>
       <div class="aba" data-tab="history">Histórico Completo</div>
     </div>
 
@@ -522,69 +520,75 @@
       <div class="cabecalho-perfil">
         <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" alt="Foto do paciente" class="foto-perfil">
         <div>
-          <h2>Maria da Silva</h2>
-          <p>38 anos | Feminino | Cartão SUS: 123 4567 8901 2345</p>
-          <p>Última consulta: 15/06/2025 | Próxima consulta: 15/09/2025</p>
+          <h2>{{.Paciente.Name}}</h2>
+          <p>{{.Paciente.GetIdade}} anos | Feminino | Cartão SUS: {{.Paciente.CNS}}</p>
+          <p>CPF: {{.Paciente.CPF}}</p>
         </div>
       </div>
 
       <div class="grade-dados-paciente">
         <div class="cartao-dados">
-          <h3><i class="fas fa-history"></i> Histórico Médico</h3>
+          <h3><i class="fas fa-user"></i> Dados Pessoais</h3>
           <ul>
-            <li>2 gestações, 2 partos</li>
-            <li>Hipertensão arterial controlada</li>
-            <li>Tabagismo: 10 anos (interrompido em 2018)</li>
-            <li>Alergia: Dipirona (urticária)</li>
-            <li>Histórico familiar: Mãe com câncer de colo uterino</li>
+            <li>Nome da Mãe: {{.Paciente.NomeMae}}</li>
+            <li>Data de Nascimento: {{.Paciente.DataNascimento}}</li>
+            <li>Idade: {{.Paciente.GetIdade}} anos</li>
+            <li>Raça/Cor: {{.Paciente.RacaCor}}</li>
+            <li>Escolaridade: {{.Paciente.Escolaridade}}</li>
           </ul>
         </div>
 
         <div class="cartao-dados">
-          <h3><i class="fas fa-pills"></i> Medicações Atuais</h3>
+          <h3><i class="fas fa-home"></i> Endereço</h3>
           <ul>
-            <li>Losartana 50mg - 1x/dia (desde 2019)</li>
-            <li>Omeprazol 20mg - 1x/dia (desde 2020)</li>
-            <li>Complexo B - 1x/dia</li>
+            <li>{{.Paciente.Endereco.Logradouro}}, {{.Paciente.Endereco.Numero}}</li>
+            <li>Complemento: {{.Paciente.Endereco.Complemento}}</li>
+            <li>Bairro: {{.Paciente.Endereco.Bairro}}</li>
+            <li>Cidade: {{.Paciente.Endereco.Cidade}}</li>
+            <li>CEP: {{.Paciente.Endereco.CEP}}</li>
+            <li>Telefone: {{.Paciente.Telefone}}</li>
           </ul>
         </div>
 
         <div class="cartao-dados">
-          <h3><i class="fas fa-flask"></i> Exames Recentes</h3>
+          <h3><i class="fas fa-file-medical"></i> Anamnese</h3>
           <ul>
-            <li>Preventivo (15/06/2025): ASC-H</li>
-            <li>Hemograma (10/06/2025): Normal</li>
-            <li>Ultrassom pélvico (05/2025): Sem alterações</li>
-            <li>Teste HPV (03/2025): Positivo para tipos 16/18</li>
+            <li>Motivo do exame: {{.Anamnese.MotivoExame}}</li>
+            <li>Já fez exame antes: {{.Anamnese.FezExame}}</li>
+            <li>Usa DIU: {{.Anamnese.UsaDIU}}</li>
+            <li>Grávida: {{.Anamnese.Gravida}}</li>
+            <li>Usa anticoncepcional: {{.Anamnese.Anticoncepcional}}</li>
           </ul>
         </div>
 
         <div class="cartao-dados">
-          <h3><i class="fas fa-heartbeat"></i> Sinais Vitais</h3>
+          <h3><i class="fas fa-info-circle"></i> Informações Adicionais</h3>
           <ul>
-            <li>PA: 120x80 mmHg (15/06/2025)</li>
-            <li>IMC: 24.2 (Peso: 68kg, Altura: 1.68m)</li>
-            <li>Glicemia capilar: 92 mg/dL</li>
-            <li>Temperatura: 36.5°C</li>
+            <li>Usa hormônio para menopausa: {{.Anamnese.HormonioMenopausa}}</li>
+            <li>Já fez radioterapia: {{.Anamnese.Radioterapia}}</li>
+            <li>Sangramento pós-coito: {{.Anamnese.SangramentoPosCoito}}</li>
+            <li>Sangramento pós-menopausa: {{.Anamnese.SangramentoPosMenopausa}}</li>
           </ul>
         </div>
       </div>
     </div>
-
+<!--
     <div class="linha-tempo-paciente">
-      <h2><i class="fas fa-history"></i> Linha do Tempo</h2>
+      <h2><i class="fas fa-history"></i> Histórico de Exames</h2>
       
+      {{range .Paciente.Fichas}}
       <div class="item-linha-tempo">
-        <div class="data-linha-tempo">15/06/2025</div>
+        <div class="data-linha-tempo">{{.DataColeta}}</div>
         <div class="conteudo-linha-tempo">
           <div class="resultado-exame">
             <div style="display: flex; justify-content: space-between;">
-              <h3>Exame Preventivo - Colo do Útero</h3>
-              <span class="etiqueta etiqueta-perigo">ASC-H</span>
+              <h3>Exame Citopatológico</h3>
+              <span class="etiqueta {{if eq .Resultado "Normal"}}etiqueta-concluido{{else}}etiqueta-perigo{{end}}">{{.Resultado}}</span>
             </div>
-            <p><strong>Resultado:</strong> ASC-H (Atipia em células escamosas, não pode excluir HSIL)</p>
-            <p><strong>Médico Solicitante:</strong> Dr. Ana Oliveira</p>
-            <p><strong>Observações:</strong> Paciente relata sangramento pós-coito ocasional. Teste HPV positivo.</p>
+            <p><strong>Protocolo:</strong> {{.Protocolo}}</p>
+            <p><strong>Unidade de Saúde:</strong> {{.UnidadeSaude}}</p>
+            <p><strong>Médico Responsável:</strong> {{.ResponsavelColeta}}</p>
+            <p><strong>Observações:</strong> {{.Observacoes}}</p>
             <div style="margin-top: 1rem;">
               <a class="botao botao-primario botao-pequeno">
                 <i class="fas fa-file-medical-alt"></i> Ver Laudo Completo
@@ -596,80 +600,9 @@
           </div>
         </div>
       </div>
-
-      <div class="item-linha-tempo">
-        <div class="data-linha-tempo">12/03/2025</div>
-        <div class="conteudo-linha-tempo">
-          <div class="resultado-exame">
-            <h3>Consulta de Rotina</h3>
-            <p><strong>Médico:</strong> Dr. Carlos Silva</p>
-            <p><strong>Queixa principal:</strong> Nenhuma</p>
-            <p><strong>Exame físico:</strong> Normal</p>
-            <p><strong>Conduta:</strong> Solicitar preventivo em 3 meses</p>
-            <a class="botao botao-secundario botao-pequeno">
-              <i class="fas fa-file-alt"></i> Ver Detalhes
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="item-linha-tempo">
-        <div class="data-linha-tempo">15/12/2024</div>
-        <div class="conteudo-linha-tempo">
-          <div class="resultado-exame">
-            <div style="display: flex; justify-content: space-between;">
-              <h3>Exame Preventivo - Colo do Útero</h3>
-              <span class="etiqueta etiqueta-concluido">Normal</span>
-            </div>
-            <p><strong>Resultado:</strong> Negativo para neoplasia intraepitelial ou malignidade</p>
-            <p><strong>Médico Responsável:</strong> Dr. Ana Oliveira</p>
-            <a class="botao botao-secundario botao-pequeno">
-              <i class="fas fa-file-medical-alt"></i> Ver Laudo Completo
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+      {{end}}
+    </div> -->
   </main>
-  
-  <div class="modal" id="modalAnamnese">
-    <div class="conteudo-modal">
-      <div class="cabecalho-modal">
-        <h2 class="titulo-modal">Atualizar Anamnese</h2>
-        <button class="fechar-modal" onclick="document.getElementById('modalAnamnese').style.display='none'">&times;</button>
-      </div>
-      
-      <form>
-        <div style="margin-bottom: 1.5rem;">
-          <label for="historiaClinica" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">História Clínica</label>
-          <textarea id="historiaClinica" name="historiaClinica" style="width: 100%; padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 6px; min-height: 100px;"></textarea>
-        </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Fatores de Risco</label>
-          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
-            <label style="display: flex; align-items: center; gap: 0.5rem;">
-              <input type="checkbox" name="fatoresRisco" value="tabagismo"> Tabagismo
-            </label>
-            <label style="display: flex; align-items: center; gap: 0.5rem;">
-              <input type="checkbox" name="fatoresRisco" value="hpv"> HPV+
-            </label>
-            <label style="display: flex; align-items: center; gap: 0.5rem;">
-              <input type="checkbox" name="fatoresRisco" value="multiparidade"> Multiparidade
-            </label>
-            <label style="display: flex; align-items: center; gap: 0.5rem;">
-              <input type="checkbox" name="fatoresRisco" value="familia"> Histórico Familiar
-            </label>
-          </div>
-        </div>
-        
-        <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
-          <button type="button" class="botao botao-secundario" onclick="document.getElementById('modalAnamnese').style.display='none'">Cancelar</button>
-          <button type="submit" class="botao botao-primario">Salvar Alterações</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
   <script>
     document.querySelectorAll('.aba').forEach(aba => {
@@ -678,10 +611,6 @@
         this.classList.add('ativa');
       });
     });
-
-    function abrirModalAnamnese() {
-      document.getElementById('modalAnamnese').style.display = 'flex';
-    }
   </script>
 </body>
 </html>

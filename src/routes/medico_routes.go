@@ -20,7 +20,9 @@ func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.Med
 		medico.GET("/encaminhamentos", medicoController.ExibirEncaminhamentos)
 		medico.GET("/encaminhamentos/novo", medicoController.RenderNovoEncaminhamentoPage)
 		medico.GET("/laudos/novo", medicoController.RenderNovoLaudoPage)
-		medico.GET("/pacientes/123456", medicoController.ExibirPaciente)
+
+		medico.GET("/paciente/:id", medicoController.RenderPacientePage)
+        medico.GET("/api/pacientes/:id", pacienteController.GetPaciente)
 
 		medico.GET("/pacientes-lista", pacienteController.ListarPacientes)
 

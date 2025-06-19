@@ -27,3 +27,28 @@ func (mc *medicoController) ExibirPaciente(c *gin.Context) {
 		"Medico": medico,
 	})
 }
+
+func (pc *medicoController) RenderPacientePage(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		c.HTML(http.StatusBadRequest, "error.html", gin.H{"error": "ID do paciente é obrigatório"})
+		return
+	}
+
+	paciente, err := pc.pacienteService.GetPacienteByID(id)
+	if err != nil {
+		c.HTML(http.StatusNotFound, "error.html", gin.H{"error": err.Error()})
+		return
+	}
+
+	anamnase, err := pc.pacienteService.GetAnamneseByPacienteID(id)
+	if err != nil {
+		c.HTML(http.StatusNotFound, "error.html", gin.H{"error": err.Error()})
+		return
+	}
+
+	c.HTML(http.StatusOK, "paciente-medico.html", gin.H{
+		"Paciente": paciente,
+	    "Anamnese": anamnase,
+	})
+}

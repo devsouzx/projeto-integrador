@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Erro - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: #333333;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .container-erro {
+      background-color: white;
+      border-radius: 10px;
+      padding: 3rem;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-top: 4px solid #e74c3c;
+      max-width: 500px;
+      width: 90%;
+      margin: 0 auto;
+    }
+    
+    .icone-erro {
+      font-size: 4rem;
+      color: #e74c3c;
+      margin-bottom: 1.5rem;
+    }
+    
+    .titulo-erro {
+      font-size: 2rem;
+      color: #e74c3c;
+      margin-bottom: 1rem;
+    }
+    
+    .mensagem-erro {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .botao-primario {
+      background-color: #9b59b6;
+      color: white;
+    }
+    
+    .botao-primario:hover {
+      background-color: #8e44ad;
+      transform: translateY(-2px);
+    }
+    
+    .botao-secundario {
+      background-color: white;
+      color: #9b59b6;
+      border: 1px solid #9b59b6;
+      margin-left: 10px;
+    }
+    
+    .botao-secundario:hover {
+      background-color: #f5f7fa;
+      transform: translateY(-2px);
+    }
+    
+    .acoes-erro {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .container-erro {
+        padding: 2rem;
+      }
+      
+      .titulo-erro {
+        font-size: 1.5rem;
+      }
+      
+      .mensagem-erro {
+        font-size: 1rem;
+      }
+      
+      .acoes-erro {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .botao {
+        width: 100%;
+        margin-left: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container-erro">
+    <div class="icone-erro">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h1 class="titulo-erro">Ocorreu um erro</h1>
+    <p class="mensagem-erro">{{.error}}</p>
+    
+    <div class="acoes-erro">
+      <a href="/" class="botao botao-primario">
+        <i class="fas fa-home"></i> Página Inicial
+      </a>
+      <a href="javascript:history.back()" class="botao botao-secundario">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+  </div>
+</body>
+</html>

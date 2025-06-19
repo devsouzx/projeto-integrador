@@ -1,6 +1,8 @@
 package paciente
 
 import (
+	"fmt"
+
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
 )
@@ -19,6 +21,8 @@ type pacienteService struct {
 
 type PacienteService interface {
 	ListarPacientes(page, pageSize int, search string) ([]*model.Paciente, int, error)
+	GetPacienteByID(id string) (*model.Paciente, error)
+	GetAnamneseByPacienteID(pacienteId string) (*model.Anamnese, error)
 }
 
 func (ps *pacienteService) ListarPacientes(page, pageSize int, search string) ([]*model.Paciente, int, error) {
@@ -31,4 +35,22 @@ func (ps *pacienteService) ListarPacientes(page, pageSize int, search string) ([
     }
 
     return ps.repository.ListarPacientes(page, pageSize, search)
+}
+
+func (ps *pacienteService) GetPacienteByID(id string) (*model.Paciente, error) {
+	paciente, err := ps.repository.FindPacienteByID(id)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
+	}
+
+	return paciente, nil
+}
+
+func (ps *pacienteService) GetAnamneseByPacienteID(pacienteId string) (*model.Anamnese, error) {
+	anamnese, err := ps.repository.FindAnamneseByPacienteID(pacienteId)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao buscar anamnese: %w", err)
+	}
+
+	return anamnese, nil
 }

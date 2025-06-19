@@ -54,3 +54,15 @@ func (p *Paciente) GetID() string {
 func (p *Paciente) GetEmail() string { 
 	return p.Email 
 }
+
+func (p *Paciente) GetIdade() int {
+    if p.NascimentoTime.IsZero() {
+        return 0
+    }
+    now := time.Now()
+    years := now.Year() - p.NascimentoTime.Year()
+    if now.YearDay() < p.NascimentoTime.YearDay() {
+        years--
+    }
+    return years
+}

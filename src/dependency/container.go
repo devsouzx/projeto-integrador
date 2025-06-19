@@ -38,17 +38,17 @@ func InitContainer(db *sql.DB) *Container {
 	unidadeService := datasus.NewCNESService()
 	unidadeController := unidadeController.NewUnidadeController(unidadeService)
 
+	pacienteRepository := paciente.NewPacienteRepository(db)
+	pacienteService := pacienteService.NewPacienteService(pacienteRepository)
+	pacienteController := pacienteController.NewPacienteController(pacienteService, userRepository)
+
 	medicoRepository := medicoRepository.NewMedicoRepository(db)
 	medicoService := medicoService.NewMedicoService(medicoRepository)
-	medicoController := medicoController.NewMedicoController(medicoService, *unidadeService)
+	medicoController := medicoController.NewMedicoController(medicoService, *unidadeService, pacienteService)
 
 	fichRepository := fichaRepository.NewFichaRepository(db)
 	fichaService := fichaService.NewFichaService(fichRepository, userRepository)
 	fichaController := fichaController.NewFichaController(fichaService)
-
-	pacienteRepository := paciente.NewPacienteRepository(db)
-	pacienteService := pacienteService.NewPacienteService(pacienteRepository)
-	pacienteController := pacienteController.NewPacienteController(pacienteService, userRepository)
 
 	return &Container{
 		UserController: userController,

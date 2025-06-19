@@ -29,6 +29,7 @@ type pacienteController struct {
 type PacienteControllerInterface interface {
 	BuscarPacientePorCPF(c *gin.Context)
     ListarPacientes(c *gin.Context)
+    GetPaciente(c *gin.Context)
 }
 
 func (pc *pacienteController) ListarPacientes(c *gin.Context) {
@@ -97,4 +98,20 @@ func calcularIdade(nascimento time.Time) int {
     }
     
     return years
+}
+
+func (pc *pacienteController) GetPaciente(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID do paciente é obrigatório"})
+		return
+	}
+
+	paciente, err := pc.pacienteService.GetPacienteByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, paciente)
 }

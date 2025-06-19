@@ -22,7 +22,7 @@ func (uc *userController) CadastrarUsuario(c *gin.Context) {
 	usuario, err := uc.service.CadastrarUsuario(cadRequest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error":   err.Error(),
+			"error":   "Erro ao cadastrar usuario",
 			"details": err.Error(),
 		})
 		return
