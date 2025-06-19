@@ -67,7 +67,7 @@ O **SobreVidas** é um sistema desenvolvido por estudantes do curso de Engenhari
    go mod tidy
    ```
 
-4. **Inicialize o banco de dados** com as tabelas esperadas.
+4. **Inicialize o banco de dados**
 
 5. **Execute o servidor**
    ```bash
