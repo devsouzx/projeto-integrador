@@ -60,5 +60,11 @@ func (fs *fichaService) CreateFicha(request *request.FichaRequest) (*model.Ficha
 		return nil, fmt.Errorf("erro ao criar/atualizar dados da anamnase: %v", err)
 	}
 
+	request.ExameClinico.FichaID = ficha.ID
+	err = fs.fichaRepository.RegistrarExame(&request.ExameClinico, pacienteId)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao registrar dados do exame: %v", err)
+	}
+
 	return ficha, nil
 }

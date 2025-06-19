@@ -34,4 +34,16 @@ type Anamnese struct {
 	SangramentoPosMenopausa string `json:"sangramento_pos_menopausa" db:"sangramento_pos_menopausa"`
 	PacienteID              string `json:"paciente_id" db:"paciente_id"`
 	FichaID                 string `json:"ficha_id" db:"ficha_id"`
+	CreatedAt         time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt         time.Time `json:"updated_at" db:"updated_at"`
+}
+
+type ExameClinico struct {
+	ID                      string `json:"id" db:"id"`
+    InspecaoColo string `json:"inspecao_colo"`
+    SinaisDST    string `json:"sinais_dst"`
+    Observacoes  string `json:"observacoes"`
+	PacienteID              string `json:"paciente_id" db:"paciente_id"`
+	FichaID                 string `json:"ficha_id" db:"ficha_id"`
+	CreatedAt         time.Time `json:"created_at" db:"created_at"`
 }

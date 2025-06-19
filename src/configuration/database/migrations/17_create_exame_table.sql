@@ -10,7 +10,6 @@ CREATE TABLE exame (
     paciente_id UUID NOT NULL,
     ficha_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_exame_paciente
         FOREIGN KEY (paciente_id)
         REFERENCES paciente(id)
