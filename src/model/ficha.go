@@ -9,6 +9,7 @@ type FichaCitopatologica struct {
 	ID                string    `json:"id" db:"id"`
 	Protocolo         string    `json:"protocolo" db:"protocolo"`
 	UnidadeID         string    `json:"unidade_id" db:"unidade_id"`
+	Unidade string `json:"unidade"`
 	DataColeta        string    `json:"data_coleta" db:"data_coleta"`
 	ResponsavelColeta string    `json:"responsavel_coleta" db:"responsavel_coleta"`
 	MotivoExame       string    `json:"motivo_exame" db:"motivo_exame"`

@@ -28,11 +28,12 @@ INSERT INTO exame (
 
 -- Ficha para Paciente 2 (Carlos Eduardo Lima)
 INSERT INTO ficha (
-    protocolo, data_coleta, responsavel_coleta, motivo_exame, observacoes, responsavel_id, paciente_id
+    protocolo, data_coleta, responsavel_coleta, motivo_exame, observacoes, responsavel_id, paciente_id, unidade_id
 ) VALUES (
     'PROT20230002', '2023-01-15 09:45:00', 'Enfermeiro João Santos', 'Sangramento', 'Paciente com queixa de sangramento', 
     (SELECT id FROM medico LIMIT 1), 
-    (SELECT id FROM paciente WHERE cpf = '23456789012')
+    (SELECT id FROM paciente WHERE cpf = '23456789012'),
+    2506327
 );
 
 INSERT INTO anamnese (
@@ -556,4 +557,80 @@ INSERT INTO exame (
     'Alterado', 'Não', 'Presença de lesão suspeita',
     (SELECT id FROM paciente WHERE cpf = '00011122233'),
     (SELECT id FROM ficha WHERE protocolo = 'PROT20230020')
+);
+
+-- Atualizando as fichas com CNES de unidades de saúde de Goiânia/GO
+
+-- Ficha para Paciente 1 (Ana Clara Souza) - UBS Jardim América (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200032 WHERE protocolo = 'PROT20230001';
+
+-- Ficha para Paciente 3 (Maria das Graças Oliveira) - UBS Bueno (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200040 WHERE protocolo = 'PROT20230003';
+
+-- Ficha para Paciente 4 (Juliana Santos - Gestante) - UBS Campinas (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200059 WHERE protocolo = 'PROT20230004';
+
+-- Ficha para Paciente 5 (Pedro Henrique Alves - Criança) - Hospital Infantil (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200067 WHERE protocolo = 'PROT20230005';
+
+-- Ficha para Paciente 6 (Juan Carlos Mendez - Estrangeiro) - UBS Setor Sul (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200075 WHERE protocolo = 'PROT20230006';
+
+-- Ficha para Paciente 7 (Aruã Pataxó - Indígena) - Casa de Saúde Indígena (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200083 WHERE protocolo = 'PROT20230007';
+
+-- Ficha para Paciente 8 (Roberto Ferreira - Hipertenso) - UBS Setor Oeste (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200091 WHERE protocolo = 'PROT20230008';
+
+-- Ficha para Paciente 9 (Sônia Regina Gomes - Diabética) - UBS Setor Leste (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200105 WHERE protocolo = 'PROT20230009';
+
+-- Ficha para Paciente 10 (Francisco da Silva - Prioritário) - UBS Setor Norte (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200113 WHERE protocolo = 'PROT20230010';
+
+-- Ficha para Paciente 11 (Fernanda Oliveira) - UBS Setor Marista (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200121 WHERE protocolo = 'PROT20230011';
+
+-- Ficha para Paciente 12 (Ricardo Nunes) - UBS Setor Pedro Ludovico (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200130 WHERE protocolo = 'PROT20230012';
+
+-- Ficha para Paciente 13 (Antônia Bezerra) - UBS Setor Coimbra (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200148 WHERE protocolo = 'PROT20230013';
+
+-- Ficha para Paciente 14 (Camila Rocha - Gestante) - Maternidade Nascer Cidadão (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200156 WHERE protocolo = 'PROT20230014';
+
+-- Ficha para Paciente 15 (Lucas Mendes - Adolescente) - UBS Setor Nova Vila (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200164 WHERE protocolo = 'PROT20230015';
+
+-- Ficha para Paciente 16 (Sophie Martin - Estrangeira) - UBS Setor Bela Vista (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200172 WHERE protocolo = 'PROT20230016';
+
+-- Ficha para Paciente 17 (Jaci Tupinambá - Indígena) - Polo Base de Saúde Indígena (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200180 WHERE protocolo = 'PROT20230017';
+
+-- Ficha para Paciente 18 (Mauro Andrade - Hipertenso) - UBS Setor Criméia (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200199 WHERE protocolo = 'PROT20230018';
+
+-- Ficha para Paciente 19 (Lúcia Pereira - Diabética) - UBS Setor Recanto do Bosque (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200202 WHERE protocolo = 'PROT20230019';
+
+-- Ficha para Paciente 20 (Dona Maria - Prioritária) - UBS Setor Garavelo (Goiânia/GO)
+UPDATE ficha SET unidade_id = 5200210 WHERE protocolo = 'PROT20230020';
+
+INSERT INTO ficha (
+    protocolo, data_coleta, responsavel_coleta, motivo_exame, observacoes, responsavel_id, paciente_id, unidade_id
+) VALUES (
+    'PROT20230089', '2025-01-10 08:30:00', 'Enfermeira Maria Silva', 'Rotina', 'Paciente assintomática', 
+    (SELECT id FROM medico LIMIT 1), 
+    (SELECT id FROM paciente WHERE cpf = '12345678901'),
+    5200210
+);
+
+INSERT INTO exame (
+    inspecao_colo, sinais_dst, observacoes, paciente_id, ficha_id
+) VALUES (
+    'Alterado', 'Não', 'Colo sem alterações',
+    (SELECT id FROM paciente WHERE cpf = '12345678901'),
+    (SELECT id FROM ficha WHERE protocolo = 'PROT20230089')
 );

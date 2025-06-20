@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
+	"github.com/devsouzx/projeto-integrador/src/service/datasus"
+	"strconv"
 )
 
 func NewPacienteRepository(
@@ -24,6 +26,8 @@ type PacienteRepository interface {
 	ListarPacientes(page, pageSize int, search string) ([]*model.Paciente, int, error)
 	FindPacienteByID(id string) (*model.Paciente, error)
 	FindAnamneseByPacienteID(pacienteId string) (*model.Anamnese, error)
+	FindExamesByPacienteID(pacienteID string) ([]*model.ExameClinico, error)
+	FindFichasByPacienteID(pacienteID string) ([]*model.FichaCitopatologica, error)
 }
 
 func (pr *pacienteRepository) ListarPacientes(page, pageSize int, search string) ([]*model.Paciente, int, error) {
@@ -90,6 +94,18 @@ func (pr *pacienteRepository) ListarPacientes(page, pageSize int, search string)
 		}
 
 		p.NascimentoTime = nascimentoTime
+
+		exames, err := pr.FindExamesByPacienteID(p.ID)
+		if err != nil {
+			return nil, 0, fmt.Errorf("erro ao buscar exames: %w", err)
+		}
+
+		if len(exames) > 0 {
+			p.UltimaInspecao = exames[0].InspecaoColo
+		} else {
+			p.UltimaInspecao = ""
+		}
+
 		pacientes = append(pacientes, &p)
 	}
 
@@ -182,9 +198,9 @@ func (pr *pacienteRepository) buscarEnderecoPorPacienteID(pacienteId string) (*m
 }
 
 func (pr *pacienteRepository) FindAnamneseByPacienteID(pacienteId string) (*model.Anamnese, error) {
-    query := `
+	query := `
         SELECT 
-            id, motivo_exame, fez_exame, ultimo_exame_ano, usa_diu, 
+            id, motivo_exame, fez_exame, usa_diu, 
             gravida, anticoncepcional, hormonio_menopausa, radioterapia,
             dum, nao_lembra_dum, sangramento_pos_coito, 
             sangramento_pos_menopausa, paciente_id, ficha_id
@@ -192,35 +208,129 @@ func (pr *pacienteRepository) FindAnamneseByPacienteID(pacienteId string) (*mode
         WHERE paciente_id = $1
     `
 
-    var anamnese model.Anamnese
-    var dum sql.NullTime
+	var anamnese model.Anamnese
+	var dum sql.NullTime
 
-    err := pr.DB.QueryRow(query, pacienteId).Scan(
-        &anamnese.ID,
-        &anamnese.MotivoExame,
-        &anamnese.FezExame,
-        &anamnese.UltimoExameAno,
-        &anamnese.UsaDIU,
-        &anamnese.Gravida,
-        &anamnese.Anticoncepcional,
-        &anamnese.HormonioMenopausa,
-        &anamnese.Radioterapia,
-        &dum,
-        &anamnese.NaoLembraDUM,
-        &anamnese.SangramentoPosCoito,
-        &anamnese.SangramentoPosMenopausa,
-        &anamnese.PacienteID,
-        &anamnese.FichaID,
-    )
+	err := pr.DB.QueryRow(query, pacienteId).Scan(
+		&anamnese.ID,
+		&anamnese.MotivoExame,
+		&anamnese.FezExame,
+		&anamnese.UsaDIU,
+		&anamnese.Gravida,
+		&anamnese.Anticoncepcional,
+		&anamnese.HormonioMenopausa,
+		&anamnese.Radioterapia,
+		&dum,
+		&anamnese.NaoLembraDUM,
+		&anamnese.SangramentoPosCoito,
+		&anamnese.SangramentoPosMenopausa,
+		&anamnese.PacienteID,
+		&anamnese.FichaID,
+	)
 
-    if err != nil {
-        if err == sql.ErrNoRows {
-            return nil, fmt.Errorf("anamnese não encontrada")
-        }
-        return nil, fmt.Errorf("erro ao buscar anamnese: %w", err)
-    }
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("anamnese não encontrada")
+		}
+		return nil, fmt.Errorf("erro ao buscar anamnese: %w", err)
+	}
 
-    anamnese.DUM = dum
+	anamnese.DUM = dum
 
-    return &anamnese, nil
+	return &anamnese, nil
+}
+
+func (pr *pacienteRepository) FindExamesByPacienteID(pacienteID string) ([]*model.ExameClinico, error) {
+	query := `
+        SELECT 
+            id, inspecao_colo, sinais_dst, observacoes, paciente_id, ficha_id, created_at
+        FROM exame
+        WHERE paciente_id = $1
+        ORDER BY created_at DESC
+    `
+
+	rows, err := pr.DB.Query(query, pacienteID)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao buscar exames: %w", err)
+	}
+	defer rows.Close()
+
+	var exames []*model.ExameClinico
+	for rows.Next() {
+		var exame model.ExameClinico
+
+		err := rows.Scan(
+			&exame.ID,
+			&exame.InspecaoColo,
+			&exame.SinaisDST,
+			&exame.Observacoes,
+			&exame.PacienteID,
+			&exame.FichaID,
+			&exame.CreatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao scanear exame: %w", err)
+		}
+
+		exames = append(exames, &exame)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("erro após iterar exames: %w", err)
+	}
+
+	return exames, nil
+}
+
+func (pr *pacienteRepository) FindFichasByPacienteID(pacienteID string) ([]*model.FichaCitopatologica, error) {
+	query := `
+        SELECT 
+            id, protocolo, data_coleta, responsavel_coleta, motivo_exame, observacoes, created_at, unidade_id
+        FROM ficha
+        WHERE paciente_id = $1
+        ORDER BY data_coleta DESC
+    `
+
+	rows, err := pr.DB.Query(query, pacienteID)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao buscar fichas: %w", err)
+	}
+	defer rows.Close()
+
+	var fichas []*model.FichaCitopatologica
+	for rows.Next() {
+		var ficha model.FichaCitopatologica
+
+		err := rows.Scan(
+			&ficha.ID,
+			&ficha.Protocolo,
+			&ficha.DataColeta,
+			&ficha.ResponsavelColeta,
+			&ficha.MotivoExame,
+			&ficha.Observacoes,
+			&ficha.CreatedAt,
+			&ficha.UnidadeID,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao scanear exame: %w", err)
+		}
+
+		unidadeIDInt, err := strconv.Atoi(ficha.UnidadeID)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao converter UnidadeID para int: %w", err)
+		}
+		unidade, err := datasus.NewCNESService().BuscarUnidadePorCNES(unidadeIDInt)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao buscar unidade: %w", err)
+		}
+		ficha.Unidade = unidade.NomeRazaoSocial
+
+		fichas = append(fichas, &ficha)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("erro após iterar fichas: %w", err)
+	}
+
+	return fichas, nil
 }

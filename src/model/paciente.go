@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type Paciente struct {
 	BaseUser
@@ -16,6 +18,8 @@ type Paciente struct {
 	Escolaridade   string    `json:"escolaridade" db:"escolaridade"`
 	Endereco       *Endereco  `json:"endereco"`
 	Telefone       string    `json:"telefone" db:"telefone"`
+	UltimaInspecao string `json:"ultima_inspecao"`
+	Fichas []*FichaCitopatologica `json:"fichas"`
 	CreatedAt      time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at" db:"updated_at"`
 }

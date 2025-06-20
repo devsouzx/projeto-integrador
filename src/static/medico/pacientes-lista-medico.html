@@ -678,6 +678,7 @@ function carregarPacientes(search = '', filter = '') {
             data.data.forEach(paciente => {
                 const itemPaciente = document.createElement('div');
                 itemPaciente.className = 'item-paciente';
+                
                 itemPaciente.onclick = () => window.location.href = `/medico/paciente/${paciente.id}`;
                 
                 itemPaciente.innerHTML = `
@@ -689,7 +690,7 @@ function carregarPacientes(search = '', filter = '') {
                             <div class="nome-paciente">${paciente.nome}</div>
                             <div class="cns-paciente">CPF: ${formatarCPF(paciente.cpf)}</div>
                             <div>
-                                <span class="etiqueta ${getEtiquetaClasse(paciente)}">${getEtiquetaTexto(paciente)}</span>
+                                <span class="etiqueta ${getEtiquetaClasse(paciente.ultimaInspecao)}">${getEtiquetaTexto(paciente.ultimaInspecao)}</span>
                             </div>
                         </div>
                     </div>
@@ -750,14 +751,48 @@ function formatarCNS(cns) {
     return cns.replace(/(\d{3})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
 }
 
-function getEtiquetaClasse(paciente) {
-    // Implemente sua lógica para determinar a classe da etiqueta
-    return 'normal';
+function getEtiquetaClasse(ultimaInspecao) {
+    if (!ultimaInspecao) return 'normal'; // Sem informação de exame
+    
+    // Mapeia os valores possíveis para classes CSS
+    const mapeamento = {
+        'normal': 'normal-ccu',
+        'alterado': 'lesao',
+        'hpv': 'hpv',
+        'lesao': 'lesao',
+        'alto risco': 'alto-risco',
+        'suspeito': 'lesao',
+        'cancer': 'lesao'
+    };
+    
+    // Padroniza para minúsculas e remove acentos
+    const padronizado = ultimaInspecao.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    
+    // Retorna a classe correspondente ou 'normal' como padrão
+    return mapeamento[padronizado] || 'normal-ccu';
 }
 
-function getEtiquetaTexto(paciente) {
-    // Implemente sua lógica para determinar o texto da etiqueta
-    return 'Normal';
+function getEtiquetaTexto(ultimaInspecao) {
+    if (!ultimaInspecao) return 'Sem exame'; // Quando não há informação
+    
+    // Mapeia os valores para textos mais amigáveis
+    const mapeamento = {
+        'normal': 'Normal',
+        'alterado': 'Alterado',
+        'hpv': 'HPV+',
+        'lesao': 'Lesão',
+        'alto risco': 'Alto Risco',
+        'suspeito': 'Suspeito',
+        'cancer': 'Câncer'
+    };
+    
+    // Padroniza para minúsculas e remove acentos
+    const padronizado = ultimaInspecao.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    
+    // Retorna o texto correspondente ou o valor original como fallback
+    return mapeamento[padronizado] || ultimaInspecao;
 }
 
 function abrirFicha(pacienteId) {
