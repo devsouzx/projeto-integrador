@@ -1,6 +1,7 @@
 package paciente
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
@@ -14,7 +15,8 @@ func (pc *pacienteController) BuscarPacientePorCPF(c *gin.Context) {
 		return
 	}
 
-	pacienteInterface, err := pc.userRepository.FindUserByIdentifier(cpf, "paciente")
+	pacienteInterface, err := pc.userRepository.FindPacienteByCPF(cpf)
+	fmt.Println(err)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Paciente não encontrado"})
 		return

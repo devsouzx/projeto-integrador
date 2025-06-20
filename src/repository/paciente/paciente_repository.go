@@ -193,7 +193,7 @@ func (pr *pacienteRepository) FindAnamneseByPacienteID(pacienteId string) (*mode
     `
 
     var anamnese model.Anamnese
-    var dum sql.NullString
+    var dum sql.NullTime
 
     err := pr.DB.QueryRow(query, pacienteId).Scan(
         &anamnese.ID,
@@ -220,11 +220,7 @@ func (pr *pacienteRepository) FindAnamneseByPacienteID(pacienteId string) (*mode
         return nil, fmt.Errorf("erro ao buscar anamnese: %w", err)
     }
 
-    if dum.Valid {
-        anamnese.DUM = dum.String
-    } else {
-        anamnese.DUM = ""
-    }
+    anamnese.DUM = dum
 
     return &anamnese, nil
 }

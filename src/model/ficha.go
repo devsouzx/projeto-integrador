@@ -1,6 +1,7 @@
 package model
 
 import (
+	"database/sql"
 	"time"
 )
 
@@ -28,7 +29,7 @@ type Anamnese struct {
 	Anticoncepcional        string `json:"anticoncepcional" db:"anticoncepcional"`
 	HormonioMenopausa       string `json:"hormonio_menopausa" db:"hormonio_menopausa"`
 	Radioterapia            string `json:"radioterapia" db:"radioterapia"`
-	DUM                     string `json:"dum" db:"dum"`
+	DUM                     sql.NullTime `json:"dum" db:"dum"`
 	NaoLembraDUM            bool   `json:"nao_lembra_dum" db:"nao_lembra_dum"`
 	SangramentoPosCoito     string `json:"sangramento_pos_coito" db:"sangramento_pos_coito"`
 	SangramentoPosMenopausa string `json:"sangramento_pos_menopausa" db:"sangramento_pos_menopausa"`

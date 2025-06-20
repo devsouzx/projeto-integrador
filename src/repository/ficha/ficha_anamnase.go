@@ -18,6 +18,13 @@ func (fr *fichaRepository) UpsertAnamnase(anamnase *model.Anamnese, pacienteId s
         SELECT id FROM anamnese WHERE paciente_id = $1 LIMIT 1
     `, pacienteId).Scan(&existingId)
 
+    var dum interface{}
+    if anamnase.NaoLembraDUM || anamnase.DUM.Time.IsZero() {
+        dum = nil
+    } else {
+        dum = anamnase.DUM.Time
+    }
+
     if err == nil {
         _, err = fr.DB.Exec(`
             UPDATE anamnese SET
@@ -29,7 +36,7 @@ func (fr *fichaRepository) UpsertAnamnase(anamnase *model.Anamnese, pacienteId s
             WHERE id = $13
         `, anamnase.MotivoExame, anamnase.FezExame, anamnase.UltimoExameAno,
             anamnase.UsaDIU, anamnase.Gravida, anamnase.Anticoncepcional,
-            anamnase.HormonioMenopausa, anamnase.Radioterapia, anamnase.DUM,
+            anamnase.HormonioMenopausa, anamnase.Radioterapia, dum,
             anamnase.NaoLembraDUM, anamnase.SangramentoPosCoito,
             anamnase.SangramentoPosMenopausa, existingId)
     } else if errors.Is(err, sql.ErrNoRows) {
@@ -42,7 +49,7 @@ func (fr *fichaRepository) UpsertAnamnase(anamnase *model.Anamnese, pacienteId s
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
         `, anamnase.MotivoExame, anamnase.FezExame, anamnase.UltimoExameAno,
             anamnase.UsaDIU, anamnase.Gravida, anamnase.Anticoncepcional,
-            anamnase.HormonioMenopausa, anamnase.Radioterapia, anamnase.DUM,
+            anamnase.HormonioMenopausa, anamnase.Radioterapia, dum,
             anamnase.NaoLembraDUM, anamnase.SangramentoPosCoito,
             anamnase.SangramentoPosMenopausa, pacienteId, anamnase.FichaID)
     }
