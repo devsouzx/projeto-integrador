@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Não Encontrada - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      overflow-y: auto;
+      background-color: #f8f1ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(214, 174, 241, 0.15);
+      z-index: -1;
+    }
+    
+    body::before {
+      width: 400px;
+      height: 400px;
+      top: -150px;
+      right: -100px;
+    }
+    
+    body::after {
+      width: 500px;
+      height: 500px;
+      bottom: -200px;
+      left: -150px;
+    }
+    
+    .onda {
+      position: absolute;
+      opacity: 0.05;
+      z-index: -1;
+    }
+    
+    .onda-1 {
+      width: 700px;
+      height: 600px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--primaria) 0%, transparent 70%);
+    }
+    
+    .onda-2 {
+      width: 900px;
+      height: 800px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--secundaria) 0%, transparent 70%);
+    }
+    
+    .container-404 {
+      width: 100%;
+      max-width: 600px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      overflow: hidden;
+      animation: aparecer 0.5s ease-out;
+      position: relative;
+      text-align: center;
+      padding: 40px;
+    }
+    
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      background-color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border: 2px solid var(--primaria);
+    }
+    
+    .logo i {
+      color: var(--primaria);
+      font-size: 36px;
+    }
+    
+    .titulo-404 {
+      font-size: 100px;
+      font-weight: 700;
+      color: var(--primaria);
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+    
+    .subtitulo-404 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+    }
+    
+    .mensagem-404 {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    
+    .botao {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 5px;
+    }
+    
+    .botao:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(155,89,182,0.2);
+    }
+    
+    .botao:active {
+      transform: translateY(0);
+    }
+    
+    .botao-secundario {
+      background: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+    
+    .acoes-404 {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    
+    @media (max-width: 768px) {
+      body::before,
+      body::after,
+      .onda {
+        display: none;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f8f1ff, #e8d5f5);
+        padding: 10px;
+      }
+
+      .container-404 {
+        max-width: 100%;
+        padding: 30px 20px;
+      }
+      
+      .titulo-404 {
+        font-size: 80px;
+      }
+      
+      .subtitulo-404 {
+        font-size: 20px;
+      }
+      
+      .acoes-404 {
+        flex-direction: column;
+      }
+      
+      .botao {
+        width: 100%;
+        margin: 5px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="onda onda-1"></div>
+  <div class="onda onda-2"></div>
+
+  <div class="container-404">
+    <div class="logo">
+      <i class="fas fa-heartbeat"></i>
+    </div>
+    
+    <h1 class="titulo-404">404</h1>
+    <h2 class="subtitulo-404">Página não encontrada</h2>
+    
+    <p class="mensagem-404">
+      A página que você está tentando acessar não existe ou foi movida.
+      <br>
+      Verifique o endereço digitado ou utilize os links abaixo para navegar no sistema.
+    </p>
+    
+    <div class="acoes-404">
+      <a href="/login" class="botao">
+        <i class="fas fa-home"></i> Página Inicial
+      </a>
+      <a href="javascript:history.back()" class="botao botao-secundario">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+  </div>
+</body>
+</html>

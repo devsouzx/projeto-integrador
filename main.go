@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/configuration/database"
@@ -31,6 +32,10 @@ func main() {
 
 	container := dependency.InitContainer(db)
 
+	router.NoRoute(func(c *gin.Context) {
+		c.HTML(http.StatusNotFound, "404.html", nil)
+	})
+	
 	routes.InitRoutes(router.Group("/"), container)
 
 	if err := router.Run(":8080"); err != nil {
