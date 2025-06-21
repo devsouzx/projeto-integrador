@@ -17,7 +17,6 @@ const docTemplate = `{
     "paths": {
         "/login": {
             "post": {
-                "description": "Login user in the application",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,13 +24,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Login"
+                    "auth"
                 ],
-                "summary": "Login",
+                "summary": "Login de usuário",
                 "parameters": [
                     {
-                        "description": "Request body",
-                        "name": "request",
+                        "description": "Credenciais de login",
+                        "name": "credentials",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -39,7 +38,14 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.LoginResponse"
+                        }
+                    }
+                }
             }
         }
     },
@@ -51,6 +57,40 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "redirect": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/response.UserResponse"
+                }
+            }
+        },
+        "response.UserResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 },
                 "role": {

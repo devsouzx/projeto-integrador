@@ -7,17 +7,18 @@ import (
 	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/model/request"
+	"github.com/devsouzx/projeto-integrador/src/model/response"
 	"github.com/gin-gonic/gin"
 )
 
 // @BasePath /api/v1
 
-// @Summary Login
-// @Description Login user in the application
-// @Tags Login
+// @Summary Login de usuário
+// @Tags auth
 // @Accept json
 // @Produce json
-// @Param request body request.LoginRequest true "Request body"
+// @Param credentials body request.LoginRequest true "Credenciais de login"
+// @Success 200 {object} response.LoginResponse
 // @Router /login [post]
 func (uc *userController) LoginUser(c *gin.Context) {
 	var userRequest request.LoginRequest
@@ -72,18 +73,20 @@ func (uc *userController) LoginUser(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("token", token, 3600, "/", "", false, true)
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Login realizado com sucesso",
-		"token":   token,
-		"user": gin.H{
-			"id":    user.GetID(),
-			"name":  user.GetName(),
-			"email": user.GetEmail(),
-			"role":  user.GetRole(),
+	response := response.LoginResponse{
+		Message: "Login realizado com sucesso",
+		Token:   token,
+		User: response.UserResponse{
+			ID:    user.GetID(),
+			Name:  user.GetName(),
+			Email: user.GetEmail(),
+			Role:  user.GetRole(),
 		},
-		"redirect": fmt.Sprintf("/%s/dashboard", strings.ToLower(user.GetRole())),
-	})
+		Redirect: fmt.Sprintf("/%s/dashboard", strings.ToLower(user.GetRole())),
+	}
+
+	c.SetCookie("token", token, 3600, "/", "", false, true)
+	c.JSON(http.StatusOK, response)
 }
 
 func (uc *userController) Logout(c *gin.Context) {

@@ -8,6 +8,28 @@ definitions:
       role:
         type: string
     type: object
+  response.LoginResponse:
+    properties:
+      message:
+        type: string
+      redirect:
+        type: string
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/response.UserResponse'
+    type: object
+  response.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -15,18 +37,21 @@ paths:
     post:
       consumes:
       - application/json
-      description: Login user in the application
       parameters:
-      - description: Request body
+      - description: Credenciais de login
         in: body
-        name: request
+        name: credentials
         required: true
         schema:
           $ref: '#/definitions/request.LoginRequest'
       produces:
       - application/json
-      responses: {}
-      summary: Login
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.LoginResponse'
+      summary: Login de usuário
       tags:
-      - Login
+      - auth
 swagger: "2.0"
