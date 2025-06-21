@@ -18,7 +18,7 @@ type Paciente struct {
 	Escolaridade   string    `json:"escolaridade" db:"escolaridade"`
 	Endereco       *Endereco  `json:"endereco"`
 	Telefone       string    `json:"telefone" db:"telefone"`
-	UltimaInspecao string `json:"ultima_inspecao"`
+	UltimoExame *ExameClinico `json:"ultima_exame"`
 	Fichas []*FichaCitopatologica `json:"fichas"`
 	CreatedAt      time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at" db:"updated_at"`
@@ -57,6 +57,14 @@ func (p *Paciente) GetID() string {
 
 func (p *Paciente) GetEmail() string { 
 	return p.Email 
+}
+
+func (p *Paciente) GetInspecaoColo() string {
+	return p.UltimoExame.InspecaoColo
+}
+
+func (p *Paciente) GetDataUltimoExame() time.Time {
+	return p.UltimoExame.CreatedAt
 }
 
 func (p *Paciente) GetIdade() int {

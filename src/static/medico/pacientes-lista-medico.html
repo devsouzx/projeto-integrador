@@ -697,8 +697,7 @@ function carregarPacientes(search = '', filter = '') {
                     <div>${paciente.idade} anos</div>
                     <div class="cns-paciente">${formatarCNS(paciente.cns)}</div>
                     <div class="ultima-consulta">
-                        <span class="data-consulta">--/--/----</span>
-                        <span class="status-consulta">Nenhuma consulta registrada</span>
+                        <span class="data-consulta">${formatarData(paciente.ultimoExameData)}</span>
                     </div>
                     <div class="acoes-paciente">
                         <button class="botao botao-pequeno botao-primario tooltip" onclick="event.stopPropagation(); abrirFicha('${paciente.id}')">
@@ -746,7 +745,18 @@ function atualizarControlesPaginacao() {
 function formatarCPF(cpf) {
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
 }
-
+function formatarData(dataString) {
+    if (!dataString) return '--/--/----';
+    
+    const data = new Date(dataString);
+    if (isNaN(data.getTime())) return '--/--/----';
+    
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+    
+    return `${dia}/${mes}/${ano}`;
+}
 function formatarCNS(cns) {
     return cns.replace(/(\d{3})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
 }

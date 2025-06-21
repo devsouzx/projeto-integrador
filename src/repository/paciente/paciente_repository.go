@@ -101,9 +101,7 @@ func (pr *pacienteRepository) ListarPacientes(page, pageSize int, search string)
 		}
 
 		if len(exames) > 0 {
-			p.UltimaInspecao = exames[0].InspecaoColo
-		} else {
-			p.UltimaInspecao = ""
+			p.UltimoExame = exames[0]
 		}
 
 		pacientes = append(pacientes, &p)

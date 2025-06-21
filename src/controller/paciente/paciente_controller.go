@@ -69,7 +69,8 @@ func (pc *pacienteController) ListarPacientes(c *gin.Context) {
 			"raca":           p.RacaCor,
 			"nacionalidade":  p.Nacionalidade,
 			"escolaridade":   p.Escolaridade,
-			"ultimaInspecao": p.UltimaInspecao,
+			"ultimoExameData": p.GetDataUltimoExame(),
+			"ultimaInspecao": p.GetInspecaoColo(),
 		}
 		response = append(response, pacienteData)
 	}
