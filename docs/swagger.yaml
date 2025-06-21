@@ -1,4 +1,32 @@
+definitions:
+  request.LoginRequest:
+    properties:
+      identificador:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login user in the application
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Login
+      tags:
+      - Login
 swagger: "2.0"

@@ -10,6 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @BasePath /api/v1
+
+// @Summary Login
+// @Description Login user in the application
+// @Tags Login
+// @Accept json
+// @Produce json
+// @Param request body request.LoginRequest true "Request body"
+// @Router /login [post]
 func (uc *userController) LoginUser(c *gin.Context) {
 	var userRequest request.LoginRequest
 
