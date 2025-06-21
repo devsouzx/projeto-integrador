@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
+	"github.com/devsouzx/projeto-integrador/src/controller/enfermeiro"
 	"github.com/gin-gonic/gin"
 )
 
-func InitEnfermeiroRoutes(rg *gin.RouterGroup) {
+func InitEnfermeiroRoutes(rg *gin.RouterGroup, enfermeiroController enfermeiro.EnfermeiroControllerInterface) {
 	enfermeira := rg.Group("/enfermeiro")
 	enfermeira.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("enfermeiro"))
 	{
@@ -34,5 +35,7 @@ func InitEnfermeiroRoutes(rg *gin.RouterGroup) {
 		enfermeira.GET("/relatorios", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "relatorios-enfermeira.html", nil)
 		})
+
+		enfermeira.GET("/minha-unidade", enfermeiroController.GetUnidadeEnfermeiro)
 	}
 }

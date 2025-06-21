@@ -10,10 +10,13 @@ import (
 	userController "github.com/devsouzx/projeto-integrador/src/controller/user"
 	fichaRepository "github.com/devsouzx/projeto-integrador/src/repository/ficha"
 	medicoRepository "github.com/devsouzx/projeto-integrador/src/repository/medico"
-	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
+	enfermeiroController "github.com/devsouzx/projeto-integrador/src/controller/enfermeiro"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
+	pacienteRepository "github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	"github.com/devsouzx/projeto-integrador/src/service/datasus"
 	emailService "github.com/devsouzx/projeto-integrador/src/service/email"
+	enfermeiroRepository "github.com/devsouzx/projeto-integrador/src/repository/enfermeiro"
+	enfermeiroService "github.com/devsouzx/projeto-integrador/src/service/enfermeiro"
 	fichaService "github.com/devsouzx/projeto-integrador/src/service/ficha"
 	medicoService "github.com/devsouzx/projeto-integrador/src/service/medico"
 	pacienteService "github.com/devsouzx/projeto-integrador/src/service/paciente"
@@ -26,20 +29,23 @@ type Container struct {
 	FichaController    fichaController.FichaController
 	UnidadeController  unidadeController.UnidadeController
 	PacienteController pacienteController.PacienteControllerInterface
+	EnfermeiroController enfermeiroController.EnfermeiroControllerInterface
 }
 
 func InitContainer(db *sql.DB) *Container {
 	// Incializa Repositories
 	userRepository := userRepository.NewUserRepository(db)
-	pacienteRepository := paciente.NewPacienteRepository(db)
+	pacienteRepository := pacienteRepository.NewPacienteRepository(db)
 	medicoRepository := medicoRepository.NewMedicoRepository(db)
 	fichRepository := fichaRepository.NewFichaRepository(db)
+	enfermeiroRepository := enfermeiroRepository.NewEnfermeiroRepository(db)
 
 	// Inicializa Services
 	emailService := emailService.NewEmailService()
 	unidadeService := datasus.NewCNESService()
 	pacienteService := pacienteService.NewPacienteService(pacienteRepository)
 	medicoService := medicoService.NewMedicoService(medicoRepository)
+	enfermeiroService := enfermeiroService.NewEnfermeiroService(enfermeiroRepository)
 	userService := userService.NewUserDomainService(
 		userRepository,
 		emailService,
@@ -55,6 +61,10 @@ func InitContainer(db *sql.DB) *Container {
 	unidadeController := unidadeController.NewUnidadeController(unidadeService)
 	pacienteController := pacienteController.NewPacienteController(pacienteService)
 	fichaController := fichaController.NewFichaController(fichaService)
+	enfermeiroController := enfermeiroController.NewEnfermeiroController(
+		enfermeiroService,
+		*unidadeService,
+	)
 	userController := userController.NewUserController(
 		userService, 
 		emailService,
@@ -71,5 +81,6 @@ func InitContainer(db *sql.DB) *Container {
 		FichaController:    fichaController,
 		UnidadeController:  unidadeController,
 		PacienteController: pacienteController,
+		EnfermeiroController: enfermeiroController,
 	}
 }

@@ -988,7 +988,7 @@
   botaoBuscar.disabled = true;
   
   // Chamada real para a API
-  fetch(`/medico/buscar-paciente?cpf=${cpfNumeros}`, {
+  fetch(`/buscar-paciente?cpf=${cpfNumeros}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -1174,7 +1174,7 @@ function calcularIdade(dataNascimento) {
     console.log("Dados sendo enviados:", payload); // Para debug
 
     try {
-        const response = await fetch('/medico/nova-ficha', {
+        const response = await fetch('/nova-ficha', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1264,7 +1264,7 @@ function calcularIdade(dataNascimento) {
           };
           
           // Enviar para o backend
-          fetch('/medico/nova-ficha', {
+          fetch('/nova-ficha', {
             method: 'POST',
              headers: {
     'Content-Type': 'application/json',

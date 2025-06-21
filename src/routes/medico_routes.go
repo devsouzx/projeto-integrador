@@ -1,14 +1,13 @@
 package routes
 
 import (
-	fichaController "github.com/devsouzx/projeto-integrador/src/controller/ficha"
 	medicoController "github.com/devsouzx/projeto-integrador/src/controller/medico"
 	"github.com/devsouzx/projeto-integrador/src/controller/paciente"
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/gin-gonic/gin"
 )
 
-func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.MedicoControllerInterface, fichaController fichaController.FichaController, pacienteController paciente.PacienteControllerInterface) {
+func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.MedicoControllerInterface, pacienteController paciente.PacienteControllerInterface) {
 	medico := rg.Group("/medico")
 	medico.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("medico"))
 	{
@@ -26,9 +25,6 @@ func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.Med
 
 		medico.GET("/pacientes-lista", pacienteController.ListarPacientes)
 
-		medico.POST("/nova-ficha", fichaController.Create)
-
-		medico.GET("/buscar-paciente", pacienteController.BuscarPacientePorCPF)
 		medico.GET("/minha-unidade", medicoController.GetUnidadeMedico)
 	}
 }
