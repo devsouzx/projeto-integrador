@@ -10,6 +10,7 @@ import (
 	"github.com/devsouzx/projeto-integrador/src/model"
 
 	"github.com/devsouzx/projeto-integrador/src/model/request"
+	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
 	emailService "github.com/devsouzx/projeto-integrador/src/service/email"
 	"golang.org/x/crypto/bcrypt"
@@ -18,15 +19,18 @@ import (
 func NewUserDomainService(
 	userRepository userRepository.UserRepository,
 	emailService emailService.EmailService,
+	pacienteRepository paciente.PacienteRepository,
 ) UserDomainService {
 	return &userDomainService{
 		userRepository: userRepository,
 		emailService:   emailService,
+		pacienteRepository: pacienteRepository,
 	}
 }
 
 type userDomainService struct {
 	userRepository userRepository.UserRepository
+	pacienteRepository paciente.PacienteRepository
 	emailService   emailService.EmailService
 }
 
@@ -177,7 +181,7 @@ func (s *userDomainService) CadastrarUsuario(req request.CadastroRequest) (*mode
 		}
 	}
 
-	usuario, err := s.userRepository.CreatePaciente(usuario)
+	usuario, err := s.pacienteRepository.CreatePaciente(usuario)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao cadastrar paciente: %w", err)
 	}

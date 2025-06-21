@@ -6,22 +6,26 @@ import (
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/model/request"
 	fichaRepository "github.com/devsouzx/projeto-integrador/src/repository/ficha"
+	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
 )
 
 func NewFichaService(
 	fichaRepository fichaRepository.FichaRepositoryInterface,
 	userRepository userRepository.UserRepository,
+	pacienteRepository paciente.PacienteRepository,
 ) FichaServiceInterface {
 	return &fichaService{
 		fichaRepository: fichaRepository,
 		userRepository:  userRepository,
+		pacienteRepository: pacienteRepository,
 	}
 }
 
 type fichaService struct {
 	fichaRepository fichaRepository.FichaRepositoryInterface
-	userRepository  userRepository.UserRepository
+	userRepository userRepository.UserRepository
+	pacienteRepository paciente.PacienteRepository
 }
 
 type FichaServiceInterface interface {
@@ -31,7 +35,7 @@ type FichaServiceInterface interface {
 func (fs *fichaService) CreateFicha(request *request.FichaRequest) (*model.FichaCitopatologica, error) {
 	paciente, err := fs.userRepository.FindUserByIdentifier(request.Paciente.CPF, "paciente")
     if err != nil {
-        paciente, err = fs.userRepository.CreatePacienteficha(&request.Paciente)
+        paciente, err = fs.pacienteRepository.CreatePacienteficha(&request.Paciente)
         if err != nil {
             return nil, fmt.Errorf("erro ao criar paciente: %v", err)
         }
@@ -39,7 +43,7 @@ func (fs *fichaService) CreateFicha(request *request.FichaRequest) (*model.Ficha
         pacienteModel := paciente.(*model.Paciente)
         pacienteModel.Name = request.Paciente.Name
         pacienteModel.DataNascimento = request.Paciente.DataNascimento
-        err := fs.userRepository.UpdatePaciente(pacienteModel)
+        err := fs.pacienteRepository.UpdatePaciente(pacienteModel)
         if err != nil {
             return nil, fmt.Errorf("erro ao atualizar paciente: %v", err)
         }

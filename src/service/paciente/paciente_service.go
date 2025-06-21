@@ -22,6 +22,7 @@ type pacienteService struct {
 type PacienteService interface {
 	ListarPacientes(page, pageSize int, search string) ([]*model.Paciente, int, error)
 	GetPacienteByID(id string) (*model.Paciente, error)
+	GetPacienteByCPF(CPF string) (*model.Paciente, error)
 	GetAnamneseByPacienteID(pacienteId string) (*model.Anamnese, error)
 	ListarExamesPeloPaciente(identifier string) ([]*model.ExameClinico, error)
 	ListarFichasPeloPaciente(identifier string) ([]*model.FichaCitopatologica, error)
@@ -42,7 +43,7 @@ func (ps *pacienteService) ListarPacientes(page, pageSize int, search string) ([
 func (ps *pacienteService) GetPacienteByID(id string) (*model.Paciente, error) {
 	paciente, err := ps.repository.FindPacienteByID(id)
 	if err != nil {
-
+		return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
 	}
 
 	fichas, err := ps.ListarFichasPeloPaciente(id)
@@ -51,6 +52,15 @@ func (ps *pacienteService) GetPacienteByID(id string) (*model.Paciente, error) {
 	}
 	paciente.Fichas = fichas
 
+	return paciente, nil
+}
+
+func (ps *pacienteService) GetPacienteByCPF(CPF string) (*model.Paciente, error) {
+	paciente, err := ps.repository.FindPacienteByCPF(CPF)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
+	}
+	
 	return paciente, nil
 }
 

@@ -3,11 +3,13 @@ package paciente
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
+
+	"strconv"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/service/datasus"
-	"strconv"
 )
 
 func NewPacienteRepository(
@@ -28,6 +30,10 @@ type PacienteRepository interface {
 	FindAnamneseByPacienteID(pacienteId string) (*model.Anamnese, error)
 	FindExamesByPacienteID(pacienteID string) ([]*model.ExameClinico, error)
 	FindFichasByPacienteID(pacienteID string) ([]*model.FichaCitopatologica, error)
+	CreatePaciente(paciente *model.Paciente) (*model.Paciente, error)
+	UpdatePaciente(paciente *model.Paciente) error
+	CreatePacienteficha(paciente *model.Paciente) (*model.Paciente, error)
+	FindPacienteByCPF(identifier string) (*model.Paciente, error)
 }
 
 func (pr *pacienteRepository) ListarPacientes(page, pageSize int, search string) ([]*model.Paciente, int, error) {
@@ -331,4 +337,224 @@ func (pr *pacienteRepository) FindFichasByPacienteID(pacienteID string) ([]*mode
 	}
 
 	return fichas, nil
+}
+
+func (pr *pacienteRepository) FindPacienteByCPF(identifier string) (*model.Paciente, error) {
+	var paciente model.Paciente
+
+	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", ""), " ", "")
+
+	query := `
+			SELECT id,
+            nome AS name,
+            cpf, 
+            cns, 
+            nome_mae, 
+            data_nascimento,
+            telefone, 
+            apelido, 
+            raca AS raca_cor, 
+            nacionalidade,
+            escolaridade,
+            created_at, 
+            updated_at,
+			is_verified
+			FROM paciente
+			WHERE cpf = $1
+		`
+
+	err := pr.DB.QueryRow(query, cpfFormatado).Scan(
+		&paciente.ID,
+		&paciente.Name,
+		&paciente.CPF,
+		&paciente.CNS,
+		&paciente.NomeMae,
+		&paciente.NascimentoTime,
+		&paciente.Telefone,
+		&paciente.Apelido,
+		&paciente.RacaCor,
+		&paciente.Nacionalidade,
+		&paciente.Escolaridade,
+		&paciente.CreatedAt,
+		&paciente.UpdatedAt,
+		&paciente.Verified,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("usuário ou senha inválidos")
+		}
+		return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
+	}
+
+	endereco, err := pr.buscarEnderecoPorPacienteID(paciente.ID)
+	if err == nil {
+		paciente.Endereco = endereco
+	} else {
+		fmt.Printf("Erro ao buscar endereço: %v\n", err)
+	}
+
+	return &paciente, nil
+}
+
+func (pr *pacienteRepository) CreatePaciente(paciente *model.Paciente) (*model.Paciente, error) {
+	if paciente.DataNascimento != "" {
+		nascimento, err := time.Parse("2006-01-02", paciente.DataNascimento)
+		if err != nil {
+			return nil, fmt.Errorf("formato de data inválido: %v", err)
+		}
+		paciente.NascimentoTime = nascimento
+	}
+
+	paciente.EncryptPassword()
+	apelido := strings.Split(paciente.Name, " ")[0]
+
+	query := `
+    INSERT INTO paciente (
+        email, senha, nome, 
+        apelido, nome_mae, cns, cpf, 
+        data_nascimento, nacionalidade, 
+        raca, escolaridade, telefone
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    RETURNING id, created_at, updated_at`
+
+	err := pr.DB.QueryRow(
+		query,
+		paciente.Email,
+		paciente.Password,
+		paciente.Name,
+		apelido,
+		paciente.NomeMae,
+		paciente.CNS,
+		paciente.CPF,
+		paciente.NascimentoTime,
+		paciente.Nacionalidade,
+		paciente.RacaCor,
+		paciente.Escolaridade,
+		paciente.Telefone,
+	).Scan(&paciente.ID, &paciente.CreatedAt, &paciente.UpdatedAt)
+
+	if err != nil {
+		return nil, fmt.Errorf("erro ao criar paciente: %v", err)
+	}
+
+	if paciente.Endereco != nil {
+		queryEndereco := `
+        INSERT INTO endereco (
+            cep, logradouro, numero, complemento, 
+            bairro, cidade, uf, paciente_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING id, created_at, updated_at`
+
+		err = pr.DB.QueryRow(
+			queryEndereco,
+			paciente.Endereco.CEP,
+			paciente.Endereco.Logradouro,
+			paciente.Endereco.Numero,
+			paciente.Endereco.Complemento,
+			paciente.Endereco.Bairro,
+			paciente.Endereco.Cidade,
+			paciente.Endereco.UF,
+			paciente.ID,
+		).Scan(
+			&paciente.Endereco.ID,
+			&paciente.Endereco.CreatedAt,
+			&paciente.Endereco.UpdatedAt,
+		)
+
+		if err != nil {
+			return nil, fmt.Errorf("erro ao criar endereço: %v", err)
+		}
+	}
+
+	return paciente, nil
+}
+
+func (pr *pacienteRepository) CreatePacienteficha(paciente *model.Paciente) (*model.Paciente, error) {
+	if paciente.DataNascimento != "" {
+		nascimento, err := time.Parse("2006-01-02", paciente.DataNascimento)
+		if err != nil {
+			return nil, fmt.Errorf("formato de data inválido: %v", err)
+		}
+		paciente.NascimentoTime = nascimento
+	}
+
+	paciente.EncryptPassword()
+	apelido := strings.Split(paciente.Name, " ")[0]
+
+	query := `
+    INSERT INTO paciente (nome, 
+        apelido, nome_mae, cns, cpf, 
+        data_nascimento, nacionalidade, 
+        raca, escolaridade, telefone
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    RETURNING id, created_at, updated_at`
+
+	err := pr.DB.QueryRow(
+		query,
+		paciente.Name,
+		apelido,
+		paciente.NomeMae,
+		paciente.CNS,
+		paciente.CPF,
+		paciente.NascimentoTime,
+		paciente.Nacionalidade,
+		paciente.RacaCor,
+		paciente.Escolaridade,
+		paciente.Telefone,
+	).Scan(&paciente.ID, &paciente.CreatedAt, &paciente.UpdatedAt)
+
+	if err != nil {
+		return nil, fmt.Errorf("erro ao criar paciente: %v", err)
+	}
+
+	if paciente.Endereco != nil {
+		queryEndereco := `
+        INSERT INTO endereco (
+            cep, logradouro, numero, complemento, 
+            bairro, cidade, uf, paciente_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING id, created_at, updated_at`
+
+		err = pr.DB.QueryRow(
+			queryEndereco,
+			paciente.Endereco.CEP,
+			paciente.Endereco.Logradouro,
+			paciente.Endereco.Numero,
+			paciente.Endereco.Complemento,
+			paciente.Endereco.Bairro,
+			paciente.Endereco.Cidade,
+			paciente.Endereco.UF,
+			paciente.ID,
+		).Scan(
+			&paciente.Endereco.ID,
+			&paciente.Endereco.CreatedAt,
+			&paciente.Endereco.UpdatedAt,
+		)
+
+		if err != nil {
+			return nil, fmt.Errorf("erro ao criar endereço: %v", err)
+		}
+	}
+
+	return paciente, nil
+}
+
+func (pr *pacienteRepository) UpdatePaciente(paciente *model.Paciente) error {
+	query := `UPDATE paciente SET nome = $1, 
+        apelido = $2, nome_mae = $3, cns = $4, cpf = $5, 
+        data_nascimento = $6, nacionalidade = $7, 
+        raca = $8, escolaridade = $9, telefone = $10 WHERE id = $11`
+	_, err := pr.DB.Exec(query,
+		paciente.Name,
+		paciente.Apelido,
+		paciente.NomeMae,
+		paciente.CNS,
+		paciente.CPF,
+		paciente.NascimentoTime,
+		paciente.Nacionalidade,
+		paciente.RacaCor,
+		paciente.Escolaridade,
+		paciente.Telefone,
+		paciente.ID)
+	return err
 }

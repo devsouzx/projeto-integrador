@@ -8,9 +8,9 @@ import (
 	pacienteController "github.com/devsouzx/projeto-integrador/src/controller/paciente"
 	unidadeController "github.com/devsouzx/projeto-integrador/src/controller/unidade"
 	userController "github.com/devsouzx/projeto-integrador/src/controller/user"
-	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	fichaRepository "github.com/devsouzx/projeto-integrador/src/repository/ficha"
 	medicoRepository "github.com/devsouzx/projeto-integrador/src/repository/medico"
+	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
 	"github.com/devsouzx/projeto-integrador/src/service/datasus"
 	emailService "github.com/devsouzx/projeto-integrador/src/service/email"
@@ -21,40 +21,55 @@ import (
 )
 
 type Container struct {
-	UserController userController.UserController
-	MedicoController medicoController.MedicoControllerInterface
-	FichaController fichaController.FichaController
-	UnidadeController unidadeController.UnidadeController
+	UserController     userController.UserController
+	MedicoController   medicoController.MedicoControllerInterface
+	FichaController    fichaController.FichaController
+	UnidadeController  unidadeController.UnidadeController
 	PacienteController pacienteController.PacienteControllerInterface
 }
 
 func InitContainer(db *sql.DB) *Container {
-	emailService := emailService.NewEmailService()
+	// Incializa Repositories
 	userRepository := userRepository.NewUserRepository(db)
-	
-	userService := userService.NewUserDomainService(userRepository, emailService)
-	userController := userController.NewUserController(userService, emailService)
-
-	unidadeService := datasus.NewCNESService()
-	unidadeController := unidadeController.NewUnidadeController(unidadeService)
-
 	pacienteRepository := paciente.NewPacienteRepository(db)
-	pacienteService := pacienteService.NewPacienteService(pacienteRepository)
-	pacienteController := pacienteController.NewPacienteController(pacienteService, userRepository)
-
 	medicoRepository := medicoRepository.NewMedicoRepository(db)
-	medicoService := medicoService.NewMedicoService(medicoRepository)
-	medicoController := medicoController.NewMedicoController(medicoService, *unidadeService, pacienteService)
-
 	fichRepository := fichaRepository.NewFichaRepository(db)
-	fichaService := fichaService.NewFichaService(fichRepository, userRepository)
+
+	// Inicializa Services
+	emailService := emailService.NewEmailService()
+	unidadeService := datasus.NewCNESService()
+	pacienteService := pacienteService.NewPacienteService(pacienteRepository)
+	medicoService := medicoService.NewMedicoService(medicoRepository)
+	userService := userService.NewUserDomainService(
+		userRepository,
+		emailService,
+		pacienteRepository,
+	)
+	fichaService := fichaService.NewFichaService(
+		fichRepository,
+		userRepository,
+		pacienteRepository,
+	)
+
+	// Inicializa Controllers
+	unidadeController := unidadeController.NewUnidadeController(unidadeService)
+	pacienteController := pacienteController.NewPacienteController(pacienteService)
 	fichaController := fichaController.NewFichaController(fichaService)
+	userController := userController.NewUserController(
+		userService, 
+		emailService,
+	)
+	medicoController := medicoController.NewMedicoController(
+		medicoService, 
+		*unidadeService, 
+		pacienteService,
+	)
 
 	return &Container{
-		UserController: userController,
-		MedicoController: medicoController,
-		FichaController: fichaController,
-		UnidadeController: unidadeController,
+		UserController:     userController,
+		MedicoController:   medicoController,
+		FichaController:    fichaController,
+		UnidadeController:  unidadeController,
 		PacienteController: pacienteController,
 	}
 }

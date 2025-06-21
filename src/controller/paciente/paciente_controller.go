@@ -5,31 +5,73 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
-	"github.com/devsouzx/projeto-integrador/src/repository/user"
+	
 	"github.com/devsouzx/projeto-integrador/src/service/paciente"
 	"github.com/gin-gonic/gin"
 )
 
 func NewPacienteController(
 	pacienteService paciente.PacienteService,
-	userRepository user.UserRepository,
 ) PacienteControllerInterface {
 	return &pacienteController{
 		pacienteService: pacienteService,
-		userRepository:  userRepository,
 	}
 }
 
 type pacienteController struct {
 	pacienteService paciente.PacienteService
-	userRepository  user.UserRepository
 }
 
 type PacienteControllerInterface interface {
 	BuscarPacientePorCPF(c *gin.Context)
 	ListarPacientes(c *gin.Context)
 	GetPaciente(c *gin.Context)
+}
+
+func (pc *pacienteController) BuscarPacientePorCPF(c *gin.Context) {
+	cpf := c.Query("cpf")
+	if cpf == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "CPF não informado"})
+		return
+	}
+
+	paciente, err := pc.pacienteService.GetPacienteByCPF(cpf)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Paciente não encontrado"})
+		return
+	}
+
+	dataNascimento := ""
+	if !paciente.NascimentoTime.IsZero() {
+		dataNascimento = paciente.NascimentoTime.Format("2006-01-02")
+	}
+
+	response := gin.H{
+		"Name":           paciente.Name,
+		"Apelido":        paciente.Apelido,
+		"NomeMae":        paciente.NomeMae,
+		"CNS":            paciente.CNS,
+		"CPF":            paciente.CPF,
+		"DataNascimento": dataNascimento,
+		"Nacionalidade":  paciente.Nacionalidade,
+		"RacaCor":        paciente.RacaCor,
+		"Escolaridade":   paciente.Escolaridade,
+		"Telefone":       paciente.Telefone,
+	}
+
+	if paciente.Endereco != nil {
+		response["Endereco"] = gin.H{
+			"Logradouro":  paciente.Endereco.Logradouro,
+			"Numero":      paciente.Endereco.Numero,
+			"Complemento": paciente.Endereco.Complemento,
+			"Bairro":      paciente.Endereco.Bairro,
+			"Cidade":      paciente.Endereco.Cidade,
+			"CEP":         paciente.Endereco.CEP,
+			"UF":          paciente.Endereco.UF,
+		}
+	}
+	
+	c.JSON(http.StatusOK, response)
 }
 
 func (pc *pacienteController) ListarPacientes(c *gin.Context) {
@@ -90,18 +132,6 @@ func (pc *pacienteController) ListarPacientes(c *gin.Context) {
 	})
 }
 
-func calcularIdade(nascimento time.Time) int {
-	now := time.Now()
-	years := now.Year() - nascimento.Year()
-
-	if now.Month() < nascimento.Month() ||
-		(now.Month() == nascimento.Month() && now.Day() < nascimento.Day()) {
-		years--
-	}
-
-	return years
-}
-
 func (pc *pacienteController) GetPaciente(c *gin.Context) {
 	id := c.Param("id")
 	if id == "" {
@@ -116,4 +146,16 @@ func (pc *pacienteController) GetPaciente(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, paciente)
+}
+
+func calcularIdade(nascimento time.Time) int {
+	now := time.Now()
+	years := now.Year() - nascimento.Year()
+
+	if now.Month() < nascimento.Month() ||
+		(now.Month() == nascimento.Month() && now.Day() < nascimento.Day()) {
+		years--
+	}
+
+	return years
 }
