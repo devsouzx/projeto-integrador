@@ -13,15 +13,15 @@ func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.Med
 	{
 		medico.GET("/dashboard", medicoController.RenderDashboard)
 		medico.GET("/nova-ficha", medicoController.RenderNovaFichaPage)
-		medico.GET("/pacientes", medicoController.ExibirListaPacientes)
-		medico.GET("/laudos", medicoController.ExibirLaudos)
-		medico.GET("/estatisticas", medicoController.ExibirEstatisticas)
-		medico.GET("/encaminhamentos", medicoController.ExibirEncaminhamentos)
+		medico.GET("/pacientes", medicoController.RenderListaPacientesPage)
+		medico.GET("/laudos", medicoController.RenderLaudosPage)
+		medico.GET("/estatisticas", medicoController.RenderEstatisticasPage)
+		medico.GET("/encaminhamentos", medicoController.RenderEncaminhamentosPage)
 		medico.GET("/encaminhamentos/novo", medicoController.RenderNovoEncaminhamentoPage)
 		medico.GET("/laudos/novo", medicoController.RenderNovoLaudoPage)
-
 		medico.GET("/paciente/:id", medicoController.RenderPacientePage)
-        
+		medico.GET("/api/paciente/:id", medicoController.GetPacienteByID)
+
 		medico.GET("/minha-unidade", medicoController.GetUnidadeMedico)
 	}
 }
