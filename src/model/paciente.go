@@ -51,6 +51,10 @@ func (p *Paciente) GetCPF() string {
 	return p.CPF
 }
 
+func (p *Paciente) GetPhone() string {
+	return p.Telefone
+}
+
 func (p *Paciente) GetID() string {
 	return p.ID
 }

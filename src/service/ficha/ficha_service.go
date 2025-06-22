@@ -2,23 +2,27 @@ package ficha
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/model/request"
 	fichaRepository "github.com/devsouzx/projeto-integrador/src/repository/ficha"
 	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
+	"github.com/devsouzx/projeto-integrador/src/service/notifications"
 )
 
 func NewFichaService(
 	fichaRepository fichaRepository.FichaRepositoryInterface,
 	userRepository userRepository.UserRepository,
 	pacienteRepository paciente.PacienteRepository,
+	notificationsService notifications.NotificationService,
 ) FichaServiceInterface {
 	return &fichaService{
 		fichaRepository: fichaRepository,
 		userRepository:  userRepository,
 		pacienteRepository: pacienteRepository,
+		notificationsService: notificationsService,
 	}
 }
 
@@ -26,6 +30,7 @@ type fichaService struct {
 	fichaRepository fichaRepository.FichaRepositoryInterface
 	userRepository userRepository.UserRepository
 	pacienteRepository paciente.PacienteRepository
+	notificationsService notifications.NotificationService
 }
 
 type FichaServiceInterface interface {
@@ -71,6 +76,16 @@ func (fs *fichaService) CreateFicha(request *request.FichaRequest) (*model.Ficha
 	err = fs.fichaRepository.RegistrarExame(&request.ExameClinico, pacienteId)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao registrar dados do exame: %v", err)
+	}
+
+	err = fs.notificationsService.SendExamNotification(
+		paciente.(*model.Paciente).GetPhone(),
+		paciente.GetName(),
+		"07/07/2025",
+	)
+	
+	if err != nil {
+		log.Printf("Falha ao enviar SMS: %v", err)
 	}
 
 	return ficha, nil
