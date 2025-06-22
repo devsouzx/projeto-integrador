@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	
+
 	"github.com/devsouzx/projeto-integrador/src/service/paciente"
 	"github.com/gin-gonic/gin"
 )

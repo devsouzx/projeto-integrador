@@ -22,7 +22,8 @@ func InitRoutes(rg *gin.RouterGroup, container *dependency.Container) {
 	{
 		rg.GET("/buscar-paciente", container.PacienteController.BuscarPacientePorCPF)
 		rg.POST("/nova-ficha", container.FichaController.Create)
-		
+		rg.GET("/pacientes-lista", container.PacienteController.ListarPacientes)
+		rg.GET("/api/pacientes/:id", container.PacienteController.GetPaciente)
 	}
 
 	// Inicializa Swagger

@@ -648,7 +648,7 @@ function carregarPacientes(search = '', filter = '') {
     currentSearch = search;
     currentFilter = filter;
     
-    let url = `/medico/pacientes-lista?page=${currentPage}&pageSize=10`;
+    let url = `/pacientes-lista?page=${currentPage}&pageSize=10`;
     if (search) url += `&search=${encodeURIComponent(search)}`;
     if (filter) url += `&filter=${encodeURIComponent(filter)}`;
     

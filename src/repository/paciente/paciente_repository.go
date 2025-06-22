@@ -60,7 +60,7 @@ func (pr *pacienteRepository) ListarPacientes(page, pageSize int, search string)
 
 	query := `
 		SELECT 
-			id, nome, email, cpf, cns, nome_mae, data_nascimento, 
+			id, nome, cpf, cns, nome_mae, data_nascimento, 
 			telefone, apelido, raca, nacionalidade, escolaridade, 
 			created_at, updated_at
 		FROM paciente`
@@ -91,7 +91,7 @@ func (pr *pacienteRepository) ListarPacientes(page, pageSize int, search string)
 		var nascimentoTime time.Time
 
 		err := rows.Scan(
-			&p.ID, &p.Name, &p.Email, &p.CPF, &p.CNS, &p.NomeMae, &nascimentoTime,
+			&p.ID, &p.Name, &p.CPF, &p.CNS, &p.NomeMae, &nascimentoTime,
 			&p.Telefone, &p.Apelido, &p.RacaCor, &p.Nacionalidade, &p.Escolaridade,
 			&p.CreatedAt, &p.UpdatedAt,
 		)
@@ -123,7 +123,7 @@ func (pr *pacienteRepository) ListarPacientes(page, pageSize int, search string)
 func (pr *pacienteRepository) FindPacienteByID(id string) (*model.Paciente, error) {
 	query := `
         SELECT 
-            id, nome, email, cpf, cns, nome_mae, data_nascimento, 
+            id, nome, cpf, cns, nome_mae, data_nascimento, 
             telefone, apelido, raca, nacionalidade, escolaridade,
             created_at, updated_at
         FROM paciente
@@ -136,7 +136,6 @@ func (pr *pacienteRepository) FindPacienteByID(id string) (*model.Paciente, erro
 	err := pr.DB.QueryRow(query, id).Scan(
 		&paciente.ID,
 		&paciente.Name,
-		&paciente.Email,
 		&paciente.CPF,
 		&paciente.CNS,
 		&paciente.NomeMae,

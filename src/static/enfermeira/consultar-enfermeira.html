@@ -354,6 +354,46 @@
       gap: 0.5rem;
     }
 
+    /* Paginação */
+    .paginacao {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    #infoPagina {
+        font-weight: 500;
+        color: #555;
+    }
+
+    .disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    /* Loader */
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #9b59b6;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 2s linear infinite;
+      margin: 20px auto;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     /* Responsividade */
     @media (max-width: 768px) {
       .navegacao-superior {
@@ -427,6 +467,11 @@
       .acoes-modal .botao {
         width: 100%;
       }
+      
+      .paginacao {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -467,7 +512,7 @@
     
     <div class="container-busca">
       <h2 class="titulo-busca">Buscar Paciente</h2>
-      <form class="formulario-busca">
+      <form class="formulario-busca" id="formBusca">
         <div class="grupo-formulario">
           <label for="termo-busca" class="rotulo-formulario">Nome, CPF ou Cartão SUS</label>
           <input type="text" id="termo-busca" class="controle-formulario" placeholder="Digite para buscar">
@@ -487,10 +532,12 @@
     <div class="container-resultados">
       <div class="cabecalho-resultados">
         <h2>Resultados da Busca</h2>
-        <div class="contador-resultados">5 pacientes encontrados</div>
+        <div class="contador-resultados" id="contador-resultados">0 pacientes encontrados</div>
       </div>
       
-      <table class="tabela-pacientes">
+      <div class="loader" id="loader"></div>
+      
+      <table class="tabela-pacientes" id="tabela-pacientes">
         <thead>
           <tr>
             <th>Paciente</th>
@@ -501,59 +548,21 @@
             <th>Ações</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Maria da Silva</td>
-            <td>15/05/1985</td>
-            <td>123 4567 8901 2345</td>
-            <td>15/03/2025</td>
-            <td><span class="etiqueta-status status-normal">Normal</span></td>
-            <td>
-              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('1')"><i class="fas fa-eye"></i> Visualizar</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Joana Pereira</td>
-            <td>22/10/1978</td>
-            <td>234 5678 9012 3456</td>
-            <td>10/01/2025</td>
-            <td><span class="etiqueta-status status-normal">Normal</span></td>
-            <td>
-              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('2')"><i class="fas fa-eye"></i> Visualizar</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Ana Oliveira</td>
-            <td>03/07/1990</td>
-            <td>345 6789 0123 4567</td>
-            <td>12/09/2024</td>
-            <td><span class="etiqueta-status status-alterado">Alterado</span></td>
-            <td>
-              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('3')"><i class="fas fa-eye"></i> Visualizar</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Carla Santos</td>
-            <td>28/02/1982</td>
-            <td>456 7890 1234 5678</td>
-            <td>20/05/2024</td>
-            <td><span class="etiqueta-status status-normal">Normal</span></td>
-            <td>
-              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('4')"><i class="fas fa-eye"></i> Visualizar</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Fernanda Costa</td>
-            <td>17/11/1975</td>
-            <td>567 8901 2345 6789</td>
-            <td>15/03/2024</td>
-            <td><span class="etiqueta-status status-normal">Normal</span></td>
-            <td>
-              <a href="#" class="link-acao" onclick="abrirModalVisualizacao('5')"><i class="fas fa-eye"></i> Visualizar</a>
-            </td>
-          </tr>
+        <tbody id="tabela-pacientes-body">
+          <!-- Os dados serão preenchidos via JavaScript -->
         </tbody>
       </table>
+      
+      <!-- Área de Paginação -->
+      <div class="paginacao">
+        <button id="btnAnterior" class="botao botao-primario" disabled>
+          <i class="fas fa-chevron-left"></i> Anterior
+        </button>
+        <span id="infoPagina">Página 1 de 1</span>
+        <button id="btnProximo" class="botao botao-primario" disabled>
+          Próximo <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
     </div>
   </main>
   
@@ -646,18 +655,278 @@
   </div>
 
   <script>
+    // Variáveis de estado
+    let currentPage = 1;
+    let totalPages = 1;
+    let currentSearch = '';
+    let currentDate = '';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const formBusca = document.getElementById('formBusca');
+        
+        // Evento de busca
+        formBusca.addEventListener('submit', function(e) {
+            e.preventDefault();
+            currentSearch = document.getElementById('termo-busca').value.trim();
+            currentDate = document.getElementById('data-busca').value;
+            currentPage = 1; // Resetar para a primeira página ao buscar
+            carregarPacientes();
+        });
+        
+        // Eventos de paginação
+        document.getElementById('btnAnterior').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                carregarPacientes();
+            }
+        });
+        
+        document.getElementById('btnProximo').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                carregarPacientes();
+            }
+        });
+        
+        // Carregar pacientes inicialmente
+        carregarPacientes();
+    });
+
+    function carregarPacientes() {
+    const loader = document.getElementById('loader');
+    const tabela = document.getElementById('tabela-pacientes');
+    const tabelaBody = document.getElementById('tabela-pacientes-body');
+    
+    // Mostrar loader e esconder tabela
+    loader.style.display = 'block';
+    tabela.style.display = 'none';
+    
+    // Construir URL da API
+    let url = `/pacientes-lista?page=${currentPage}&pageSize=10`;
+    if (currentSearch) url += `&search=${encodeURIComponent(currentSearch)}`;
+    if (currentDate) url += `&data=${encodeURIComponent(currentDate)}`;
+    
+    // Fazer requisição para o backend
+    fetch(url, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro na requisição');
+        }
+        return response.json();
+    })
+    .then(response => {
+        // Ajuste para a estrutura real da resposta
+        const pacientes = response.data || [];
+        const pagination = response.pagination || {};
+        
+        // Atualizar estado de paginação
+        totalPages = pagination.totalPages || 1;
+        
+        // Atualizar controles de paginação
+        atualizarControlesPaginacao();
+        
+        // Atualizar contador de resultados
+        document.getElementById('contador-resultados').textContent = 
+            `${pagination.totalItems || 0} pacientes encontrados`;
+        
+        // Atualizar informação da página
+        document.getElementById('infoPagina').textContent = 
+            `Página ${currentPage} de ${totalPages}`;
+        
+        // Limpar tabela
+        tabelaBody.innerHTML = '';
+        
+        // Adicionar pacientes na tabela
+        if (pacientes.length > 0) {
+            pacientes.forEach(paciente => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${paciente.apelido || paciente.nome || 'Não informado'}</td>
+                    <td>${formatarData(paciente.nascimento)}</td>
+                    <td>${formatarCNS(paciente.cns)}</td>
+                    <td>${formatarData(paciente.ultimoExameData)}</td>
+                    <td>
+                        <span class="etiqueta-status ${paciente.ultimaInspecao === 'Normal' ? 'status-normal' : 'status-alterado'}">
+                            ${paciente.ultimaInspecao === 'Normal' ? 'Normal' : 'Alterado'}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="#" class="link-acao" onclick="abrirModalVisualizacao('${paciente.id}')">
+                            <i class="fas fa-eye"></i> Visualizar
+                        </a>
+                    </td>
+                `;
+                
+                tabelaBody.appendChild(row);
+            });
+        } else {
+            // Caso não haja resultados
+            const row = document.createElement('tr');
+            row.innerHTML = `<td colspan="6" style="text-align: center;">Nenhum paciente encontrado</td>`;
+            tabelaBody.appendChild(row);
+        }
+        
+        // Esconder loader e mostrar tabela
+        loader.style.display = 'none';
+        tabela.style.display = 'table';
+    })
+    .catch(error => {
+        console.error('Erro ao carregar pacientes:', error);
+        
+        // Mostrar mensagem de erro
+        tabelaBody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; color: #721c24;">
+                    Erro ao carregar pacientes. Por favor, tente novamente.
+                </td>
+            </tr>
+        `;
+        
+        // Esconder loader e mostrar tabela
+        loader.style.display = 'none';
+        tabela.style.display = 'table';
+    });
+}
+    
+    function atualizarControlesPaginacao() {
+        const btnAnterior = document.getElementById('btnAnterior');
+        const btnProximo = document.getElementById('btnProximo');
+        
+        btnAnterior.disabled = currentPage <= 1;
+        btnProximo.disabled = currentPage >= totalPages;
+        
+        // Estilização adicional para botões desabilitados
+        if (btnAnterior.disabled) {
+            btnAnterior.classList.add('disabled');
+        } else {
+            btnAnterior.classList.remove('disabled');
+        }
+        
+        if (btnProximo.disabled) {
+            btnProximo.classList.add('disabled');
+        } else {
+            btnProximo.classList.remove('disabled');
+        }
+    }
+
+    // Funções auxiliares
+    function formatarData(dataString) {
+        if (!dataString) return '--/--/----';
+        
+        const data = new Date(dataString);
+        if (isNaN(data.getTime())) return '--/--/----';
+        
+        const dia = String(data.getDate()).padStart(2, '0');
+        const mes = String(data.getMonth() + 1).padStart(2, '0');
+        const ano = data.getFullYear();
+        
+        return `${dia}/${mes}/${ano}`;
+    }
+    
+    function formatarCNS(cns) {
+        if (!cns) return 'Não informado';
+        return cns.replace(/(\d{3})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
+    }
+    
     function abrirModalVisualizacao(idPaciente) {
-      if (idPaciente === '3') {
-        document.getElementById('resultado-ultimo-exame').className = 'etiqueta-status status-alterado';
-        document.getElementById('resultado-ultimo-exame').textContent = 'Alterado';
-        document.getElementById('observacoes-ultimo-exame').textContent = 'Resultado alterado. Encaminhar para avaliação médica.';
-      }
-      
-      document.getElementById('modalVisualizacao').classList.add('ativo');
+    fetch(`/api/pacientes/${idPaciente}`)
+    .then(response => {
+        if (!response.ok) throw new Error('Erro ao carregar paciente');
+        return response.json();
+    })
+    .then(paciente => {
+        // Preencher dados pessoais
+        document.getElementById('nome-paciente').textContent = paciente.name || paciente.apelido || 'Não informado';
+        document.getElementById('sus-paciente').textContent = formatarCNS(paciente.cns) || 'Não informado';
+        
+        // Data de nascimento e idade
+        const nascimentoEl = document.getElementById('nascimento-paciente');
+        if (paciente.nascimento) {
+            const idade = calcularIdade(paciente.nascimento);
+            nascimentoEl.textContent = `${formatarData(paciente.nascimento)} (${idade} anos)`;
+        } else {
+            nascimentoEl.textContent = 'Não informado';
+        }
+        
+        // Telefone
+        document.getElementById('telefone-paciente').textContent = paciente.telefone || 'Não informado';
+        
+        // Endereço completo
+        const endereco = paciente.endereco;
+        if (endereco) {
+            const enderecoStr = [
+                endereco.logradouro,
+                endereco.numero,
+                endereco.complemento ? `, ${endereco.complemento}` : '',
+                ` - ${endereco.bairro}`,
+                `, ${endereco.cidade}/${endereco.uf}`,
+                ` - CEP: ${endereco.cep || 'sem CEP'}`
+            ].join('');
+            document.getElementById('endereco-paciente').textContent = enderecoStr;
+        } else {
+            document.getElementById('endereco-paciente').textContent = 'Não informado';
+        }
+        
+        // Informações do último exame
+        const ultimoExame = paciente.fichas && paciente.fichas.length > 0 
+            ? paciente.fichas[0] 
+            : null;
+        
+        document.getElementById('data-ultimo-exame').textContent = 
+            ultimoExame ? formatarData(ultimoExame.data_coleta) : 'Nenhum exame registrado';
+            
+        document.getElementById('tipo-ultimo-exame').textContent = 
+            ultimoExame ? (ultimoExame.motivo_exame || 'Não especificado') : '-';
+            
+            
+        document.getElementById('observacoes-ultimo-exame').textContent = 
+            ultimoExame ? (ultimoExame.observacoes || 'Nenhuma observação') : '-';
+            
+        // Resultado do exame (ajuste conforme seu modelo de dados)
+        const resultadoEl = document.getElementById('resultado-ultimo-exame');
+        if (ultimoExame) {
+            resultadoEl.textContent = 'Normal'; // Substitua pela lógica real
+            resultadoEl.className = 'etiqueta-status status-normal';
+        } else {
+            resultadoEl.textContent = 'Não realizado';
+            resultadoEl.className = '';
+        }
+        
+        // Mostrar o modal
+        document.getElementById('modalVisualizacao').classList.add('ativo');
+    })
+    .catch(error => {
+        console.error('Erro ao carregar detalhes:', error);
+        alert('Erro ao carregar detalhes do paciente. Por favor, tente novamente.');
+    });
+}
+
+    function calcularIdade(dataNascimento) {
+        if (!dataNascimento) return '?';
+        
+        const nascimento = new Date(dataNascimento);
+        if (isNaN(nascimento.getTime())) return '?';
+        
+        const hoje = new Date();
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const mes = hoje.getMonth() - nascimento.getMonth();
+        
+        if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
+        }
+        
+        return idade;
     }
 
     function fecharModalVisualizacao() {
-      document.getElementById('modalVisualizacao').classList.remove('ativo');
+        document.getElementById('modalVisualizacao').classList.remove('ativo');
     }
   </script>
 </body>

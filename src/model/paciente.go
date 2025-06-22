@@ -60,11 +60,17 @@ func (p *Paciente) GetEmail() string {
 }
 
 func (p *Paciente) GetInspecaoColo() string {
+	if p.UltimoExame == nil {
+		return ""
+	}
 	return p.UltimoExame.InspecaoColo
 }
 
 func (p *Paciente) GetDataUltimoExame() time.Time {
-	return p.UltimoExame.CreatedAt
+    if p.UltimoExame == nil {
+        return time.Time{}
+    }
+    return p.UltimoExame.CreatedAt
 }
 
 func (p *Paciente) GetIdade() int {
