@@ -21,10 +21,10 @@ type enfermeiroRepository struct {
 }
 
 type EnfermeiroRepositoryInterface interface {
-	FindEnfermeiroByIdentifier(identifier string) (model.UserInterface, error)
+	FindEnfermeiroByIdentifier(identifier string) (*model.Enfermeiro, error)
 }
 
-func (er *enfermeiroRepository) FindEnfermeiroByIdentifier(identifier string) (model.UserInterface, error) {
+func (er *enfermeiroRepository) FindEnfermeiroByIdentifier(identifier string) (*model.Enfermeiro, error) {
 	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", ""), " ", "")
 	clean := strings.ToUpper(strings.ReplaceAll(identifier, "/", ""))
 	

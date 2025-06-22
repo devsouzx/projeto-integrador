@@ -20,10 +20,10 @@ type enfermeitoService struct {
 }
 
 type EnfermeiroServiceInterface interface {
-	FindEnfermeiroByIdentifier(identifier string) (model.UserInterface, error)
+	FindEnfermeiroByIdentifier(identifier string) (*model.Enfermeiro, error)
 }
 
-func (es *enfermeitoService) FindEnfermeiroByIdentifier(identifier string) (model.UserInterface, error) {
+func (es *enfermeitoService) FindEnfermeiroByIdentifier(identifier string) (*model.Enfermeiro, error) {
 	enfermeiro, err := es.repository.FindEnfermeiroByIdentifier(identifier)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao busccar o enfermeiro")
