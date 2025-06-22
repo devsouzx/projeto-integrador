@@ -26,6 +26,8 @@ O **SobreVidas** é um sistema desenvolvido por estudantes do curso de Engenhari
 - **golang-jwt/jwt** (autenticação com JWT)
 - **godotenv** (configuração via `.env`)
 - **gomail** (envio de e-mails)
+- **Twilio** (envio de SMS)
+- **swaggo/gin-swagger** (documentação da API)
 - **PostgreSQL** (banco de dados)
 - Outras dependências estão listadas no `go.mod`
 
@@ -47,19 +49,27 @@ O **SobreVidas** é um sistema desenvolvido por estudantes do curso de Engenhari
 
 2. **Crie um arquivo `.env`** com as variáveis necessárias:
    ```
+   # Banco de Dados
    DB_HOST=localhost
    DB_USERNAME=seu_usuario
    DB_PASSWORD=sua_senha
    DB_NAME=sobrevidas
    DB_PORT=5432
-   
+
+   # JWT
    JWT_SECRET_KEY=crie_uma_secret_key
-   
+
+   # SMTP
    SMTP_PORT=587
    SMTP_HOST=smtp.gmail.com
    SMTP_USER=seu_email
    SMTP_PASS=sua_senha
    SMTP_FROM=seu_email
+
+   # Twilio
+   TWILIO_ACCOUNT_SID=seu_sid
+   TWILIO_AUTH_TOKEN=seu_token
+   TWILIO_PHONE=seu_twillio_phone
    ```
 
 3. **Instale as dependências**
@@ -79,6 +89,20 @@ O **SobreVidas** é um sistema desenvolvido por estudantes do curso de Engenhari
    http://localhost:8080
    ```
 
+---
+
+## 📚 Documentação da API (Swagger)
+
+Após rodar o servidor, acesse:
+
+```
+http://localhost:8080/swagger/index.html
+```
+
+> A documentação interativa exibe todos os endpoints disponíveis, exemplos de requisições e respostas, além de facilitar testes diretos na API.
+
+---
+
 ## 📁 Estrutura do Projeto
 
 ```
@@ -86,7 +110,8 @@ projeto-integrador/
 ├── main.go               # Arquivo principal
 ├── go.mod / go.sum       # Dependências
 ├── src/                  # Código backend (controladores, rotas, etc.)
-  └── static/               # HTML, CSS e Javascript
+│   └── static/           # HTML, CSS e Javascript (frontend)
+├── docs/                 # Documentação Swagger (gerado pelo swag)
 ```
 
 ## 👨‍💻 Contribuidores
