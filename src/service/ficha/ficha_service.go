@@ -19,17 +19,17 @@ func NewFichaService(
 	notificationsService notifications.NotificationService,
 ) FichaServiceInterface {
 	return &fichaService{
-		fichaRepository: fichaRepository,
-		userRepository:  userRepository,
-		pacienteRepository: pacienteRepository,
+		fichaRepository:      fichaRepository,
+		userRepository:       userRepository,
+		pacienteRepository:   pacienteRepository,
 		notificationsService: notificationsService,
 	}
 }
 
 type fichaService struct {
-	fichaRepository fichaRepository.FichaRepositoryInterface
-	userRepository userRepository.UserRepository
-	pacienteRepository paciente.PacienteRepository
+	fichaRepository      fichaRepository.FichaRepositoryInterface
+	userRepository       userRepository.UserRepository
+	pacienteRepository   paciente.PacienteRepository
 	notificationsService notifications.NotificationService
 }
 
@@ -39,20 +39,20 @@ type FichaServiceInterface interface {
 
 func (fs *fichaService) CreateFicha(request *request.FichaRequest) (*model.FichaCitopatologica, error) {
 	paciente, err := fs.userRepository.FindUserByIdentifier(request.Paciente.CPF, "paciente")
-    if err != nil {
-        paciente, err = fs.pacienteRepository.CreatePacienteficha(&request.Paciente)
-        if err != nil {
-            return nil, fmt.Errorf("erro ao criar paciente: %v", err)
-        }
-    } else {
-        pacienteModel := paciente.(*model.Paciente)
-        pacienteModel.Name = request.Paciente.Name
-        pacienteModel.DataNascimento = request.Paciente.DataNascimento
-        err := fs.pacienteRepository.UpdatePaciente(pacienteModel)
-        if err != nil {
-            return nil, fmt.Errorf("erro ao atualizar paciente: %v", err)
-        }
-    }
+	if err != nil {
+		paciente, err = fs.pacienteRepository.CreatePacienteficha(&request.Paciente)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao criar paciente: %v", err)
+		}
+	} else {
+		pacienteModel := paciente.(*model.Paciente)
+		pacienteModel.Name = request.Paciente.Name
+		pacienteModel.DataNascimento = request.Paciente.DataNascimento
+		err := fs.pacienteRepository.UpdatePaciente(pacienteModel)
+		if err != nil {
+			return nil, fmt.Errorf("erro ao atualizar paciente: %v", err)
+		}
+	}
 
 	pacienteId := paciente.GetID()
 	err = fs.fichaRepository.UpsertEndereco(&request.DadosResidenciais, pacienteId)
@@ -83,7 +83,7 @@ func (fs *fichaService) CreateFicha(request *request.FichaRequest) (*model.Ficha
 		paciente.GetName(),
 		"07/07/2025",
 	)
-	
+
 	if err != nil {
 		log.Printf("Falha ao enviar SMS: %v", err)
 	}

@@ -2,8 +2,6 @@ package agente
 
 import (
 	"database/sql"
-
-	"github.com/devsouzx/projeto-integrador/src/service/agente"
 )
 
 func NewAgenteRepository(
@@ -19,5 +17,4 @@ type agenteRepository struct {
 }
 
 type AgenteRepositoryInterface interface {
-	
 }

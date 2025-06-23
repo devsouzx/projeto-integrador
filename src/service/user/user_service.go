@@ -22,16 +22,16 @@ func NewUserDomainService(
 	pacienteRepository paciente.PacienteRepository,
 ) UserDomainService {
 	return &userDomainService{
-		userRepository: userRepository,
-		emailService:   emailService,
+		userRepository:     userRepository,
+		emailService:       emailService,
 		pacienteRepository: pacienteRepository,
 	}
 }
 
 type userDomainService struct {
-	userRepository userRepository.UserRepository
+	userRepository     userRepository.UserRepository
 	pacienteRepository paciente.PacienteRepository
-	emailService   emailService.EmailService
+	emailService       emailService.EmailService
 }
 
 type UserDomainService interface {

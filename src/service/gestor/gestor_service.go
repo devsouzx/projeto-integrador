@@ -1,7 +1,10 @@
 package agente
 
 import (
-	"github.com/devsouzx/projeto-integrador/src/repository/gestor"
+	"projeto-integrador/internal/model"
+	"projeto-integrador/internal/repository/gestor"
+
+	"github.com/devsouzx/projeto-integrador/src/model/request"
 )
 
 func NewGestorService(
@@ -17,5 +20,9 @@ type gestorService struct {
 }
 
 type GestorServiceInterface interface {
-	
+	CadastrarMedico(req request.CadastroMedicoRequest) (*model.Medico, error)
+}
+
+func (s *gestorService) CadastrarMedico(req request.CadastroMedicoRequest) (*model.Medico, error) {
+	return s.gestorRepository.CadastrarMedico(medico)
 }

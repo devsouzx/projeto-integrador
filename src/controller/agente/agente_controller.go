@@ -17,5 +17,4 @@ type agenteController struct {
 }
 
 type AgenteControllerInterface interface {
-	
 }

@@ -1,7 +1,8 @@
-package agente
+package gestor
 
 import (
 	"github.com/devsouzx/projeto-integrador/src/service/gestor"
+	"github.com/gin-gonic/gin"
 )
 
 func NewGestorController(
@@ -17,5 +18,5 @@ type gestorController struct {
 }
 
 type GestorControllerInterface interface {
-	
+	CadastrarMedico(c *gin.Context)
 }
