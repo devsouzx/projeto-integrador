@@ -405,14 +405,80 @@
   </main>
 
   <script>
-    document.querySelectorAll('.opcao-diagnostico').forEach(opcao => {
-      opcao.addEventListener('click', function() {
-        document.querySelectorAll('.opcao-diagnostico').forEach(opt => {
-          opt.classList.remove('selecionado');
-        });
-        this.classList.add('selecionado');
-      });
+  document.addEventListener('DOMContentLoaded', function() {
+    // Formulário de laudo
+    const formLaudo = document.querySelector('.container-laudo');
+    const btnSalvarRascunho = document.querySelector('.botao-secundario');
+    const btnEmitirLaudo = document.querySelector('.botao-primario');
+    
+    // Obter paciente da URL (se estiver vindo da seleção)
+    const urlParams = new URLSearchParams(window.location.search);
+    const pacienteId = urlParams.get('paciente');
+    
+    if (pacienteId) {
+      // Buscar dados do paciente via API
+      fetch(`/api/paciente/${pacienteId}`)
+        .then(response => response.json())
+        .then(data => {
+          // Preencher informações do paciente
+          document.querySelector('.info-paciente div:nth-child(1)').innerHTML = 
+            `<strong>Paciente:</strong> ${data.data.nome}`;
+          document.querySelector('.info-paciente div:nth-child(2)').innerHTML = 
+            `<strong>Idade:</strong> ${data.data.idade} anos`;
+          document.querySelector('.info-paciente div:nth-child(5)').innerHTML = 
+            `<strong>Cartão SUS:</strong> ${data.data.cns}`;
+        })
+        .catch(error => console.error('Erro ao buscar paciente:', error));
+    }
+    
+    // Manipular envio do formulário
+    btnSalvarRascunho.addEventListener('click', function(e) {
+      e.preventDefault();
+      salvarLaudo('rascunho');
     });
-  </script>
+    
+    btnEmitirLaudo.addEventListener('click', function(e) {
+      e.preventDefault();
+      salvarLaudo('concluido');
+    });
+    
+    function salvarLaudo(status) {
+      const resultadoSelecionado = document.querySelector('.opcao-diagnostico.selecionado strong').textContent;
+      const comentarios = document.getElementById('comentarios').value;
+      const recomendacoes = document.getElementById('recomendacoes').value;
+      
+      const laudoData = {
+        pacienteId: pacienteId,
+        resultado: resultadoSelecionado,
+        comentarios: comentarios,
+        recomendacoes: recomendacoes,
+        status: status,
+        dataExame: new Date().toISOString(),
+        adequabilidade: document.querySelector('.secao-resultado p:nth-child(1)').textContent.replace('Adequabilidade:', '').trim(),
+        microbiologia: document.querySelector('.secao-resultado p:nth-child(3)').textContent.replace('Microbiologia:', '').trim(),
+        celulasEndometriais: document.querySelector('.secao-resultado p:nth-child(4)').textContent.includes('Presentes')
+      };
+      
+      fetch('/api/laudos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(laudoData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert('Laudo salvo com sucesso!');
+        if (status === 'concluido') {
+          window.location.href = '/medico/laudos';
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao salvar laudo');
+      });
+    }
+  });
+</script>
 </body>
 </html>
