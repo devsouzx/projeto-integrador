@@ -5,10 +5,6 @@ import (
 	"github.com/devsouzx/projeto-integrador/src/repository/laudo"
 )
 
-type LaudoServiceInterface interface {
-	GetLaudosByMedicoID(medicoID string) ([]*model.Laudo, error)
-}
-
 type laudoService struct {
 	repo laudo.LaudoRepositoryInterface
 }
@@ -17,6 +13,15 @@ func NewLaudoService(repo laudo.LaudoRepositoryInterface) LaudoServiceInterface 
 	return &laudoService{repo: repo}
 }
 
-func (s *laudoService) GetLaudosByMedicoID(medicoID string) ([]*model.Laudo, error) {
-	return s.repo.FindByMedicoID(medicoID)
+type LaudoServiceInterface interface {
+	CreateLaudo(laudo *model.Laudo) error
+    GetLaudosByMedicoID(medicoID string, resultadoFilter string, search string, page int, pageSize int) ([]*model.Laudo, int, error)
+}
+
+func (s *laudoService) CreateLaudo(laudo *model.Laudo) error {
+	return s.repo.Create(laudo)
+}
+
+func (s *laudoService) GetLaudosByMedicoID(medicoID string, resultadoFilter string, search string, page int, pageSize int) ([]*model.Laudo, int, error) {
+    return s.repo.FindByMedicoID(medicoID, resultadoFilter, search, page, pageSize)
 }

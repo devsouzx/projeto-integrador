@@ -26,6 +26,7 @@ type PacienteService interface {
 	GetAnamneseByPacienteID(pacienteId string) (*model.Anamnese, error)
 	ListarExamesPeloPaciente(identifier string) ([]*model.ExameClinico, error)
 	ListarFichasPeloPaciente(identifier string) ([]*model.FichaCitopatologica, error)
+	FindUltimaFichaByPacienteID(pacienteID string) (*model.FichaCitopatologica, error)
 }
 
 func (ps *pacienteService) ListarPacientes(page, pageSize int, search string) ([]*model.Paciente, int, error) {
@@ -45,13 +46,6 @@ func (ps *pacienteService) GetPacienteByID(id string) (*model.Paciente, error) {
 	if err != nil {
 		return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
 	}
-
-	fichas, err := ps.ListarFichasPeloPaciente(id)
-	if err != nil {
-		return nil, fmt.Errorf("erro ao buscar fichas: %w", err)
-	}
-	paciente.Fichas = fichas
-
 	return paciente, nil
 }
 
@@ -60,7 +54,7 @@ func (ps *pacienteService) GetPacienteByCPF(CPF string) (*model.Paciente, error)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
 	}
-	
+
 	return paciente, nil
 }
 
@@ -87,4 +81,8 @@ func (ps *pacienteService) ListarFichasPeloPaciente(identifier string) ([]*model
 		return nil, fmt.Errorf("erro ao buscar fichas do paciente: %w", err)
 	}
 	return fichas, nil
+}
+
+func (ps *pacienteService) FindUltimaFichaByPacienteID(pacienteID string) (*model.FichaCitopatologica, error) {
+	return ps.repository.FindUltimaFichaByPacienteID(pacienteID)
 }

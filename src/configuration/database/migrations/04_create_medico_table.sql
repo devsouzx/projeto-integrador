@@ -13,3 +13,5 @@ CREATE TABLE medico (
     senha VARCHAR(255) NOT NULL,
     unidade_saude_id INTEGER
 );
+
+CREATE INDEX IF NOT EXISTS idx_medico_id ON medico(id);

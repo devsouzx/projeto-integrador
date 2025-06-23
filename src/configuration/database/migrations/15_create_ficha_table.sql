@@ -19,3 +19,6 @@ CREATE TABLE ficha (
         REFERENCES paciente(id)
         ON DELETE CASCADE
 );
+
+CREATE INDEX IF NOT EXISTS idx_ficha_id ON ficha(id);
+CREATE INDEX idx_ficha_paciente_id ON ficha(paciente_id);

@@ -30,6 +30,7 @@ type PacienteRepository interface {
 	FindAnamneseByPacienteID(pacienteId string) (*model.Anamnese, error)
 	FindExamesByPacienteID(pacienteID string) ([]*model.ExameClinico, error)
 	FindFichasByPacienteID(pacienteID string) ([]*model.FichaCitopatologica, error)
+	FindUltimaFichaByPacienteID(pacienteID string) (*model.FichaCitopatologica, error)
 	CreatePaciente(paciente *model.Paciente) (*model.Paciente, error)
 	UpdatePaciente(paciente *model.Paciente) error
 	CreatePacienteficha(paciente *model.Paciente) (*model.Paciente, error)
@@ -121,49 +122,68 @@ func (pr *pacienteRepository) ListarPacientes(page, pageSize int, search string)
 }
 
 func (pr *pacienteRepository) FindPacienteByID(id string) (*model.Paciente, error) {
-	query := `
+    query := `
         SELECT 
-            id, nome, cpf, cns, nome_mae, data_nascimento, 
-            telefone, apelido, raca, nacionalidade, escolaridade,
-            created_at, updated_at
-        FROM paciente
-        WHERE id = $1
+            p.id, p.nome, p.cpf, p.cns, p.nome_mae, p.data_nascimento, 
+            p.telefone, p.apelido, p.raca, p.nacionalidade, p.escolaridade,
+            p.created_at, p.updated_at,
+            f.id AS ficha_id, f.protocolo, f.data_coleta, f.responsavel_coleta, 
+            f.motivo_exame, f.observacoes, f.created_at AS ficha_created_at,
+            f.unidade_id
+        FROM paciente p
+        LEFT JOIN ficha f ON p.id = f.paciente_id
+        WHERE p.id = $1
+        ORDER BY f.data_coleta DESC
     `
 
-	var paciente model.Paciente
-	var nascimentoTime time.Time
+    rows, err := pr.DB.Query(query, id)
+    if err != nil {
+        return nil, fmt.Errorf("erro ao buscar paciente com fichas: %w", err)
+    }
+    defer rows.Close()
 
-	err := pr.DB.QueryRow(query, id).Scan(
-		&paciente.ID,
-		&paciente.Name,
-		&paciente.CPF,
-		&paciente.CNS,
-		&paciente.NomeMae,
-		&nascimentoTime,
-		&paciente.Telefone,
-		&paciente.Apelido,
-		&paciente.RacaCor,
-		&paciente.Nacionalidade,
-		&paciente.Escolaridade,
-		&paciente.CreatedAt,
-		&paciente.UpdatedAt,
-	)
+    var paciente model.Paciente
+    var fichas []*model.FichaCitopatologica
 
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("paciente não encontrado")
-		}
-		return nil, fmt.Errorf("erro ao buscar paciente: %w", err)
-	}
+    for rows.Next() {
+        var ficha model.FichaCitopatologica
+        var unidadeIDStr string
 
-	paciente.NascimentoTime = nascimentoTime
+        err := rows.Scan(
+            &paciente.ID, &paciente.Name, &paciente.CPF, &paciente.CNS,
+            &paciente.NomeMae, &paciente.NascimentoTime, &paciente.Telefone,
+            &paciente.Apelido, &paciente.RacaCor, &paciente.Nacionalidade,
+            &paciente.Escolaridade, &paciente.CreatedAt, &paciente.UpdatedAt,
+            &ficha.ID, &ficha.Protocolo, &ficha.DataColeta,
+            &ficha.ResponsavelColeta, &ficha.MotivoExame, &ficha.Observacoes,
+            &ficha.CreatedAt, &unidadeIDStr,
+        )
+        if err != nil {
+            return nil, fmt.Errorf("erro ao scanear paciente e ficha: %w", err)
+        }
 
-	endereco, err := pr.buscarEnderecoPorPacienteID(paciente.ID)
-	if err == nil {
-		paciente.Endereco = endereco
-	}
+        if ficha.ID != "" {
+            _, err := strconv.Atoi(unidadeIDStr)
+            if err != nil {
+                return nil, fmt.Errorf("erro ao converter UnidadeID para int: %w", err)
+            }
+            ficha.UnidadeID = unidadeIDStr
+            fichas = append(fichas, &ficha)
+        }
+    }
 
-	return &paciente, nil
+    if err = rows.Err(); err != nil {
+        return nil, fmt.Errorf("erro após iterar resultados: %w", err)
+    }
+
+    paciente.Fichas = fichas
+
+    endereco, err := pr.buscarEnderecoPorPacienteID(paciente.ID)
+    if err == nil {
+        paciente.Endereco = endereco
+    }
+
+    return &paciente, nil
 }
 
 func (pr *pacienteRepository) buscarEnderecoPorPacienteID(pacienteId string) (*model.Endereco, error) {
@@ -336,6 +356,37 @@ func (pr *pacienteRepository) FindFichasByPacienteID(pacienteID string) ([]*mode
 	}
 
 	return fichas, nil
+}
+
+func (pr *pacienteRepository) FindUltimaFichaByPacienteID(pacienteID string) (*model.FichaCitopatologica, error) {
+	query := `
+        SELECT 
+            id, protocolo, data_coleta, responsavel_coleta, motivo_exame, observacoes, created_at, unidade_id
+        FROM ficha
+        WHERE paciente_id = $1
+        ORDER BY data_coleta DESC
+        LIMIT 1
+    `
+
+	row := pr.DB.QueryRow(query, pacienteID)
+
+	var ficha model.FichaCitopatologica
+
+	err := row.Scan(
+		&ficha.ID,
+		&ficha.Protocolo,
+		&ficha.DataColeta,
+		&ficha.ResponsavelColeta,
+		&ficha.MotivoExame,
+		&ficha.Observacoes,
+		&ficha.CreatedAt,
+		&ficha.UnidadeID,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao buscar última ficha: %w", err)
+	}
+
+	return &ficha, nil
 }
 
 func (pr *pacienteRepository) FindPacienteByCPF(identifier string) (*model.Paciente, error) {

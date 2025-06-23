@@ -22,3 +22,5 @@ CREATE TABLE paciente (
     verification_token VARCHAR(255),
     token_expires_at TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_paciente_id ON paciente(id);

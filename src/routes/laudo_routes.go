@@ -10,6 +10,7 @@ func InitLaudoRoutes(rg *gin.RouterGroup, laudoController laudo.LaudoControllerI
 	laudos := rg.Group("/laudos")
 	laudos.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("medico"))
 	{
+		laudos.POST("", laudoController.CreateLaudo)
 		laudos.GET("/medico/meus-laudos", laudoController.GetLaudosByMedico)
 	}
 }

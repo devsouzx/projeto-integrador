@@ -323,67 +323,47 @@
   <main class="conteudo-principal">
     <div class="cabecalho">
       <h1 class="titulo-pagina">Emitir Laudo</h1>
-      <a href="/medicos/pacientes/123456" class="botao-voltar">
-        <i class="fas fa-arrow-left"></i> Voltar ao Prontuário
+      <a href="/medico/laudos" class="botao-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar para Laudos
       </a>
     </div>
     
     <div class="container-laudo">
       <div class="info-paciente">
         <div>
-          <strong>Paciente:</strong> Maria da Silva
+          <strong>Paciente:</strong> <span id="paciente-nome">Carregando...</span>
         </div>
         <div>
-          <strong>Idade:</strong> 38 anos
+          <strong>Idade:</strong> <span id="paciente-idade">--</span>
         </div>
         <div>
-          <strong>Data do Exame:</strong> 15/06/2025
+          <strong>Data do Exame:</strong> <span id="data-exame">--/--/----</span>
         </div>
         <div>
-          <strong>Médico Solicitante:</strong> Dr. Ana Oliveira
+          <strong>Médico Responsável:</strong> <span id="medico-nome">{{.Medico.Name}}</span>
         </div>
         <div>
-          <strong>Cartão SUS:</strong> 123 4567 8901 2345
+          <strong>Cartão SUS:</strong> <span id="paciente-cns">--</span>
         </div>
         <div>
-          <strong>Unidade:</strong> UBS Centro
+          <strong>Unidade:</strong> <span id="unidade">--</span>
         </div>
       </div>
       
       <div class="secao-resultado">
         <h2>Resultado do Exame Citopatológico</h2>
         <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 6px;">
-          <p><strong>Adequabilidade:</strong> Satisfatória</p>
-          <p><strong>Resultado Preliminar:</strong> ASC-H (Atipia em células escamosas, não pode excluir HSIL)</p>
-          <p><strong>Microbiologia:</strong> Flora bacteriana mista</p>
-          <p><strong>Células endometriais:</strong> Ausentes</p>
+          <p><strong>Adequabilidade:</strong> <span id="adequabilidade">Satisfatória</span></p>
+          <p><strong>Microbiologia:</strong> <span id="microbiologia">Flora bacteriana mista</span></p>
+          <p><strong>Células endometriais:</strong> <span id="celulas-endometriais">Ausentes</span></p>
         </div>
       </div>
       
       <div class="secao-resultado">
         <h2>Diagnóstico Médico</h2>
         
-        <div class="opcoes-diagnostico">
-          <div class="opcao-diagnostico selecionado">
-            <strong>ASC-H</strong>
-            <p>Atipia em células escamosas</p>
-          </div>
-          <div class="opcao-diagnostico">
-            <strong>LSIL</strong>
-            <p>Lesão intraepitelial de baixo grau</p>
-          </div>
-          <div class="opcao-diagnostico">
-            <strong>HSIL</strong>
-            <p>Lesão intraepitelial de alto grau</p>
-          </div>
-          <div class="opcao-diagnostico">
-            <strong>Carcinoma</strong>
-            <p>Carcinoma de células escamosas</p>
-          </div>
-          <div class="opcao-diagnostico">
-            <strong>Normal</strong>
-            <p>Sem alterações significativas</p>
-          </div>
+        <div class="opcoes-diagnostico" id="opcoes-diagnostico">
+          <!-- Opções -->
         </div>
         
         <div class="grupo-formulario">
@@ -398,87 +378,236 @@
       </div>
       
       <div class="acoes-formulario">
-        <button class="botao botao-secundario">Salvar Rascunho</button>
-        <button class="botao botao-primario">Emitir Laudo</button>
+        <button class="botao botao-secundario" id="btn-salvar-rascunho">Salvar Rascunho</button>
+        <button class="botao botao-primario" id="btn-emitir-laudo">Emitir Laudo</button>
       </div>
     </div>
   </main>
 
   <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Formulário de laudo
-    const formLaudo = document.querySelector('.container-laudo');
-    const btnSalvarRascunho = document.querySelector('.botao-secundario');
-    const btnEmitirLaudo = document.querySelector('.botao-primario');
+    const opcoesDiagnostico = document.getElementById('opcoes-diagnostico');
+    const btnSalvarRascunho = document.getElementById('btn-salvar-rascunho');
+    const btnEmitirLaudo = document.getElementById('btn-emitir-laudo');
     
-    // Obter paciente da URL (se estiver vindo da seleção)
     const urlParams = new URLSearchParams(window.location.search);
-    const pacienteId = urlParams.get('paciente');
+    const pacienteId = urlParams.get('pacienteId');
+    const fichaId = urlParams.get('fichaId');
     
-    if (pacienteId) {
-      // Buscar dados do paciente via API
-      fetch(`/api/paciente/${pacienteId}`)
-        .then(response => response.json())
-        .then(data => {
-          // Preencher informações do paciente
-          document.querySelector('.info-paciente div:nth-child(1)').innerHTML = 
-            `<strong>Paciente:</strong> ${data.data.nome}`;
-          document.querySelector('.info-paciente div:nth-child(2)').innerHTML = 
-            `<strong>Idade:</strong> ${data.data.idade} anos`;
-          document.querySelector('.info-paciente div:nth-child(5)').innerHTML = 
-            `<strong>Cartão SUS:</strong> ${data.data.cns}`;
-        })
-        .catch(error => console.error('Erro ao buscar paciente:', error));
-    }
+    let dadosPaciente = null;
+    let dadosFicha = null;
+    let diagnosticoSelecionado = null;
     
-    // Manipular envio do formulário
-    btnSalvarRascunho.addEventListener('click', function(e) {
-      e.preventDefault();
-      salvarLaudo('rascunho');
-    });
+    // Opções de diagnóstico
+    const diagnosticos = [
+      { valor: 'normal', label: 'Normal', descricao: 'Sem alterações significativas' },
+      { valor: 'ascus', label: 'ASC-US', descricao: 'Atipia em células escamosas de significado indeterminado' },
+      { valor: 'asch', label: 'ASC-H', descricao: 'Atipia em células escamosas, não pode excluir HSIL' },
+      { valor: 'lsil', label: 'LSIL', descricao: 'Lesão intraepitelial de baixo grau' },
+      { valor: 'hsil', label: 'HSIL', descricao: 'Lesão intraepitelial de alto grau' },
+      { valor: 'carcinoma', label: 'Carcinoma', descricao: 'Carcinoma de células escamosas' }
+    ];
     
-    btnEmitirLaudo.addEventListener('click', function(e) {
-      e.preventDefault();
-      salvarLaudo('concluido');
-    });
-    
-    function salvarLaudo(status) {
-      const resultadoSelecionado = document.querySelector('.opcao-diagnostico.selecionado strong').textContent;
-      const comentarios = document.getElementById('comentarios').value;
-      const recomendacoes = document.getElementById('recomendacoes').value;
+    // Inicializar opções de diagnóstico
+    function inicializarOpcoesDiagnostico() {
+      opcoesDiagnostico.innerHTML = diagnosticos.map(d => `
+        <div class="opcao-diagnostico" data-valor="${d.valor}">
+          <strong>${d.label}</strong>
+          <p>${d.descricao}</p>
+        </div>
+      `).join('');
       
-      const laudoData = {
-        pacienteId: pacienteId,
-        resultado: resultadoSelecionado,
-        comentarios: comentarios,
-        recomendacoes: recomendacoes,
-        status: status,
-        dataExame: new Date().toISOString(),
-        adequabilidade: document.querySelector('.secao-resultado p:nth-child(1)').textContent.replace('Adequabilidade:', '').trim(),
-        microbiologia: document.querySelector('.secao-resultado p:nth-child(3)').textContent.replace('Microbiologia:', '').trim(),
-        celulasEndometriais: document.querySelector('.secao-resultado p:nth-child(4)').textContent.includes('Presentes')
-      };
-      
-      fetch('/api/laudos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(laudoData)
-      })
-      .then(response => response.json())
-      .then(data => {
-        alert('Laudo salvo com sucesso!');
-        if (status === 'concluido') {
-          window.location.href = '/medico/laudos';
-        }
-      })
-      .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao salvar laudo');
+      // Adicionar eventos de clique
+      document.querySelectorAll('.opcao-diagnostico').forEach(opcao => {
+        opcao.addEventListener('click', function() {
+          document.querySelectorAll('.opcao-diagnostico').forEach(o => o.classList.remove('selecionado'));
+          this.classList.add('selecionado');
+          diagnosticoSelecionado = this.dataset.valor;
+        });
       });
     }
+    
+    // Carregar dados do paciente
+    async function carregarDadosPaciente(pacienteId) {
+      try {
+        const response = await fetch(`/medico/api/paciente/${pacienteId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.data) {
+          throw new Error('Estrutura de dados inválida da API');
+        }
+
+        dadosPaciente = result.data;
+        console.log('Dados do paciente recebidos:', dadosPaciente);
+        atualizarDadosPaciente();
+
+      } catch (error) {
+        console.error('Erro ao carregar paciente:', error);
+        document.getElementById('paciente-nome').textContent = 'Erro ao carregar dados';
+      }
+    }
+    
+    // Carregar dados da ficha
+    async function carregarDadosFicha() {
+      if (!fichaId) return;
+      
+      try {
+        const response = await fetch(`/api/fichas/${fichaId}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          dadosFicha = data;
+          atualizarDadosFicha();
+        }
+      } catch (error) {
+        console.error('Erro ao carregar ficha:', error);
+      }
+    }
+    
+    function atualizarDadosPaciente() {
+      if (!dadosPaciente) {
+        console.error('Nenhum dado do paciente disponível');
+        return;
+      }
+      
+      document.getElementById('paciente-nome').textContent = 
+        dadosPaciente.name || dadosPaciente.apelido || 'Nome não informado';
+
+      document.getElementById('paciente-cns').textContent = 
+        dadosPaciente.cns || 'Não informado';
+
+      if (dadosPaciente.nascimento && dadosPaciente.nascimento.trim() !== "") {
+        const idade = calcularIdade(new Date(dadosPaciente.nascimento));
+        document.getElementById('paciente-idade').textContent = `${idade} anos`;
+      } else {
+        document.getElementById('paciente-idade').textContent = 'Idade não informada';
+      }
+
+      if (dadosFicha && dadosFicha.dataExame) {
+        document.getElementById('data-exame').textContent = formatarData(dadosFicha.dataExame);
+      } else {
+        document.getElementById('data-exame').textContent = formatarData(new Date());
+      }
+
+      if (dadosPaciente.endereco) {
+        document.getElementById('unidade').textContent = 
+          dadosPaciente.endereco.cidade || 'Unidade não especificada';
+      }
+    }
+    
+    // Atualizar UI com dados da ficha
+    function atualizarDadosFicha() {
+      if (!dadosFicha) return;
+      
+      document.getElementById('data-exame').textContent = formatarData(dadosFicha.dataExame);
+      document.getElementById('adequabilidade').textContent = dadosFicha.adequabilidade || '--';
+      document.getElementById('microbiologia').textContent = dadosFicha.microbiologia || '--';
+      document.getElementById('celulas-endometriais').textContent = 
+        dadosFicha.celulasEndometriais ? 'Presentes' : 'Ausentes';
+    }
+    
+    // Função para salvar/emitir laudo
+    async function salvarLaudo(status) {
+      if (!diagnosticoSelecionado) {
+        alert('Selecione um diagnóstico antes de salvar');
+        return;
+      }
+      
+      if (!pacienteId) {
+        alert('Paciente não identificado');
+        return;
+      }
+      
+      const laudoData = {
+        paciente_id: pacienteId,
+        ficha_id: fichaId,
+        resultado: diagnosticoSelecionado,
+        comentarios: document.getElementById('comentarios').value,
+        recomendacoes: document.getElementById('recomendacoes').value,
+        status: status,
+        dataExame: dadosFicha?.dataExame || new Date().toISOString(),
+        adequabilidade: document.getElementById('adequabilidade').textContent,
+        microbiologia: document.getElementById('microbiologia').textContent,
+        celulasEndometriais: document.getElementById('celulas-endometriais').textContent === 'Presentes',
+        cid: obterCID(diagnosticoSelecionado)
+      };
+      
+      try {
+        btnSalvarRascunho.disabled = true;
+        btnEmitirLaudo.disabled = true;
+        
+        const response = await fetch('/laudos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(laudoData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          alert(`Laudo ${status === 'concluido' ? 'emitido' : 'salvo'} com sucesso!`);
+          if (status === 'concluido') {
+            window.location.href = '/medico/laudos';
+          }
+        } else {
+          throw new Error(data.message || 'Erro ao salvar laudo');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert(error.message || 'Erro ao salvar laudo');
+      } finally {
+        btnSalvarRascunho.disabled = false;
+        btnEmitirLaudo.disabled = false;
+      }
+    }
+    
+    function formatarData(dataString) {
+      if (!dataString) return '--/--/----';
+      const data = new Date(dataString);
+      return data.toLocaleDateString('pt-BR');
+    }
+    
+    function calcularIdade(dataNascimento) {
+      const diff = Date.now() - dataNascimento.getTime();
+      const ageDate = new Date(diff);
+      return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+    
+    function obterCID(resultado) {
+      const map = {
+        'normal': 'Z01.4',
+        'ascus': 'R87.61',
+        'asch': 'R87.61',
+        'lsil': 'R87.61',
+        'hsil': 'D06.9',
+        'carcinoma': 'C53.9',
+      };
+      return map[resultado] || 'R87.61';
+    }
+    
+    btnSalvarRascunho.addEventListener('click', () => salvarLaudo('rascunho'));
+    btnEmitirLaudo.addEventListener('click', () => salvarLaudo('concluido'));
+    
+    inicializarOpcoesDiagnostico();
+    carregarDadosPaciente(pacienteId);
+    carregarDadosFicha();
+    
+    if (!fichaId) {
+      document.getElementById('data-exame').textContent = formatarData(new Date());
+    }
   });
-</script>
+  </script>
 </body>
 </html>

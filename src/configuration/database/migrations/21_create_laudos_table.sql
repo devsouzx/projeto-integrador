@@ -21,10 +21,9 @@ CREATE TABLE laudos (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_laudos_paciente_id ON laudos(paciente_id);
-CREATE INDEX idx_laudos_medico_id ON laudos(medico_id);
-CREATE INDEX idx_laudos_status ON laudos(status);
-CREATE INDEX idx_laudos_data_exame ON laudos(data_exame);
+CREATE INDEX IF NOT EXISTS idx_laudos_paciente_id ON laudos(paciente_id);
+CREATE INDEX IF NOT EXISTS idx_laudos_ficha_id ON laudos(ficha_id);
+CREATE INDEX IF NOT EXISTS idx_laudos_medico_id ON laudos(medico_id);
 
 -- Inserção de laudos de teste com ficha_id
 INSERT INTO laudos (

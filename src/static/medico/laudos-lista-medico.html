@@ -160,7 +160,7 @@
     }
 
     .botao-primario:hover {
-      background-color: #7d3c98;
+      background-color: var(--secundaria);
       transform: translateY(-2px);
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
@@ -313,42 +313,6 @@
       font-size: 0.75rem;
       font-weight: 500;
       text-transform: uppercase;
-    }
-
-    .etiqueta-normal {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .etiqueta-ascus {
-      background-color: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeeba;
-    }
-
-    .etiqueta-asch {
-      background-color: #ffe8cc;
-      color: #804d00;
-      border: 1px solid #ffd699;
-    }
-
-    .etiqueta-lsil {
-      background-color: #cce5ff;
-      color: #004085;
-      border: 1px solid #b8daff;
-    }
-
-    .etiqueta-hsil {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .etiqueta-carcinoma {
-      background-color: #dc3545;
-      color: white;
-      border: 1px solid #dc3545;
     }
 
     .botao-ccu {
@@ -555,6 +519,54 @@
       margin-bottom: 1rem;
     }
 
+    .etiqueta {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      background-color: #f0e5f5;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+
+    .etiqueta-normal {
+      background-color: rgba(155, 89, 182, 0.1);
+      color: var(--primaria);
+      border-color: rgba(155, 89, 182, 0.3);
+    }
+
+    .etiqueta-ascus {
+      background-color: rgba(155, 89, 182, 0.2);
+      color: var(--primaria);
+      border-color: rgba(155, 89, 182, 0.4);
+    }
+
+    .etiqueta-asch {
+      background-color: rgba(155, 89, 182, 0.3);
+      color: var(--primaria);
+      border-color: rgba(155, 89, 182, 0.5);
+    }
+
+    .etiqueta-lsil {
+      background-color: rgba(142, 68, 173, 0.2);
+      color: var(--secundaria);
+      border-color: rgba(142, 68, 173, 0.4);
+    }
+
+    .etiqueta-hsil {
+      background-color: rgba(142, 68, 173, 0.3);
+      color: var(--secundaria);
+      border-color: rgba(142, 68, 173, 0.5);
+    }
+
+    .etiqueta-carcinoma {
+      background-color: var(--secundaria);
+      color: white;
+      border-color: var(--secundaria);
+    }
+
     /* Responsividade */
     @media (max-width: 768px) {
       .navegacao-superior {
@@ -699,7 +711,7 @@
       </div>
       
       <div id="containerLaudos">
-        <!-- Laudos serão carregados dinamicamente aqui -->
+        <!-- Laudos -->
         <div class="empty-state">
           <i class="fas fa-file-medical-alt"></i>
           <p>Nenhum laudo encontrado</p>
@@ -725,7 +737,7 @@
         </div>
         
         <div class="lista-pacientes" id="listaPacientes">
-          <!-- Pacientes serão carregados dinamicamente aqui -->
+          <!-- Pacientes -->
           <div class="empty-state">
             <i class="fas fa-user-injured"></i>
             <p>Nenhum paciente encontrado</p>
@@ -745,216 +757,221 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Elementos da página
-      const btnNovoLaudo = document.getElementById('btnNovoLaudo');
-      const modalSelecao = document.getElementById('modalSelecaoPaciente');
-      const fecharModal = document.getElementById('fecharModal');
-      const cancelarSelecao = document.getElementById('cancelarSelecao');
-      const btnBuscar = document.getElementById('btnBuscar');
-      const campoBusca = document.getElementById('campoBusca');
-      const botoesFiltro = document.querySelectorAll('.botao-filtro');
-      const containerLaudos = document.getElementById('containerLaudos');
+  // Funções auxiliares globais
+  function formatarData(dataString) {
+    if (!dataString) return '--/--/----';
+    
+    const data = new Date(dataString);
+    if (isNaN(data.getTime())) return '--/--/----';
+    
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+    
+    return `${dia}/${mes}/${ano}`;
+  }
+  
+  function formatarCNS(cns) {
+    if (!cns) return 'Não informado';
+    return cns.replace(/(\d{3})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
+  }
+
+  function obterClasseResultado(resultado) {
+    if (!resultado) return '';
+    
+    resultado = resultado.toLowerCase();
+    if (resultado.includes('normal')) return 'etiqueta-normal';
+    if (resultado.includes('ascus')) return 'etiqueta-ascus';
+    if (resultado.includes('asch')) return 'etiqueta-asch';
+    if (resultado.includes('lsil')) return 'etiqueta-lsil';
+    if (resultado.includes('hsil')) return 'etiqueta-hsil';
+    if (resultado.includes('carcinoma')) return 'etiqueta-carcinoma';
+    
+    return '';
+  }
+
+  function calcularIdade(dataNascimento) {
+    if (!dataNascimento) return '--';
+    
+    const diff = Date.now() - dataNascimento.getTime();
+    const ageDate = new Date(diff);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
+
+  // Função global para carregar laudos
+  async function carregarLaudos(filtro = '', busca = '', page = 1, pageSize = 10) {
+    const containerLaudos = document.getElementById('containerLaudos');
+    
+    try {
+      containerLaudos.innerHTML = `
+        <div class="loading" style="padding: 2rem; text-align: center;">
+          Carregando laudos...
+        </div>
+      `;
       
-      // Funções de formatação
-      function formatarData(dataString) {
-        if (!dataString) return '--/--/----';
-        
-        const data = new Date(dataString);
-        if (isNaN(data.getTime())) return '--/--/----';
-        
-        const dia = String(data.getDate()).padStart(2, '0');
-        const mes = String(data.getMonth() + 1).padStart(2, '0');
-        const ano = data.getFullYear();
-        
-        return `${dia}/${mes}/${ano}`;
+      let url = `/laudos/medico/meus-laudos?page=${page}&pageSize=${pageSize}`;
+      
+      if (filtro) {
+        url += `&resultado=${encodeURIComponent(filtro)}`;
       }
       
-      function formatarCNS(cns) {
-        if (!cns) return 'Não informado';
-        return cns.replace(/(\d{3})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
+      if (busca) {
+        url += `&search=${encodeURIComponent(busca)}`;
       }
       
-      function obterClasseResultado(resultado) {
-        if (!resultado) return '';
-        
-        resultado = resultado.toLowerCase();
-        if (resultado.includes('normal')) return 'etiqueta-normal';
-        if (resultado.includes('ascus')) return 'etiqueta-ascus';
-        if (resultado.includes('asch')) return 'etiqueta-asch';
-        if (resultado.includes('lsil')) return 'etiqueta-lsil';
-        if (resultado.includes('hsil')) return 'etiqueta-hsil';
-        if (resultado.includes('carcinoma')) return 'etiqueta-carcinoma';
-        
-        return '';
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Erro ao buscar laudos');
       }
       
-      // Carregar laudos
-      async function carregarLaudos(filtro = '', busca = '') {
-        try {
-          containerLaudos.innerHTML = `
-            <div class="loading" style="padding: 2rem; text-align: center;">
-              Carregando laudos...
-            </div>
-          `;
-          
-          // Simular requisição à API
-          // Substitua por uma chamada real à sua API
-          const response = await fetch(`/laudos/medico/meus-laudos`);
-          const data = await response.json();
-          
-          if (!data.data || !data.data.length) {
-            containerLaudos.innerHTML = `
-              <div class="empty-state">
+      const { data, pagination } = await response.json();
+      
+      if (!data || !data.length) {
+        containerLaudos.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-file-medical-alt"></i>
+            <p>Nenhum laudo encontrado</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let htmlLaudos = '';
+      
+      data.forEach(laudo => {
+        const classeResultado = obterClasseResultado(laudo.resultado);
+        
+        htmlLaudos += `
+          <div class="item-laudo" data-id="${laudo.id}">
+            <div class="info-laudo">
+              <div class="icone-laudo">
                 <i class="fas fa-file-medical-alt"></i>
-                <p>Nenhum laudo encontrado</p>
               </div>
-            `;
-            return;
-          }
-          
-          // Criar HTML dos laudos
-          let htmlLaudos = '';
-          
-          data.data.forEach(laudo => {
-            const classeResultado = obterClasseResultado(laudo.resultado);
-            
-            htmlLaudos += `
-              <div class="item-laudo" data-id="${laudo.id}">
-                <div class="info-laudo">
-                  <div class="icone-laudo">
-                    <i class="fas fa-file-medical-alt"></i>
-                  </div>
-                  <div>
-                    <div class="paciente-laudo">${laudo.paciente?.name || 'Paciente não informado'}</div>
-                    <div class="texto-pequeno">Cartão SUS: ${formatarCNS(laudo.paciente?.cns)}</div>
-                  </div>
-                </div>
-                <div>${formatarData(laudo.created_at)}</div>
-                <div><span class="etiqueta ${classeResultado}">${laudo.resultado || '--'}</span></div>
-                <div>${laudo.cid || '--'}</div>
-                <div class="acoes-laudo">
-                  <button class="botao botao-pequeno botao-primario" onclick="editarLaudo('${laudo.id}')">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="botao botao-pequeno botao-secundario" onclick="downloadLaudo('${laudo.id}')">
-                    <i class="fas fa-download"></i>
-                  </button>
-                  <button class="botao botao-pequeno botao-ccu" onclick="encaminharLaudo('${laudo.id}')">
-                    <i class="fas fa-exchange-alt"></i>
-                  </button>
-                </div>
+              <div>
+                <div class="paciente-laudo">${laudo.paciente?.name || 'Paciente não informado'}</div>
+                <div class="texto-pequeno">Cartão SUS: ${formatarCNS(laudo.paciente?.cns)}</div>
               </div>
-            `;
-          });
-          
-          containerLaudos.innerHTML = htmlLaudos;
-        } catch (error) {
-          console.error('Erro ao carregar laudos:', error);
-          containerLaudos.innerHTML = `
-            <div class="empty-state">
-              <i class="fas fa-exclamation-triangle"></i>
-              <p>Ocorreu um erro ao carregar os laudos</p>
             </div>
-          `;
-        }
+            <div>${formatarData(laudo.created_at)}</div>
+            <div><span class="etiqueta ${classeResultado}">${laudo.resultado || '--'}</span></div>
+            <div>${laudo.cid || '--'}</div>
+            <div class="acoes-laudo">
+              <button class="botao botao-pequeno botao-primario" onclick="editarLaudo('${laudo.id}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="botao botao-pequeno botao-secundario" onclick="downloadLaudo('${laudo.id}')">
+                <i class="fas fa-download"></i>
+              </button>
+              <button class="botao botao-pequeno botao-ccu" onclick="encaminharLaudo('${laudo.id}')">
+                <i class="fas fa-exchange-alt"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      
+      // Adicionar paginação se necessário
+      if (pagination && pagination.totalItems > pagination.pageSize) {
+        const filtroAtual = document.querySelector('.botao-filtro.ativo')?.dataset.filtro || '';
+        const buscaAtual = document.getElementById('campoBusca').value.trim();
+        
+        htmlLaudos += `
+          <div class="paginacao" style="padding: 1rem; display: flex; justify-content: center; gap: 0.5rem;">
+            ${pagination.currentPage > 1 ? 
+              `<button class="botao botao-secundario" onclick="carregarLaudos('${filtroAtual}', '${buscaAtual}', ${pagination.currentPage - 1}, ${pagination.pageSize})">
+                <i class="fas fa-chevron-left"></i> Anterior
+              </button>` : ''}
+            
+            <span style="padding: 0.5rem 1rem; display: inline-flex; align-items: center;">
+              Página ${pagination.currentPage} de ${pagination.totalPages}
+            </span>
+            
+            ${pagination.currentPage < pagination.totalPages ? 
+              `<button class="botao botao-secundario" onclick="carregarLaudos('${filtroAtual}', '${buscaAtual}', ${pagination.currentPage + 1}, ${pagination.pageSize})">
+                Próxima <i class="fas fa-chevron-right"></i>
+              </button>` : ''}
+          </div>
+        `;
       }
       
-      // Funções globais para ações
-      window.editarLaudo = function(id) {
-        window.location.href = `/medico/laudos/${id}/editar`;
-      };
-      
-      window.downloadLaudo = function(id) {
-        window.open(`/laudos/${id}/download`, '_blank');
-      };
-      
-      window.encaminharLaudo = function(id) {
-        // Implementar lógica de encaminhamento
-        alert(`Encaminhar laudo ${id}`);
-      };
-      
-      // Event Listeners
-      btnNovoLaudo.addEventListener('click', function() {
-        modalSelecao.classList.add('ativo');
-      });
-      
-      fecharModal.addEventListener('click', function() {
-        modalSelecao.classList.remove('ativo');
-      });
-      
-      cancelarSelecao.addEventListener('click', function() {
-        modalSelecao.classList.remove('ativo');
-      });
-      
-      btnBuscar.addEventListener('click', function() {
-        const termoBusca = campoBusca.value.trim();
-        const filtroAtivo = document.querySelector('.botao-filtro.ativo')?.dataset.filtro || '';
-        carregarLaudos(filtroAtivo, termoBusca);
-      });
-      
-      campoBusca.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          const termoBusca = campoBusca.value.trim();
-          const filtroAtivo = document.querySelector('.botao-filtro.ativo')?.dataset.filtro || '';
-          carregarLaudos(filtroAtivo, termoBusca);
+      containerLaudos.innerHTML = htmlLaudos;
+    } catch (error) {
+      console.error('Erro ao carregar laudos:', error);
+      containerLaudos.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Ocorreu um erro ao carregar os laudos</p>
+          <button class="botao botao-secundario" onclick="carregarLaudos()">
+            Tentar novamente
+          </button>
+        </div>
+      `;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnNovoLaudo = document.getElementById('btnNovoLaudo');
+    const modalSelecao = document.getElementById('modalSelecaoPaciente');
+    const fecharModal = document.getElementById('fecharModal');
+    const cancelarSelecao = document.getElementById('cancelarSelecao');
+    const btnBuscar = document.getElementById('btnBuscar');
+    const campoBusca = document.getElementById('campoBusca');
+    const botoesFiltro = document.querySelectorAll('.botao-filtro');
+    const buscaPaciente = document.getElementById('buscaPaciente');
+    const btnBuscarPaciente = document.getElementById('btnBuscarPaciente');
+    
+    let pacientesCache = [];
+    let pacienteSelecionadoId = null;
+    
+    // Função para buscar pacientes na API
+    async function buscarPacientesAPI(termo = '') {
+      try {
+        let url = '/pacientes-lista';
+        
+        if (termo) {
+          url += `?search=${encodeURIComponent(termo)}`;
         }
-      });
-      
-      botoesFiltro.forEach(botao => {
-        botao.addEventListener('click', function() {
-          botoesFiltro.forEach(btn => btn.classList.remove('ativo'));
-          this.classList.add('ativo');
-          
-          const filtro = this.dataset.filtro;
-          const termoBusca = campoBusca.value.trim();
-          carregarLaudos(filtro, termoBusca);
-        });
-      });
-      
-      // Carregar laudos ao iniciar
-      carregarLaudos();
-      
-      // Simular dados para o modal de pacientes
-      document.getElementById('btnBuscarPaciente').addEventListener('click', function() {
-        const termo = document.getElementById('buscaPaciente').value.trim().toLowerCase();
-        const listaPacientes = document.getElementById('listaPacientes');
         
-        // Simular busca de pacientes
-        const pacientes = [
-          {
-            id: 1,
-            nome: 'Maria da Silva',
-            idade: 38,
-            cns: '123456789012345',
-            cid: 'R87.61'
-          },
-          {
-            id: 2,
-            nome: 'Ana Oliveira',
-            idade: 42,
-            cns: '987654321098765',
-            cid: 'R87.61'
-          },
-          {
-            id: 3,
-            nome: 'Fernanda Costa',
-            idade: 28,
-            cns: '456789012345678',
-            cid: 'D06.9'
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
-        ];
+        });
         
-        // Filtrar pacientes pelo termo de busca
-        const pacientesFiltrados = termo 
-          ? pacientes.filter(p => 
-              p.nome.toLowerCase().includes(termo) || 
-              p.cns.includes(termo) ||
-              p.cid.toLowerCase().includes(termo))
-          : pacientes;
+        if (!response.ok) {
+          throw new Error('Erro ao buscar pacientes');
+        }
         
-        // Atualizar lista de pacientes
-        if (pacientesFiltrados.length === 0) {
+        const data = await response.json();
+        console.log(data);
+        
+        pacientesCache = data.data || [];
+        return pacientesCache;
+      } catch (error) {
+        console.error('Erro na requisição:', error);
+        throw error;
+      }
+    }
+    
+    // Função para carregar pacientes no modal
+    async function carregarPacientesModal(termo = '') {
+      const listaPacientes = document.getElementById('listaPacientes');
+      
+      try {
+        listaPacientes.innerHTML = `
+          <div class="loading" style="padding: 2rem; text-align: center;">
+            Buscando pacientes...
+          </div>
+        `;
+        
+        const pacientes = await buscarPacientesAPI(termo);
+        
+        if (!pacientes.length) {
           listaPacientes.innerHTML = `
             <div class="empty-state">
               <i class="fas fa-user-injured"></i>
@@ -966,7 +983,7 @@
         
         let htmlPacientes = '';
         
-        pacientesFiltrados.forEach(paciente => {
+        pacientes.forEach(paciente => {
           htmlPacientes += `
             <div class="item-paciente" data-id="${paciente.id}">
               <div class="info-paciente-modal">
@@ -976,9 +993,9 @@
                 <div class="detalhes-paciente-modal">
                   <div class="nome-paciente-modal">${paciente.nome}</div>
                   <div class="dados-paciente-modal">
-                    <span>${paciente.idade} anos</span> • 
+                    <span>${calcularIdade(new Date(paciente.nascimento))} anos</span> • 
                     <span>Cartão SUS: ${formatarCNS(paciente.cns)}</span> • 
-                    <span>CID: ${paciente.cid}</span>
+                    <span>CPF: ${paciente.cpf || 'Não informado'}</span>
                   </div>
                 </div>
               </div>
@@ -988,31 +1005,109 @@
         
         listaPacientes.innerHTML = htmlPacientes;
         
-        // Adicionar evento de seleção
         document.querySelectorAll('.item-paciente').forEach(item => {
           item.addEventListener('click', function() {
             document.querySelectorAll('.item-paciente').forEach(i => i.classList.remove('selecionado'));
             this.classList.add('selecionado');
+            pacienteSelecionadoId = this.dataset.id;
           });
         });
-      });
-      
-      // Confirmar seleção de paciente
-      document.getElementById('confirmarSelecao').addEventListener('click', function() {
-        const pacienteSelecionado = document.querySelector('.item-paciente.selecionado');
-        
-        if (!pacienteSelecionado) {
-          alert('Selecione um paciente para continuar');
-          return;
-        }
-        
-        const pacienteId = pacienteSelecionado.dataset.id;
-        modalSelecao.classList.remove('ativo');
-        
-        // Redirecionar para a página de criação de laudo com o ID do paciente
-        window.location.href = `/medico/laudos/novo?pacienteId=${pacienteId}`;
+      } catch (error) {
+        console.error('Erro ao carregar pacientes:', error);
+        listaPacientes.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Ocorreu um erro ao buscar pacientes</p>
+            <button class="botao botao-secundario" onclick="carregarPacientesModal()">
+              Tentar novamente
+            </button>
+          </div>
+        `;
+      }
+    }
+    
+    btnNovoLaudo.addEventListener('click', function() {
+      pacienteSelecionadoId = null;
+      buscaPaciente.value = '';
+      carregarPacientesModal();
+      modalSelecao.classList.add('ativo');
+    });
+    
+    fecharModal.addEventListener('click', function() {
+      modalSelecao.classList.remove('ativo');
+    });
+    
+    cancelarSelecao.addEventListener('click', function() {
+      modalSelecao.classList.remove('ativo');
+    });
+    
+    // Busca de laudos
+    function executarBuscaLaudos() {
+      const termoBusca = campoBusca.value.trim();
+      const filtroAtivo = document.querySelector('.botao-filtro.ativo')?.dataset.filtro || '';
+      carregarLaudos(filtroAtivo, termoBusca);
+    }
+    
+    btnBuscar.addEventListener('click', executarBuscaLaudos);
+    
+    campoBusca.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        executarBuscaLaudos();
+      }
+    });
+    
+    botoesFiltro.forEach(botao => {
+      botao.addEventListener('click', function() {
+        botoesFiltro.forEach(btn => btn.classList.remove('ativo'));
+        this.classList.add('ativo');
+        executarBuscaLaudos();
       });
     });
-  </script>
+    
+    // Busca de pacientes no modal
+    function executarBuscaPacientes() {
+      const termo = buscaPaciente.value.trim();
+      carregarPacientesModal(termo);
+    }
+    
+    btnBuscarPaciente.addEventListener('click', executarBuscaPacientes);
+    
+    buscaPaciente.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        executarBuscaPacientes();
+      }
+    });
+    
+    // Confirmar seleção de paciente
+    document.getElementById('confirmarSelecao').addEventListener('click', function() {
+      if (!pacienteSelecionadoId) {
+        alert('Selecione um paciente para continuar');
+        return;
+      }
+      
+      modalSelecao.classList.remove('ativo');
+      window.location.href = `/medico/laudos/novo?pacienteId=${pacienteSelecionadoId}`;
+    });
+    
+    // Carregar laudos inicialmente
+    carregarLaudos();
+  });
+  
+  // Funções para os botões de ação (placeholders)
+  function editarLaudo(id) {
+    console.log('Editar laudo:', id);
+    window.location.href = `/medico/laudos/editar/${id}`;
+  }
+  
+  function downloadLaudo(id) {
+    console.log('Download laudo:', id);
+    window.location.href = `/medico/laudos/download/${id}`;
+  }
+  
+  function encaminharLaudo(id) {
+    console.log('Encaminhar laudo:', id);
+    window.location.href = `/medico/laudos/encaminhar/${id}`;
+  }
+</script>
 </body>
 </html>
