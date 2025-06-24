@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
+	"github.com/devsouzx/projeto-integrador/src/controller/gestor"
 	"github.com/gin-gonic/gin"
 )
 
-func InitGestorRoutes(rg *gin.RouterGroup) {
+func InitGestorRoutes(rg *gin.RouterGroup, gestorController gestor.GestorControllerInterface) {
 	gestor := rg.Group("/gestor")
 	gestor.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("gestor"))
 	{
@@ -30,5 +31,7 @@ func InitGestorRoutes(rg *gin.RouterGroup) {
 		gestor.GET("/exames", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "exames-gestor.html", nil)
 		})
+
+		gestor.POST("/novo-profissional", gestorController.CadastrarProfissional)
 	}
 }

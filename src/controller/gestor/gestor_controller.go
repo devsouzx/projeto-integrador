@@ -6,7 +6,7 @@ import (
 )
 
 func NewGestorController(
-	gestorService gestor.GestorSevice,
+	gestorService gestor.GestorServiceInterface,
 ) GestorControllerInterface {
 	return &gestorController{
 		gestorService: gestorService,
@@ -14,9 +14,9 @@ func NewGestorController(
 }
 
 type gestorController struct {
-	gestorService gestor.GestorService
+	gestorService gestor.GestorServiceInterface
 }
 
 type GestorControllerInterface interface {
-	CadastrarMedico(c *gin.Context)
+	CadastrarProfissional(c *gin.Context)
 }

@@ -16,7 +16,7 @@ func InitRoutes(rg *gin.RouterGroup, container *dependency.Container) {
 	InitMedicoRoutes(rg, container.MedicoController, container.PacienteController)
 	InitEnfermeiroRoutes(rg, container.EnfermeiroController)
 	InitAgenteRoutes(rg)
-	InitGestorRoutes(rg)
+	InitGestorRoutes(rg, container.GestorController)
 	InitLaudoRoutes(rg, container.LaudoController)
 
 	rg.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("medico", "enfermeiro"))

@@ -1,4 +1,4 @@
-package request //cadastro de usuário
+package request
 
 type CadastroRequest struct {
 	NomeCompleto      string `json:"nomecompleto" binding:"required"`

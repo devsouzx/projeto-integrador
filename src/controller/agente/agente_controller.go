@@ -5,7 +5,7 @@ import (
 )
 
 func NewAgenteController(
-	agenteService agente.AgenteSevice,
+	agenteService agente.AgenteServiceInterface,
 ) AgenteControllerInterface {
 	return &agenteController{
 		agenteService: agenteService,
@@ -13,7 +13,7 @@ func NewAgenteController(
 }
 
 type agenteController struct {
-	agenteService agente.AgenteService
+	agenteService agente.AgenteServiceInterface
 }
 
 type AgenteControllerInterface interface {

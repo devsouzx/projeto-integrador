@@ -8,13 +8,14 @@ type Medico struct {
 	CPF              string    `json:"cpf"`
 	Especialidade    string    `json:"especialidade"`
 	Telefone         string    `json:"telefone"`
-	DataNascimento   time.Time `json:"data_nascimento"`
 	EnderecoConsulta string    `json:"endereco_consulta"`
 	Avatar           []byte    `json:"avatar"`
 	UnidadeID        int       `json:"unidade_saude_id"`
+	CreatedAt        time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt        time.Time `json:"updated_at" db:"updated_at"`
 }
 
-func NewMedico(email, password, name, crm, cpf string) UserInterface {
+func NewMedico(email, password, name, crm, cpf, especialidade, telefone string, unidadeID int) *Medico {
 	return &Medico{
 		BaseUser: BaseUser{
 			Email:    email,
@@ -22,12 +23,11 @@ func NewMedico(email, password, name, crm, cpf string) UserInterface {
 			Name:     name,
 			Role:     "medico",
 		},
-		CRM:            crm,
-		CPF:            cpf,
-		DataNascimento: data_nascimento,
-		Especialidade:  especialidade,
-		Telefone:       telefone,
-		UnidadeID:      unidadeID,
+		CRM:           crm,
+		CPF:           cpf,
+		Especialidade: especialidade,
+		Telefone:      telefone,
+		UnidadeID:     unidadeID,
 	}
 }
 

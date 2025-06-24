@@ -11,7 +11,9 @@ CREATE TABLE medico (
     crm VARCHAR(15) NOT NULL,
     especialidade VARCHAR(50),
     senha VARCHAR(255) NOT NULL,
-    unidade_saude_id INTEGER
+    unidade_saude_id INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_medico_id ON medico(id);

@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
-
 	"github.com/devsouzx/projeto-integrador/src/model/request"
+
 	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
 	emailService "github.com/devsouzx/projeto-integrador/src/service/email"

@@ -5,6 +5,7 @@ import (
 
 	enfermeiroController "github.com/devsouzx/projeto-integrador/src/controller/enfermeiro"
 	fichaController "github.com/devsouzx/projeto-integrador/src/controller/ficha"
+	gestorController "github.com/devsouzx/projeto-integrador/src/controller/gestor"
 	laudoController "github.com/devsouzx/projeto-integrador/src/controller/laudo"
 	medicoController "github.com/devsouzx/projeto-integrador/src/controller/medico"
 	pacienteController "github.com/devsouzx/projeto-integrador/src/controller/paciente"
@@ -16,10 +17,12 @@ import (
 	medicoRepository "github.com/devsouzx/projeto-integrador/src/repository/medico"
 	pacienteRepository "github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
+	gestorRepository "github.com/devsouzx/projeto-integrador/src/repository/gestor"
 	"github.com/devsouzx/projeto-integrador/src/service/datasus"
 	emailService "github.com/devsouzx/projeto-integrador/src/service/email"
 	enfermeiroService "github.com/devsouzx/projeto-integrador/src/service/enfermeiro"
 	fichaService "github.com/devsouzx/projeto-integrador/src/service/ficha"
+	gestorService "github.com/devsouzx/projeto-integrador/src/service/gestor"
 	laudoService "github.com/devsouzx/projeto-integrador/src/service/laudo"
 	medicoService "github.com/devsouzx/projeto-integrador/src/service/medico"
 	"github.com/devsouzx/projeto-integrador/src/service/notifications"
@@ -34,7 +37,8 @@ type Container struct {
 	UnidadeController    unidadeController.UnidadeController
 	PacienteController   pacienteController.PacienteControllerInterface
 	EnfermeiroController enfermeiroController.EnfermeiroControllerInterface
-	LaudoController laudoController.LaudoControllerInterface
+	LaudoController      laudoController.LaudoControllerInterface
+	GestorController     gestorController.GestorControllerInterface
 }
 
 func InitContainer(db *sql.DB) *Container {
@@ -45,6 +49,7 @@ func InitContainer(db *sql.DB) *Container {
 	fichRepository := fichaRepository.NewFichaRepository(db)
 	enfermeiroRepository := enfermeiroRepository.NewEnfermeiroRepository(db)
 	laudoRepository := laudoRepository.NewLaudoRepository(db)
+	gestorRepository := gestorRepository.NewGestorRepository(db)
 
 	// Inicializa Services
 	emailService := emailService.NewEmailService()
@@ -55,6 +60,7 @@ func InitContainer(db *sql.DB) *Container {
 	enfermeiroService := enfermeiroService.NewEnfermeiroService(enfermeiroRepository)
 	notificationsService := notifications.NewNotificationService(smsService)
 	laudoService := laudoService.NewLaudoService(laudoRepository)
+	gestorService := gestorService.NewGestorService(gestorRepository)
 	userService := userService.NewUserDomainService(
 		userRepository,
 		emailService,
@@ -71,6 +77,7 @@ func InitContainer(db *sql.DB) *Container {
 	unidadeController := unidadeController.NewUnidadeController(unidadeService)
 	pacienteController := pacienteController.NewPacienteController(pacienteService)
 	fichaController := fichaController.NewFichaController(fichaService)
+	gestorController := gestorController.NewGestorController(gestorService)
 	enfermeiroController := enfermeiroController.NewEnfermeiroController(
 		enfermeiroService,
 		*unidadeService,
@@ -97,6 +104,7 @@ func InitContainer(db *sql.DB) *Container {
 		UnidadeController:    unidadeController,
 		PacienteController:   pacienteController,
 		EnfermeiroController: enfermeiroController,
-		LaudoController: laudoController,
+		LaudoController:      laudoController,
+		GestorController: gestorController,
 	}
 }

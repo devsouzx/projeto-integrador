@@ -5,15 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adicionar Usuário - Sistema de Diagnóstico</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
       --primaria: #9b59b6;
       --secundaria: #8e44ad;
-      --perigo: #e74c3c;
-      --aviso: #f39c12;
+      --sucesso: #00b894;
+      --perigo: #d63031;
+      --aviso: #fdcb6e;
       --cinza-claro: #f5f7fa;
-      --cinza-medio: #e0e0e0;
-      --cinza-escuro: #333333;
+      --cinza-medio: #dfe6e9;
+      --cinza-escuro: #2d3436;
+      --sombra: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
     * {
@@ -24,19 +27,20 @@
     }
     
     body {
-      background: rgba(214, 174, 241, 0.15);
+      background: #f8f9fa;
       color: var(--cinza-escuro);
+      min-height: 100vh;
     }
     
     /* Navegação Superior */
     .navegacao-superior {
-      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      background: linear-gradient(135deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 0.75rem 1.5rem;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: var(--sombra);
     }
     
     .container-navegacao {
@@ -50,15 +54,15 @@
     .logo {
       font-weight: 600;
       font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     
     .menu-navegacao {
       display: flex;
       list-style: none;
-    }
-    
-    .item-navegacao {
-      margin-left: 1rem;
+      gap: 0.5rem;
     }
     
     .link-navegacao {
@@ -66,7 +70,7 @@
       text-decoration: none;
       padding: 0.5rem 1rem;
       border-radius: 6px;
-      transition: background-color 0.3s;
+      transition: all 0.3s;
       font-size: 0.95rem;
       display: flex;
       align-items: center;
@@ -74,7 +78,8 @@
     }
     
     .link-navegacao:hover, .link-navegacao.ativo {
-      background-color: rgba(255,255,255,0.2);
+      background-color: rgba(255,255,255,0.15);
+      transform: translateY(-2px);
     }
     
     .info-usuario {
@@ -87,6 +92,12 @@
 
     .info-usuario:hover .menu-usuario {
       display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .menu-usuario {
@@ -95,23 +106,25 @@
       top: 100%;
       right: 0;
       background: white;
-      border-radius: 6px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-shadow: var(--sombra);
       min-width: 200px;
       z-index: 10;
+      overflow: hidden;
     }
 
     .menu-usuario a {
       display: block;
       padding: 0.75rem 1rem;
-      color: #333333;
+      color: var(--cinza-escuro);
       text-decoration: none;
-      transition: background-color 0.2s;
+      transition: all 0.2s;
     }
 
     .menu-usuario a:hover {
-      background-color: #f5f5f5;
+      background-color: var(--cinza-claro);
       color: var(--primaria);
+      padding-left: 1.25rem;
     }
 
     .menu-usuario a i {
@@ -127,6 +140,11 @@
       object-fit: cover;
       border: 2px solid white;
       background-color: #f0e5f5;
+      transition: transform 0.3s;
+    }
+    
+    .info-usuario:hover .avatar-usuario {
+      transform: scale(1.1);
     }
     
     /* Conteúdo Principal */
@@ -146,18 +164,52 @@
     .titulo-pagina {
       font-size: 1.75rem;
       color: var(--primaria);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .sino-notificacao {
+      position: relative;
+      cursor: pointer;
+      color: var(--cinza-escuro);
+      font-size: 1.25rem;
+      transition: all 0.3s;
+    }
+    
+    .sino-notificacao:hover {
+      color: var(--primaria);
+      transform: rotate(15deg);
+    }
+    
+    .badge-notificacao {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: var(--perigo);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     /* Formulário */
     .container-formulario {
       background-color: white;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 2rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      box-shadow: var(--sombra);
+      margin-bottom: 2rem;
     }
     
     .grupo-formulario {
       margin-bottom: 1.5rem;
+      position: relative;
     }
     
     .linha-formulario {
@@ -174,31 +226,52 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
+      color: var(--cinza-escuro);
     }
     
     .controle-formulario {
       width: 100%;
       padding: 0.75rem 1rem;
       border: 1px solid var(--cinza-medio);
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 1rem;
+      transition: all 0.3s;
     }
     
     .controle-formulario:focus {
       outline: none;
       border-color: var(--primaria);
-      box-shadow: 0 0 0 2px rgba(24,90,157,0.2);
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+    
+    .mensagem-erro {
+      color: var(--perigo);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    
+    .controle-formulario.invalido {
+      border-color: var(--perigo);
+    }
+    
+    .controle-formulario.invalido + .mensagem-erro {
+      display: block;
     }
     
     .botao {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
       padding: 0.75rem 1.5rem;
-      border-radius: 6px;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 500;
       cursor: pointer;
       border: none;
       transition: all 0.3s;
+      font-size: 1rem;
     }
     
     .botao-primario {
@@ -207,16 +280,27 @@
     }
     
     .botao-primario:hover {
-      background-color: #134a80;
+      background-color: var(--secundaria);
+      transform: translateY(-2px);
+      box-shadow: var(--sombra);
     }
     
     .botao-secundario {
-      background-color: var(--cinza-medio);
-      color: var(--cinza-escuro);
+      background-color: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
     }
     
     .botao-secundario:hover {
-      background-color: #d1d1d1;
+      background-color: var(--cinza-claro);
+      transform: translateY(-2px);
+      box-shadow: var(--sombra);
+    }
+    
+    .botao:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none !important;
     }
     
     .grupo-botoes {
@@ -228,28 +312,66 @@
     /* Campos específicos por tipo de usuário */
     .campos-profissional {
       display: none;
-      background-color: #f8f9fa;
+      background-color: var(--cinza-claro);
       padding: 1.5rem;
       border-radius: 8px;
       margin-top: 1.5rem;
+      animation: fadeIn 0.5s ease;
     }
     
     .campos-profissional.ativo {
       display: block;
     }
     
+    /* Loader */
+    .loader {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Toast de notificação */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--sucesso);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: var(--sombra);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .toast.ativo {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .toast.erro {
+      background-color: var(--perigo);
+    }
+    
+    .toast i {
+      font-size: 1.25rem;
+    }
+    
     /* Responsividade */
     @media (max-width: 768px) {
-      .navegacao-superior {
-        padding: 0.5rem 0.5rem;
-      }
-
-      .logo {
-        font-size: 1rem;
-        white-space: nowrap;
-        margin-right: 0.5rem;
-      }
-      
       .container-navegacao {
         flex-direction: column;
         align-items: stretch;
@@ -257,42 +379,37 @@
       }
       
       .menu-navegacao {
-        flex-direction: row;
         overflow-x: auto;
-        white-space: nowrap;
-        gap: 0.25rem;
-        width: 100%;
-        scrollbar-width: thin;
-      }
-
-      .item-navegacao {
-        margin-left: 0;
-        flex: 0 0 auto;
-      }
-      
-      .info-usuario {
-        justify-content: center;
-        margin-top: 0.5rem;
+        padding-bottom: 0.5rem;
       }
       
       .linha-formulario {
         flex-direction: column;
         gap: 1rem;
       }
+      
+      .conteudo-principal {
+        padding: 0 1rem;
+      }
+      
+      .container-formulario {
+        padding: 1.5rem 1rem;
+      }
     }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
   <nav class="navegacao-superior">
     <div class="container-navegacao">
-      <div class="logo">Área do Gestor</div>
+      <div class="logo">
+        <span>Área do Gestor</span>
+      </div>
       
       <ul class="menu-navegacao">
-        <li class="item-navegacao"><a href="/gestor/dashboard" class="link-navegacao"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="item-navegacao"><a href="/gestor/usuarios" class="link-navegacao ativo"><i class="fas fa-users"></i> Usuários</a></li>
-        <li class="item-navegacao"><a href="/gestor/relatorios" class="link-navegacao"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
-        <li class="item-navegacao"><a href="/gestor/exames" class="link-navegacao"><i class="fas fa-file-medical"></i> Exames</a></li>
+        <li><a href="/gestor/dashboard" class="link-navegacao"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="/gestor/usuarios" class="link-navegacao ativo"><i class="fas fa-users"></i> Usuários</a></li>
+        <li><a href="/gestor/relatorios" class="link-navegacao"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+        <li><a href="/gestor/exames" class="link-navegacao"><i class="fas fa-file-medical"></i> Exames</a></li>
       </ul>
       
       <div class="info-usuario">
@@ -310,7 +427,10 @@
   
   <main class="conteudo-principal">
     <div class="cabecalho">
-      <h1 class="titulo-pagina">Adicionar Novo Usuário</h1>
+      <h1 class="titulo-pagina">
+        <i class="fas fa-user-plus"></i>
+        Adicionar Novo Usuário
+      </h1>
       <div class="sino-notificacao">
         <i class="fas fa-bell"></i>
         <span class="badge-notificacao">5</span>
@@ -324,12 +444,14 @@
             <div class="grupo-formulario">
               <label for="nome" class="rotulo-formulario">Nome Completo</label>
               <input type="text" id="nome" class="controle-formulario" required>
+              <span class="mensagem-erro">Por favor, insira um nome válido</span>
             </div>
           </div>
           <div class="coluna-formulario">
             <div class="grupo-formulario">
               <label for="cpf" class="rotulo-formulario">CPF</label>
               <input type="text" id="cpf" class="controle-formulario" placeholder="000.000.000-00" required>
+              <span class="mensagem-erro">Por favor, insira um CPF válido</span>
             </div>
           </div>
         </div>
@@ -339,12 +461,14 @@
             <div class="grupo-formulario">
               <label for="email" class="rotulo-formulario">E-mail</label>
               <input type="email" id="email" class="controle-formulario" required>
+              <span class="mensagem-erro">Por favor, insira um e-mail válido</span>
             </div>
           </div>
           <div class="coluna-formulario">
             <div class="grupo-formulario">
               <label for="telefone" class="rotulo-formulario">Telefone</label>
               <input type="tel" id="telefone" class="controle-formulario" placeholder="(00) 00000-0000">
+              <span class="mensagem-erro">Por favor, insira um telefone válido</span>
             </div>
           </div>
         </div>
@@ -358,6 +482,7 @@
             <option value="agente">Agente Comunitário</option>
             <option value="gestor">Gestor</option>
           </select>
+          <span class="mensagem-erro">Por favor, selecione um tipo de usuário</span>
         </div>
         
         <!-- Campos específicos para Médico -->
@@ -367,12 +492,14 @@
               <div class="grupo-formulario">
                 <label for="crm" class="rotulo-formulario">CRM</label>
                 <input type="text" id="crm" class="controle-formulario" placeholder="000000/UF">
+                <span class="mensagem-erro">Por favor, insira um CRM válido</span>
               </div>
             </div>
             <div class="coluna-formulario">
               <div class="grupo-formulario">
                 <label for="especialidade" class="rotulo-formulario">Especialidade</label>
                 <input type="text" id="especialidade" class="controle-formulario">
+                <span class="mensagem-erro">Por favor, insira uma especialidade</span>
               </div>
             </div>
           </div>
@@ -383,6 +510,7 @@
           <div class="grupo-formulario">
             <label for="coren" class="rotulo-formulario">COREN</label>
             <input type="text" id="coren" class="controle-formulario" placeholder="000000/UF">
+            <span class="mensagem-erro">Por favor, insira um COREN válido</span>
           </div>
         </div>
         
@@ -391,6 +519,7 @@
           <div class="grupo-formulario">
             <label for="emailInstitucional" class="rotulo-formulario">E-mail Institucional</label>
             <input type="email" id="emailInstitucional" class="controle-formulario" placeholder="seu.email@saude.gov.br">
+            <span class="mensagem-erro">Por favor, insira um e-mail institucional válido</span>
           </div>
         </div>
         
@@ -398,13 +527,15 @@
           <div class="coluna-formulario">
             <div class="grupo-formulario">
               <label for="senha" class="rotulo-formulario">Senha</label>
-              <input type="password" id="senha" class="controle-formulario" required>
+              <input type="password" id="senha" class="controle-formulario" required minlength="6">
+              <span class="mensagem-erro">A senha deve ter pelo menos 6 caracteres</span>
             </div>
           </div>
           <div class="coluna-formulario">
             <div class="grupo-formulario">
               <label for="confirmarSenha" class="rotulo-formulario">Confirmar Senha</label>
               <input type="password" id="confirmarSenha" class="controle-formulario" required>
+              <span class="mensagem-erro">As senhas não coincidem</span>
             </div>
           </div>
         </div>
@@ -418,11 +549,13 @@
             <option value="ubs_sul">UBS Sul</option>
             <option value="ubs_leste">UBS Leste</option>
           </select>
+          <span class="mensagem-erro">Por favor, selecione uma unidade de saúde</span>
         </div>
         
         <div class="grupo-botoes">
-          <button type="submit" class="botao botao-primario">
+          <button type="submit" class="botao botao-primario" id="botaoEnviar">
             <i class="fas fa-save"></i> Salvar Usuário
+            <div class="loader" id="loader"></div>
           </button>
           <a href="/gestor/usuarios" class="botao botao-secundario">
             <i class="fas fa-times"></i> Cancelar
@@ -432,10 +565,87 @@
     </div>
   </main>
 
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Operação realizada com sucesso!</span>
+  </div>
+
   <script>
+    // Elementos do DOM
+    const formulario = document.getElementById('formularioUsuario');
+    const tipoUsuario = document.getElementById('tipoUsuario');
+    const botaoEnviar = document.getElementById('botaoEnviar');
+    const loader = document.getElementById('loader');
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+
+    // Função para mostrar toast de notificação
+    function mostrarToast(mensagem, isError = false) {
+      toastMessage.textContent = mensagem;
+      toast.classList.remove('erro');
+      
+      if (isError) {
+        toast.classList.add('erro');
+      }
+      
+      toast.classList.add('ativo');
+      
+      setTimeout(() => {
+        toast.classList.remove('ativo');
+      }, 5000);
+    }
+
+    // Função para validar campo
+    function validarCampo(campo, validacao) {
+      const valor = campo.value.trim();
+      const grupo = campo.closest('.grupo-formulario');
+      const mensagemErro = grupo.querySelector('.mensagem-erro');
+      
+      if (!validacao(valor)) {
+        campo.classList.add('invalido');
+        return false;
+      } else {
+        campo.classList.remove('invalido');
+        return true;
+      }
+    }
+
+    // Funções de validação
+    function validarNome(nome) {
+      return nome.length >= 3;
+    }
+
+    function validarCPF(cpf) {
+      return cpf.replace(/\D/g, '').length === 11;
+    }
+
+    function validarEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validarTelefone(telefone) {
+      return telefone.replace(/\D/g, '').length >= 10;
+    }
+
+    function validarCRM(crm) {
+      return /^\d{6}\/[A-Z]{2}$/.test(crm);
+    }
+
+    function validarCOREN(coren) {
+      return /^\d{6}\/[A-Z]{2}$/.test(coren);
+    }
+
+    function validarSenha(senha) {
+      return senha.length >= 6;
+    }
+
+    function validarSenhasIguais(senha, confirmacao) {
+      return senha === confirmacao;
+    }
+
     // Função para alternar os campos específicos de cada tipo de profissional
     function alternarCamposProfissionais() {
-      const tipoUsuario = document.getElementById('tipoUsuario').value;
+      const tipoSelecionado = tipoUsuario.value;
       
       // Esconde todos os campos específicos primeiro
       document.getElementById('camposMedico').classList.remove('ativo');
@@ -443,25 +653,12 @@
       document.getElementById('camposOutros').classList.remove('ativo');
       
       // Mostra apenas os campos relevantes para o tipo selecionado
-      if (tipoUsuario === 'medico') {
+      if (tipoSelecionado === 'medico') {
         document.getElementById('camposMedico').classList.add('ativo');
-        document.getElementById('crm').setAttribute('required', '');
-        document.getElementById('emailInstitucional').removeAttribute('required');
-        document.getElementById('coren').removeAttribute('required');
-      } else if (tipoUsuario === 'enfermeiro') {
+      } else if (tipoSelecionado === 'enfermeiro') {
         document.getElementById('camposEnfermeiro').classList.add('ativo');
-        document.getElementById('coren').setAttribute('required', '');
-        document.getElementById('emailInstitucional').removeAttribute('required');
-        document.getElementById('crm').removeAttribute('required');
-      } else if (tipoUsuario === 'agente' || tipoUsuario === 'administrativo' || tipoUsuario === 'gestor') {
+      } else if (tipoSelecionado === 'agente' || tipoSelecionado === 'gestor') {
         document.getElementById('camposOutros').classList.add('ativo');
-        document.getElementById('emailInstitucional').setAttribute('required', '');
-        document.getElementById('crm').removeAttribute('required');
-        document.getElementById('coren').removeAttribute('required');
-      } else {
-        document.getElementById('emailInstitucional').removeAttribute('required');
-        document.getElementById('crm').removeAttribute('required');
-        document.getElementById('coren').removeAttribute('required');
       }
     }
     
@@ -472,6 +669,8 @@
       if (valor.length > 7) valor = valor.substring(0, 7) + '.' + valor.substring(7);
       if (valor.length > 11) valor = valor.substring(0, 11) + '-' + valor.substring(11);
       this.value = valor.substring(0, 14);
+      
+      validarCampo(this, validarCPF);
     });
     
     // Formatar Telefone
@@ -480,13 +679,31 @@
       if (valor.length > 0) valor = '(' + valor.substring(0, 2) + ') ' + valor.substring(2);
       if (valor.length > 10) valor = valor.substring(0, 10) + '-' + valor.substring(10);
       this.value = valor.substring(0, 15);
+      
+      if (this.value.length > 0) {
+        validarCampo(this, validarTelefone);
+      } else {
+        this.classList.remove('invalido');
+      }
     });
     
     // Formatar CRM
     document.getElementById('crm').addEventListener('input', function() {
-      let valor = this.value.replace(/\D/g, '');
-      if (valor.length > 6) valor = valor.substring(0, 6) + '/' + valor.substring(6, 8);
-      this.value = valor.substring(0, 9).toUpperCase();
+      let valor = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        
+        const numeros = valor.match(/^\d{1,6}/);
+        const letras = valor.replace(numeros ? numeros[0] : '', '').match(/[A-Z]{0,2}/);
+
+        const num = numeros ? numeros[0] : '';
+        const uf = letras ? letras[0] : '';
+
+        e.target.value = num + (uf ? '/' + uf : '');
+      
+      if (this.value.length > 0) {
+        validarCampo(this, validarCRM);
+      } else {
+        this.classList.remove('invalido');
+      }
     });
     
     // Formatar COREN
@@ -494,22 +711,147 @@
       let valor = this.value.replace(/\D/g, '');
       if (valor.length > 6) valor = valor.substring(0, 6) + '/' + valor.substring(6, 8);
       this.value = valor.substring(0, 9).toUpperCase();
+      
+      if (this.value.length > 0) {
+        validarCampo(this, validarCOREN);
+      } else {
+        this.classList.remove('invalido');
+      }
     });
-    
-    // Validação do formulário
-    document.getElementById('formularioUsuario').addEventListener('submit', function(e) {
+
+    // Validação em tempo real
+    document.getElementById('nome').addEventListener('blur', function() {
+      validarCampo(this, validarNome);
+    });
+
+    document.getElementById('email').addEventListener('blur', function() {
+      validarCampo(this, validarEmail);
+    });
+
+    document.getElementById('senha').addEventListener('blur', function() {
+      validarCampo(this, validarSenha);
+    });
+
+    document.getElementById('confirmarSenha').addEventListener('blur', function() {
+      const senha = document.getElementById('senha').value;
+      const confirmacao = this.value;
+      
+      if (!validarSenhasIguais(senha, confirmacao)) {
+        this.classList.add('invalido');
+        document.querySelector('#confirmarSenha + .mensagem-erro').textContent = 'As senhas não coincidem';
+      } else {
+        this.classList.remove('invalido');
+      }
+    });
+
+    // Envio do formulário
+    formulario.addEventListener('submit', async function(e) {
       e.preventDefault();
       
-      const senha = document.getElementById('senha').value;
-      const confirmarSenha = document.getElementById('confirmarSenha').value;
+      // Validar todos os campos
+      const nomeValido = validarCampo(document.getElementById('nome'), validarNome);
+      const cpfValido = validarCampo(document.getElementById('cpf'), validarCPF);
+      const emailValido = validarCampo(document.getElementById('email'), validarEmail);
+      const telefoneValido = document.getElementById('telefone').value.length === 0 || 
+                            validarCampo(document.getElementById('telefone'), validarTelefone);
+      const tipoValido = tipoUsuario.value !== '';
+      const senhaValida = validarCampo(document.getElementById('senha'), validarSenha);
+      const confirmacaoValida = validarSenhasIguais(
+        document.getElementById('senha').value,
+        document.getElementById('confirmarSenha').value
+      );
+      const unidadeValida = document.getElementById('unidade').value !== '';
       
-      if (senha !== confirmarSenha) {
-        alert('As senhas não coincidem!');
+      // Validações específicas por tipo
+      let camposEspecificosValidos = true;
+      
+      switch (tipoUsuario.value) {
+        case 'medico':
+          const crmValido = validarCampo(document.getElementById('crm'), validarCRM);
+          const especialidadeValida = document.getElementById('especialidade').value.trim() !== '';
+          camposEspecificosValidos = crmValido && especialidadeValida;
+          break;
+        case 'enfermeiro':
+          const corenValido = validarCampo(document.getElementById('coren'), validarCOREN);
+          camposEspecificosValidos = corenValido;
+          break;
+        case 'agente':
+        case 'gestor':
+          const emailInstitucionalValido = validarCampo(
+            document.getElementById('emailInstitucional'), 
+            validarEmail
+          );
+          camposEspecificosValidos = emailInstitucionalValido;
+          break;
+      }
+      
+      if (!confirmacaoValida) {
+        document.getElementById('confirmarSenha').classList.add('invalido');
+        document.querySelector('#confirmarSenha + .mensagem-erro').textContent = 'As senhas não coincidem';
+      } else {
+        document.getElementById('confirmarSenha').classList.remove('invalido');
+      }
+      
+      if (!nomeValido || !cpfValido || !emailValido || !telefoneValido || !tipoValido || 
+          !senhaValida || !confirmacaoValida || !unidadeValida || !camposEspecificosValidos) {
+        mostrarToast('Por favor, preencha todos os campos corretamente', true);
         return;
       }
       
-      alert('Usuário cadastrado com sucesso!');
-      window.location.href = '/gestor/usuarios';
+      // Mostrar loader e desabilitar botão
+      botaoEnviar.disabled = true;
+      loader.style.display = 'block';
+      
+      // Preparar dados para envio
+      const dados = {
+        nomecompleto: document.getElementById('nome').value.trim(),
+        cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
+        email: document.getElementById('email').value.trim(),
+        telefone: document.getElementById('telefone').value.replace(/\D/g, ''),
+        role: tipoUsuario.value,
+        password: document.getElementById('senha').value,
+        unidade: document.getElementById('unidade').value
+      };
+      
+      // Adicionar campos específicos
+      if (tipoUsuario.value === 'medico') {
+        dados.crm = document.getElementById('crm').value;
+        dados.especialidade = document.getElementById('especialidade').value.trim();
+      } else if (tipoUsuario.value === 'enfermeiro') {
+        dados.coren = document.getElementById('coren').value;
+      } else if (tipoUsuario.value === 'agente' || tipoUsuario.value === 'gestor') {
+        dados.emailInstitucional = document.getElementById('emailInstitucional').value.trim();
+      }
+      
+      try {
+        const response = await fetch('/gestor/novo-profissional', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dados),
+          credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Erro ao cadastrar usuário');
+        }
+        
+        mostrarToast('Usuário cadastrado com sucesso!');
+        
+        // Redirecionar após 2 segundos
+        setTimeout(() => {
+          window.location.href = '/gestor/usuarios';
+        }, 2000);
+      } catch (error) {
+        console.error('Erro:', error);
+        mostrarToast(error.message || 'Erro ao cadastrar usuário', true);
+      } finally {
+        botaoEnviar.disabled = false;
+        loader.style.display = 'none';
+      }
     });
   </script>
 </body>

@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (gc *gestorController) CadastrarUsuario(c *gin.Context) {
-	var cadRequest request.CadastroUsuarioRequest
+func (gc *gestorController) CadastrarProfissional(c *gin.Context) {
+	var cadRequest request.CadastroProfissionalRequest
 
 	if err := c.ShouldBindJSON(&cadRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -18,9 +18,9 @@ func (gc *gestorController) CadastrarUsuario(c *gin.Context) {
 		return
 	}
 
-	switch cadRequest.TipoUsuario {
+	switch cadRequest.Role {
 	case "medico":
-		medico, err := gc.service.CadastrarMedico(cadRequest)
+		medico, err := gc.gestorService.CadastrarMedico(cadRequest)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error":   "Erro ao cadastrar médico",
@@ -36,7 +36,6 @@ func (gc *gestorController) CadastrarUsuario(c *gin.Context) {
 				"crm":              medico.CRM,
 				"especialidade":    medico.Especialidade,
 				"cpf":              medico.CPF,
-				"datadenascimento": medico.DataNascimento,
 				"email":            medico.Email,
 				"telefone":         medico.Telefone,
 			},
