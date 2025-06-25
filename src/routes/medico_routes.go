@@ -4,10 +4,11 @@ import (
 	medicoController "github.com/devsouzx/projeto-integrador/src/controller/medico"
 	"github.com/devsouzx/projeto-integrador/src/controller/paciente"
 	"github.com/devsouzx/projeto-integrador/src/model"
+	"github.com/devsouzx/projeto-integrador/src/controller/encaminhamento"
 	"github.com/gin-gonic/gin"
 )
 
-func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.MedicoControllerInterface, pacienteController paciente.PacienteControllerInterface) {
+func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.MedicoControllerInterface, pacienteController paciente.PacienteControllerInterface, encaminhamentoController encaminhamento.EncaminhamentoControllerInterface) {
 	medico := rg.Group("/medico")
 	medico.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("medico"))
 	{
@@ -23,5 +24,11 @@ func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.Med
 		medico.GET("/api/paciente/:id", medicoController.GetPacienteByID)
 
 		medico.GET("/minha-unidade", medicoController.GetUnidadeMedico)
+
+		medico.GET("/api/encaminhamentos", encaminhamentoController.GetEncaminhamentosByMedico)
+		medico.GET("/api/encaminhamentos/:id", encaminhamentoController.GetEncaminhamento)
+		medico.GET("/api/encaminhamentos/paciente/:pacienteId", encaminhamentoController.GetEncaminhamentosByPaciente)
+		medico.PUT("/api/encaminhamentos/update/:id", encaminhamentoController.UpdateStatus)
+		medico.POST("/api/encaminhamentos", encaminhamentoController.CreateEncaminhamento)
 	}
 }

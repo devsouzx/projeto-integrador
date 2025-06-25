@@ -622,63 +622,39 @@
   <main class="conteudo-principal">
     <div class="cabecalho">
       <h1 class="titulo-pagina">Novo Encaminhamento</h1>
-      <a href="/medico/pacientes/123456" class="botao-voltar">
+      <a href="#" id="voltarProntuario" class="botao-voltar">
         <i class="fas fa-arrow-left"></i> Voltar ao Prontuário
       </a>
     </div>
 
     <div class="container-encaminhamento">
-      <div class="info-paciente">
-        <strong>Paciente:</strong> Maria da Silva (38 anos) | <strong>Cartão SUS:</strong> 123 4567 8901 2345 | <strong>CID-10:</strong> R87.61 (ASC-H)
+      <div class="info-paciente" id="infoPaciente">
+        <strong>Paciente:</strong> <span id="pacienteNome">Carregando...</span> | 
+        <strong>Cartão SUS:</strong> <span id="pacienteCNS">Carregando...</span> | 
+        <strong>Data Nasc.:</strong> <span id="pacienteNascimento">Carregando...</span>
       </div>
       
       <div class="dados-clinicos">
         <h3><i class="fas fa-clipboard-list"></i> Dados Clínicos Relevantes</h3>
-        <div class="dados-clinicos-grid">
-          <div class="item-dado-clinico">
-            <strong>Último Exame Preventivo</strong>
-            15/06/2025 - ASC-H
-          </div>
-          <div class="item-dado-clinico">
-            <strong>Exame Anterior</strong>
-            10/03/2025 - ASC-H
-          </div>
-          <div class="item-dado-clinico">
-            <strong>Teste HPV</strong>
-            Positivo (16/18)
-          </div>
-          <div class="item-dado-clinico">
-            <strong>Fatores de Risco</strong>
-            Tabagismo, 3 gestações
-          </div>
+        <div class="dados-clinicos-grid" id="dadosClinicos">
+          <!-- Dados serão carregados via JavaScript -->
         </div>
       </div>
       
+      <!-- Passo 1 - Tipo de Encaminhamento -->
       <div class="passo-encaminhamento">
         <div class="numero-passo">1</div>
         <div class="conteudo-passo">
           <h3>Tipo de Encaminhamento</h3>
           <p>Selecione o tipo de especialidade ou procedimento necessário</p>
           
-          <div class="grade-especialidades">
-            <div class="card-especialidade selecionado" onclick="document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado')); this.classList.add('selecionado')">
-              <h3><i class="fas fa-microscope"></i> Colposcopia com Biópsia</h3>
-              <p>Exame detalhado do colo uterino com possibilidade de coleta de fragmentos para análise histopatológica</p>
-            </div>
-
-            <div class="card-especialidade" onclick="document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado')); this.classList.add('selecionado')">
-              <h3><i class="fas fa-user-md"></i> Oncologia Ginecológica</h3>
-              <p>Avaliação especializada para casos suspeitos de neoplasia maligna</p>
-            </div>
-
-            <div class="card-especialidade" onclick="document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado')); this.classList.add('selecionado')">
-              <h3><i class="fas fa-procedures"></i> Cirurgia Ginecológica</h3>
-              <p>Para casos que necessitem de intervenção cirúrgica (conização, LEEP, etc.)</p>
-            </div>
+          <div class="grade-especialidades" id="especialidadesContainer">
+            <!-- Opções serão carregadas via JavaScript -->
           </div>
         </div>
       </div>
       
+      <!-- Passo 2 - Nível de Urgência -->
       <div class="passo-encaminhamento">
         <div class="numero-passo">2</div>
         <div class="conteudo-passo">
@@ -686,19 +662,19 @@
           <p>Defina a prioridade do encaminhamento conforme a situação clínica</p>
           
           <div class="niveis-urgencia">
-            <div class="opcao-urgencia" onclick="document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado')); this.classList.add('selecionado')">
+            <div class="opcao-urgencia" data-urgencia="rotina" onclick="selecionarUrgencia(this)">
               <h3>Rotina</h3>
               <p>Agendamento em até 60 dias</p>
               <p style="margin-top: 0.5rem; color: var(--primaria); font-weight: 500;">Para acompanhamento</p>
             </div>
 
-            <div class="opcao-urgencia selecionado" onclick="document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado')); this.classList.add('selecionado')">
+            <div class="opcao-urgencia selecionado" data-urgencia="prioritario" onclick="selecionarUrgencia(this)">
               <h3>Prioritário</h3>
               <p>Agendamento em até 15 dias</p>
               <p style="margin-top: 0.5rem; color: var(--primaria); font-weight: 500;">Para casos como ASC-H, LSIL</p>
             </div>
 
-            <div class="opcao-urgencia" onclick="document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado')); this.classList.add('selecionado')">
+            <div class="opcao-urgencia" data-urgencia="urgente" onclick="selecionarUrgencia(this)">
               <h3>Urgente</h3>
               <p>Agendamento em até 72h</p>
               <p style="margin-top: 0.5rem; color: var(--primaria); font-weight: 500;">Para HSIL ou suspeita de câncer</p>
@@ -707,6 +683,7 @@
         </div>
       </div>
       
+      <!-- Passo 3 - Justificativa Clínica -->
       <div class="passo-encaminhamento">
         <div class="numero-passo">3</div>
         <div class="conteudo-passo">
@@ -714,11 +691,12 @@
           <p>Descreva os motivos do encaminhamento e informações relevantes</p>
           
           <div class="grupo-formulario">
-            <textarea class="controle-formulario" rows="5" placeholder="Descreva a justificativa clínica para este encaminhamento..."></textarea>
+            <textarea id="justificativa" class="controle-formulario" rows="5" placeholder="Descreva a justificativa clínica para este encaminhamento..."></textarea>
           </div>
         </div>
       </div>
       
+      <!-- Passo 4 - Exames Anexos -->
       <div class="passo-encaminhamento">
         <div class="numero-passo">4</div>
         <div class="conteudo-passo">
@@ -733,16 +711,14 @@
               <input type="file" id="entradaArquivo" style="display: none;" multiple>
             </div>
             
-            <div class="arquivos-anexos">
-              <div class="arquivo-anexo">
-                <i class="fas fa-file-pdf"></i> Citologia_06-2025.pdf
-                <span class="remover-arquivo" title="Remover arquivo">&times;</span>
-              </div>
+            <div class="arquivos-anexos" id="arquivosAnexos">
+              <!-- Arquivos anexados aparecerão aqui -->
             </div>
           </div>
         </div>
       </div>
       
+      <!-- Passo 5 - Unidade de Referência -->
       <div class="passo-encaminhamento">
         <div class="numero-passo">5</div>
         <div class="conteudo-passo">
@@ -750,18 +726,16 @@
           <p>Selecione a unidade de saúde para onde o paciente será encaminhado</p>
           
           <div class="grupo-formulario">
-            <select class="controle-formulario">
-              <option>Selecione uma unidade...</option>
-              <option>Hospital Central - Ambulatório de Colposcopia</option>
-              <option>Hospital da Mulher - Setor de Ginecologia</option>
-              <option>Centro de Oncologia Municipal</option>
+            <select id="unidadeReferencia" class="controle-formulario">
+              <option value="">Selecione uma unidade...</option>
+              <!-- Unidades serão carregadas via JavaScript -->
             </select>
           </div>
         </div>
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
-        <button class="botao botao-secundario" onclick="alert('Rascunho salvo com sucesso!')">
+        <button class="botao botao-secundario" id="btnSalvarRascunho">
           <i class="fas fa-save"></i> Salvar Rascunho
         </button>
         <button class="botao botao-primario" id="btnEnviarEncaminhamento">
@@ -770,10 +744,11 @@
       </div>
     </div>
 
+    <!-- Seção de Encaminhamentos Anteriores -->
     <div class="encaminhamentos-anteriores">
       <h2><i class="fas fa-history"></i> Encaminhamentos Anteriores</h2>
       
-      <table class="tabela-dados">
+      <table class="tabela-dados" id="tabelaEncaminhamentos">
         <thead>
           <tr>
             <th>Data</th>
@@ -784,102 +759,513 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>15/03/2025</td>
-            <td>Colposcopia</td>
-            <td>Hospital Central</td>
-            <td><span class="etiqueta etiqueta-concluido">Realizado</span></td>
-            <td><a href="#" class="link-acao" onclick="document.getElementById('modalEncaminhamento').style.display = 'flex'">Ver Detalhes</a></td>
-          </tr>
-          <tr>
-            <td>10/12/2024</td>
-            <td>Ginecologia</td>
-            <td>UBS Centro</td>
-            <td><span class="etiqueta etiqueta-concluido">Realizado</span></td>
-            <td><a href="#" class="link-acao" onclick="document.getElementById('modalEncaminhamento').style.display = 'flex'">Ver Detalhes</a></td>
-          </tr>
+          <!-- Encaminhamentos serão carregados via JavaScript -->
         </tbody>
       </table>
     </div>
   </main>
 
+  <!-- Modal de Detalhes do Encaminhamento -->
   <div class="modal" id="modalEncaminhamento">
     <div class="conteudo-modal">
       <div class="cabecalho-modal">
         <h2 class="titulo-modal">Detalhes do Encaminhamento</h2>
-        <button class="fechar-modal" onclick="document.getElementById('modalEncaminhamento').style.display = 'none'">&times;</button>
+        <button class="fechar-modal" onclick="fecharModal()">&times;</button>
       </div>
       
-      <div>
-        <div style="margin-bottom: 1.5rem;">
-          <h3>Encaminhamento para Colposcopia</h3>
-          <p><strong>Data:</strong> 15/03/2025</p>
-          <p><strong>Paciente:</strong> Maria da Silva</p>
-          <p><strong>Cartão SUS:</strong> 123 4567 8901 2345</p>
-        </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-          <h4>Justificativa Clínica</h4>
-          <p>Paciente com resultado ASC-US em exame preventivo. Necessário avaliação com colposcopia para descartar lesão de alto grau.</p>
-        </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-          <h4>Unidade de Referência</h4>
-          <p>Hospital Central - Ambulatório de Colposcopia</p>
-        </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-          <h4>Status</h4>
-          <p><span class="etiqueta etiqueta-concluido">Realizado em 20/03/2025</span></p>
-          <p>Resultado: Biópsia com CIN1. Retorno em 6 meses.</p>
-        </div>
+      <div id="modalConteudo">
+        <!-- Conteúdo será carregado via JavaScript -->
       </div>
       
       <div class="acoes-modal">
-        <button class="botao botao-secundario" onclick="document.getElementById('modalEncaminhamento').style.display = 'none'">Fechar</button>
-        <button class="botao botao-primario" onclick="alert('Imprimindo encaminhamento...')"><i class="fas fa-print"></i> Imprimir</button>
+        <button class="botao botao-secundario" onclick="fecharModal()">Fechar</button>
+        <button class="botao botao-primario" id="btnImprimirEncaminhamento">
+          <i class="fas fa-print"></i> Imprimir
+        </button>
       </div>
     </div>
   </div>
 
   <script>
-    // Validação do formulário
-    document.getElementById('btnEnviarEncaminhamento').addEventListener('click', function() {
-      const justificativa = document.querySelector('textarea.controle-formulario').value;
-      const especialidadeSelecionada = document.querySelector('.card-especialidade.selecionado');
-      const urgenciaSelecionada = document.querySelector('.opcao-urgencia.selecionado');
-      const unidadeSelecionada = document.querySelector('select.controle-formulario').value;
-      
-      if (!justificativa) {
-        alert('Por favor, preencha a justificativa clínica');
-        return;
+    // Variáveis globais
+    let paciente = null;
+    let encaminhamentosAnteriores = [];
+    let unidadesReferencia = [];
+    let arquivosAnexados = [];
+    let encaminhamentoSelecionado = null;
+    let medico = null;
+
+    // Elementos do DOM
+    const elementos = {
+      pacienteNome: document.getElementById('pacienteNome'),
+      pacienteCNS: document.getElementById('pacienteCNS'),
+      pacienteNascimento: document.getElementById('pacienteNascimento'),
+      dadosClinicos: document.getElementById('dadosClinicos'),
+      especialidadesContainer: document.getElementById('especialidadesContainer'),
+      arquivosAnexos: document.getElementById('arquivosAnexos'),
+      unidadeReferencia: document.getElementById('unidadeReferencia'),
+      tabelaEncaminhamentos: document.getElementById('tabelaEncaminhamentos').querySelector('tbody'),
+      modalConteudo: document.getElementById('modalConteudo'),
+      btnEnviarEncaminhamento: document.getElementById('btnEnviarEncaminhamento'),
+      btnSalvarRascunho: document.getElementById('btnSalvarRascunho'),
+      btnImprimirEncaminhamento: document.getElementById('btnImprimirEncaminhamento'),
+      voltarProntuario: document.getElementById('voltarProntuario'),
+      logoutLink: document.getElementById('logoutLink')
+    };
+
+    // Obter ID do paciente da URL
+    function obterIdPacienteDaUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('pacienteId');
+    }
+
+    // Carregar dados do paciente
+    async function carregarPaciente() {
+      try {
+        const pacienteId = obterIdPacienteDaUrl();
+        if (!pacienteId) {
+          throw new Error('ID do paciente não encontrado na URL');
+        }
+
+        const response = await fetch(`/api/pacientes/${pacienteId}`);
+        
+        if (!response.ok) {
+          throw new Error('Erro ao carregar paciente');
+        }
+        
+        paciente = await response.json();
+        
+        // Atualizar informações do paciente na tela
+        elementos.pacienteNome.textContent = `${paciente.nome}`;
+        elementos.pacienteCNS.textContent = paciente.cns || 'Não informado';
+        
+        // Formatando data de nascimento
+        if (paciente.data_nascimento) {
+          const dataNasc = new Date(paciente.data_nascimento);
+          elementos.pacienteNascimento.textContent = dataNasc.toLocaleDateString('pt-BR');
+        } else {
+          elementos.pacienteNascimento.textContent = 'Não informado';
+        }
+        
+        // Configurar link de voltar
+        elementos.voltarProntuario.href = `/medico/pacientes/${paciente.id}`;
+        
+        // Carregar dados clínicos
+        carregarDadosClinicos();
+        
+      } catch (error) {
+        console.error('Erro ao carregar paciente:', error);
+        alert('Não foi possível carregar os dados do paciente');
+        elementos.infoPaciente.innerHTML = '<p>Erro ao carregar dados do paciente</p>';
       }
-      
-      if (!especialidadeSelecionada) {
-        alert('Por favor, selecione um tipo de encaminhamento');
-        return;
+    }
+
+    // Carregar dados clínicos do paciente
+    function carregarDadosClinicos() {
+      elementos.dadosClinicos.innerHTML = `
+        <div class="item-dado-clinico">
+          <strong>Último Exame Preventivo</strong>
+          ${paciente.ultimo_exame || 'Não informado'}
+        </div>
+        <div class="item-dado-clinico">
+          <strong>Exame Anterior</strong>
+          ${paciente.exame_anterior || 'Não informado'}
+        </div>
+        <div class="item-dado-clinico">
+          <strong>Teste HPV</strong>
+          ${paciente.hpv_status || 'Não informado'}
+        </div>
+        <div class="item-dado-clinico">
+          <strong>Fatores de Risco</strong>
+          ${paciente.fatores_risco || 'Não informado'}
+        </div>
+      `;
+    }
+
+    // Carregar especialidades disponíveis
+    async function carregarEspecialidades() {
+      try {
+        const response = await fetch('/api/especialidades');
+        
+        if (!response.ok) {
+          throw new Error('Erro ao carregar especialidades');
+        }
+        
+        const especialidades = await response.json();
+        
+        // Limpar container
+        elementos.especialidadesContainer.innerHTML = '';
+        
+        // Adicionar especialidades ao container
+        especialidades.forEach(especialidade => {
+          const card = document.createElement('div');
+          card.className = 'card-especialidade';
+          card.innerHTML = `
+            <h3><i class="${especialidade.icone || 'fas fa-user-md'}"></i> ${especialidade.nome}</h3>
+            <p>${especialidade.descricao}</p>
+          `;
+          
+          card.addEventListener('click', function() {
+            document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado'));
+            this.classList.add('selecionado');
+          });
+          
+          elementos.especialidadesContainer.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error('Erro ao carregar especialidades:', error);
+        elementos.especialidadesContainer.innerHTML = '<p>Erro ao carregar especialidades</p>';
       }
-      
-      if (!urgenciaSelecionada) {
-        alert('Por favor, selecione um nível de urgência');
-        return;
+    }
+
+    // Carregar unidades de referência
+    async function carregarUnidadesReferencia() {
+      try {
+        const response = await fetch('/api/unidades-referencia');
+        
+        if (!response.ok) {
+          throw new Error('Erro ao carregar unidades de referência');
+        }
+        
+        unidadesReferencia = await response.json();
+        
+        // Limpar select
+        elementos.unidadeReferencia.innerHTML = '<option value="">Selecione uma unidade...</option>';
+        
+        // Adicionar unidades ao select
+        unidadesReferencia.forEach(unidade => {
+          const option = document.createElement('option');
+          option.value = unidade.id;
+          option.textContent = unidade.nome;
+          elementos.unidadeReferencia.appendChild(option);
+        });
+        
+      } catch (error) {
+        console.error('Erro ao carregar unidades de referência:', error);
+        elementos.unidadeReferencia.innerHTML = '<option value="">Erro ao carregar unidades</option>';
       }
-      
-      if (unidadeSelecionada === 'Selecione uma unidade...') {
-        alert('Por favor, selecione uma unidade de referência');
-        return;
+    }
+
+    // Carregar encaminhamentos anteriores
+    async function carregarEncaminhamentosAnteriores() {
+      try {
+        const pacienteId = obterIdPacienteDaUrl();
+        if (!pacienteId) return;
+
+        const response = await fetch(`/api/encaminhamentos/paciente/${pacienteId}`);
+        
+        if (!response.ok) {
+          throw new Error('Erro ao carregar encaminhamentos anteriores');
+        }
+        
+        encaminhamentosAnteriores = await response.json();
+        
+        // Limpar tabela
+        elementos.tabelaEncaminhamentos.innerHTML = '';
+        
+        // Adicionar encaminhamentos à tabela
+        encaminhamentosAnteriores.forEach(enc => {
+          const row = document.createElement('tr');
+          
+          // Formatar data
+          const data = new Date(enc.data_encaminhamento).toLocaleDateString('pt-BR');
+          
+          // Determinar classe do status
+          let statusClass, statusText;
+          switch(enc.status) {
+            case 'concluido':
+              statusClass = 'etiqueta-concluido';
+              statusText = 'Concluído';
+              break;
+            case 'cancelado':
+              statusClass = 'etiqueta-cancelado';
+              statusText = 'Cancelado';
+              break;
+            case 'agendado':
+              statusClass = 'etiqueta-agendado';
+              statusText = 'Agendado';
+              break;
+            default:
+              statusClass = 'etiqueta-pendente';
+              statusText = 'Pendente';
+          }
+          
+          row.innerHTML = `
+            <td>${data}</td>
+            <td>${enc.especialidade}</td>
+            <td>${enc.unidade_referencia}</td>
+            <td><span class="etiqueta ${statusClass}">${statusText}</span></td>
+            <td><a href="#" class="link-acao" onclick="abrirModalEncaminhamento('${enc.id}')">Ver Detalhes</a></td>
+          `;
+          
+          elementos.tabelaEncaminhamentos.appendChild(row);
+        });
+        
+      } catch (error) {
+        console.error('Erro ao carregar encaminhamentos anteriores:', error);
+        elementos.tabelaEncaminhamentos.innerHTML = '<tr><td colspan="5">Erro ao carregar encaminhamentos</td></tr>';
       }
+    }
+
+    // Abrir modal com detalhes do encaminhamento
+    async function abrirModalEncaminhamento(encaminhamentoId) {
+      try {
+        const response = await fetch(`/api/encaminhamentos/${encaminhamentoId}`);
+        
+        if (!response.ok) {
+          throw new Error('Erro ao carregar detalhes do encaminhamento');
+        }
+        
+        encaminhamentoSelecionado = await response.json();
+        
+        // Formatar datas
+        const dataEncaminhamento = new Date(encaminhamentoSelecionado.data_encaminhamento).toLocaleDateString('pt-BR');
+        const dataAgendamento = encaminhamentoSelecionado.data_agendamento 
+          ? new Date(encaminhamentoSelecionado.data_agendamento).toLocaleDateString('pt-BR')
+          : 'Não agendado';
+        const dataConclusao = encaminhamentoSelecionado.data_conclusao 
+          ? new Date(encaminhamentoSelecionado.data_conclusao).toLocaleDateString('pt-BR')
+          : 'Não concluído';
+        
+        // Determinar classe do status
+        let statusClass, statusText;
+        switch(encaminhamentoSelecionado.status) {
+          case 'concluido':
+            statusClass = 'etiqueta-concluido';
+            statusText = 'Concluído';
+            break;
+          case 'cancelado':
+            statusClass = 'etiqueta-cancelado';
+            statusText = 'Cancelado';
+            break;
+          case 'agendado':
+            statusClass = 'etiqueta-agendado';
+            statusText = 'Agendado';
+            break;
+          default:
+            statusClass = 'etiqueta-pendente';
+            statusText = 'Pendente';
+        }
+        
+        // Montar conteúdo do modal
+        elementos.modalConteudo.innerHTML = `
+          <div style="margin-bottom: 1.5rem;">
+            <h3>Encaminhamento para ${encaminhamentoSelecionado.especialidade}</h3>
+            <p><strong>Data:</strong> ${dataEncaminhamento}</p>
+            <p><strong>Paciente:</strong> ${encaminhamentoSelecionado.paciente.nome}</p>
+            <p><strong>Cartão SUS:</strong> ${encaminhamentoSelecionado.paciente.cns || 'Não informado'}</p>
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h4>Justificativa Clínica</h4>
+            <p>${encaminhamentoSelecionado.justificativa}</p>
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h4>Unidade de Referência</h4>
+            <p>${encaminhamentoSelecionado.unidade_referencia}</p>
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h4>Status</h4>
+            <p><span class="etiqueta ${statusClass}">${statusText}</span></p>
+            ${encaminhamentoSelecionado.data_agendamento ? `<p><strong>Data Agendamento:</strong> ${dataAgendamento}</p>` : ''}
+            ${encaminhamentoSelecionado.data_conclusao ? `<p><strong>Data Conclusão:</strong> ${dataConclusao}</p>` : ''}
+            ${encaminhamentoSelecionado.observacoes ? `<p><strong>Observações:</strong> ${encaminhamentoSelecionado.observacoes}</p>` : ''}
+          </div>
+        `;
+        
+        // Configurar botão de impressão
+        elementos.btnImprimirEncaminhamento.onclick = function() {
+          window.open(`/api/encaminhamentos/${encaminhamentoId}/imprimir`, '_blank');
+        };
+        
+        // Mostrar modal
+        document.getElementById('modalEncaminhamento').style.display = 'flex';
+        
+      } catch (error) {
+        console.error('Erro ao carregar detalhes do encaminhamento:', error);
+        elementos.modalConteudo.innerHTML = '<p>Erro ao carregar detalhes do encaminhamento</p>';
+        document.getElementById('modalEncaminhamento').style.display = 'flex';
+      }
+    }
+
+    // Fechar modal
+    function fecharModal() {
+      document.getElementById('modalEncaminhamento').style.display = 'none';
+    }
+
+    // Selecionar nível de urgência
+    function selecionarUrgencia(elemento) {
+      document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado'));
+      elemento.classList.add('selecionado');
+    }
+
+    // Manipular upload de arquivos
+    document.getElementById('entradaArquivo').addEventListener('change', function(e) {
+      const files = Array.from(e.target.files);
       
-      alert('Encaminhamento enviado com sucesso!');
-      window.location.href = '/medico/encaminhamentos';
-    });
-    
-    // Remover arquivos anexados
-    document.querySelectorAll('.remover-arquivo').forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.parentElement.remove();
+      files.forEach(file => {
+        // Verificar se o arquivo já foi adicionado
+        if (arquivosAnexados.some(f => f.name === file.name && f.size === file.size)) {
+          return;
+        }
+        
+        // Adicionar à lista de arquivos anexados
+        arquivosAnexados.push(file);
+        
+        // Criar elemento para exibir o arquivo
+        const arquivoElemento = document.createElement('div');
+        arquivoElemento.className = 'arquivo-anexo';
+        arquivoElemento.innerHTML = `
+          <i class="fas fa-file-pdf"></i> ${file.name}
+          <span class="remover-arquivo" onclick="removerArquivo(this, '${file.name}')" title="Remover arquivo">&times;</span>
+        `;
+        
+        elementos.arquivosAnexos.appendChild(arquivoElemento);
       });
+      
+      // Limpar input para permitir novos uploads
+      e.target.value = '';
     });
+
+    // Remover arquivo anexado
+    function removerArquivo(elemento, nomeArquivo) {
+      // Remover da lista de arquivos anexados
+      arquivosAnexados = arquivosAnexados.filter(file => file.name !== nomeArquivo);
+      
+      // Remover elemento do DOM
+      elemento.parentElement.remove();
+    }
+
+    // Enviar encaminhamento
+    async function enviarEncaminhamento() {
+      try {
+        // Validar dados
+        const especialidadeSelecionada = document.querySelector('.card-especialidade.selecionado');
+        const urgenciaSelecionada = document.querySelector('.opcao-urgencia.selecionado');
+        const justificativa = elementos.justificativa.value;
+        const unidadeId = elementos.unidadeReferencia.value;
+        
+        if (!especialidadeSelecionada) {
+          alert('Por favor, selecione um tipo de encaminhamento');
+          return;
+        }
+        
+        if (!urgenciaSelecionada) {
+          alert('Por favor, selecione um nível de urgência');
+          return;
+        }
+        
+        if (!justificativa) {
+          alert('Por favor, preencha a justificativa clínica');
+          return;
+        }
+        
+        if (!unidadeId) {
+          alert('Por favor, selecione uma unidade de referência');
+          return;
+        }
+        
+        // Obter dados da unidade selecionada
+        const unidade = unidadesReferencia.find(u => u.id === unidadeId);
+        if (!unidade) {
+          alert('Unidade selecionada inválida');
+          return;
+        }
+        
+        // Montar objeto do encaminhamento
+        const encaminhamento = {
+          paciente_id: obterIdPacienteDaUrl(),
+          especialidade: especialidadeSelecionada.querySelector('h3').textContent,
+          urgencia: urgenciaSelecionada.getAttribute('data-urgencia'),
+          justificativa: justificativa,
+          unidade_referencia: unidade.nome,
+          status: 'pendente'
+        };
+        
+        // Enviar encaminhamento
+        const response = await fetch('/api/encaminhamentos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(encaminhamento)
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Erro ao enviar encaminhamento');
+        }
+        
+        const resultado = await response.json();
+        
+        // Se houver arquivos anexados, enviá-los
+        if (arquivosAnexados.length > 0) {
+          await enviarArquivos(resultado.id);
+        }
+        
+        alert('Encaminhamento criado com sucesso!');
+        window.location.href = `/medico/encaminhamentos/${resultado.id}`;
+        
+      } catch (error) {
+        console.error('Erro ao enviar encaminhamento:', error);
+        alert(`Não foi possível enviar o encaminhamento: ${error.message}`);
+      }
+    }
+
+    // Enviar arquivos anexados
+    async function enviarArquivos(encaminhamentoId) {
+      try {
+        const formData = new FormData();
+        
+        // Adicionar arquivos ao FormData
+        arquivosAnexados.forEach(file => {
+          formData.append('arquivos', file);
+        });
+        
+        // Enviar arquivos
+        const response = await fetch(`/api/encaminhamentos/${encaminhamentoId}/arquivos`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erro ao enviar arquivos');
+        }
+        
+      } catch (error) {
+        console.error('Erro ao enviar arquivos:', error);
+        // Não interromper o fluxo mesmo se houver erro no upload de arquivos
+      }
+    }
+
+    // Salvar rascunho do encaminhamento
+    async function salvarRascunho() {
+      try {
+        alert('Funcionalidade de rascunho será implementada na próxima versão');
+      } catch (error) {
+        console.error('Erro ao salvar rascunho:', error);
+        alert('Não foi possível salvar o rascunho');
+      }
+    }
+
+    // Inicializar página
+    async function inicializar() {
+      // Carregar dados
+      await carregarPaciente();
+      await carregarEspecialidades();
+      await carregarUnidadesReferencia();
+      await carregarEncaminhamentosAnteriores();
+      
+      // Configurar eventos
+      elementos.btnEnviarEncaminhamento.addEventListener('click', enviarEncaminhamento);
+      elementos.btnSalvarRascunho.addEventListener('click', salvarRascunho);
+    }
+
+    // Iniciar quando o DOM estiver carregado
+    document.addEventListener('DOMContentLoaded', inicializar);
   </script>
 </body>
 </html>

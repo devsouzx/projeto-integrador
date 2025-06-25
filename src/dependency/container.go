@@ -30,6 +30,9 @@ import (
 	userService "github.com/devsouzx/projeto-integrador/src/service/user"
 	agendamentoRepository "github.com/devsouzx/projeto-integrador/src/repository/agendamento"
 	agendamentoService "github.com/devsouzx/projeto-integrador/src/service/agendamento"
+	encaminhamentoService "github.com/devsouzx/projeto-integrador/src/service/encaminhamento"
+	encaminhamentoRepository "github.com/devsouzx/projeto-integrador/src/repository/encaminhamento"
+	encaminhamentoController "github.com/devsouzx/projeto-integrador/src/controller/encaminhamento"
 )
 
 type Container struct {
@@ -41,6 +44,7 @@ type Container struct {
 	EnfermeiroController enfermeiroController.EnfermeiroControllerInterface
 	LaudoController      laudoController.LaudoControllerInterface
 	GestorController     gestorController.GestorControllerInterface
+	EncaminhamentoController encaminhamentoController.EncaminhamentoControllerInterface
 }
 
 func InitContainer(db *sql.DB) *Container {
@@ -53,6 +57,7 @@ func InitContainer(db *sql.DB) *Container {
 	laudoRepository := laudoRepository.NewLaudoRepository(db)
 	gestorRepository := gestorRepository.NewGestorRepository(db)
 	agendamentoRepo := agendamentoRepository.NewAgendamentoRepository(db)
+	encaminhamentoRepository := encaminhamentoRepository.NewEncaminhamentoRepository(db)
 
 	// Inicializa Services
 	emailService := emailService.NewEmailService()
@@ -76,6 +81,7 @@ func InitContainer(db *sql.DB) *Container {
 		pacienteRepository,
 		*notificationsService,
 	)
+	encaminhamentoService := encaminhamentoService.NewEncaminhamentoService(encaminhamentoRepository)
 
 	// Inicializa Controllers
 	unidadeController := unidadeController.NewUnidadeController(unidadeService)
@@ -101,6 +107,11 @@ func InitContainer(db *sql.DB) *Container {
 		pacienteService,
 		medicoService,
 	)
+	enacaminhamentoController := encaminhamentoController.NewEncaminhamentoController(
+		encaminhamentoService,
+		pacienteService,
+		medicoService,
+	)
 
 	return &Container{
 		UserController:       userController,
@@ -111,5 +122,6 @@ func InitContainer(db *sql.DB) *Container {
 		EnfermeiroController: enfermeiroController,
 		LaudoController:      laudoController,
 		GestorController: gestorController,
+		EncaminhamentoController: enacaminhamentoController,
 	}
 }
