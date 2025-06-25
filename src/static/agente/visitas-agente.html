@@ -365,35 +365,34 @@
     }
     
     @media (max-width: 768px) {
-      .topo-navegacao {
-        padding: 0.5rem 0.5rem;
+      .navegacao-superior {
+        padding: 0.75rem 1rem;
       }
 
-      .logo {
-        font-size: 1rem;
-        white-space: nowrap;
-        margin-right: 0.5rem;
-      }
-      
       .container-navegacao {
-        flex-direction: column;
-        align-items: stretch;
+        flex-wrap: wrap;
         gap: 1rem;
       }
       
+      .logo {
+        font-size: 1.1rem;
+      }
+      
       .menu-navegacao {
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 0.25rem;
+        order: 3;
         width: 100%;
-        scrollbar-width: thin;
+        overflow-x: auto;
         padding-bottom: 0.5rem;
+        scrollbar-width: thin;
       }
 
       .item-navegacao {
         margin-left: 0;
         flex: 0 0 auto;
+      }
+      
+      .info-usuario {
+        margin-left: auto;
       }
       
       .grade-calendario {
@@ -422,7 +421,7 @@
 <body>
   <nav class="topo-navegacao">
     <div class="container-navegacao">
-      <div class="logo">Área do Agente Comunitário</div>
+      <div class="logo">Área do Agente</div>
       
       <ul class="menu-navegacao">
         <li class="item-navegacao"><a href="/agente/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>

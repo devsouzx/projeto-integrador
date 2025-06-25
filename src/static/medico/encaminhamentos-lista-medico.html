@@ -571,8 +571,7 @@
       font-size: 0.85rem;
       color: #666666;
     }
-
-    /* Modal de Agendamento */
+    
     .modal-agendamento {
       display: none;
       position: fixed;
@@ -585,8 +584,7 @@
       justify-content: center;
       align-items: center;
     }
-
-    /* Modal de Confirmação */
+    
     .modal-confirmacao {
       display: none;
       position: fixed;
@@ -599,8 +597,7 @@
       justify-content: center;
       align-items: center;
     }
-
-    /* Loading state */
+    
     .loading {
       position: relative;
       pointer-events: none;
@@ -648,15 +645,21 @@
         gap: 1rem;
       }
       
+      .logo {
+        font-size: 1.1rem;
+      }
+      
       .menu-navegacao {
         order: 3;
         width: 100%;
         overflow-x: auto;
         padding-bottom: 0.5rem;
+        scrollbar-width: thin;
       }
 
       .item-navegacao {
         margin-left: 0;
+        flex: 0 0 auto;
       }
       
       .info-usuario {

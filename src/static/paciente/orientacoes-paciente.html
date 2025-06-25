@@ -42,6 +42,7 @@
       align-items: center;
       max-width: 1200px;
       margin: 0 auto;
+      flex-wrap: wrap;
     }
     
     .logo {
@@ -52,10 +53,19 @@
     .menu-navegacao {
       display: flex;
       list-style: none;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+    }
+    
+    .menu-navegacao::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
     }
     
     .item-navegacao {
       margin-left: 1rem;
+      flex: 0 0 auto;
     }
     
     .link-navegacao {
@@ -68,6 +78,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      white-space: nowrap;
     }
     
     .link-navegacao:hover, .link-navegacao.ativo {
@@ -80,6 +91,7 @@
       gap: 0.75rem;
       cursor: pointer;
       position: relative;
+      margin-left: auto;
     }
 
     .info-usuario:hover .menu-usuario {
@@ -258,27 +270,71 @@
     }
     
     /* Responsividade */
+    @media (max-width: 992px) {
+      .container-orientacoes {
+        grid-template-columns: 1fr;
+      }
+      
+      .menu-orientacoes {
+        order: 2;
+      }
+    }
+    
     @media (max-width: 768px) {
       .navegacao-superior {
-      padding: 0.5rem 0.5rem;
+        padding: 0.75rem 1rem;
       }
 
-      .logo {
-      font-size: 1rem;
-      white-space: nowrap;
-      margin-right: 0.5rem;
-      }
       .container-navegacao {
-        flex-direction: column;
-        align-items: stretch;
         gap: 1rem;
       }
+      
+      .logo {
+        font-size: 1.1rem;
+      }
+      
       .menu-navegacao {
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 0.25rem;
+        order: 3;
         width: 100%;
+        margin-top: 0.5rem;
+      }
+      
+      .item-navegacao:first-child {
+        margin-left: 0;
+      }
+      
+      .conteudo-orientacoes {
+        padding: 1.5rem;
+      }
+      
+      .titulo-pagina {
+        font-size: 1.5rem;
+      }
+      
+      .titulo-conteudo {
+        font-size: 1.3rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .navegacao-superior {
+        padding: 0.75rem 1rem;
+      }
+
+      .container-navegacao {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      
+      .logo {
+        font-size: 1.1rem;
+      }
+      
+      .menu-navegacao {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
         scrollbar-width: thin;
       }
 
@@ -288,23 +344,30 @@
       }
       
       .info-usuario {
-        justify-content: center;
-        margin-top: 0.5rem;
-      }
-
-      .container-orientacoes {
-        grid-template-columns: 1fr;
+        margin-left: auto;
       }
       
-      .menu-orientacoes {
-        order: -1;
+      .conteudo-principal {
+        padding: 0 1rem;
+        margin: 1rem auto;
+      }
+      
+      .cabecalho-pagina {
+        margin-bottom: 1.5rem;
+      }
+      
+      .conteudo-orientacoes {
+        padding: 1rem;
+      }
+      
+      .titulo-secao {
+        font-size: 1.1rem;
       }
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <!-- Navegação Superior -->
   <nav class="navegacao-superior">
     <div class="container-navegacao">
       <div class="logo">Área do Paciente</div>
@@ -331,7 +394,6 @@
     </div>
   </nav>
   
-  <!-- Conteúdo Principal -->
   <main class="conteudo-principal">
     <div class="cabecalho-pagina">
       <h1 class="titulo-pagina">Orientações sobre Saúde Preventiva</h1>

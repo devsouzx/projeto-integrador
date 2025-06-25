@@ -279,9 +279,9 @@
       .navegacao-superior {
         padding: 0.75rem 1rem;
       }
-      
+
       .container-navegacao {
-        flex-direction: row;
+        flex-wrap: wrap;
         gap: 1rem;
       }
       
@@ -292,12 +292,18 @@
       .menu-navegacao {
         order: 3;
         width: 100%;
-        margin-top: 1rem;
-        justify-content: center;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        scrollbar-width: thin;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
       }
       
       .info-usuario {
-        margin-left: 0;
+        margin-left: auto;
       }
       
       .filtros {

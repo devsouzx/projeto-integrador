@@ -39,55 +39,54 @@
 
       /* Navegação Superior */
       .navegacao-superior {
-        background: linear-gradient(90deg, var(--primaria), var(--secundaria));
-        color: white;
-        padding: 0.75rem 1.5rem;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .container-navegacao {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .logo {
-        font-weight: 600;
-        font-size: 1.25rem;
-      }
-
-      .menu-navegacao {
-        display: flex;
-        list-style: none;
-      }
-
-      .item-navegacao {
-        margin-left: 1rem;
-      }
-
-      .link-navegacao {
-        color: white;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        transition: background-color 0.3s;
-        font-size: 0.95rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .link-navegacao:hover,
-      .link-navegacao.ativo {
-        background-color: rgba(255, 255, 255, 0.2);
-      }
-
-      .info-usuario {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
@@ -129,15 +128,15 @@
       width: 20px;
       text-align: center;
     }
-
-      .avatar-usuario {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid white;
-        background-color: #f0e5f5;
-      }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: #f0e5f5;
+    }
 
       /* Conteúdo Principal */
       .conteudo-principal {
@@ -412,32 +411,34 @@
       /* Responsividade */
       @media (max-width: 768px) {
         .navegacao-superior {
-          padding: 0.5rem 0.5rem;
-        }
+        padding: 0.75rem 1rem;
+      }
 
-        .logo {
-          font-size: 1rem;
-          white-space: nowrap;
-          margin-right: 0.5rem;
-        }
-        .container-navegacao {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 1rem;
-        }
-        .menu-navegacao {
-          flex-direction: row;
-          overflow-x: auto;
-          white-space: nowrap;
-          gap: 0.25rem;
-          width: 100%;
-          scrollbar-width: thin;
-        }
+      .container-navegacao {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      
+      .logo {
+        font-size: 1.1rem;
+      }
+      
+      .menu-navegacao {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        scrollbar-width: thin;
+      }
 
-        .item-navegacao {
-          margin-left: 0;
-          flex: 0 0 auto;
-        }
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .info-usuario {
+        margin-left: auto;
+      }
 
         .container {
           grid-template-columns: 1fr;

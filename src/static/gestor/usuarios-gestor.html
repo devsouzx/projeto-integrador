@@ -281,25 +281,23 @@
     /* Responsividade */
     @media (max-width: 768px) {
       .navegacao-superior {
-      padding: 0.5rem 0.5rem;
+        padding: 0.75rem 1rem;
       }
 
-      .logo {
-      font-size: 1rem;
-      white-space: nowrap;
-      margin-right: 0.5rem;
-      }
       .container-navegacao {
-        flex-direction: column;
-        align-items: stretch;
+        flex-wrap: wrap;
         gap: 1rem;
       }
+      
+      .logo {
+        font-size: 1.1rem;
+      }
+      
       .menu-navegacao {
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        gap: 0.25rem;
+        order: 3;
         width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
         scrollbar-width: thin;
       }
 
@@ -309,8 +307,7 @@
       }
       
       .info-usuario {
-        justify-content: center;
-        margin-top: 0.5rem;
+        margin-left: auto;
       }
       
       .barra-busca {
