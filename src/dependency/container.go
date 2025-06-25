@@ -28,6 +28,8 @@ import (
 	"github.com/devsouzx/projeto-integrador/src/service/notifications"
 	pacienteService "github.com/devsouzx/projeto-integrador/src/service/paciente"
 	userService "github.com/devsouzx/projeto-integrador/src/service/user"
+	agendamentoRepository "github.com/devsouzx/projeto-integrador/src/repository/agendamento"
+	agendamentoService "github.com/devsouzx/projeto-integrador/src/service/agendamento"
 )
 
 type Container struct {
@@ -50,6 +52,7 @@ func InitContainer(db *sql.DB) *Container {
 	enfermeiroRepository := enfermeiroRepository.NewEnfermeiroRepository(db)
 	laudoRepository := laudoRepository.NewLaudoRepository(db)
 	gestorRepository := gestorRepository.NewGestorRepository(db)
+	agendamentoRepo := agendamentoRepository.NewAgendamentoRepository(db)
 
 	// Inicializa Services
 	emailService := emailService.NewEmailService()
@@ -60,6 +63,7 @@ func InitContainer(db *sql.DB) *Container {
 	enfermeiroService := enfermeiroService.NewEnfermeiroService(enfermeiroRepository)
 	notificationsService := notifications.NewNotificationService(smsService)
 	laudoService := laudoService.NewLaudoService(laudoRepository)
+	agendamentoService := agendamentoService.NewAgendamentoService(agendamentoRepo)
 	gestorService := gestorService.NewGestorService(gestorRepository)
 	userService := userService.NewUserDomainService(
 		userRepository,
@@ -81,6 +85,7 @@ func InitContainer(db *sql.DB) *Container {
 	enfermeiroController := enfermeiroController.NewEnfermeiroController(
 		enfermeiroService,
 		*unidadeService,
+		agendamentoService,
 	)
 	userController := userController.NewUserController(
 		userService,

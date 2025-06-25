@@ -529,6 +529,122 @@
         padding: 1.5rem;
       }
     }
+
+    .botao-secundaria {
+      background-color: var(--secundaria);
+      color: white;
+    }
+    
+    .botao-secundaria:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+    }
+    
+    .botao-perigo {
+      background-color: #dc3545;
+      color: white;
+    }
+    
+    .botao-perigo:hover {
+      background-color: #c82333;
+      transform: translateY(-2px);
+    }
+    
+    .botao-pequeno {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+    
+    .badge-perigo {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    .badge-info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+    
+    .selecao-paciente {
+      position: relative;
+    }
+    
+    .lista-pacientes {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 0 0 6px 6px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+    
+    .lista-pacientes.mostrar {
+      display: block;
+    }
+    
+    .item-paciente {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    
+    .item-paciente:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .dia-calendario.selecionado {
+      background-color: var(--primaria);
+      color: white;
+      font-weight: bold;
+    }
+    
+    .dia-calendario.com-agendamento {
+      background-color: #e8f4f8;
+      position: relative;
+    }
+    
+    .dia-calendario.com-agendamento::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      background-color: var(--primaria);
+      border-radius: 50%;
+    }
+    
+    .horario-disponivel {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #c8e6c9;
+    }
+    
+    .horario-indisponivel {
+      background-color: #ffebee;
+      color: #c62828;
+      border: 1px solid #ffcdd2;
+      cursor: not-allowed;
+    }
+    
+    .carregando {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -568,57 +684,22 @@
 
     <div class="container-calendario">
       <div class="cabecalho-calendario">
-        <h2>Novembro 2023</h2>
+        <h2 id="mesAnoCalendario">Novembro 2023</h2>
         <div class="navegacao-calendario">
-          <button><i class="fas fa-chevron-left"></i></button>
-          <button><i class="fas fa-chevron-right"></i></button>
+          <button id="btnMesAnterior"><i class="fas fa-chevron-left"></i></button>
+          <button id="btnMesSeguinte"><i class="fas fa-chevron-right"></i></button>
         </div>
       </div>
       
-      <div class="grade-calendario">
-        <div class="dia-calendario cabecalho">Dom</div>
-        <div class="dia-calendario cabecalho">Seg</div>
-        <div class="dia-calendario cabecalho">Ter</div>
-        <div class="dia-calendario cabecalho">Qua</div>
-        <div class="dia-calendario cabecalho">Qui</div>
-        <div class="dia-calendario cabecalho">Sex</div>
-        <div class="dia-calendario cabecalho">Sáb</div>
-        
-        <div class="dia-calendario">29</div>
-        <div class="dia-calendario">30</div>
-        <div class="dia-calendario">31</div>
-        <div class="dia-calendario">1</div>
-        <div class="dia-calendario">2</div>
-        <div class="dia-calendario">3</div>
-        <div class="dia-calendario">4</div>
+      <div class="grade-calendario" id="gradeCalendario">
+        <!-- Dias serão preenchidos via JavaScript -->
       </div>
     </div>
 
     <div class="lista-agendamentos">
-      <h2>Agendamentos para Hoje (15/11/2023)</h2>
-      
-      <div class="item-agendamento">
-        <div>
-          <strong>Maria da Silva</strong>
-          <div>14:30 - Preventivo</div>
-          <span class="badge badge-sucesso">Confirmado</span>
-        </div>
-        <div class="acoes-agendamento">
-          <button class="botao botao-secundaria"><i class="fas fa-edit"></i></button>
-          <button class="botao botao-perigo"><i class="fas fa-times"></i></button>
-        </div>
-      </div>
-
-      <div class="item-agendamento">
-        <div>
-          <strong>Joana Pereira</strong>
-          <div>15:00 - Retorno</div>
-          <span class="badge badge-alerta">Pendente</span>
-        </div>
-        <div class="acoes-agendamento">
-          <button class="botao botao-secundaria"><i class="fas fa-edit"></i></button>
-          <button class="botao botao-perigo"><i class="fas fa-times"></i></button>
-        </div>
+      <h2 id="tituloAgendamentosDia">Agendamentos para Hoje (<span id="dataAtual">15/11/2023</span>)</h2>
+      <div id="listaAgendamentos">
+        <!-- Agendamentos serão carregados via JavaScript -->
       </div>
     </div>
   </main>
@@ -628,61 +709,565 @@
       <span class="fechar">&times;</span>
       <h2>Novo Agendamento</h2>
       <form id="formularioAgendamento">
-        <div class="grupo-formulario">
+        <div class="grupo-formulario selecao-paciente">
           <label>Paciente</label>
-          <input type="text" class="controle-formulario" required>
+          <input type="text" id="inputPaciente" class="controle-formulario" required placeholder="Digite o nome ou CNS do paciente">
+          <div class="lista-pacientes" id="listaPacientes"></div>
+        </div>
+        
+        <input type="hidden" id="pacienteId">
+        
+        <div class="grupo-formulario">
+          <label>Tipo de Consulta</label>
+          <select id="tipoConsulta" class="controle-formulario" required>
+            <option value="">Selecione...</option>
+            <option value="Preventivo">Preventivo</option>
+            <option value="Retorno">Retorno</option>
+            <option value="Curativo">Curativo</option>
+            <option value="Vacinação">Vacinação</option>
+            <option value="Medicação">Medicação</option>
+            <option value="Outro">Outro</option>
+          </select>
         </div>
         
         <div class="linha-formulario">
           <div class="grupo-formulario">
             <label>Data</label>
-            <input type="date" class="controle-formulario" required>
+            <input type="date" id="dataAgendamento" class="controle-formulario" required>
           </div>
           <div class="grupo-formulario">
             <label>Horário</label>
-            <select class="controle-formulario" required>
-              <option>08:00</option>
-              <option>08:30</option>
-              <option>09:00</option>
-              <option>09:30</option>
-              <option>10:00</option>
-              <option>10:30</option>
-              <option>11:00</option>
-              <option>11:30</option>
-              <option>13:00</option>
-              <option>13:30</option>
-              <option>14:00</option>
-              <option>14:30</option>
-              <option>15:00</option>
-              <option>15:30</option>
-              <option>16:00</option>
-              <option>16:30</option>
+            <select id="horarioAgendamento" class="controle-formulario" required>
+              <option value="">Selecione...</option>
+              <!-- Horários serão preenchidos via JavaScript -->
             </select>
           </div>
         </div>
 
-        <button type="submit" class="botao botao-primaria">Agendar</button>
+        <div class="grupo-formulario">
+          <label>Observações</label>
+          <textarea id="observacoes" class="controle-formulario" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="botao botao-primaria" id="btnAgendar">
+          <span id="textoBtnAgendar">Agendar</span>
+          <span id="carregandoBtnAgendar" class="carregando" style="display: none;"></span>
+        </button>
       </form>
     </div>
   </div>
 
+  <div class="modal" id="modalConfirmacao">
+    <div class="conteudo-modal">
+      <span class="fechar">&times;</span>
+      <h2 id="tituloModalConfirmacao">Confirmar Ação</h2>
+      <p id="mensagemModalConfirmacao">Tem certeza que deseja realizar esta ação?</p>
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button class="botao botao-secundaria" id="btnConfirmarAcao">Confirmar</button>
+        <button class="botao botao-perigo" onclick="fecharModalConfirmacao()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const modal = document.getElementById('modalAgendamento');
-    const botaoFechar = document.querySelector('.fechar');
-
-    function abrirModalNovoAgendamento() {
-      modal.style.display = 'block';
+    // Variáveis globais
+    let dataAtual = new Date();
+    let agendamentos = [];
+    let pacienteSelecionado = null;
+    let agendamentoParaAcao = null;
+    
+    // Elementos do DOM
+    const mesAnoCalendario = document.getElementById('mesAnoCalendario');
+    const gradeCalendario = document.getElementById('gradeCalendario');
+    const tituloAgendamentosDia = document.getElementById('tituloAgendamentosDia');
+    const dataAtualSpan = document.getElementById('dataAtual');
+    const listaAgendamentos = document.getElementById('listaAgendamentos');
+    const modalAgendamento = document.getElementById('modalAgendamento');
+    const modalConfirmacao = document.getElementById('modalConfirmacao');
+    const formularioAgendamento = document.getElementById('formularioAgendamento');
+    const inputPaciente = document.getElementById('inputPaciente');
+    const listaPacientes = document.getElementById('listaPacientes');
+    const pacienteId = document.getElementById('pacienteId');
+    const tipoConsulta = document.getElementById('tipoConsulta');
+    const dataAgendamento = document.getElementById('dataAgendamento');
+    const horarioAgendamento = document.getElementById('horarioAgendamento');
+    const observacoes = document.getElementById('observacoes');
+    const btnAgendar = document.getElementById('btnAgendar');
+    const textoBtnAgendar = document.getElementById('textoBtnAgendar');
+    const carregandoBtnAgendar = document.getElementById('carregandoBtnAgendar');
+    const btnMesAnterior = document.getElementById('btnMesAnterior');
+    const btnMesSeguinte = document.getElementById('btnMesSeguinte');
+    const btnConfirmarAcao = document.getElementById('btnConfirmarAcao');
+    
+    // Funções para manipulação de datas
+    function formatarData(data) {
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      return `${dia}/${mes}/${ano}`;
     }
-
-    botaoFechar.onclick = () => {
-      modal.style.display = 'none';
+    
+    function formatarDataParaAPI(data) {
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      return `${ano}-${mes}-${dia}`;
     }
-
-    window.onclick = (evento) => {
-      if (evento.target == modal) {
-        modal.style.display = 'none';
+    
+    function formatarHoraParaAPI(hora) {
+      return `${hora}:00`;
+    }
+    
+    function obterNomeMes(mes) {
+      const meses = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      ];
+      return meses[mes];
+    }
+    
+    // Funções para carregar dados
+    async function carregarAgendamentos(data) {
+      try {
+        const response = await fetch(`/enfermeiro/agendamentos/listar?date=${formatarDataParaAPI(data)}`);
+        if (!response.ok) throw new Error('Erro ao carregar agendamentos');
+        
+        const dados = await response.json();
+        agendamentos = dados.agendamentos || [];
+        console.log(dados);
+        
+        // Atualizar a exibição
+        dataAtualSpan.textContent = dados.data;
+        atualizarListaAgendamentos();
+      } catch (erro) {
+        console.error('Erro:', erro);
+        alert('Não foi possível carregar os agendamentos. Tente novamente.');
       }
     }
+    
+    async function buscarPacientes(termo) {
+      try {
+        const response = await fetch(`/buscar-paciente?q=${termo}`);
+        if (!response.ok) throw new Error('Erro ao buscar pacientes');
+        
+        return await response.json();
+      } catch (erro) {
+        console.error('Erro:', erro);
+        return [];
+      }
+    }
+    
+    // Funções para renderização
+    function atualizarListaAgendamentos() {
+      if (agendamentos.length === 0) {
+        listaAgendamentos.innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: #666;">
+            <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <p>Nenhum agendamento para esta data</p>
+          </div>
+        `;
+        return;
+      }
+      
+      listaAgendamentos.innerHTML = agendamentos.map(agendamento => `
+        <div class="item-agendamento" data-id="${agendamento.id}">
+          <div>
+            <strong>${agendamento.paciente_nome}</strong>
+            <div>${formatarHoraAgendamento(agendamento.data_hora)} - ${agendamento.tipo_consulta}</div>
+            <span class="badge ${obterClasseStatus(agendamento.status)}">${formatarStatus(agendamento.status)}</span>
+          </div>
+          <div class="acoes-agendamento">
+            ${agendamento.status === 'pendente' || agendamento.status === 'confirmado' ? `
+              <button class="botao botao-secundaria botao-pequeno" onclick="abrirModalConfirmacao('confirmar', '${agendamento.id}')">
+                <i class="fas fa-check"></i>
+              </button>
+              <button class="botao botao-perigo botao-pequeno" onclick="abrirModalConfirmacao('cancelar', '${agendamento.id}')">
+                <i class="fas fa-times"></i>
+              </button>
+            ` : ''}
+            ${agendamento.status === 'confirmado' ? `
+              <button class="botao botao-primaria botao-pequeno" onclick="abrirModalConfirmacao('concluir', '${agendamento.id}')">
+                <i class="fas fa-check-circle"></i>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function formatarHoraAgendamento(dataHora) {
+      const data = new Date(dataHora);
+      const horas = String(data.getHours()).padStart(2, '0');
+      const minutos = String(data.getMinutes()).padStart(2, '0');
+      return `${horas}:${minutos}`;
+    }
+    
+    function formatarStatus(status) {
+      const statusMap = {
+        'pendente': 'Pendente',
+        'confirmado': 'Confirmado',
+        'cancelado': 'Cancelado',
+        'concluido': 'Concluído'
+      };
+      return statusMap[status] || status;
+    }
+    
+    function obterClasseStatus(status) {
+      const classesMap = {
+        'pendente': 'badge-alerta',
+        'confirmado': 'badge-sucesso',
+        'cancelado': 'badge-perigo',
+        'concluido': 'badge-info'
+      };
+      return classesMap[status] || '';
+    }
+    
+    function renderizarCalendario(ano, mes) {
+      // Limpar calendário
+      gradeCalendario.innerHTML = '';
+      
+      // Adicionar cabeçalhos dos dias da semana
+      const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      diasSemana.forEach(dia => {
+        const divDia = document.createElement('div');
+        divDia.className = 'dia-calendario cabecalho';
+        divDia.textContent = dia;
+        gradeCalendario.appendChild(divDia);
+      });
+      
+      // Obter primeiro dia do mês e último dia do mês
+      const primeiroDia = new Date(ano, mes, 1);
+      const ultimoDia = new Date(ano, mes + 1, 0);
+      
+      // Obter dia da semana do primeiro dia (0-6)
+      const diaSemanaPrimeiroDia = primeiroDia.getDay();
+      
+      // Obter último dia do mês anterior
+      const ultimoDiaMesAnterior = new Date(ano, mes, 0).getDate();
+      
+      // Adicionar dias do mês anterior (se necessário)
+      for (let i = diaSemanaPrimeiroDia - 1; i >= 0; i--) {
+        const divDia = document.createElement('div');
+        divDia.className = 'dia-calendario';
+        divDia.textContent = ultimoDiaMesAnterior - i;
+        divDia.style.color = '#ccc';
+        gradeCalendario.appendChild(divDia);
+      }
+      
+      // Adicionar dias do mês atual
+      for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
+        const divDia = document.createElement('div');
+        divDia.className = 'dia-calendario';
+        divDia.textContent = dia;
+        
+        // Verificar se há agendamentos neste dia
+        const dataDia = new Date(ano, mes, dia);
+        const temAgendamento = agendamentos.some(ag => {
+          const dataAg = new Date(ag.data_hora);
+          return dataAg.getDate() === dataDia.getDate() && 
+                 dataAg.getMonth() === dataDia.getMonth() && 
+                 dataAg.getFullYear() === dataDia.getFullYear();
+        });
+        
+        if (temAgendamento) {
+          divDia.classList.add('com-agendamento');
+        }
+        
+        // Destacar dia atual
+        const hoje = new Date();
+        if (dia === hoje.getDate() && mes === hoje.getMonth() && ano === hoje.getFullYear()) {
+          divDia.classList.add('selecionado');
+        }
+        
+        // Adicionar evento de clique
+        divDia.addEventListener('click', () => {
+          selecionarDiaCalendario(dia, mes, ano);
+        });
+        
+        gradeCalendario.appendChild(divDia);
+      }
+      
+      // Adicionar dias do próximo mês (se necessário)
+      const diasRestantes = 42 - (diaSemanaPrimeiroDia + ultimoDia.getDate());
+      for (let dia = 1; dia <= diasRestantes; dia++) {
+        const divDia = document.createElement('div');
+        divDia.className = 'dia-calendario';
+        divDia.textContent = dia;
+        divDia.style.color = '#ccc';
+        gradeCalendario.appendChild(divDia);
+      }
+      
+      // Atualizar título do calendário
+      mesAnoCalendario.textContent = `${obterNomeMes(mes)} ${ano}`;
+    }
+    
+    function selecionarDiaCalendario(dia, mes, ano) {
+      // Remover seleção anterior
+      const diasSelecionados = document.querySelectorAll('.dia-calendario.selecionado');
+      diasSelecionados.forEach(d => d.classList.remove('selecionado'));
+      
+      // Adicionar seleção ao dia clicado
+      const dias = document.querySelectorAll('.dia-calendario');
+      const diaSelecionado = Array.from(dias).find(d => 
+        d.textContent === String(dia) && !d.classList.contains('cabecalho') && d.style.color !== 'rgb(204, 204, 204)'
+      );
+      
+      if (diaSelecionado) {
+        diaSelecionado.classList.add('selecionado');
+        const dataSelecionada = new Date(ano, mes, dia);
+        carregarAgendamentos(dataSelecionada);
+      }
+    }
+    
+    function carregarHorariosDisponiveis(data) {
+      // Simulação - na prática, você faria uma chamada API para verificar horários disponíveis
+      const horarios = [];
+      const horaInicio = 8;
+      const horaFim = 17;
+      
+      for (let hora = horaInicio; hora <= horaFim; hora++) {
+        // Adiciona horários de hora em hora e meia em meia hora
+        horarios.push(`${String(hora).padStart(2, '0')}:00`);
+        if (hora < horaFim) {
+          horarios.push(`${String(hora).padStart(2, '0')}:30`);
+        }
+      }
+      
+      // Limpar select
+      horarioAgendamento.innerHTML = '<option value="">Selecione...</option>';
+      
+      // Adicionar horários disponíveis
+      horarios.forEach(horario => {
+        const option = document.createElement('option');
+        option.value = horario;
+        option.textContent = horario;
+        horarioAgendamento.appendChild(option);
+      });
+    }
+    
+    // Funções para modais
+    function abrirModalNovoAgendamento() {
+      // Definir data mínima como hoje
+      const hoje = new Date();
+      dataAgendamento.min = formatarDataParaAPI(hoje);
+      dataAgendamento.value = formatarDataParaAPI(hoje);
+      
+      // Carregar horários disponíveis para hoje
+      carregarHorariosDisponiveis(hoje);
+      
+      // Limpar formulário
+      formularioAgendamento.reset();
+      pacienteId.value = '';
+      pacienteSelecionado = null;
+      
+      // Abrir modal
+      modalAgendamento.style.display = 'block';
+    }
+    
+    function fecharModalAgendamento() {
+      modalAgendamento.style.display = 'none';
+    }
+    
+    function abrirModalConfirmacao(acao, agendamentoId) {
+      agendamentoParaAcao = agendamentoId;
+      
+      const titulo = document.getElementById('tituloModalConfirmacao');
+      const mensagem = document.getElementById('mensagemModalConfirmacao');
+      
+      if (acao === 'confirmar') {
+        titulo.textContent = 'Confirmar Agendamento';
+        mensagem.textContent = 'Tem certeza que deseja confirmar este agendamento?';
+        btnConfirmarAcao.className = 'botao botao-secundaria';
+        btnConfirmarAcao.innerHTML = '<i class="fas fa-check"></i> Confirmar';
+        btnConfirmarAcao.onclick = () => atualizarStatusAgendamento('confirmado');
+      } else if (acao === 'cancelar') {
+        titulo.textContent = 'Cancelar Agendamento';
+        mensagem.textContent = 'Tem certeza que deseja cancelar este agendamento?';
+        btnConfirmarAcao.className = 'botao botao-perigo';
+        btnConfirmarAcao.innerHTML = '<i class="fas fa-times"></i> Cancelar';
+        btnConfirmarAcao.onclick = () => atualizarStatusAgendamento('cancelado');
+      } else if (acao === 'concluir') {
+        titulo.textContent = 'Concluir Agendamento';
+        mensagem.textContent = 'Tem certeza que deseja marcar este agendamento como concluído?';
+        btnConfirmarAcao.className = 'botao botao-primaria';
+        btnConfirmarAcao.innerHTML = '<i class="fas fa-check-circle"></i> Concluir';
+        btnConfirmarAcao.onclick = () => atualizarStatusAgendamento('concluido');
+      }
+      
+      modalConfirmacao.style.display = 'block';
+    }
+    
+    function fecharModalConfirmacao() {
+      modalConfirmacao.style.display = 'none';
+      agendamentoParaAcao = null;
+    }
+    
+    // Funções para manipulação de agendamentos
+    async function criarAgendamento() {
+      const dados = {
+        paciente_id: pacienteId.value,
+        tipo_consulta: tipoConsulta.value,
+        data_hora: `${dataAgendamento.value}T${horarioAgendamento.value}:00`,
+        observacoes: observacoes.value
+      };
+      
+      try {
+        // Mostrar indicador de carregamento
+        textoBtnAgendar.style.display = 'none';
+        carregandoBtnAgendar.style.display = 'inline-block';
+        
+        const response = await fetch('/enfermeiro/agendamentos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dados)
+        });
+        
+        if (!response.ok) throw new Error('Erro ao criar agendamento');
+        
+        const novoAgendamento = await response.json();
+        
+        // Recarregar agendamentos para a data selecionada
+        const dataSelecionada = new Date(dataAgendamento.value);
+        await carregarAgendamentos(dataSelecionada);
+        
+        // Fechar modal e limpar formulário
+        fecharModalAgendamento();
+        formularioAgendamento.reset();
+        
+        // Mostrar mensagem de sucesso
+        alert('Agendamento criado com sucesso!');
+      } catch (erro) {
+        console.error('Erro:', erro);
+        alert('Não foi possível criar o agendamento. Verifique os dados e tente novamente.');
+      } finally {
+        // Restaurar botão
+        textoBtnAgendar.style.display = 'inline';
+        carregandoBtnAgendar.style.display = 'none';
+      }
+    }
+    
+    async function atualizarStatusAgendamento(novoStatus) {
+      try {
+        const response = await fetch(`/enfermeiro/agendamentos/${agendamentoParaAcao}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: novoStatus })
+        });
+        
+        if (!response.ok) throw new Error('Erro ao atualizar agendamento');
+        
+        // Recarregar agendamentos para a data atual
+        await carregarAgendamentos(dataAtual);
+        
+        // Fechar modal de confirmação
+        fecharModalConfirmacao();
+        
+        // Mostrar mensagem de sucesso
+        alert('Agendamento atualizado com sucesso!');
+      } catch (erro) {
+        console.error('Erro:', erro);
+        alert('Não foi possível atualizar o agendamento. Tente novamente.');
+      }
+    }
+    
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Inicializar calendário
+      renderizarCalendario(dataAtual.getFullYear(), dataAtual.getMonth());
+      
+      // Carregar agendamentos para hoje
+      carregarAgendamentos(dataAtual);
+      
+      // Configurar evento de mudança de mês
+      btnMesAnterior.addEventListener('click', () => {
+        dataAtual.setMonth(dataAtual.getMonth() - 1);
+        renderizarCalendario(dataAtual.getFullYear(), dataAtual.getMonth());
+      });
+      
+      btnMesSeguinte.addEventListener('click', () => {
+        dataAtual.setMonth(dataAtual.getMonth() + 1);
+        renderizarCalendario(dataAtual.getFullYear(), dataAtual.getMonth());
+      });
+      
+      // Configurar busca de pacientes
+      inputPaciente.addEventListener('input', async (e) => {
+        const termo = e.target.value.trim();
+        
+        if (termo.length < 3) {
+          listaPacientes.classList.remove('mostrar');
+          return;
+        }
+        
+        const pacientes = await buscarPacientes(termo);
+        
+        if (pacientes.length > 0) {
+          listaPacientes.innerHTML = pacientes.map(paciente => `
+            <div class="item-paciente" data-id="${paciente.id}" data-nome="${paciente.nome}">
+              ${paciente.nome} - ${paciente.cns}
+            </div>
+          `).join('');
+          
+          // Adicionar eventos de clique aos itens
+          document.querySelectorAll('.item-paciente').forEach(item => {
+            item.addEventListener('click', () => {
+              pacienteSelecionado = {
+                id: item.dataset.id,
+                nome: item.dataset.nome
+              };
+              
+              inputPaciente.value = pacienteSelecionado.nome;
+              pacienteId.value = pacienteSelecionado.id;
+              listaPacientes.classList.remove('mostrar');
+            });
+          });
+          
+          listaPacientes.classList.add('mostrar');
+        } else {
+          listaPacientes.innerHTML = '<div class="item-paciente">Nenhum paciente encontrado</div>';
+          listaPacientes.classList.add('mostrar');
+        }
+      });
+      
+      // Fechar lista de pacientes ao clicar fora
+      document.addEventListener('click', (e) => {
+        if (!inputPaciente.contains(e.target)) {
+          listaPacientes.classList.remove('mostrar');
+        }
+      });
+      
+      // Configurar mudança de data no formulário
+      dataAgendamento.addEventListener('change', (e) => {
+        const dataSelecionada = new Date(e.target.value);
+        carregarHorariosDisponiveis(dataSelecionada);
+      });
+      
+      // Configurar envio do formulário
+      formularioAgendamento.addEventListener('submit', (e) => {
+        e.preventDefault();
+        criarAgendamento();
+      });
+    });
+    
+    // Fechar modais ao clicar no X ou fora
+    document.querySelectorAll('.fechar').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modalAgendamento.style.display = 'none';
+        modalConfirmacao.style.display = 'none';
+      });
+    });
+    
+    window.addEventListener('click', (e) => {
+      if (e.target === modalAgendamento) {
+        modalAgendamento.style.display = 'none';
+      }
+      if (e.target === modalConfirmacao) {
+        modalConfirmacao.style.display = 'none';
+      }
+    });
   </script>
 </body>
 </html>

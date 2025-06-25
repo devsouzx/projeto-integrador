@@ -18,5 +18,10 @@ func InitEnfermeiroRoutes(rg *gin.RouterGroup, enfermeiroController enfermeiro.E
 		enfermeira.GET("/relatorios", enfermeiroController.RenderRelatoriosPage)
 
 		enfermeira.GET("/minha-unidade", enfermeiroController.GetUnidadeEnfermeiro)
+
+		enfermeira.POST("/agendamentos", enfermeiroController.CreateAgendamento)
+		enfermeira.GET("/agendamentos/listar", enfermeiroController.GetAgendamentos)
+		enfermeira.PUT("/agendamentos/:id/status", enfermeiroController.UpdateAgendamentoStatus)
+		enfermeira.DELETE("/agendamentos/:id", enfermeiroController.DeleteAgendamento)
 	}
 }
