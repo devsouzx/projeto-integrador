@@ -8,6 +8,8 @@ type Enfermeiro struct {
 	COREN     string `json:"coren"`
 	Telefone  string `json:"telefone"`
 	UnidadeID int    `json:"unidade_saude_id"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 type Agendamento struct {
@@ -21,7 +23,7 @@ type Agendamento struct {
 	Observacoes      string    `json:"observacoes"`
 	CreatedAt        time.Time `json:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at"`
-	
+
 	PacienteNome string `json:"paciente_nome,omitempty"`
 	PacienteCNS  string `json:"paciente_cns,omitempty"`
 }

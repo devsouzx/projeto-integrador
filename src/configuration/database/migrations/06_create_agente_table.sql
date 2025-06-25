@@ -11,3 +11,6 @@ CREATE TABLE agente_comunitario (
     senha VARCHAR(255) NOT NULL,
     unidade_saude_id INTEGER
 );
+
+ALTER TABLE agente_comunitario ADD COLUMN created_at TIMESTAMP DEFAULT now();
+ALTER TABLE agente_comunitario ADD COLUMN updated_at TIMESTAMP DEFAULT now();

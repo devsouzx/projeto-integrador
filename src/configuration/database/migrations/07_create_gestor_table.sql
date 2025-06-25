@@ -11,3 +11,6 @@ CREATE TABLE gestor (
     senha VARCHAR(255) NOT NULL,
     unidade_saude_id INTEGER
 );
+
+ALTER TABLE gestor ADD COLUMN created_at TIMESTAMP DEFAULT now();
+ALTER TABLE gestor ADD COLUMN updated_at TIMESTAMP DEFAULT now();

@@ -12,3 +12,6 @@ CREATE TABLE enfermeiro (
     senha VARCHAR(255) NOT NULL,
     unidade_saude_id INTEGER
 );
+
+ALTER TABLE enfermeiro ADD COLUMN created_at TIMESTAMP DEFAULT now();
+ALTER TABLE enfermeiro ADD COLUMN updated_at TIMESTAMP DEFAULT now();
