@@ -28,7 +28,7 @@ type UserRepository interface {
 		password string,
 		role string,
 	) (model.UserInterface, error)
-	CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, error)
+	CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, string, error)
 	VerifyRecoveryCode(identifier string, code string) (bool, error)
 	UpdatePassword(identifier string, newPassword string) error
 	FindUserByIdentifier(identifier string, role string) (model.UserInterface, error)
@@ -53,13 +53,13 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 	return user, nil
 }
 
-func (ur *userRepository) CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, error) {
-	userEmail, err := ur.findUserEmail(identifier)
+func (ur *userRepository) CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, string, error) {
+	userEmail, userPhone, err := ur.findUserEmailAndPhone(identifier)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return "", fmt.Errorf("usuário não encontrado")
+			return "", "", fmt.Errorf("usuário não encontrado")
 		}
-		return "", fmt.Errorf("erro ao buscar usuário: %w", err)
+		return "", "", fmt.Errorf("erro ao buscar usuário: %w", err)
 	}
 
 	_, err = ur.DB.Exec(`
@@ -70,10 +70,10 @@ func (ur *userRepository) CreateRecoveryCode(identifier string, code string, exp
     `, identifier, code, expiresAt)
 
 	if err != nil {
-		return "", fmt.Errorf("erro ao criar código de recuperação: %w", err)
+		return "", "", fmt.Errorf("erro ao criar código de recuperação: %w", err)
 	}
 
-	return userEmail, nil
+	return userEmail, userPhone, nil
 }
 
 func (ur *userRepository) VerifyRecoveryCode(identifier string, code string) (bool, error) {
@@ -127,25 +127,25 @@ func (ur *userRepository) UpdatePassword(identifier string, newPassword string) 
 	return fmt.Errorf("usuário não foi encontrado em nenhuma tabela")
 }
 
-func (ur *userRepository) findUserEmail(identifier string) (string, error) {
+func (ur *userRepository) findUserEmailAndPhone(identifier string) (string, string, error) {
 	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", "")
 
 	tables := []string{"paciente", "medico", "enfermeiro", "agente_comunitario", "gestor"}
 
 	for _, table := range tables {
-		var email string
+		var email, telefone string
 		err := ur.DB.QueryRow(fmt.Sprintf(`
-            SELECT email FROM %s WHERE email = $1 OR cpf = $2 LIMIT 1
-        `, table), identifier, cpfFormatado).Scan(&email)
+            SELECT email, telefone FROM %s WHERE email = $1 OR cpf = $2 LIMIT 1
+        `, table), identifier, cpfFormatado).Scan(&email, &telefone)
 
 		if err == nil {
-			return email, nil
+			return email, telefone, nil
 		} else if err != sql.ErrNoRows {
-			return "", err
+			return "", "", err
 		}
 	}
 
-	return "", sql.ErrNoRows
+	return "", "", sql.ErrNoRows
 }
 
 func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (model.UserInterface, error) {

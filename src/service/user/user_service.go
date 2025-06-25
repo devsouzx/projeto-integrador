@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"sync"
 	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
@@ -13,6 +14,7 @@ import (
 	"github.com/devsouzx/projeto-integrador/src/repository/paciente"
 	userRepository "github.com/devsouzx/projeto-integrador/src/repository/user"
 	emailService "github.com/devsouzx/projeto-integrador/src/service/email"
+	"github.com/devsouzx/projeto-integrador/src/service/notifications"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -20,11 +22,13 @@ func NewUserDomainService(
 	userRepository userRepository.UserRepository,
 	emailService emailService.EmailService,
 	pacienteRepository paciente.PacienteRepository,
+	smsService     *notifications.SMSService,
 ) UserDomainService {
 	return &userDomainService{
 		userRepository:     userRepository,
 		emailService:       emailService,
 		pacienteRepository: pacienteRepository,
+		smsService:     smsService,
 	}
 }
 
@@ -32,6 +36,7 @@ type userDomainService struct {
 	userRepository     userRepository.UserRepository
 	pacienteRepository paciente.PacienteRepository
 	emailService       emailService.EmailService
+	smsService     *notifications.SMSService
 }
 
 type UserDomainService interface {
@@ -73,15 +78,56 @@ func (ud *userDomainService) SendCodeRecoveryService(recoveyRequest request.Pass
 
 	expiresAt := time.Now().Add(10 * time.Minute)
 
-	userEmail, err := ud.userRepository.CreateRecoveryCode(recoveyRequest.Identifier, code, expiresAt)
+	userEmail, userPhone, err := ud.userRepository.CreateRecoveryCode(recoveyRequest.Identifier, code, expiresAt)
 	if err != nil {
 		return err
 	}
 
-	err = ud.emailService.SendRecoveryEmail(userEmail, code)
-	if err != nil {
-		return fmt.Errorf("erro ao enviar e-mail: %w", err)
-	}
+	errChan := make(chan error, 2)
+    var wg sync.WaitGroup
+
+    wg.Add(1)
+    go func() {
+        defer wg.Done()
+        if userEmail != "" {
+            if err := ud.emailService.SendRecoveryEmail(userEmail, code); err != nil {
+                errChan <- fmt.Errorf("erro ao enviar e-mail: %w", err)
+                return
+            }
+        }
+        errChan <- nil
+    }()
+	
+    wg.Add(1)
+    go func() {
+        defer wg.Done()
+        if userPhone != "" {
+            phone := "+55" + userPhone
+			fmt.Println(phone)
+            message := fmt.Sprintf("Seu código de recuperação é: %s. Expira em 10 minutos.", code)
+            if err := ud.smsService.SendSMS(phone, message); err != nil {
+                errChan <- fmt.Errorf("erro ao enviar SMS: %w", err)
+                return
+            }
+        }
+        errChan <- nil
+    }()
+	
+    go func() {
+        wg.Wait()
+        close(errChan)
+    }()
+	
+    var errors []error
+    for err := range errChan {
+        if err != nil {
+            errors = append(errors, err)
+        }
+    }
+
+    if len(errors) > 0 {
+        return fmt.Errorf("erros ao enviar códigos: %v", errors)
+    }
 
 	return nil
 }

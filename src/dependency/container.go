@@ -74,6 +74,7 @@ func InitContainer(db *sql.DB) *Container {
 		userRepository,
 		emailService,
 		pacienteRepository,
+		smsService,
 	)
 	fichaService := fichaService.NewFichaService(
 		fichRepository,
