@@ -17,6 +17,7 @@ const docTemplate = `{
     "paths": {
         "/login": {
             "post": {
+                "description": "Realiza o login de um usuário e retorna um token JWT",
                 "consumes": [
                     "application/json"
                 ],
@@ -44,12 +45,150 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/response.LoginResponse"
                         }
+                    },
+                    "400": {
+                        "description": "Erro na validação dos dados",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciais inválidas",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "403": {
+                        "description": "Conta não verificada",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "description": "Cria uma nova conta de usuário",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Cadastrar novo usuário",
+                "parameters": [
+                    {
+                        "description": "Dados do usuário",
+                        "name": "userData",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CadastroRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Usuário cadastrado com sucesso",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
+        "request.CadastroRequest": {
+            "type": "object",
+            "required": [
+                "cartaosus",
+                "cpf",
+                "datadenascimento",
+                "email",
+                "nomecompleto",
+                "nomecompletodamae",
+                "senha",
+                "telefone"
+            ],
+            "properties": {
+                "cartaosus": {
+                    "type": "string"
+                },
+                "cpf": {
+                    "type": "string"
+                },
+                "datadenascimento": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "endereco": {
+                    "$ref": "#/definitions/request.EnderecoRequest"
+                },
+                "nomecompleto": {
+                    "type": "string"
+                },
+                "nomecompletodamae": {
+                    "type": "string"
+                },
+                "senha": {
+                    "type": "string"
+                },
+                "telefone": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.EnderecoRequest": {
+            "type": "object",
+            "properties": {
+                "bairro": {
+                    "type": "string"
+                },
+                "cep": {
+                    "type": "string"
+                },
+                "cidade": {
+                    "type": "string"
+                },
+                "complemento": {
+                    "type": "string"
+                },
+                "logradouro": {
+                    "type": "string"
+                },
+                "numero": {
+                    "type": "string"
+                },
+                "uf": {
+                    "type": "string"
+                }
+            }
+        },
         "request.LoginRequest": {
             "type": "object",
             "properties": {

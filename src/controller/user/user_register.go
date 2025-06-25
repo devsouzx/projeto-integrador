@@ -8,6 +8,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @BasePath /api/v1
+
+// @Summary Cadastrar novo usuário
+// @Description Cria uma nova conta de usuário
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param userData body request.CadastroRequest true "Dados do usuário"
+// @Success 201 {object} object "Usuário cadastrado com sucesso"
+// @Failure 400 {object} object "Dados inválidos"
+// @Failure 500 {object} object "Erro interno do servidor"
+// @Router /register [post]
 func (uc *userController) CadastrarUsuario(c *gin.Context) {
 	var cadRequest request.CadastroRequest
 

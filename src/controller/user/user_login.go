@@ -14,11 +14,16 @@ import (
 // @BasePath /api/v1
 
 // @Summary Login de usuário
+// @Description Realiza o login de um usuário e retorna um token JWT
 // @Tags auth
 // @Accept json
 // @Produce json
 // @Param credentials body request.LoginRequest true "Credenciais de login"
 // @Success 200 {object} response.LoginResponse
+// @Failure 400 {object} object "Erro na validação dos dados"
+// @Failure 401 {object} object "Credenciais inválidas"
+// @Failure 403 {object} object "Conta não verificada"
+// @Failure 500 {object} object "Erro interno do servidor"
 // @Router /login [post]
 func (uc *userController) LoginUser(c *gin.Context) {
 	var userRequest request.LoginRequest

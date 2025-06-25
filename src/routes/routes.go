@@ -18,6 +18,7 @@ func InitRoutes(rg *gin.RouterGroup, container *dependency.Container) {
 	InitAgenteRoutes(rg)
 	InitGestorRoutes(rg, container.GestorController)
 	InitLaudoRoutes(rg, container.LaudoController)
+	rg.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	rg.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("medico", "enfermeiro"))
 	{
@@ -29,5 +30,5 @@ func InitRoutes(rg *gin.RouterGroup, container *dependency.Container) {
 
 	// Inicializa Swagger
 	docs.SwaggerInfo.BasePath = "/api/v1"
-	rg.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	
 }
