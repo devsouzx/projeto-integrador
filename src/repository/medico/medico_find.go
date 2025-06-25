@@ -29,6 +29,7 @@ func (mr *medicoRepository) FindMedicoByIdentifier(identifier string) (model.Use
 		&medico.CRM,
 		&medico.UnidadeID,
 	)
+	fmt.Println("Query Executada:", err)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("medico não encontrado")

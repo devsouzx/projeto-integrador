@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -13,6 +14,7 @@ func VerifyTokenMiddleware(c *gin.Context) {
 	secret := os.Getenv(JWT_SECRET_KEY)
 
 	tokenValue, err := c.Cookie("token")
+
 	if err != nil || tokenValue == "" {
 		c.Redirect(http.StatusFound, "/login")
 		c.Abort()
@@ -67,7 +69,7 @@ func AuthorizeRole(allowedRoles ...string) gin.HandlerFunc {
 		role := user.(BaseUser).Role
 		for _, allowed := range allowedRoles {
 			if role == allowed {
-				c.Next()
+				fmt.Println("User role is allowed:", role)
 				return
 			}
 		}

@@ -3,6 +3,7 @@ package gestor
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/model/request"
@@ -30,8 +31,8 @@ type GestorRepositoryInterface interface {
 func (gr *gestorRepository) CadastrarMedico(medicoRequest request.CadastroProfissionalRequest) (*model.Medico, error) {
 	query := `
     INSERT INTO medico (
-        crm, email, senha, nomecompleto, cpf, especialidade, telefone
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+        crm, email, senha, nomecompleto, cpf, especialidade, telefone, unidade_saude_id
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     RETURNING id, created_at, updated_at`
 
 	medico := model.NewMedico(
@@ -44,16 +45,20 @@ func (gr *gestorRepository) CadastrarMedico(medicoRequest request.CadastroProfis
 		medicoRequest.Telefone,
 		24222,
 	)
+	medico.EncryptPassword()
+
+	crmFormatado := strings.ReplaceAll(medicoRequest.CRM, "/", "")
 
 	err := gr.DB.QueryRow(
 		query,
-		medicoRequest.CRM,
+		crmFormatado,
 		medicoRequest.Email,
-		medicoRequest.Password,
+		medico.Password,
 		medicoRequest.Name,
 		medicoRequest.CPF,
 		medicoRequest.Especialidade,
 		medicoRequest.Telefone,
+		medico.UnidadeID,
 	).Scan(&medico.ID, &medico.CreatedAt, &medico.UpdatedAt)
 
 	if err != nil {
@@ -78,12 +83,15 @@ func (gr *gestorRepository) CadastrarEnfermeiro(enfermeiroRequest request.Cadast
 		enfermeiroRequest.CPF,
 		enfermeiroRequest.Telefone,
 	)
+	enfermeiro.EncryptPassword()
+
+	corenFormatado := strings.ReplaceAll(enfermeiroRequest.COREN, "/", "")
 
 	err := gr.DB.QueryRow(
 		query,
-		enfermeiroRequest.COREN,
+		corenFormatado,
 		enfermeiroRequest.Email,
-		enfermeiroRequest.Password,
+		enfermeiro.Password,
 		enfermeiroRequest.Name,
 		enfermeiroRequest.CPF,
 		enfermeiroRequest.Telefone,
@@ -111,11 +119,12 @@ func (gr *gestorRepository) CadastrarAgente(agenteRequest request.CadastroProfis
 		agenteRequest.Telefone,
 		agenteRequest.UnidadeID,
 	)
+	agente.EncryptPassword()
 
 	err := gr.DB.QueryRow(
 		query,
 		agenteRequest.Email,
-		agenteRequest.Password,
+		agente.Password,
 		agenteRequest.Name,
 		agenteRequest.CPF,
 		agenteRequest.Telefone,
@@ -144,11 +153,12 @@ func (gr *gestorRepository) CadastrarGestor(gestorRequest request.CadastroProfis
 		gestorRequest.Telefone,
 		gestorRequest.UnidadeID,
 	)
+	gestor.EncryptPassword()
 
 	err := gr.DB.QueryRow(
 		query,
 		gestorRequest.Email,
-		gestorRequest.Password,
+		gestor.Password,
 		gestorRequest.Name,
 		gestorRequest.CPF,
 		gestorRequest.Telefone,

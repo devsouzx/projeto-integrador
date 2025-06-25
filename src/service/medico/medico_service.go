@@ -26,6 +26,7 @@ type MedicoServiceInterface interface {
 func (ms *medicoService) FindMedicoByIdentifier(identifier string) (model.UserInterface, error) {
 	medico, err := ms.repository.FindMedicoByIdentifier(identifier)
 	if err != nil {
+		fmt.Println("Erro ao buscar médico:", err)
 		return nil, fmt.Errorf("erro ao busccar o medico")
 	}
 

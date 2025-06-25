@@ -646,14 +646,6 @@
       return telefone.replace(/\D/g, '').length >= 10;
     }
 
-    function validarCRM(crm) {
-      return /^\d{6}\/[A-Z]{2}$/.test(crm);
-    }
-
-    function validarCOREN(coren) {
-      return /^\d{6}\/[A-Z]{2}$/.test(coren);
-    }
-
     function validarSenha(senha) {
       return senha.length >= 6;
     }
@@ -786,12 +778,12 @@
       
       switch (tipoUsuario.value) {
         case 'medico':
-          const crmValido = validarCampo(document.getElementById('crm'), validarCRM);
+          const crmValido = document.getElementById('crm');
           const especialidadeValida = document.getElementById('especialidade').value.trim() !== '';
           camposEspecificosValidos = crmValido && especialidadeValida;
           break;
         case 'enfermeiro':
-          const corenValido = validarCampo(document.getElementById('coren'), validarCOREN);
+          const corenValido = document.getElementById('coren');
           camposEspecificosValidos = corenValido;
           break;
         case 'agente':
@@ -834,10 +826,10 @@
       
       // Adicionar campos específicos
       if (tipoUsuario.value === 'medico') {
-        dados.crm = document.getElementById('crm').value;
+        dados.crm = document.getElementById('crm').value.toUpperCase();
         dados.especialidade = document.getElementById('especialidade').value.trim();
       } else if (tipoUsuario.value === 'enfermeiro') {
-        dados.coren = document.getElementById('coren').value;
+        dados.coren = document.getElementById('coren').value.toUpperCase();
       } else if (tipoUsuario.value === 'agente' || tipoUsuario.value === 'gestor') {
         dados.emailInstitucional = document.getElementById('emailInstitucional').value.trim();
       }
