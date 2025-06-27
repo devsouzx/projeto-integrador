@@ -26,6 +26,13 @@ type PacienteControllerInterface interface {
 	BuscarPacientePorCPF(c *gin.Context)
 	ListarPacientes(c *gin.Context)
 	GetPaciente(c *gin.Context)
+
+	RenderDashboard(c *gin.Context)
+	RenderAgendar(c *gin.Context)
+	RenderHistoricoExames(c *gin.Context)
+	RenderLocalizarUBS(c *gin.Context)
+	RenderNotificacoes(c *gin.Context)
+	RenderOrientacoes(c *gin.Context)
 }
 
 func (pc *pacienteController) BuscarPacientePorCPF(c *gin.Context) {
@@ -158,4 +165,28 @@ func calcularIdade(nascimento time.Time) int {
 	}
 
 	return years
+}
+
+func (pc *pacienteController) RenderDashboard(c *gin.Context) {
+	c.HTML(http.StatusOK, "dashboard-paciente.html", nil)
+}
+
+func (pc *pacienteController) RenderAgendar(c *gin.Context) {
+	c.HTML(http.StatusOK, "agendamento-paciente.html", nil)
+}
+
+func (pc *pacienteController) RenderHistoricoExames(c *gin.Context) {
+	c.HTML(http.StatusOK, "historico-exames-paciente.html", nil)
+}
+
+func (pc *pacienteController) RenderLocalizarUBS(c *gin.Context) {
+	c.HTML(http.StatusOK, "localizar-ubs-paciente.html", nil)
+}
+
+func (pc *pacienteController) RenderNotificacoes(c *gin.Context) {
+	c.HTML(http.StatusOK, "notificacoes-paciente.html", nil)
+}
+
+func (pc *pacienteController) RenderOrientacoes(c *gin.Context) {
+	c.HTML(http.StatusOK, "orientacoes-paciente.html", nil)
 }

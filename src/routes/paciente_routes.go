@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"net/http"
-
 	pacienteController "github.com/devsouzx/projeto-integrador/src/controller/paciente"
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/gin-gonic/gin"
@@ -12,36 +10,11 @@ func InitPacienteRoutes(rg *gin.RouterGroup, pacienteController pacienteControll
 	paciente := rg.Group("/paciente")
 	paciente.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("paciente"))
 	{
-		paciente.GET("/dashboard", func(c *gin.Context) {
-			user, exists := c.Get("user")
-			if !exists {
-				c.Redirect(http.StatusFound, "/login")
-				return
-			}
-
-			c.HTML(http.StatusOK, "dashboard-paciente.html", gin.H{
-				"Paciente": user,
-			})
-		})
-
-		paciente.GET("/agendar", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "agendamento-paciente.html", nil)
-		})
-
-		paciente.GET("/historico_exames", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "historico-exames-paciente.html", nil)
-		})
-
-		paciente.GET("/localizar_ubs", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "localizar-ubs-paciente.html", nil)
-		})
-
-		paciente.GET("/notificacoes", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "notificacoes-paciente.html", nil)
-		})
-
-		paciente.GET("/orientacoes", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "orientacoes-paciente.html", nil)
-		})
+		paciente.GET("/dashboard", pacienteController.RenderDashboard)
+		paciente.GET("/agendar", pacienteController.RenderAgendar)
+		paciente.GET("/historico_exames", pacienteController.RenderHistoricoExames)
+		paciente.GET("/localizar_ubs", pacienteController.RenderLocalizarUBS)
+		paciente.GET("/notificacoes", pacienteController.RenderNotificacoes)
+		paciente.GET("/orientacoes", pacienteController.RenderOrientacoes)
 	}
 }
