@@ -77,7 +77,7 @@ func (pc *pacienteController) BuscarPacientePorCPF(c *gin.Context) {
 			"UF":          paciente.Endereco.UF,
 		}
 	}
-	
+
 	c.JSON(http.StatusOK, response)
 }
 
@@ -105,21 +105,21 @@ func (pc *pacienteController) ListarPacientes(c *gin.Context) {
 	var response []gin.H
 	for _, p := range pacientes {
 		pacienteData := gin.H{
-			"id":             p.ID,
-			"nome":           p.Name,
-			"apelido":        p.Apelido,
-			"mae":            p.NomeMae,
-			"cns":            p.CNS,
-			"cpf":            p.CPF,
-			"nascimento":     p.NascimentoTime.Format("2006-01-02"),
-			"idade":          calcularIdade(p.NascimentoTime),
-			"telefone":       p.Telefone,
-			"email":          p.Email,
-			"raca":           p.RacaCor,
-			"nacionalidade":  p.Nacionalidade,
-			"escolaridade":   p.Escolaridade,
+			"id":              p.ID,
+			"nome":            p.Name,
+			"apelido":         p.Apelido,
+			"mae":             p.NomeMae,
+			"cns":             p.CNS,
+			"cpf":             p.CPF,
+			"nascimento":      p.NascimentoTime.Format("2006-01-02"),
+			"idade":           calcularIdade(p.NascimentoTime),
+			"telefone":        p.Telefone,
+			"email":           p.Email,
+			"raca":            p.RacaCor,
+			"nacionalidade":   p.Nacionalidade,
+			"escolaridade":    p.Escolaridade,
 			"ultimoExameData": p.GetDataUltimoExame(),
-			"ultimaInspecao": p.GetInspecaoColo(),
+			"ultimaInspecao":  p.GetInspecaoColo(),
 		}
 		response = append(response, pacienteData)
 	}
@@ -168,25 +168,73 @@ func calcularIdade(nascimento time.Time) int {
 }
 
 func (pc *pacienteController) RenderDashboard(c *gin.Context) {
-	c.HTML(http.StatusOK, "dashboard-paciente.html", nil)
+	paciente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "dashboard-paciente.html", gin.H{
+		"Paciente": paciente,
+	})
 }
 
 func (pc *pacienteController) RenderAgendar(c *gin.Context) {
-	c.HTML(http.StatusOK, "agendamento-paciente.html", nil)
+	paciente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "agendamento-paciente.html", gin.H{
+		"Paciente": paciente,
+	})
 }
 
 func (pc *pacienteController) RenderHistoricoExames(c *gin.Context) {
-	c.HTML(http.StatusOK, "historico-exames-paciente.html", nil)
+	paciente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "historico-exames-paciente.html", gin.H{
+		"Paciente": paciente,
+	})
 }
 
 func (pc *pacienteController) RenderLocalizarUBS(c *gin.Context) {
-	c.HTML(http.StatusOK, "localizar-ubs-paciente.html", nil)
+	paciente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+	
+	c.HTML(http.StatusOK, "localizar-ubs-paciente.html", gin.H{
+		"Paciente": paciente,
+	})
 }
 
 func (pc *pacienteController) RenderNotificacoes(c *gin.Context) {
-	c.HTML(http.StatusOK, "notificacoes-paciente.html", nil)
+	paciente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "notificacoes-paciente.html", gin.H{
+		"Paciente": paciente,
+	})
 }
 
 func (pc *pacienteController) RenderOrientacoes(c *gin.Context) {
-	c.HTML(http.StatusOK, "orientacoes-paciente.html", nil)
+	paciente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "orientacoes-paciente.html", gin.H{
+		"Paciente": paciente,
+	})
 }
