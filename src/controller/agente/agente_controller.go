@@ -28,21 +28,61 @@ type AgenteControllerInterface interface {
 }
 
 func (ac *agenteController) RenderDashboard(c *gin.Context) {
-	c.HTML(http.StatusOK, "dashboard-agente.html", nil)
+	agente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "dashboard-agente.html", gin.H{
+		"Agente": agente,
+	})
 }
 
 func (ac *agenteController) RenderPacientes(c *gin.Context) {
-	c.HTML(http.StatusOK, "cadastro-paciente-agente.html", nil)
+	agente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "cadastro-paciente-agente.html", gin.H{
+		"Agente": agente,
+	})
 }
 
 func (ac *agenteController) RenderVisitas(c *gin.Context) {
-	c.HTML(http.StatusOK, "visitas-agente.html", nil)
+	agente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "visitas-agente.html", gin.H{
+		"Agente": agente,
+	})
 }
 
 func (ac *agenteController) RenderTerritorio(c *gin.Context) {
-	c.HTML(http.StatusOK, "territorio-agente.html", nil)
+	agente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "territorio-agente.html", gin.H{
+		"Agente": agente,
+	})
 }
 
 func (ac *agenteController) RenderAlertas(c *gin.Context) {
-	c.HTML(http.StatusOK, "alertas-agente.html", nil)
+	agente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "alertas-agente.html", gin.H{
+		"Agente": agente,
+	})
 }
