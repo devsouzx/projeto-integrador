@@ -15,7 +15,7 @@ func InitRoutes(rg *gin.RouterGroup, container *dependency.Container) {
 	InitPacienteRoutes(rg, container.PacienteController)
 	InitMedicoRoutes(rg, container.MedicoController, container.PacienteController, container.EncaminhamentoController)
 	InitEnfermeiroRoutes(rg, container.EnfermeiroController)
-	InitAgenteRoutes(rg)
+	InitAgenteRoutes(rg, container.AgenteController)
 	InitGestorRoutes(rg, container.GestorController)
 	InitLaudoRoutes(rg, container.LaudoController)
 	rg.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
