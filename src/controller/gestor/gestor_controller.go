@@ -29,21 +29,58 @@ type GestorControllerInterface interface {
 }
 
 func (gc *gestorController) RenderDashboard(c *gin.Context) {
-	c.HTML(http.StatusOK, "dashboard-gestor.html", nil)
+	gestor, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+	c.HTML(http.StatusOK, "dashboard-gestor.html", gin.H{
+		"Gestor": gestor,
+	})
 }
 
 func (gc *gestorController) RenderNovoUsuario(c *gin.Context) {
-	c.HTML(http.StatusOK, "novo-usuario-gestor.html", nil)
+	gestor, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "novo-usuario-gestor.html", gin.H{
+		"Gestor": gestor,
+	})
 }
 
 func (gc *gestorController) RenderUsuarios(c *gin.Context) {
-	c.HTML(http.StatusOK, "usuarios-gestor.html", nil)
+	gestor, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+	c.HTML(http.StatusOK, "usuarios-gestor.html", gin.H{
+		"Gestor": gestor,
+	})
 }
 
 func (gc *gestorController) RenderRelatorios(c *gin.Context) {
-	c.HTML(http.StatusOK, "relatorios-gestor.html", nil)
+	gestor, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+	c.HTML(http.StatusOK, "relatorios-gestor.html", gin.H{
+		"Gestor": gestor,
+	})
 }
 
 func (gc *gestorController) RenderExames(c *gin.Context) {
-	c.HTML(http.StatusOK, "exames-gestor.html", nil)
+	gestor, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	c.HTML(http.StatusOK, "exames-gestor.html", gin.H{
+		"Gestor": gestor,
+	})
 }
