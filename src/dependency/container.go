@@ -104,6 +104,11 @@ func InitContainer(db *sql.DB) *Container {
 	userController := userController.NewUserController(
 		userService,
 		emailService,
+		pacienteService,
+		medicoService,
+		enfermeiroService,
+		agenteService,
+		gestorService,
 	)
 	medicoController := medicoController.NewMedicoController(
 		medicoService,

@@ -1,6 +1,8 @@
 package gestor
 
 import (
+	"fmt"
+
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/model/request"
 	"github.com/devsouzx/projeto-integrador/src/repository/gestor"
@@ -23,6 +25,18 @@ type GestorServiceInterface interface {
 	CadastrarEnfermeiro(req request.CadastroProfissionalRequest) (*model.Enfermeiro, error)
 	CadastrarAgente(req request.CadastroProfissionalRequest) (*model.AgenteComunitario, error)
 	CadastrarGestor(req request.CadastroProfissionalRequest) (*model.Gestor, error)
+
+	FindGestorByIdentifier(identifier string) (*model.Gestor, error)
+}
+
+func (as *gestorService) FindGestorByIdentifier(identifier string) (*model.Gestor, error) {
+	gestor, err := as.gestorRepository.FindGestorByIdentifier(identifier)
+	if err != nil {
+		fmt.Println("Erro ao buscar gestor:", err)
+		return nil, fmt.Errorf("erro ao buscar o gestor")
+	}
+
+	return gestor, nil
 }
 
 func (s *gestorService) CadastrarMedico(req request.CadastroProfissionalRequest) (*model.Medico, error) {

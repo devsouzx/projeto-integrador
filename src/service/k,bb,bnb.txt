@@ -1,0 +1,30 @@
+3 criacao do meu perfil
+4. criacao das configuraçoes
+5. implementaão do dashboard de todas ass areas
+
+Area do paciente:
+6. Agendamento de exame
+7. Localizar ubss proximas
+8. Listagem de exames
+9. listagem de notificacoes
+
+10. implemtacao do envio de notificacoes na parte do enfermeiro e paciente
+11. Realização do agendamento na parte da enfermeira
+12. correçãoo na realização do encaminhameento na parte do medico
+13. Listagem dos usarios na parte do gestor
+14. Lidtagem dos exames na parte do gestor
+15. correção de erro na responsvidade do gestor em relatorios
+
+16. cadtro de paciente na parte do agente
+17. Agendaento de visista na parte do agente
+18. listagem de alertas e notificacaoes/exames/lembretes na parte do agente
+19. Listagem de proximas visitas e visistas anteriores na parte do agente
+
+20. Download dee laudo/encaminhamento em pdf
+
+Excecoes:
+21. relatorios na parte do enfermeiro
+22. orientacoes na parte do paciente
+23. Relatorios na parte do gestor
+24. visao do territorio na area do agente
+25. estatistica na parte do medico

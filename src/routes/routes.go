@@ -18,6 +18,13 @@ func InitRoutes(rg *gin.RouterGroup, container *dependency.Container) {
 	InitAgenteRoutes(rg, container.AgenteController)
 	InitGestorRoutes(rg, container.GestorController)
 	InitLaudoRoutes(rg, container.LaudoController)
+
+	rg.Use(model.VerifyTokenMiddleware)
+    {
+        rg.GET("/perfil", container.UserController.RenderPerfil)
+        rg.GET("/configuracoes", container.UserController.RenderConfiguracoes)
+    }
+
 	rg.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	rg.Use(model.VerifyTokenMiddleware, model.AuthorizeRole("medico", "enfermeiro"))

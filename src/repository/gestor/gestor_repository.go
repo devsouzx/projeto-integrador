@@ -26,6 +26,36 @@ type GestorRepositoryInterface interface {
 	CadastrarEnfermeiro(enfermeiro request.CadastroProfissionalRequest) (*model.Enfermeiro, error)
 	CadastrarAgente(agente request.CadastroProfissionalRequest) (*model.AgenteComunitario, error)
 	CadastrarGestor(gestor request.CadastroProfissionalRequest) (*model.Gestor, error)
+
+	FindGestorByIdentifier(identifier string) (*model.Gestor, error)
+}
+
+func (gr *gestorRepository) FindGestorByIdentifier(identifier string) (*model.Gestor, error) {
+	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", ""), " ", "")
+
+	query := `
+		SELECT id, email, senha, nomecompleto, cpf
+		FROM gestor
+		WHERE id = $1 OR cpf = $2
+	`
+
+	var gestor model.Gestor
+
+	err := gr.DB.QueryRow(query, identifier, cpfFormatado).Scan(
+		&gestor.ID,
+		&gestor.Email,
+		&gestor.Password,
+		&gestor.Name,
+		&gestor.CPF,
+	)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("gestor não encontrado")
+		}
+		return nil, fmt.Errorf("erro ao buscar gestor: %w", err)
+	}
+
+	return &gestor, nil
 }
 
 func (gr *gestorRepository) CadastrarMedico(medicoRequest request.CadastroProfissionalRequest) (*model.Medico, error) {

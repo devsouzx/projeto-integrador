@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
+      --sucesso: #2ecc71;
+      --erro: #e74c3c;
+      --alerta: #f39c12;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: var(--cinza-escuro);
+    }
+    
+    /* Navegação Superior */
+    .navegacao-superior {
+      background: linear-gradient(90deg, var(--primaria), var(--secundaria));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .container-navegacao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .menu-navegacao {
+      display: flex;
+      list-style: none;
+    }
+    
+    .item-navegacao {
+      margin-left: 1rem;
+    }
+    
+    .link-navegacao {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .link-navegacao:hover, .link-navegacao.ativo {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .info-usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .info-usuario:hover .menu-usuario {
+      display: block;
+    }
+
+    .menu-usuario {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      min-width: 200px;
+      z-index: 10;
+    }
+
+    .menu-usuario a {
+      display: block;
+      padding: 0.75rem 1rem;
+      color: #333333;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+
+    .menu-usuario a:hover {
+      background-color: #f5f5f5;
+      color: var(--primaria);
+    }
+
+    .menu-usuario a i {
+      margin-right: 0.5rem;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .avatar-usuario {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      background-color: #f0e5f5;
+    }
+    
+    /* Conteúdo Principal */
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
+    
+    .card-perfil {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    
+    .cabecalho-perfil {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .avatar-grande {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #f0e5f5;
+      margin-right: 1.5rem;
+    }
+    
+    .info-usuario-perfil h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--primaria);
+    }
+    
+    .info-usuario-perfil p {
+      color: #666;
+    }
+    
+    .grupo-formulario {
+      margin-bottom: 1.5rem;
+    }
+    
+    .grupo-formulario label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primaria);
+    }
+    
+    .grupo-formulario input,
+    .grupo-formulario select,
+    .grupo-formulario textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    
+    .grupo-formulario textarea {
+      min-height: 100px;
+    }
+    
+    .grade-formulario {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
+    
+    .botao-primario:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+    }
+    
+    .botao-secundario {
+      background-color: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
+    
+    .botao-secundario:hover {
+      background-color: #f0e5f5;
+    }
+    
+    .acoes-formulario {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .badge-verificado {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--sucesso);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+    }
+    
+    .badge-nao-verificado {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--alerta);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+    }
+    
+    .mensagem-erro {
+      color: var(--erro);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+    
+    /* Estilos para a seção de endereço detalhado */
+    .secao-endereco-detalhado {
+      background: #f9f9f9;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      display: none;
+    }
+    
+    .secao-endereco-detalhado h3 {
+      color: var(--primaria);
+      margin-bottom: 1rem;
+    }
+    
+    .mensagem-ajuda {
+      color: #666;
+      font-size: 0.8rem;
+      display: block;
+      margin-top: 0.25rem;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .navegacao-superior {
+        padding: 0.75rem 1rem;
+      }
+
+      .container-navegacao {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      
+      .logo {
+        font-size: 1.1rem;
+      }
+      
+      .menu-navegacao {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        scrollbar-width: thin;
+      }
+
+      .item-navegacao {
+        margin-left: 0;
+        flex: 0 0 auto;
+      }
+      
+      .info-usuario {
+        margin-left: auto;
+      }
+      
+      .grade-formulario {
+        grid-template-columns: 1fr;
+      }
+      
+      .cabecalho-perfil {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .avatar-grande {
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">
+        Área do {{if eq .Usuario.Role "paciente"}}Paciente
+        {{else if eq .Usuario.Role "medico"}}Médico
+        {{else if eq .Usuario.Role "enfermeiro"}}Enfermeiro
+        {{else if eq .Usuario.Role "agente"}}Agente Comunitário
+        {{else}}Gestor{{end}}
+      </div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/{{.Usuario.Role}}/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/perfil" class="link-navegacao ativo"><i class="fas fa-user"></i> Perfil</a></li>
+        <li class="item-navegacao"><a href="/configuracoes" class="link-navegacao"><i class="fas fa-cog"></i> Configurações</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" 
+             class="avatar-usuario" alt="Avatar do usuário">
+        <span>{{.Usuario.Name}}</span>
+        
+        <div class="menu-usuario">
+          <a href="/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
+          <a href="/configuracoes"><i class="fas fa-cog"></i> Configurações</a>
+          <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Meu Perfil</h1>
+    </div>
+    
+    <div class="card-perfil">
+      <div class="cabecalho-perfil">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" 
+             class="avatar-grande" alt="Foto do perfil">
+        <div class="info-usuario-perfil">
+          <h2>{{.Usuario.Name}} 
+            {{if .Usuario.Verified}}
+              <span class="badge-verificado"><i class="fas fa-check-circle"></i> Verificado</span>
+            {{else}}
+              <span class="badge-nao-verificado"><i class="fas fa-exclamation-triangle"></i> Não verificado</span>
+            {{end}}
+          </h2>
+          <p>{{.Usuario.Role}} | {{.Usuario.Email}}</p>
+          <form id="formFoto" enctype="multipart/form-data" style="display: none;">
+            <input type="file" id="fotoPerfil" name="foto" accept="image/*">
+          </form>
+          <button class="botao botao-secundario" style="margin-top: 0.5rem;" onclick="document.getElementById('fotoPerfil').click()">
+            <i class="fas fa-camera"></i> Alterar Foto
+          </button>
+        </div>
+      </div>
+      
+      <form action="/atualizar-perfil" method="POST">
+        <div class="grade-formulario">
+          <div class="grupo-formulario">
+            <label for="name">Nome Completo</label>
+            <input type="text" id="name" name="name" value="{{.Usuario.Name}}" required>
+            {{if .Erros.Name}}<div class="mensagem-erro">{{.Erros.Name}}</div>{{end}}
+          </div>
+          
+          <div class="grupo-formulario">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" value="{{.Usuario.Email}}" required>
+            {{if .Erros.Email}}<div class="mensagem-erro">{{.Erros.Email}}</div>{{end}}
+          </div>
+          
+          <div class="grupo-formulario">
+            <label for="phone">Telefone</label>
+            <input type="tel" id="phone" name="phone" value="8873847807087" required>
+            {{if .Erros.Phone}}<div class="mensagem-erro">{{.Erros.Phone}}</div>{{end}}
+          </div>
+          
+          {{if eq .Usuario.Role "paciente"}}
+          <div class="grupo-formulario">
+            <label for="data_nascimento">Data de Nascimento</label>
+            <input type="date" id="data_nascimento" name="data_nascimento" 
+                   value="{{.Detalhes.DataNascimento.Format "2006-01-02"}}" required>
+          </div>
+          
+          <div class="grupo-formulario">
+            <label for="cns">Cartão SUS (CNS)</label>
+            <input type="text" id="cns" value="{{.Detalhes.CNS}}" readonly>
+          </div>
+          {{end}}
+          
+          {{if eq .Usuario.Role "medico"}}
+          <div class="grupo-formulario">
+            <label for="crm">CRM</label>
+            <input type="text" id="crm" value="{{.Detalhes.CRM}}" readonly>
+          </div>
+          
+          <div class="grupo-formulario">
+            <label for="especialidade">Especialidade</label>
+            <input type="text" id="especialidade" name="especialidade" value="{{.Detalhes.Especialidade}}">
+          </div>
+          {{end}}
+          
+          {{if eq .Usuario.Role "enfermeiro"}}
+          <div class="grupo-formulario">
+            <label for="coren">COREN</label>
+            <input type="text" id="coren" value="{{.Detalhes.COREN}}" readonly>
+          </div>
+          {{end}}
+          
+          <div class="grupo-formulario">
+            <label for="password">Nova Senha (deixe em branco para não alterar)</label>
+            <input type="password" id="password" name="password">
+            {{if .Erros.Password}}<div class="mensagem-erro">{{.Erros.Password}}</div>{{end}}
+          </div>
+          
+          <div class="grupo-formulario">
+            <label for="password_confirmation">Confirmar Nova Senha</label>
+            <input type="password" id="password_confirmation" name="password_confirmation">
+          </div>
+        </div>
+        
+        {{if eq .Usuario.Role "paciente"}}
+        <div class="grupo-formulario">
+          <label for="endereco_resumo">Endereço</label>
+          <textarea id="endereco_resumo" name="endereco_resumo" readonly>{{.Detalhes.Endereco.Formatado}}</textarea>
+          <button type="button" class="botao botao-secundario" onclick="mostrarDetalhesEndereco()" 
+                  style="margin-top: 0.5rem;">
+            <i class="fas fa-edit"></i> Editar detalhes do endereço
+          </button>
+        </div>
+        
+        
+        <div id="secaoEnderecoDetalhado" class="secao-endereco-detalhado">
+          <h3>Detalhes do Endereço</h3>
+          
+          <div class="grade-formulario">
+            <div class="grupo-formulario">
+              <label for="cep">CEP</label>
+              <input type="text" id="cep" name="cep" value="{{.Detalhes.Endereco.CEP}}" 
+                     onblur="buscarEnderecoPorCEP(this.value)">
+              <small class="mensagem-ajuda">Digite o CEP para autopreenchimento</small>
+            </div>
+            
+            <div class="grupo-formulario">
+              <label for="logradouro">Logradouro</label>
+              <input type="text" id="logradouro" name="logradouro" value="{{.Detalhes.Endereco.Logradouro}}">
+            </div>
+            
+            <div class="grupo-formulario">
+              <label for="numero">Número</label>
+              <input type="text" id="numero" name="numero" value="{{.Detalhes.Endereco.Numero}}">
+            </div>
+            
+            <div class="grupo-formulario">
+              <label for="complemento">Complemento</label>
+              <input type="text" id="complemento" name="complemento" value="{{.Detalhes.Endereco.Complemento}}">
+            </div>
+            
+            <div class="grupo-formulario">
+              <label for="bairro">Bairro</label>
+              <input type="text" id="bairro" name="bairro" value="{{.Detalhes.Endereco.Bairro}}">
+            </div>
+            
+            <div class="grupo-formulario">
+              <label for="cidade">Cidade</label>
+              <input type="text" id="cidade" name="cidade" value="{{.Detalhes.Endereco.Cidade}}">
+            </div>
+            
+            <div class="grupo-formulario">
+              <label for="uf">Estado (UF)</label>
+              <select id="uf" name="uf" class="form-control">
+                <option value="">Selecione</option>
+                <option value="AC" {{if eq .Detalhes.Endereco.UF "AC"}}selected{{end}}>Acre</option>
+                <option value="AL" {{if eq .Detalhes.Endereco.UF "AL"}}selected{{end}}>Alagoas</option>
+                <option value="AP" {{if eq .Detalhes.Endereco.UF "AP"}}selected{{end}}>Amapá</option>
+                <option value="AM" {{if eq .Detalhes.Endereco.UF "AM"}}selected{{end}}>Amazonas</option>
+                <option value="BA" {{if eq .Detalhes.Endereco.UF "BA"}}selected{{end}}>Bahia</option>
+                <option value="CE" {{if eq .Detalhes.Endereco.UF "CE"}}selected{{end}}>Ceará</option>
+                <option value="DF" {{if eq .Detalhes.Endereco.UF "DF"}}selected{{end}}>Distrito Federal</option>
+                <option value="ES" {{if eq .Detalhes.Endereco.UF "ES"}}selected{{end}}>Espírito Santo</option>
+                <option value="GO" {{if eq .Detalhes.Endereco.UF "GO"}}selected{{end}}>Goiás</option>
+                <option value="MA" {{if eq .Detalhes.Endereco.UF "MA"}}selected{{end}}>Maranhão</option>
+                <option value="MT" {{if eq .Detalhes.Endereco.UF "MT"}}selected{{end}}>Mato Grosso</option>
+                <option value="MS" {{if eq .Detalhes.Endereco.UF "MS"}}selected{{end}}>Mato Grosso do Sul</option>
+                <option value="MG" {{if eq .Detalhes.Endereco.UF "MG"}}selected{{end}}>Minas Gerais</option>
+                <option value="PA" {{if eq .Detalhes.Endereco.UF "PA"}}selected{{end}}>Pará</option>
+                <option value="PB" {{if eq .Detalhes.Endereco.UF "PB"}}selected{{end}}>Paraíba</option>
+                <option value="PR" {{if eq .Detalhes.Endereco.UF "PR"}}selected{{end}}>Paraná</option>
+                <option value="PE" {{if eq .Detalhes.Endereco.UF "PE"}}selected{{end}}>Pernambuco</option>
+                <option value="PI" {{if eq .Detalhes.Endereco.UF "PI"}}selected{{end}}>Piauí</option>
+                <option value="RJ" {{if eq .Detalhes.Endereco.UF "RJ"}}selected{{end}}>Rio de Janeiro</option>
+                <option value="RN" {{if eq .Detalhes.Endereco.UF "RN"}}selected{{end}}>Rio Grande do Norte</option>
+                <option value="RS" {{if eq .Detalhes.Endereco.UF "RS"}}selected{{end}}>Rio Grande do Sul</option>
+                <option value="RO" {{if eq .Detalhes.Endereco.UF "RO"}}selected{{end}}>Rondônia</option>
+                <option value="RR" {{if eq .Detalhes.Endereco.UF "RR"}}selected{{end}}>Roraima</option>
+                <option value="SC" {{if eq .Detalhes.Endereco.UF "SC"}}selected{{end}}>Santa Catarina</option>
+                <option value="SP" {{if eq .Detalhes.Endereco.UF "SP"}}selected{{end}}>São Paulo</option>
+                <option value="SE" {{if eq .Detalhes.Endereco.UF "SE"}}selected{{end}}>Sergipe</option>
+                <option value="TO" {{if eq .Detalhes.Endereco.UF "TO"}}selected{{end}}>Tocantins</option>
+              </select>
+            </div>
+            
+            <div class="grupo-formulario">
+              <label for="referencia">Ponto de Referência</label>
+              <input type="text" id="referencia" name="referencia" value="{{.Detalhes.Endereco.Referencia}}">
+            </div>
+          </div>
+          
+          <div class="acoes-formulario" style="margin-top: 1rem;">
+            <button type="button" class="botao botao-secundario" onclick="ocultarDetalhesEndereco()">Cancelar</button>
+            <button type="button" class="botao botao-primario" onclick="atualizarResumoEndereco()">Aplicar</button>
+          </div>
+        </div>
+        {{end}}
+        
+        <div class="acoes-formulario">
+          <button type="button" class="botao botao-secundario" onclick="window.location.reload()">Cancelar</button>
+          <button type="submit" class="botao botao-primario">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // Upload de foto de perfil
+    document.getElementById('fotoPerfil').addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const formData = new FormData(document.getElementById('formFoto'));
+        
+        fetch('/upload-foto-perfil', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.querySelector('.avatar-grande').src = data.url;
+            document.querySelector('.avatar-usuario').src = data.url;
+            window.location.reload();
+          } else {
+            alert('Erro ao atualizar foto: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Erro ao enviar foto');
+        });
+      }
+    });
+    
+    // Validação de senha no formulário
+    document.querySelector('form').addEventListener('submit', function(e) {
+      const password = document.getElementById('password').value;
+      const passwordConfirmation = document.getElementById('password_confirmation').value;
+      
+      if (password && password !== passwordConfirmation) {
+        e.preventDefault();
+        alert('As senhas não coincidem!');
+      }
+    });
+
+    // Mostra a seção de detalhes do endereço
+    function mostrarDetalhesEndereco() {
+      document.getElementById('secaoEnderecoDetalhado').style.display = 'block';
+    }
+
+    // Oculta a seção de detalhes do endereço
+    function ocultarDetalhesEndereco() {
+      document.getElementById('secaoEnderecoDetalhado').style.display = 'none';
+    }
+
+    // Atualiza o resumo do endereço com os detalhes preenchidos
+    function atualizarResumoEndereco() {
+      const logradouro = document.getElementById('logradouro').value;
+      const numero = document.getElementById('numero').value;
+      const complemento = document.getElementById('complemento').value;
+      const bairro = document.getElementById('bairro').value;
+      const cidade = document.getElementById('cidade').value;
+      const uf = document.getElementById('uf').value;
+      const cep = document.getElementById('cep').value;
+      
+      // Formata o endereço para exibição resumida
+      let enderecoCompleto = `${logradouro}, ${numero}`;
+      if (complemento) enderecoCompleto += ` - ${complemento}`;
+      enderecoCompleto += ` - ${bairro}, ${cidade}/${uf}`;
+      if (cep) enderecoCompleto += ` - CEP: ${cep}`;
+      
+      document.getElementById('endereco_resumo').value = enderecoCompleto;
+      ocultarDetalhesEndereco();
+    }
+
+    // Busca endereço via API de CEP
+    function buscarEnderecoPorCEP(cep) {
+      // Remove caracteres não numéricos
+      cep = cep.replace(/\D/g, '');
+      
+      // Verifica se o CEP tem 8 dígitos
+      if (cep.length !== 8) return;
+      
+      // Faz a requisição para a API ViaCEP
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(data => {
+          if (!data.erro) {
+            document.getElementById('logradouro').value = data.logradouro || '';
+            document.getElementById('bairro').value = data.bairro || '';
+            document.getElementById('cidade').value = data.localidade || '';
+            document.getElementById('uf').value = data.uf || '';
+            
+            // Foca no campo número após o preenchimento automático
+            document.getElementById('numero').focus();
+          } else {
+            alert('CEP não encontrado. Por favor, preencha manualmente.');
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao buscar CEP:', error);
+          alert('Erro ao consultar CEP. Tente novamente mais tarde.');
+        });
+    }
+
+    // Máscara para o campo CEP
+    document.getElementById('cep').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 5) {
+        value = value.substring(0, 5) + '-' + value.substring(5, 8);
+      }
+      e.target.value = value;
+    });
+  </script>
+</body>
+</html>
