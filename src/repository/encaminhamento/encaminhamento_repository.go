@@ -63,16 +63,21 @@ func (r *encaminhamentoRepository) FindByID(id string) (*model.Encaminhamento, e
 			e.justificativa, e.unidade_referencia, e.status, e.data_encaminhamento,
 			e.data_agendamento, e.data_conclusao, e.observacoes, e.created_at, e.updated_at,
 			p.id, p.nome, p.cns,
-			m.id, m.nomecompleto, m.crm
+			m.id, m.nomecompleto, m.crm,
+			l.id, l.paciente_id, l.medico_id, l.ficha_id, l.data_exame, l.data_laudo,
+			l.resultado, l.cid, l.adequabilidade, l.microbiologia, l.celulas_endometriais,
+			l.comentarios, l.recomendacoes, l.status, l.created_at, l.updated_at
 		FROM encaminhamentos e
 		LEFT JOIN paciente p ON p.id = e.paciente_id
 		LEFT JOIN medico m ON m.id = e.medico_id
+		LEFT JOIN laudos l ON l.id = e.laudo_id
 		WHERE e.id = $1
 	`
 
 	var encaminhamento model.Encaminhamento
 	var paciente model.Paciente
 	var medico model.Medico
+	var laudo model.Laudo
 
 	err := r.DB.QueryRow(query, id).Scan(
 		&encaminhamento.ID,
@@ -96,6 +101,22 @@ func (r *encaminhamentoRepository) FindByID(id string) (*model.Encaminhamento, e
 		&medico.ID,
 		&medico.Name,
 		&medico.CRM,
+		&laudo.ID,
+		&laudo.PacienteID,
+		&laudo.MedicoID,
+		&laudo.FichaID,
+		&laudo.DataExame,
+		&laudo.DataLaudo,
+		&laudo.Resultado,
+		&laudo.CID,
+		&laudo.Adequabilidade,
+		&laudo.Microbiologia,
+		&laudo.CelulasEndometriais,
+		&laudo.Comentarios,
+		&laudo.Recomendacoes,
+		&laudo.Status,
+		&laudo.CreatedAt,
+		&laudo.UpdatedAt,
 	)
 
 	if err != nil {
@@ -104,6 +125,10 @@ func (r *encaminhamentoRepository) FindByID(id string) (*model.Encaminhamento, e
 
 	encaminhamento.Paciente = &paciente
 	encaminhamento.Medico = &medico
+	
+	if laudo.ID != "" {
+		encaminhamento.Laudo = &laudo
+	}
 
 	return &encaminhamento, nil
 }

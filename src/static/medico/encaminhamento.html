@@ -175,11 +175,6 @@
       background-color: #f0e5f5;
     }
 
-    .botao-pequeno {
-      padding: 0.5rem 1rem;
-      font-size: 0.85rem;
-    }
-
     .container-encaminhamento {
       background-color: white;
       border-radius: 10px;
@@ -437,7 +432,9 @@
 
     <div class="container-encaminhamento">
       <div class="info-paciente">
-        <strong>Paciente:</strong> Maria da Silva (38 anos) | <strong>Cartão SUS:</strong> 123 4567 8901 2345 | <strong>CID-10:</strong> R87.61 (ASC-H)
+        <strong>Paciente:</strong> {{.Encaminhamento.Paciente.Name}} ({{.Encaminhamento.Paciente.GetIdade}} anos) | 
+        <strong>Cartão SUS:</strong> {{.Encaminhamento.Paciente.CNS}} | 
+        <strong>CID-10:</strong> {{.Encaminhamento.Laudo.CID}}
       </div>
       
       <div class="dados-clinicos">
@@ -465,47 +462,61 @@
       <div class="detalhes-encaminhamento">
         <div class="grupo-detalhe">
           <h3><i class="fas fa-calendar-alt"></i> Data do Encaminhamento</h3>
-          <p>15/06/2025</p>
+          <p>{{.Encaminhamento.DataEncaminhamento.Format "02/01/2006"}}</p>
         </div>
         
         <div class="grupo-detalhe">
           <h3><i class="fas fa-user-md"></i> Especialidade</h3>
-          <p>Colposcopia com Biópsia</p>
+          <p>{{.Encaminhamento.Especialidade}}</p>
         </div>
         
         <div class="grupo-detalhe">
           <h3><i class="fas fa-exclamation-circle"></i> Nível de Urgência</h3>
-          <p><span class="urgencia-badge urgencia-prioritario"><i class="fas fa-exclamation-circle"></i> Prioritário</span></p>
+          <p>
+            {{if eq .Encaminhamento.Urgencia "rotina"}}
+            <span class="urgencia-badge urgencia-rotina"><i class="fas fa-calendar"></i> Rotina</span>
+            {{else if eq .Encaminhamento.Urgencia "prioritario"}}
+            <span class="urgencia-badge urgencia-prioritario"><i class="fas fa-exclamation-circle"></i> Prioritário</span>
+            {{else}}
+            <span class="urgencia-badge urgencia-urgente"><i class="fas fa-exclamation-triangle"></i> Urgente</span>
+            {{end}}
+          </p>
         </div>
         
         <div class="grupo-detalhe">
           <h3><i class="fas fa-hospital"></i> Unidade de Referência</h3>
-          <p>Hospital Central - Ambulatório de Colposcopia</p>
-          <p>Av. Principal, 1234 - Centro | Tel: (11) 1234-5678</p>
+          <p>{{.Encaminhamento.UnidadeReferencia}}</p>
+          <p>Tel: (11) 1234-5678</p>
+          <p>Av. Principal, 1234 - Centro</p>
         </div>
         
         <div class="grupo-detalhe">
           <h3><i class="fas fa-info-circle"></i> Status</h3>
-          <p><span class="status-badge status-pendente"><i class="fas fa-clock"></i> Pendente</span></p>
+          <p>
+            {{if eq .Encaminhamento.Status "pendente"}}
+            <span class="status-badge status-pendente"><i class="fas fa-clock"></i> Pendente</span>
+            {{else if eq .Encaminhamento.Status "agendado"}}
+            <span class="status-badge status-agendado"><i class="fas fa-calendar-check"></i> Agendado</span>
+            {{else if eq .Encaminhamento.Status "concluido"}}
+            <span class="status-badge status-concluido"><i class="fas fa-check-circle"></i> Concluído</span>
+            {{else}}
+            <span class="status-badge status-cancelado"><i class="fas fa-times-circle"></i> Cancelado</span>
+            {{end}}
+          </p>
+          {{if .Encaminhamento.DataAgendamento}}
+          <p><strong>Data Agendamento:</strong> {{.Encaminhamento.DataAgendamento.Format "02/01/2006"}}</p>
+          {{end}}
+          {{if .Encaminhamento.DataConclusao}}
+          <p><strong>Data Conclusão:</strong> {{.Encaminhamento.DataConclusao.Format "02/01/2006"}}</p>
+          {{end}}
+          {{if .Encaminhamento.Observacoes}}
+          <p><strong>Observações:</strong> {{.Encaminhamento.Observacoes}}</p>
+          {{end}}
         </div>
         
         <div class="grupo-detalhe">
           <h3><i class="fas fa-comment-medical"></i> Justificativa Clínica</h3>
-          <p>Paciente com resultado ASC-H em exame preventivo. Necessário avaliação com colposcopia para descartar lesão de alto grau. Paciente com histórico de tabagismo e HPV positivo, fatores de risco para neoplasia cervical.</p>
-        </div>
-        
-        <div class="grupo-detalhe">
-          <h3><i class="fas fa-paperclip"></i> Exames Anexos</h3>
-          <div class="arquivos-anexos">
-            <a href="#" class="arquivo-anexo" download>
-              <i class="fas fa-file-pdf"></i>
-              <span>Citologia_06-2025.pdf</span>
-            </a>
-            <a href="#" class="arquivo-anexo" download>
-              <i class="fas fa-file-image"></i>
-              <span>Resultado_HPV.png</span>
-            </a>
-          </div>
+          <p>{{.Encaminhamento.Justificativa}}</p>
         </div>
       </div>
       
@@ -513,7 +524,7 @@
         <button class="botao botao-secundario" onclick="window.print()">
           <i class="fas fa-print"></i> Imprimir
         </button>
-        <button class="botao botao-primario" onclick="window.location.href='/medico/encaminhamentos/1/editar'">
+        <button class="botao botao-primario" onclick="window.location.href='/medico/encaminhamentos/{{.Encaminhamento.ID}}/editar'">
           <i class="fas fa-edit"></i> Editar
         </button>
       </div>

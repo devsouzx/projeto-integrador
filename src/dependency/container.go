@@ -114,6 +114,7 @@ func InitContainer(db *sql.DB) *Container {
 		medicoService,
 		*unidadeService,
 		pacienteService,
+		encaminhamentoService,
 	)
 	laudoController := laudoController.NewLaudoController(
 		laudoService,

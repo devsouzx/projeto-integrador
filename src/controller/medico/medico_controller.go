@@ -5,6 +5,7 @@ import (
 
 	"github.com/devsouzx/projeto-integrador/src/model"
 	"github.com/devsouzx/projeto-integrador/src/service/datasus"
+	"github.com/devsouzx/projeto-integrador/src/service/encaminhamento"
 	medicoService "github.com/devsouzx/projeto-integrador/src/service/medico"
 	"github.com/devsouzx/projeto-integrador/src/service/paciente"
 	"github.com/gin-gonic/gin"
@@ -14,11 +15,13 @@ func NewMedicoController(
 	service medicoService.MedicoServiceInterface, 
 	cnesService datasus.CNESService,
 	pacienteService paciente.PacienteService,
+	encaminhamentoService encaminhamento.EncaminhamentoServiceInterface,
 ) MedicoControllerInterface {
 	return &medicoController{
 		service: service,
 		cnesService: cnesService,
 		pacienteService: pacienteService,
+		encaminhamentoService: encaminhamentoService,
 	}
 }
 
@@ -26,6 +29,7 @@ type medicoController struct {
 	service medicoService.MedicoServiceInterface
 	cnesService datasus.CNESService
 	pacienteService paciente.PacienteService
+	encaminhamentoService encaminhamento.EncaminhamentoServiceInterface
 }
 
 type MedicoControllerInterface interface {
@@ -41,6 +45,7 @@ type MedicoControllerInterface interface {
 	RenderNovoLaudoPage(c *gin.Context)
 	RenderLaudosPage(c *gin.Context)
 	RenderEstatisticasPage(c *gin.Context)
+	RenderEncaminhamentoPage(c *gin.Context)
 }
 
 func (mc *medicoController) GetUnidadeMedico(c *gin.Context) {
@@ -231,5 +236,28 @@ func (mc *medicoController) RenderEstatisticasPage(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "estatisticas-medico.html", gin.H{
 		"Medico": medico,
+	})
+}
+
+func (ec *medicoController) RenderEncaminhamentoPage(c *gin.Context) {
+	medico, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	id := c.Param("id")
+	
+	encaminhamento, err := ec.encaminhamentoService.GetEncaminhamentoByID(id)
+	if err != nil {
+		c.HTML(http.StatusNotFound, "error.html", gin.H{
+			"error": "Encaminhamento não encontrado",
+		})
+		return
+	}
+	
+	c.HTML(http.StatusOK, "encaminhamento.html", gin.H{
+		"Medico":        medico,
+		"Encaminhamento": encaminhamento,
 	})
 }
