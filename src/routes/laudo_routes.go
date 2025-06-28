@@ -12,5 +12,6 @@ func InitLaudoRoutes(rg *gin.RouterGroup, laudoController laudo.LaudoControllerI
 	{
 		laudos.POST("", laudoController.CreateLaudo)
 		laudos.GET("/medico/meus-laudos", laudoController.GetLaudosByMedico)
+		laudos.GET("/:id/download", laudoController.DownloadLaudo)
 	}
 }

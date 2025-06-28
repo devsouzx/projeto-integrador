@@ -12,6 +12,7 @@ import (
 type LaudoRepositoryInterface interface {
     Create(laudo *model.Laudo) error
     FindByMedicoID(medicoID string, resultadoFilter string, search string, page int, pageSize int) ([]*model.Laudo, int, error)
+    FindByIDWithRelations(id string) (*model.Laudo, error)
 }
 
 type laudoRepository struct {
@@ -153,4 +154,78 @@ func (r *laudoRepository) FindByMedicoID(medicoID string, resultadoFilter string
     }
 
     return laudos, total, nil
+}
+
+func (r *laudoRepository) FindByIDWithRelations(id string) (*model.Laudo, error) {
+	query := `
+		SELECT 
+			l.id, l.paciente_id, l.medico_id, l.ficha_id, l.data_exame, l.data_laudo,
+			l.resultado, l.cid, l.adequabilidade, l.microbiologia, 
+			l.celulas_endometriais, l.comentarios, l.recomendacoes, l.status,
+			l.created_at, l.updated_at,
+			p.nome as paciente_nome, p.cns as paciente_cns, p.data_nascimento as paciente_nascimento,
+			m.nomecompleto as medico_nome, m.crm as medico_crm
+		FROM laudos l
+		LEFT JOIN paciente p ON l.paciente_id = p.id
+		LEFT JOIN medico m ON l.medico_id = m.id
+		WHERE l.id = $1
+	`
+
+	var laudo model.Laudo
+	var pacienteNome, pacienteCNS sql.NullString
+	var pacienteNascimento sql.NullTime
+	var medicoNome, medicoCRM sql.NullString
+
+	err := r.DB.QueryRow(query, id).Scan(
+		&laudo.ID,
+		&laudo.PacienteID,
+		&laudo.MedicoID,
+		&laudo.FichaID,
+		&laudo.DataExame,
+		&laudo.DataLaudo,
+		&laudo.Resultado,
+		&laudo.CID,
+		&laudo.Adequabilidade,
+		&laudo.Microbiologia,
+		&laudo.CelulasEndometriais,
+		&laudo.Comentarios,
+		&laudo.Recomendacoes,
+		&laudo.Status,
+		&laudo.CreatedAt,
+		&laudo.UpdatedAt,
+		&pacienteNome,
+		&pacienteCNS,
+		&pacienteNascimento,
+		&medicoNome,
+		&medicoCRM,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("laudo não encontrado")
+		}
+		return nil, err
+	}
+
+	// Preencher relacionamentos se existirem
+	if pacienteNome.Valid {
+		laudo.Paciente = &model.Paciente{
+			BaseUser: model.BaseUser{
+				Name: pacienteNome.String,
+			},
+			CNS:            pacienteCNS.String,
+			NascimentoTime: pacienteNascimento.Time,
+		}
+	}
+
+	if medicoNome.Valid {
+		laudo.Medico = &model.Medico{
+			BaseUser: model.BaseUser{
+				Name: medicoNome.String,
+			},
+			CRM: medicoCRM.String,
+		}
+	}
+
+	return &laudo, nil
 }
