@@ -642,8 +642,23 @@
       
       <div class="dados-clinicos">
         <h3><i class="fas fa-clipboard-list"></i> Dados Clínicos Relevantes</h3>
-        <div class="dados-clinicos-grid" id="dadosClinicos">
-          <!-- Dados serão carregados via JavaScript -->
+        <div class="dados-clinicos-grid">
+          <div class="item-dado-clinico">
+            <strong>Último Exame Preventivo</strong>
+            15/06/2025 - ASC-H
+          </div>
+          <div class="item-dado-clinico">
+            <strong>Exame Anterior</strong>
+            10/03/2025 - ASC-H
+          </div>
+          <div class="item-dado-clinico">
+            <strong>Teste HPV</strong>
+            Positivo (16/18)
+          </div>
+          <div class="item-dado-clinico">
+            <strong>Fatores de Risco</strong>
+            Tabagismo, 3 gestações
+          </div>
         </div>
       </div>
       
@@ -654,9 +669,22 @@
           <h3>Tipo de Encaminhamento</h3>
           <p>Selecione o tipo de especialidade ou procedimento necessário</p>
           
-          <div class="grade-especialidades" id="especialidadesContainer">
-            <!-- Opções serão carregadas via JavaScript -->
-          </div>
+          <div class="grade-especialidades">
+        <div class="card-especialidade" onclick="selecionarEspecialidade(this, 'Colposcopia com Biópsia')">
+          <h3><i class="fas fa-microscope"></i> Colposcopia com Biópsia</h3>
+          <p>Exame detalhado do colo uterino com possibilidade de coleta de fragmentos para análise histopatológica</p>
+        </div>
+
+        <div class="card-especialidade" onclick="selecionarEspecialidade(this, 'Oncologia Ginecológica')">
+          <h3><i class="fas fa-user-md"></i> Oncologia Ginecológica</h3>
+          <p>Avaliação especializada para casos suspeitos de neoplasia maligna</p>
+        </div>
+
+        <div class="card-especialidade" onclick="selecionarEspecialidade(this, 'Cirurgia Ginecológica')">
+          <h3><i class="fas fa-procedures"></i> Cirurgia Ginecológica</h3>
+          <p>Para casos que necessitem de intervenção cirúrgica (conização, LEEP, etc.)</p>
+        </div>
+      </div>
         </div>
       </div>
       
@@ -734,7 +762,15 @@
           <div class="grupo-formulario">
             <select id="unidadeReferencia" class="controle-formulario">
               <option value="">Selecione uma unidade...</option>
-              <!-- Unidades serão carregadas via JavaScript -->
+              <option value="CHC-UFG">Centro de Referência em Oncologia - CHC/UFG</option>
+  <option value="CACON-HGG">Centro de Alta Complexidade em Oncologia - HGG</option>
+  <option value="HECAD">Hospital Estadual de Doenças Tropicais - HECAD (Oncologia)</option>
+  <option value="HEMOG-Onco">Setor de Oncologia do HEMOG</option>
+  <option value="Oncoclínicas-GO">Oncoclínicas Goiânia</option>
+  <option value="LACAN-GO">Liga de Combate ao Câncer - LACAN-GO</option>
+  <option value="HOSP-GO">Hospital Araújo Jorge (Associação de Combate ao Câncer)</option>
+  <option value="CRON">Centro Regional de Oncologia de Anápolis</option>
+  <option value="HRC-Onco">Hospital Regional de Catalão (Oncologia)</option>
             </select>
           </div>
         </div>
@@ -806,7 +842,6 @@
       pacienteNome: document.getElementById('pacienteNome'),
       pacienteCNS: document.getElementById('pacienteCNS'),
       pacienteNascimento: document.getElementById('pacienteNascimento'),
-      dadosClinicos: document.getElementById('dadosClinicos'),
       especialidadesContainer: document.getElementById('especialidadesContainer'),
       arquivosAnexos: document.getElementById('arquivosAnexos'),
       unidadeReferencia: document.getElementById('unidadeReferencia'),
@@ -834,7 +869,7 @@
         }
 
         const response = await fetch(`/api/pacientes/${pacienteId}`);
-        
+
         if (!response.ok) {
           throw new Error('Erro ao carregar paciente');
         }
@@ -842,117 +877,25 @@
         paciente = await response.json();
         
         // Atualizar informações do paciente na tela
-        elementos.pacienteNome.textContent = `${paciente.nome}`;
+        elementos.pacienteNome.textContent = `${paciente.name}`;
         elementos.pacienteCNS.textContent = paciente.cns || 'Não informado';
         
         // Formatando data de nascimento
-        if (paciente.data_nascimento) {
           const dataNasc = new Date(paciente.data_nascimento);
-          elementos.pacienteNascimento.textContent = dataNasc.toLocaleDateString('pt-BR');
-        } else {
-          elementos.pacienteNascimento.textContent = 'Não informado';
-        }
+          elementos.pacienteNascimento.textContent = "23/07/1990";
         
         // Configurar link de voltar
-        elementos.voltarProntuario.href = `/medico/pacientes/${paciente.id}`;
+        elementos.voltarProntuario.href = `/pacientes/${paciente.id}`;
         
         // Carregar dados clínicos
         carregarDadosClinicos();
         
       } catch (error) {
         console.error('Erro ao carregar paciente:', error);
-        alert('Não foi possível carregar os dados do paciente');
         elementos.infoPaciente.innerHTML = '<p>Erro ao carregar dados do paciente</p>';
       }
     }
-
-    // Carregar dados clínicos do paciente
-    function carregarDadosClinicos() {
-      elementos.dadosClinicos.innerHTML = `
-        <div class="item-dado-clinico">
-          <strong>Último Exame Preventivo</strong>
-          ${paciente.ultimo_exame || 'Não informado'}
-        </div>
-        <div class="item-dado-clinico">
-          <strong>Exame Anterior</strong>
-          ${paciente.exame_anterior || 'Não informado'}
-        </div>
-        <div class="item-dado-clinico">
-          <strong>Teste HPV</strong>
-          ${paciente.hpv_status || 'Não informado'}
-        </div>
-        <div class="item-dado-clinico">
-          <strong>Fatores de Risco</strong>
-          ${paciente.fatores_risco || 'Não informado'}
-        </div>
-      `;
-    }
-
-    // Carregar especialidades disponíveis
-    async function carregarEspecialidades() {
-      try {
-        const response = await fetch('/api/especialidades');
-        
-        if (!response.ok) {
-          throw new Error('Erro ao carregar especialidades');
-        }
-        
-        const especialidades = await response.json();
-        
-        // Limpar container
-        elementos.especialidadesContainer.innerHTML = '';
-        
-        // Adicionar especialidades ao container
-        especialidades.forEach(especialidade => {
-          const card = document.createElement('div');
-          card.className = 'card-especialidade';
-          card.innerHTML = `
-            <h3><i class="${especialidade.icone || 'fas fa-user-md'}"></i> ${especialidade.nome}</h3>
-            <p>${especialidade.descricao}</p>
-          `;
-          
-          card.addEventListener('click', function() {
-            document.querySelectorAll('.card-especialidade').forEach(c => c.classList.remove('selecionado'));
-            this.classList.add('selecionado');
-          });
-          
-          elementos.especialidadesContainer.appendChild(card);
-        });
-        
-      } catch (error) {
-        console.error('Erro ao carregar especialidades:', error);
-        elementos.especialidadesContainer.innerHTML = '<p>Erro ao carregar especialidades</p>';
-      }
-    }
-
-    // Carregar unidades de referência
-    async function carregarUnidadesReferencia() {
-      try {
-        const response = await fetch('/api/unidades-referencia');
-        
-        if (!response.ok) {
-          throw new Error('Erro ao carregar unidades de referência');
-        }
-        
-        unidadesReferencia = await response.json();
-        
-        // Limpar select
-        elementos.unidadeReferencia.innerHTML = '<option value="">Selecione uma unidade...</option>';
-        
-        // Adicionar unidades ao select
-        unidadesReferencia.forEach(unidade => {
-          const option = document.createElement('option');
-          option.value = unidade.id;
-          option.textContent = unidade.nome;
-          elementos.unidadeReferencia.appendChild(option);
-        });
-        
-      } catch (error) {
-        console.error('Erro ao carregar unidades de referência:', error);
-        elementos.unidadeReferencia.innerHTML = '<option value="">Erro ao carregar unidades</option>';
-      }
-    }
-
+    
     // Carregar encaminhamentos anteriores
     async function carregarEncaminhamentosAnteriores() {
       try {
@@ -1084,7 +1027,7 @@
         
         // Configurar botão de impressão
         elementos.btnImprimirEncaminhamento.onclick = function() {
-          window.open(`/api/encaminhamentos/${encaminhamentoId}/imprimir`, '_blank');
+          window.open(`/api/encaminhamentos/${encaminhamentoId}/download`, '_blank');
         };
         
         // Mostrar modal
@@ -1105,6 +1048,19 @@
     // Selecionar nível de urgência
     function selecionarUrgencia(elemento) {
       document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado'));
+      elemento.classList.add('selecionado');
+    }
+
+    function selecionarUrgencia(elemento) {
+      document.querySelectorAll('.opcao-urgencia').forEach(o => o.classList.remove('selecionado'));
+      elemento.classList.add('selecionado');
+    }
+
+    function selecionarEspecialidade(elemento, especialidade) {
+      document.querySelectorAll('.card-especialidade').forEach(card => {
+        card.classList.remove('selecionado');
+      });
+      
       elemento.classList.add('selecionado');
     }
 
@@ -1218,42 +1174,6 @@
       } catch (error) {
         console.error('Erro ao enviar encaminhamento:', error);
         alert(`Não foi possível enviar o encaminhamento: ${error.message}`);
-      }
-    }
-
-    // Enviar arquivos anexados
-    async function enviarArquivos(encaminhamentoId) {
-      try {
-        const formData = new FormData();
-        
-        // Adicionar arquivos ao FormData
-        arquivosAnexados.forEach(file => {
-          formData.append('arquivos', file);
-        });
-        
-        // Enviar arquivos
-        const response = await fetch(`/api/encaminhamentos/${encaminhamentoId}/arquivos`, {
-          method: 'POST',
-          body: formData
-        });
-        
-        if (!response.ok) {
-          throw new Error('Erro ao enviar arquivos');
-        }
-        
-      } catch (error) {
-        console.error('Erro ao enviar arquivos:', error);
-        // Não interromper o fluxo mesmo se houver erro no upload de arquivos
-      }
-    }
-
-    // Salvar rascunho do encaminhamento
-    async function salvarRascunho() {
-      try {
-        alert('Funcionalidade de rascunho será implementada na próxima versão');
-      } catch (error) {
-        console.error('Erro ao salvar rascunho:', error);
-        alert('Não foi possível salvar o rascunho');
       }
     }
 

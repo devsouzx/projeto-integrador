@@ -31,5 +31,7 @@ func InitMedicoRoutes(rg *gin.RouterGroup, medicoController medicoController.Med
 		medico.GET("/api/encaminhamentos/paciente/:pacienteId", encaminhamentoController.GetEncaminhamentosByPaciente)
 		medico.PUT("/api/encaminhamentos/update/:id", encaminhamentoController.UpdateStatus)
 		medico.POST("/api/encaminhamentos", encaminhamentoController.CreateEncaminhamento)
+
+		medico.GET("/encaminhamentos/:id/download", encaminhamentoController.DownloadEncaminhamento)
 	}
 }
