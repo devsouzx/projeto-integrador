@@ -45,8 +45,6 @@
       align-items: center;
       max-width: 1200px;
       margin: 0 auto;
-      flex-wrap: wrap;
-      gap: 1rem;
     }
     
     .logo {
@@ -57,19 +55,10 @@
     .menu-navegacao {
       display: flex;
       list-style: none;
-      overflow-x: auto;
-      padding: 0.5rem 0;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none; /* Firefox */
-    }
-    
-    .menu-navegacao::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
     }
     
     .item-navegacao {
       margin-left: 1rem;
-      flex: 0 0 auto;
     }
     
     .link-navegacao {
@@ -82,7 +71,6 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      white-space: nowrap;
     }
     
     .link-navegacao:hover, .link-navegacao.ativo {
@@ -95,7 +83,6 @@
       gap: 0.75rem;
       cursor: pointer;
       position: relative;
-      margin-left: auto;
     }
 
     .info-usuario:hover .menu-usuario {
