@@ -65,7 +65,6 @@ func (lc *laudoController) CreateLaudo(c *gin.Context) {
 	laudo.FichaID = ficha.ID
 
 	if err := lc.laudoService.CreateLaudo(&laudo); err != nil {
-		fmt.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -102,7 +101,6 @@ func (lc *laudoController) GetLaudosByMedico(c *gin.Context) {
 		page,
 		pageSize,
 	)
-	fmt.Println(err)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

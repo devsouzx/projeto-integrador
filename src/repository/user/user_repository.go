@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -35,6 +36,7 @@ type UserRepository interface {
 	FindByVerificationToken(token string) (model.UserInterface, error)
 	UpdateUser(user model.UserInterface) error
 	FindByID(id string, role string) (model.UserInterface, error)
+	FindUserEmailAndPhone(identifier string) (string, string, error)
 }
 
 func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, role string) (model.UserInterface, error) {
@@ -54,7 +56,7 @@ func (ur *userRepository) FindUserByIdentifierAndPassword(identifier, password, 
 }
 
 func (ur *userRepository) CreateRecoveryCode(identifier string, code string, expiresAt time.Time) (string, string, error) {
-	userEmail, userPhone, err := ur.findUserEmailAndPhone(identifier)
+	userEmail, userPhone, err := ur.FindUserEmailAndPhone(identifier)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return "", "", fmt.Errorf("usuário não encontrado")
@@ -127,25 +129,38 @@ func (ur *userRepository) UpdatePassword(identifier string, newPassword string) 
 	return fmt.Errorf("usuário não foi encontrado em nenhuma tabela")
 }
 
-func (ur *userRepository) findUserEmailAndPhone(identifier string) (string, string, error) {
-	cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", "")
+func (ur *userRepository) FindUserEmailAndPhone(identifier string) (string, string, error) {
+    cpfFormatado := strings.ReplaceAll(strings.ReplaceAll(identifier, ".", ""), "-", "")
 
-	tables := []string{"paciente", "medico", "enfermeiro", "agente_comunitario", "gestor"}
+    tables := []string{"paciente", "medico", "enfermeiro", "agente_comunitario", "gestor"}
 
-	for _, table := range tables {
-		var email, telefone string
-		err := ur.DB.QueryRow(fmt.Sprintf(`
-            SELECT email, telefone FROM %s WHERE email = $1 OR cpf = $2 LIMIT 1
-        `, table), identifier, cpfFormatado).Scan(&email, &telefone)
+    for _, table := range tables {
+        var email, telefone string
+        
+        if _, err := uuid.Parse(identifier); err == nil {
+            err := ur.DB.QueryRow(fmt.Sprintf(`
+                SELECT email, telefone FROM %s WHERE id = $1::uuid LIMIT 1
+            `, table), identifier).Scan(&email, &telefone)
 
-		if err == nil {
-			return email, telefone, nil
-		} else if err != sql.ErrNoRows {
-			return "", "", err
-		}
-	}
+            if err == nil {
+                return email, telefone, nil
+            } else if err != sql.ErrNoRows {
+                return "", "", err
+            }
+        } else {
+            err := ur.DB.QueryRow(fmt.Sprintf(`
+                SELECT email, telefone FROM %s WHERE email = $1 OR cpf = $2 LIMIT 1
+            `, table), identifier, cpfFormatado).Scan(&email, &telefone)
+            
+            if err == nil {
+                return email, telefone, nil
+            } else if err != sql.ErrNoRows {
+                return "", "", err
+            }
+        }
+    }
 
-	return "", "", sql.ErrNoRows
+    return "", "", sql.ErrNoRows
 }
 
 func (ur *userRepository) FindUserByIdentifier(identifier string, role string) (model.UserInterface, error) {

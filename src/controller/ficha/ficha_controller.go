@@ -3,7 +3,6 @@ package ficha
 import (
 	fichaService "github.com/devsouzx/projeto-integrador/src/service/ficha"
 	"github.com/gin-gonic/gin"
-	"fmt"
 	"net/http"
 
 	"github.com/devsouzx/projeto-integrador/src/model"
@@ -26,7 +25,6 @@ func (fc *fichaController) Create(c *gin.Context) {
 	var request request.FichaRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
-		fmt.Printf("Error binding JSON: %v\n", err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":   err.Error(),
 			"details": err.Error(),
@@ -56,7 +54,6 @@ func (fc *fichaController) Create(c *gin.Context) {
 	request.Ficha.ResponsavelID = medico.(model.BaseUser).ID
 	createdFicha, err := fc.service.CreateFicha(&request)
 	if err != nil {
-		fmt.Printf("Error creating ficha: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error":   err.Error(),
 			"details": err.Error(),

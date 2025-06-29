@@ -206,8 +206,7 @@ func (r *laudoRepository) FindByIDWithRelations(id string) (*model.Laudo, error)
 		}
 		return nil, err
 	}
-
-	// Preencher relacionamentos se existirem
+	
 	if pacienteNome.Valid {
 		laudo.Paciente = &model.Paciente{
 			BaseUser: model.BaseUser{

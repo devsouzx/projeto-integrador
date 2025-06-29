@@ -73,8 +73,9 @@ func InitContainer(db *sql.DB) *Container {
 	enfermeiroService := enfermeiroService.NewEnfermeiroService(enfermeiroRepository)
 	notificationsService := notifications.NewNotificationService(smsService)
 	laudoService := laudoService.NewLaudoService(laudoRepository)
-	agendamentoService := agendamentoService.NewAgendamentoService(agendamentoRepo)
 	gestorService := gestorService.NewGestorService(gestorRepository)
+	encaminhamentoService := encaminhamentoService.NewEncaminhamentoService(encaminhamentoRepository)
+	agenteService := agenteService.NewAgenteService(agenteRepository)
 	userService := userService.NewUserDomainService(
 		userRepository,
 		emailService,
@@ -87,8 +88,12 @@ func InitContainer(db *sql.DB) *Container {
 		pacienteRepository,
 		*notificationsService,
 	)
-	encaminhamentoService := encaminhamentoService.NewEncaminhamentoService(encaminhamentoRepository)
-	agenteService := agenteService.NewAgenteService(agenteRepository)
+	agendamentoService := agendamentoService.NewAgendamentoService(
+		agendamentoRepo, 
+		userService,
+		smsService,
+		emailService,
+	)
 
 	// Inicializa Controllers
 	unidadeController := unidadeController.NewUnidadeController(unidadeService)

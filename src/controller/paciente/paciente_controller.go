@@ -1,7 +1,6 @@
 package paciente
 
 import (
-	"fmt"
 	"math"
 	"net/http"
 	"strconv"
@@ -260,13 +259,11 @@ func (pc *pacienteController) CreateAgendamento(c *gin.Context) {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
         return
     }
-	fmt.Println("Dados do agendamento:", paciente, paciente.(model.BaseUser).Name)
-fmt.Println(paciente.(model.BaseUser).ID,  "ID do paciente")
+	
     agendamento.PacienteID = paciente.(model.BaseUser).ID
     agendamento.Status = "pendente"
 
     if err := pc.agendamentoService.CreateAgendamento(&agendamento); err != nil {
-		fmt.Printf("Erro ao criar agendamento: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

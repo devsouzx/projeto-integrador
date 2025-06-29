@@ -44,7 +44,6 @@ func (r *agendamentoRepository) Create(agendamento *model.Agendamento) error {
 	if err != nil {
 		return fmt.Errorf("erro ao criar agendamento: %w", err)
 	}
-	fmt.Println(err)
 	
 	return nil
 }
@@ -138,7 +137,6 @@ func (r *agendamentoRepository) FindByProfissionalAndDate(profissionalID, profis
 	`
 
 	rows, err := r.DB.Query(query, date)
-	fmt.Println(err)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao buscar agendamentos: %w", err)
 	}
@@ -159,7 +157,7 @@ func (r *agendamentoRepository) FindByProfissionalAndDate(profissionalID, profis
 			&agendamento.PacienteNome,
 			&agendamento.PacienteCNS,
 		)
-		fmt.Println(err)
+		
 		if err != nil {
 			return nil, fmt.Errorf("erro ao ler agendamento: %w", err)
 		}

@@ -1,7 +1,6 @@
 package enfermeiro
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -25,8 +24,8 @@ func NewEnfermeiroController(
 }
 
 type enfermeiroController struct {
-	enfermeiroService enfermeiro.EnfermeiroServiceInterface
-	cnesService       datasus.CNESService
+	enfermeiroService  enfermeiro.EnfermeiroServiceInterface
+	cnesService        datasus.CNESService
 	agendamentoService agendamento.AgendamentoServiceInterface
 }
 
@@ -173,24 +172,23 @@ func (mc *enfermeiroController) RenderRelatoriosPage(c *gin.Context) {
 }
 
 func (ec *enfermeiroController) CreateAgendamento(c *gin.Context) {
-    enfermeiro, ok := ec.getEnfermeiroLogado(c)
-    if !ok {
-        c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
-        return
-    }
+	enfermeiro, ok := ec.getEnfermeiroLogado(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
+		return
+	}
 
-    var agendamento model.Agendamento
-    if err := c.ShouldBindJSON(&agendamento); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
-        return
-    }
+	var agendamento model.Agendamento
+	if err := c.ShouldBindJSON(&agendamento); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
+		return
+	}
 
 	agendamento.ProfissionalID = enfermeiro.ID
 	agendamento.ProfissionalTipo = "enfermeiro"
 	agendamento.Status = "pendente"
 
 	if err := ec.agendamentoService.CreateAgendamento(&agendamento); err != nil {
-		fmt.Printf("Erro ao criar agendamento: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -206,33 +204,26 @@ func (ec *enfermeiroController) GetAgendamentos(c *gin.Context) {
 	}
 
 	dateStr := c.Query("date")
-	var date time.Time
-	var err error
 
-	if dateStr != "" {
-		date, err = time.Parse("2006-01-02", dateStr)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de data inválido. Use YYYY-MM-DD"})
-			return
-		}
-	} else {
-		date = time.Now()
-	}
+	loc, _ := time.LoadLocation("America/Sao_Paulo")
+	dataLocal, _ := time.ParseInLocation("2006-01-02", dateStr, loc)
+	
+	dataUTC := time.Date(dataLocal.Year(), dataLocal.Month(), dataLocal.Day(), 0, 0, 0, 0, time.UTC)
 
-	agendamentos, err := ec.agendamentoService.ListAgendamentosByDate(enfermeiro.ID, "enfermeiro", date)
+	agendamentos, err := ec.agendamentoService.ListAgendamentosByDate(enfermeiro.ID, "enfermeiro", dataUTC)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar agendamentos"})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data":        date.Format("02/01/2006"),
+		"data":         dataLocal.Format("02/01/2006"),
 		"agendamentos": agendamentos,
 	})
 }
 
 func (ec *enfermeiroController) UpdateAgendamentoStatus(c *gin.Context) {
-	enfermeiro, ok := ec.getEnfermeiroLogado(c)
+	_, ok := ec.getEnfermeiroLogado(c)
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
 		return
@@ -247,15 +238,10 @@ func (ec *enfermeiroController) UpdateAgendamentoStatus(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Status inválido"})
 		return
 	}
-	
-	agendamento, err := ec.agendamentoService.GetAgendamentoByID(id)
+
+	_, err := ec.agendamentoService.GetAgendamentoByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Agendamento não encontrado"})
-		return
-	}
-
-	if agendamento.ProfissionalID != enfermeiro.ID || agendamento.ProfissionalTipo != "enfermeiro" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Você não tem permissão para alterar este agendamento"})
 		return
 	}
 

@@ -49,6 +49,7 @@ type UserDomainService interface {
 	CadastrarUsuario(req request.CadastroRequest) (*model.Paciente, error)
 	VerifyUserToken(token string) (model.UserInterface, error)
 	UpdateUser(user model.UserInterface) error
+	FindUserEmailAndPhone(identifier string) (string, string, error)
 }
 
 func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest) (model.UserInterface, string, error) {
@@ -61,8 +62,7 @@ func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest)
 	if err != nil {
 		return nil, "", err
 	}
-
-	fmt.Println(user, "User do login")
+	
 	token, err := user.GenerateToken()
 	if err != nil {
 		return nil, "", err
@@ -264,4 +264,17 @@ func (us *userDomainService) UpdateUser(user model.UserInterface) error {
 	userExistente.SetTokenExpiresAt(user.GetTokenExpiresAt())
 
 	return us.userRepository.UpdateUser(userExistente)
+}
+
+func (us *userDomainService) FindUserEmailAndPhone(identifier string) (string, string, error) {
+	userEmail, userPhone, err := us.userRepository.FindUserEmailAndPhone(identifier)
+	if err != nil {
+		return "", "", fmt.Errorf("erro ao buscar e-mail e telefone do usuário: %w", err)
+	}
+
+	if userEmail == "" && userPhone == "" {
+		return "", "", fmt.Errorf("usuário não encontrado")
+	}
+
+	return userEmail, userPhone, nil
 }

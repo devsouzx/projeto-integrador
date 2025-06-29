@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -14,6 +15,20 @@ import (
 )
 
 func main() {
+	loc, _ := time.LoadLocation("America/Sao_Paulo")
+
+// Simule uma entrada, por exemplo do formulário
+entrada := "2025-07-12 14:00"
+
+// Parse já no fuso correto
+t, err := time.ParseInLocation("2006-01-02 15:04", entrada, loc)
+if err != nil {
+	fmt.Println("Erro ao converter:", err)
+	return
+}
+
+fmt.Println("Data final:", t)             // 2025-07-12 14:00 -03:00
+fmt.Println("Em UTC:", t.UTC())  
 	router := gin.Default()
 	router.SetFuncMap(template.FuncMap{
 		"formatDate": func(dateString string) (string, error) {

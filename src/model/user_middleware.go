@@ -2,7 +2,6 @@ package model
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -47,7 +46,6 @@ func VerifyTokenMiddleware(c *gin.Context) {
 		Role:     claims["role"].(string),
 		Verified: claims["verified"].(bool),
 	}
-	fmt.Println("User from token:", user)
 
 	if user.Role == "paciente" && !user.Verified {
 		c.Redirect(http.StatusFound, "/login")
