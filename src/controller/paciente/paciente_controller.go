@@ -1,25 +1,31 @@
 package paciente
 
 import (
+	"fmt"
 	"math"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/devsouzx/projeto-integrador/src/model"
+	"github.com/devsouzx/projeto-integrador/src/service/agendamento"
 	"github.com/devsouzx/projeto-integrador/src/service/paciente"
 	"github.com/gin-gonic/gin"
 )
 
 func NewPacienteController(
 	pacienteService paciente.PacienteService,
+	agendamentoService agendamento.AgendamentoServiceInterface,
 ) PacienteControllerInterface {
 	return &pacienteController{
-		pacienteService: pacienteService,
+		pacienteService:   pacienteService,
+		agendamentoService: agendamentoService,
 	}
 }
 
 type pacienteController struct {
 	pacienteService paciente.PacienteService
+	agendamentoService agendamento.AgendamentoServiceInterface
 }
 
 type PacienteControllerInterface interface {
@@ -33,6 +39,8 @@ type PacienteControllerInterface interface {
 	RenderLocalizarUBS(c *gin.Context)
 	RenderNotificacoes(c *gin.Context)
 	RenderOrientacoes(c *gin.Context)
+
+	CreateAgendamento(c *gin.Context)
 }
 
 func (pc *pacienteController) BuscarPacientePorCPF(c *gin.Context) {
@@ -54,6 +62,7 @@ func (pc *pacienteController) BuscarPacientePorCPF(c *gin.Context) {
 	}
 
 	response := gin.H{
+		"ID":             paciente.ID,
 		"Name":           paciente.Name,
 		"Apelido":        paciente.Apelido,
 		"NomeMae":        paciente.NomeMae,
@@ -237,4 +246,30 @@ func (pc *pacienteController) RenderOrientacoes(c *gin.Context) {
 	c.HTML(http.StatusOK, "orientacoes-paciente.html", gin.H{
 		"Paciente": paciente,
 	})
+}
+
+func (pc *pacienteController) CreateAgendamento(c *gin.Context) {
+    paciente, exists := c.Get("user")
+	if !exists {
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+    var agendamento model.Agendamento
+    if err := c.ShouldBindJSON(&agendamento); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
+        return
+    }
+	fmt.Println("Dados do agendamento:", paciente, paciente.(model.BaseUser).Name)
+fmt.Println(paciente.(model.BaseUser).ID,  "ID do paciente")
+    agendamento.PacienteID = paciente.(model.BaseUser).ID
+    agendamento.Status = "pendente"
+
+    if err := pc.agendamentoService.CreateAgendamento(&agendamento); err != nil {
+		fmt.Printf("Erro ao criar agendamento: %v\n", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, agendamento)
 }

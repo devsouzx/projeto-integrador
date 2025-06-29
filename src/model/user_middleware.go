@@ -47,6 +47,7 @@ func VerifyTokenMiddleware(c *gin.Context) {
 		Role:     claims["role"].(string),
 		Verified: claims["verified"].(bool),
 	}
+	fmt.Println("User from token:", user)
 
 	if user.Role == "paciente" && !user.Verified {
 		c.Redirect(http.StatusFound, "/login")
@@ -69,7 +70,7 @@ func AuthorizeRole(allowedRoles ...string) gin.HandlerFunc {
 		role := user.(BaseUser).Role
 		for _, allowed := range allowedRoles {
 			if role == allowed {
-				fmt.Println("User role is allowed:", role)
+				c.Next()
 				return
 			}
 		}

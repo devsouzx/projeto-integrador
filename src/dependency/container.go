@@ -92,7 +92,7 @@ func InitContainer(db *sql.DB) *Container {
 
 	// Inicializa Controllers
 	unidadeController := unidadeController.NewUnidadeController(unidadeService)
-	pacienteController := pacienteController.NewPacienteController(pacienteService)
+	pacienteController := pacienteController.NewPacienteController(pacienteService, agendamentoService)
 	fichaController := fichaController.NewFichaController(fichaService)
 	gestorController := gestorController.NewGestorController(gestorService)
 	agenteController := agenteController.NewAgenteController(agenteService)

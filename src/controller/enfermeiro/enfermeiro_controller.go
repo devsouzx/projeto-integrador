@@ -1,6 +1,7 @@
 package enfermeiro
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -172,23 +173,24 @@ func (mc *enfermeiroController) RenderRelatoriosPage(c *gin.Context) {
 }
 
 func (ec *enfermeiroController) CreateAgendamento(c *gin.Context) {
-	enfermeiro, ok := ec.getEnfermeiroLogado(c)
-	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
-		return
-	}
+    enfermeiro, ok := ec.getEnfermeiroLogado(c)
+    if !ok {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
+        return
+    }
 
-	var agendamento model.Agendamento
-	if err := c.ShouldBindJSON(&agendamento); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
-		return
-	}
+    var agendamento model.Agendamento
+    if err := c.ShouldBindJSON(&agendamento); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
+        return
+    }
 
 	agendamento.ProfissionalID = enfermeiro.ID
 	agendamento.ProfissionalTipo = "enfermeiro"
 	agendamento.Status = "pendente"
 
 	if err := ec.agendamentoService.CreateAgendamento(&agendamento); err != nil {
+		fmt.Printf("Erro ao criar agendamento: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

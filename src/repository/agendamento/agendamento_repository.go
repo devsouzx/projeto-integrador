@@ -27,16 +27,14 @@ func NewAgendamentoRepository(db *sql.DB) AgendamentoRepositoryInterface {
 
 func (r *agendamentoRepository) Create(agendamento *model.Agendamento) error {
 	query := `
-		INSERT INTO agendamento (paciente_id, profissional_id, profissional_tipo, data_hora, tipo_consulta, status, observacoes)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		INSERT INTO agendamento (paciente_id, data_hora, tipo_consulta, status, observacoes)
+		VALUES ($1, $2, $3, $4, $5)
 		RETURNING id, created_at, updated_at
 	`
 	
 	err := r.DB.QueryRow(
 		query,
 		agendamento.PacienteID,
-		agendamento.ProfissionalID,
-		agendamento.ProfissionalTipo,
 		agendamento.DataHora,
 		agendamento.TipoConsulta,
 		agendamento.Status,
@@ -46,13 +44,14 @@ func (r *agendamentoRepository) Create(agendamento *model.Agendamento) error {
 	if err != nil {
 		return fmt.Errorf("erro ao criar agendamento: %w", err)
 	}
+	fmt.Println(err)
 	
 	return nil
 }
 
 func (r *agendamentoRepository) FindByID(id string) (*model.Agendamento, error) {
 	query := `
-		SELECT a.id, a.paciente_id, a.profissional_id, a.profissional_tipo, a.data_hora, 
+		SELECT a.id, a.paciente_id, a.data_hora, 
 		       a.tipo_consulta, a.status, a.observacoes, a.created_at, a.updated_at,
 		       p.nome as paciente_nome, p.cns as paciente_cns
 		FROM agendamento a
@@ -64,8 +63,6 @@ func (r *agendamentoRepository) FindByID(id string) (*model.Agendamento, error) 
 	err := r.DB.QueryRow(query, id).Scan(
 		&agendamento.ID,
 		&agendamento.PacienteID,
-		&agendamento.ProfissionalID,
-		&agendamento.ProfissionalTipo,
 		&agendamento.DataHora,
 		&agendamento.TipoConsulta,
 		&agendamento.Status,
@@ -131,17 +128,16 @@ func (r *agendamentoRepository) FindByProfissional(profissionalID, profissionalT
 
 func (r *agendamentoRepository) FindByProfissionalAndDate(profissionalID, profissionalTipo string, date time.Time) ([]*model.Agendamento, error) {
 	query := `
-		SELECT a.id, a.paciente_id, a.profissional_id, a.profissional_tipo, a.data_hora, 
+		SELECT a.id, a.paciente_id, a.data_hora, 
 		       a.tipo_consulta, a.status, a.observacoes, a.created_at, a.updated_at,
 		       p.nome as paciente_nome, p.cns as paciente_cns
 		FROM agendamento a
 		JOIN paciente p ON a.paciente_id = p.id
-		WHERE a.profissional_id = $1 AND a.profissional_tipo = $2 
-		      AND DATE(a.data_hora) = DATE($3)
+		WHERE DATE(a.data_hora) = DATE($1)
 		ORDER BY a.data_hora ASC
 	`
-	
-	rows, err := r.DB.Query(query, profissionalID, profissionalTipo, date)
+
+	rows, err := r.DB.Query(query, date)
 	fmt.Println(err)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao buscar agendamentos: %w", err)
@@ -154,8 +150,6 @@ func (r *agendamentoRepository) FindByProfissionalAndDate(profissionalID, profis
 		err := rows.Scan(
 			&agendamento.ID,
 			&agendamento.PacienteID,
-			&agendamento.ProfissionalID,
-			&agendamento.ProfissionalTipo,
 			&agendamento.DataHora,
 			&agendamento.TipoConsulta,
 			&agendamento.Status,

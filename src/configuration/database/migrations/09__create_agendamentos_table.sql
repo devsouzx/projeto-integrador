@@ -5,8 +5,8 @@ DROP TABLE IF EXISTS agendamento CASCADE;
 CREATE TABLE agendamento (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     paciente_id UUID NOT NULL REFERENCES paciente(id),
-    profissional_id UUID NOT NULL,
-    profissional_tipo VARCHAR(20) NOT NULL,
+    profissional_id UUID,
+    profissional_tipo VARCHAR(20),
     data_hora TIMESTAMP NOT NULL,
     tipo_consulta VARCHAR(50) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pendente',

@@ -16,5 +16,7 @@ func InitPacienteRoutes(rg *gin.RouterGroup, pacienteController pacienteControll
 		paciente.GET("/localizar_ubs", pacienteController.RenderLocalizarUBS)
 		paciente.GET("/notificacoes", pacienteController.RenderNotificacoes)
 		paciente.GET("/orientacoes", pacienteController.RenderOrientacoes)
+
+		paciente.POST("/agendamentos", pacienteController.CreateAgendamento)
 	}
 }

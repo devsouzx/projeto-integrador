@@ -62,6 +62,7 @@ func (ud *userDomainService) LoginUserService(loginRequest request.LoginRequest)
 		return nil, "", err
 	}
 
+	fmt.Println(user, "User do login")
 	token, err := user.GenerateToken()
 	if err != nil {
 		return nil, "", err

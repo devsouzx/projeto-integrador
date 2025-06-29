@@ -77,7 +77,7 @@ func (uc *userController) LoginUser(c *gin.Context) {
 		})
 		return
 	}
-
+	
 	response := response.LoginResponse{
 		Message: "Login realizado com sucesso",
 		Token:   token,

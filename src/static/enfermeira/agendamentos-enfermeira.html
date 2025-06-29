@@ -3,26 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agendamentos - Sistema de Saúde</title>
+  <title>Agendamentos - Área do Enfermeiro</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
       --primaria: #9b59b6;
       --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --sucesso: #2ecc71;
+      --info: #3498db;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
+      font-family: "Inter", sans-serif;
     }
-    
+
     body {
       background: rgba(214, 174, 241, 0.15);
-      color: #333333;
+      color: var(--cinza-escuro);
     }
-    
+
     .navegacao-superior {
       background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
@@ -71,7 +79,7 @@
       background-color: rgba(255,255,255,0.2);
     }
     
-     .info-usuario {
+    .info-usuario {
       display: flex;
       align-items: center;
       gap: 0.75rem;
@@ -122,13 +130,13 @@
       border: 2px solid white;
       background-color: #f0e5f5;
     }
-    
+
     .conteudo-principal {
       max-width: 1200px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
-    
+
     .cabecalho {
       display: flex;
       justify-content: space-between;
@@ -137,122 +145,12 @@
       flex-wrap: wrap;
       gap: 1rem;
     }
-    
+
     .titulo-pagina {
       font-size: 1.75rem;
       color: var(--primaria);
     }
-    
-    .sino-notificacao {
-      position: relative;
-      font-size: 1.25rem;
-      color: var(--primaria);
-    }
-    
-    .badge-notificacao {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background-color: #f8d7da;
-      color: white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 0.7rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .grade-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .card {
-      background-color: white;
-      border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    .cabecalho-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    
-    .titulo-card {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-    
-    .icone-card {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-    
-    .icone-primaria {
-      background-color: var(--primaria);
-    }
-    
-    .icone-secundaria {
-      background-color: var(--secundaria);
-    }
-    
-    .icone-alerta {
-      background-color: #fff3cd;
-    }
-    
-    .lista-exames {
-      list-style: none;
-    }
-    
-    .item-exame {
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #e0e0e0;
-    }
-    
-    .item-exame:ultimo {
-      border-bottom: none;
-    }
-    
-    .data-exame {
-      font-size: 0.85rem;
-      color: #666;
-    }
-    
-    .status-exame {
-      display: inline-block;
-      padding: 0.25rem 0.5rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 500;
-    }
-    
-    .status-pendente {
-      background-color: #fff3cd;
-      color: #856404;
-    }
-    
-    .status-concluido {
-      background-color: #d4edda;
-      color: #155724;
-    }
-    
-    .status-perigo {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-    
+
     .botao {
       display: inline-block;
       padding: 0.75rem 1.5rem;
@@ -263,56 +161,52 @@
       border: none;
       transition: all 0.3s;
     }
-    
-    .botao-primaria {
+
+    .botao-primario {
       background-color: var(--primaria);
       color: white;
     }
-    
-    .botao-primaria:hover {
+
+    .botao-primario:hover {
       background-color: #7d3c98;
       transform: translateY(-2px);
     }
-    
-    .botao-bloco {
-      display: block;
-      width: 100%;
-      text-align: center;
-    }
-    
-    .secao-informacao {
+
+    .botao-secundario {
       background-color: white;
-      border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    .grade-informacao {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    
-    .card-informacao {
-      background-color: #f8f9fa;
-      padding: 1rem;
-      border-radius: 6px;
-    }
-    
-    .card-informacao h3 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
       color: var(--primaria);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      border: 1px solid var(--primaria);
     }
-    
-    .card-informacao p {
-      font-size: 0.9rem;
+
+    .botao-secundario:hover {
+      background-color: #f0f7ff;
     }
-    
+
+    .botao-pequeno {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .botao-sucesso {
+      background-color: var(--sucesso);
+      color: white;
+    }
+
+    .botao-aviso {
+      background-color: var(--aviso);
+      color: white;
+    }
+
+    .botao-perigo {
+      background-color: var(--perigo);
+      color: white;
+    }
+
+    .botao-info {
+      background-color: var(--info);
+      color: white;
+    }
+
     .container-calendario {
       background-color: white;
       border-radius: 10px;
@@ -328,12 +222,18 @@
       margin-bottom: 1rem;
     }
 
+    .navegacao-calendario {
+      display: flex;
+      gap: 0.5rem;
+    }
+
     .navegacao-calendario button {
       background: none;
       border: none;
       cursor: pointer;
       padding: 0.5rem;
       color: var(--primaria);
+      font-size: 1rem;
     }
 
     .grade-calendario {
@@ -347,14 +247,43 @@
       text-align: center;
       border-radius: 6px;
       background-color: #f8f9fa;
+      cursor: pointer;
+      transition: all 0.3s;
     }
 
     .dia-calendario.cabecalho {
       background-color: var(--primaria);
       color: white;
       font-weight: 500;
+      cursor: default;
     }
-    
+
+    .dia-calendario.selecionado {
+      background-color: var(--primaria);
+      color: white;
+      font-weight: bold;
+    }
+
+    .dia-calendario.com-agendamento::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      background-color: var(--primaria);
+      border-radius: 50%;
+    }
+
+    .dia-calendario.com-agendamento.selecionado::after {
+      background-color: white;
+    }
+
+    .dia-calendario.outro-mes {
+      color: #ccc;
+    }
+
     .lista-agendamentos {
       background-color: white;
       border-radius: 10px;
@@ -364,10 +293,24 @@
 
     .item-agendamento {
       padding: 1rem;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid var(--cinza-medio);
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .info-agendamento {
+      flex: 1;
+    }
+
+    .nome-paciente {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .detalhes-agendamento {
+      font-size: 0.9rem;
+      color: #666;
     }
 
     .acoes-agendamento {
@@ -376,21 +319,33 @@
     }
 
     .badge {
+      display: inline-block;
       padding: 0.25rem 0.5rem;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 500;
     }
 
-    .badge-sucesso {
+    .badge-pendente {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .badge-confirmado {
       background-color: #d4edda;
       color: #155724;
     }
 
-    .badge-alerta {
-      background-color: #fff3cd;
-      color: #856404;
+    .badge-cancelado {
+      background-color: #f8d7da;
+      color: #721c24;
     }
-    
+
+    .badge-concluido {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+
     .modal {
       display: none;
       position: fixed;
@@ -430,24 +385,99 @@
       margin-bottom: 1rem;
     }
 
+    .rotulo-formulario {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
     .controle-formulario {
       width: 100%;
-      padding: 0.5rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--cinza-medio);
       border-radius: 6px;
-      border: 1px solid #ccc;
       font-size: 1rem;
     }
 
-    .linha-formulario {
-      display: flex;
-      gap: 1rem;
+    .controle-formulario:focus {
+      outline: none;
+      border-color: var(--primaria);
+      box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.1);
     }
 
-    .linha-formulario .grupo-formulario {
-      flex: 1;
+    .selecao-paciente {
+      position: relative;
     }
 
-    /* Responsividade */
+    .lista-pacientes {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 0 0 6px 6px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+
+    .lista-pacientes.mostrar {
+      display: block;
+    }
+
+    .item-paciente {
+      padding: 0.75rem;
+      cursor: pointer;
+      border-bottom: 1px solid var(--cinza-medio);
+    }
+
+    .item-paciente:hover {
+      background-color: var(--cinza-claro);
+    }
+
+    .nome-paciente-lista {
+      font-weight: 600;
+    }
+
+    .cns-paciente {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .carregando {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .mensagem {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .mensagem-sucesso {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .mensagem-erro {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
     @media (max-width: 768px) {
       .navegacao-superior {
         padding: 0.75rem 1rem;
@@ -467,7 +497,6 @@
         width: 100%;
         overflow-x: auto;
         padding-bottom: 0.5rem;
-        scrollbar-width: thin;
       }
 
       .item-navegacao {
@@ -478,169 +507,31 @@
       .info-usuario {
         margin-left: auto;
       }
-      
-      .grade-cards {
-        grid-template-columns: 1fr;
-      }
-      
+
       .conteudo-principal {
-        padding: 0 1rem;
+        padding: 1rem;
       }
-      
-      .cabecalho {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .grade-calendario {
-        grid-template-columns: repeat(7, minmax(30px, 1fr));
-      }
-      
-      .dia-calendario {
-        padding: 0.5rem;
-        font-size: 0.8rem;
-      }
-      
+
       .item-agendamento {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
       }
-      
+
       .acoes-agendamento {
         align-self: flex-end;
       }
-    }
 
-    @media (max-width: 480px) {
-      .linha-formulario {
-        flex-direction: column;
-        gap: 0;
+      .grade-calendario {
+        grid-template-columns: repeat(7, minmax(30px, 1fr));
       }
-      
-      .conteudo-modal {
-        margin: 20% auto;
-        padding: 1.5rem;
-      }
-    }
 
-    .botao-secundaria {
-      background-color: var(--secundaria);
-      color: white;
-    }
-    
-    .botao-secundaria:hover {
-      background-color: #7d3c98;
-      transform: translateY(-2px);
-    }
-    
-    .botao-perigo {
-      background-color: #dc3545;
-      color: white;
-    }
-    
-    .botao-perigo:hover {
-      background-color: #c82333;
-      transform: translateY(-2px);
-    }
-    
-    .botao-pequeno {
-      padding: 0.5rem 1rem;
-      font-size: 0.85rem;
-    }
-    
-    .badge-perigo {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-    
-    .badge-info {
-      background-color: #d1ecf1;
-      color: #0c5460;
-    }
-    
-    .selecao-paciente {
-      position: relative;
-    }
-    
-    .lista-pacientes {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 0 0 6px 6px;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 100;
-      display: none;
-    }
-    
-    .lista-pacientes.mostrar {
-      display: block;
-    }
-    
-    .item-paciente {
-      padding: 0.5rem;
-      cursor: pointer;
-    }
-    
-    .item-paciente:hover {
-      background-color: #f5f5f5;
-    }
-    
-    .dia-calendario.selecionado {
-      background-color: var(--primaria);
-      color: white;
-      font-weight: bold;
-    }
-    
-    .dia-calendario.com-agendamento {
-      background-color: #e8f4f8;
-      position: relative;
-    }
-    
-    .dia-calendario.com-agendamento::after {
-      content: '';
-      position: absolute;
-      bottom: 5px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 6px;
-      height: 6px;
-      background-color: var(--primaria);
-      border-radius: 50%;
-    }
-    
-    .horario-disponivel {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-      border: 1px solid #c8e6c9;
-    }
-    
-    .horario-indisponivel {
-      background-color: #ffebee;
-      color: #c62828;
-      border: 1px solid #ffcdd2;
-      cursor: not-allowed;
-    }
-    
-    .carregando {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+      .dia-calendario {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+      }
     }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
   <nav class="navegacao-superior">
@@ -671,7 +562,7 @@
   <main class="conteudo-principal">
     <div class="cabecalho">
       <h1 class="titulo-pagina">Gestão de Agendamentos</h1>
-      <button class="botao botao-primaria" onclick="abrirModalNovoAgendamento()">
+      <button class="botao botao-primario" id="btnNovoAgendamento">
         <i class="fas fa-plus"></i> Novo Agendamento
       </button>
     </div>
@@ -698,21 +589,25 @@
     </div>
   </main>
   
+  <!-- Modal para novo agendamento -->
   <div class="modal" id="modalAgendamento">
     <div class="conteudo-modal">
       <span class="fechar">&times;</span>
       <h2>Novo Agendamento</h2>
+      
+      <div id="mensagemModal" class="mensagem" style="display: none;"></div>
+      
       <form id="formularioAgendamento">
         <div class="grupo-formulario selecao-paciente">
-          <label>Paciente</label>
-          <input type="text" id="inputPaciente" class="controle-formulario" required placeholder="Digite o nome ou CNS do paciente">
+          <label class="rotulo-formulario">Paciente</label>
+          <input type="text" id="inputPaciente" class="controle-formulario" placeholder="Digite o nome ou CPF do paciente" required>
           <div class="lista-pacientes" id="listaPacientes"></div>
         </div>
         
         <input type="hidden" id="pacienteId">
         
         <div class="grupo-formulario">
-          <label>Tipo de Consulta</label>
+          <label class="rotulo-formulario">Tipo de Consulta</label>
           <select id="tipoConsulta" class="controle-formulario" required>
             <option value="">Selecione...</option>
             <option value="Preventivo">Preventivo</option>
@@ -724,26 +619,25 @@
           </select>
         </div>
         
-        <div class="linha-formulario">
-          <div class="grupo-formulario">
-            <label>Data</label>
-            <input type="date" id="dataAgendamento" class="controle-formulario" required>
-          </div>
-          <div class="grupo-formulario">
-            <label>Horário</label>
-            <select id="horarioAgendamento" class="controle-formulario" required>
-              <option value="">Selecione...</option>
-              <!-- Horários serão preenchidos via JavaScript -->
-            </select>
-          </div>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Data</label>
+          <input type="date" id="dataAgendamento" class="controle-formulario" required>
+        </div>
+        
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Horário</label>
+          <select id="horarioAgendamento" class="controle-formulario" required>
+            <option value="">Selecione...</option>
+            <!-- Horários serão preenchidos via JavaScript -->
+          </select>
         </div>
 
         <div class="grupo-formulario">
-          <label>Observações</label>
+          <label class="rotulo-formulario">Observações</label>
           <textarea id="observacoes" class="controle-formulario" rows="3"></textarea>
         </div>
 
-        <button type="submit" class="botao botao-primaria" id="btnAgendar">
+        <button type="submit" class="botao botao-primario" id="btnAgendar">
           <span id="textoBtnAgendar">Agendar</span>
           <span id="carregandoBtnAgendar" class="carregando" style="display: none;"></span>
         </button>
@@ -751,67 +645,85 @@
     </div>
   </div>
 
+  <!-- Modal para confirmação de ações -->
   <div class="modal" id="modalConfirmacao">
     <div class="conteudo-modal">
       <span class="fechar">&times;</span>
       <h2 id="tituloModalConfirmacao">Confirmar Ação</h2>
       <p id="mensagemModalConfirmacao">Tem certeza que deseja realizar esta ação?</p>
+      
+      <div id="mensagemConfirmacao" class="mensagem" style="display: none; margin-bottom: 1rem;"></div>
+      
       <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-        <button class="botao botao-secundaria" id="btnConfirmarAcao">Confirmar</button>
-        <button class="botao botao-perigo" onclick="fecharModalConfirmacao()">Cancelar</button>
+        <button class="botao" id="btnConfirmarAcao">Confirmar</button>
+        <button class="botao botao-secundario" onclick="fecharModalConfirmacao()">Cancelar</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Variáveis globais
-    let dataAtual = new Date();
-    let agendamentos = [];
-    let pacienteSelecionado = null;
-    let agendamentoParaAcao = null;
-    
-    // Elementos do DOM
-    const mesAnoCalendario = document.getElementById('mesAnoCalendario');
-    const gradeCalendario = document.getElementById('gradeCalendario');
-    const tituloAgendamentosDia = document.getElementById('tituloAgendamentosDia');
-    const dataAtualSpan = document.getElementById('dataAtual');
-    const listaAgendamentos = document.getElementById('listaAgendamentos');
-    const modalAgendamento = document.getElementById('modalAgendamento');
-    const modalConfirmacao = document.getElementById('modalConfirmacao');
-    const formularioAgendamento = document.getElementById('formularioAgendamento');
-    const inputPaciente = document.getElementById('inputPaciente');
-    const listaPacientes = document.getElementById('listaPacientes');
-    const pacienteId = document.getElementById('pacienteId');
-    const tipoConsulta = document.getElementById('tipoConsulta');
-    const dataAgendamento = document.getElementById('dataAgendamento');
-    const horarioAgendamento = document.getElementById('horarioAgendamento');
-    const observacoes = document.getElementById('observacoes');
-    const btnAgendar = document.getElementById('btnAgendar');
-    const textoBtnAgendar = document.getElementById('textoBtnAgendar');
-    const carregandoBtnAgendar = document.getElementById('carregandoBtnAgendar');
-    const btnMesAnterior = document.getElementById('btnMesAnterior');
-    const btnMesSeguinte = document.getElementById('btnMesSeguinte');
-    const btnConfirmarAcao = document.getElementById('btnConfirmarAcao');
-    
-    // Funções para manipulação de datas
+    // Estado da aplicação
+    const estado = {
+      dataSelecionada: new Date(),
+      agendamentos: [],
+      agendamentoParaAcao: null,
+      acaoAtual: null,
+      pacienteSelecionado: null
+    };
+
+    // Elementos DOM
+    const elementos = {
+      mesAnoCalendario: document.getElementById('mesAnoCalendario'),
+      gradeCalendario: document.getElementById('gradeCalendario'),
+      tituloAgendamentosDia: document.getElementById('tituloAgendamentosDia'),
+      dataAtual: document.getElementById('dataAtual'),
+      listaAgendamentos: document.getElementById('listaAgendamentos'),
+      btnNovoAgendamento: document.getElementById('btnNovoAgendamento'),
+      btnMesAnterior: document.getElementById('btnMesAnterior'),
+      btnMesSeguinte: document.getElementById('btnMesSeguinte'),
+      
+      // Modal novo agendamento
+      modalAgendamento: document.getElementById('modalAgendamento'),
+      formularioAgendamento: document.getElementById('formularioAgendamento'),
+      inputPaciente: document.getElementById('inputPaciente'),
+      listaPacientes: document.getElementById('listaPacientes'),
+      pacienteId: document.getElementById('pacienteId'),
+      tipoConsulta: document.getElementById('tipoConsulta'),
+      dataAgendamento: document.getElementById('dataAgendamento'),
+      horarioAgendamento: document.getElementById('horarioAgendamento'),
+      observacoes: document.getElementById('observacoes'),
+      btnAgendar: document.getElementById('btnAgendar'),
+      textoBtnAgendar: document.getElementById('textoBtnAgendar'),
+      carregandoBtnAgendar: document.getElementById('carregandoBtnAgendar'),
+      mensagemModal: document.getElementById('mensagemModal'),
+      
+      // Modal confirmação
+      modalConfirmacao: document.getElementById('modalConfirmacao'),
+      tituloModalConfirmacao: document.getElementById('tituloModalConfirmacao'),
+      mensagemModalConfirmacao: document.getElementById('mensagemModalConfirmacao'),
+      btnConfirmarAcao: document.getElementById('btnConfirmarAcao'),
+      mensagemConfirmacao: document.getElementById('mensagemConfirmacao')
+    };
+
+    // Funções auxiliares
     function formatarData(data) {
       const dia = String(data.getDate()).padStart(2, '0');
       const mes = String(data.getMonth() + 1).padStart(2, '0');
       const ano = data.getFullYear();
       return `${dia}/${mes}/${ano}`;
     }
-    
+
     function formatarDataParaAPI(data) {
       const dia = String(data.getDate()).padStart(2, '0');
       const mes = String(data.getMonth() + 1).padStart(2, '0');
       const ano = data.getFullYear();
       return `${ano}-${mes}-${dia}`;
     }
-    
+
     function formatarHoraParaAPI(hora) {
       return `${hora}:00`;
     }
-    
+
     function obterNomeMes(mes) {
       const meses = [
         'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -819,83 +731,14 @@
       ];
       return meses[mes];
     }
-    
-    // Funções para carregar dados
-    async function carregarAgendamentos(data) {
-      try {
-        const response = await fetch(`/enfermeiro/agendamentos/listar?date=${formatarDataParaAPI(data)}`);
-        if (!response.ok) throw new Error('Erro ao carregar agendamentos');
-        
-        const dados = await response.json();
-        agendamentos = dados.agendamentos || [];
-        console.log(dados);
-        
-        // Atualizar a exibição
-        dataAtualSpan.textContent = dados.data;
-        atualizarListaAgendamentos();
-      } catch (erro) {
-        console.error('Erro:', erro);
-        alert('Não foi possível carregar os agendamentos. Tente novamente.');
-      }
-    }
-    
-    async function buscarPacientes(termo) {
-      try {
-        const response = await fetch(`/buscar-paciente?q=${termo}`);
-        if (!response.ok) throw new Error('Erro ao buscar pacientes');
-        
-        return await response.json();
-      } catch (erro) {
-        console.error('Erro:', erro);
-        return [];
-      }
-    }
-    
-    // Funções para renderização
-    function atualizarListaAgendamentos() {
-      if (agendamentos.length === 0) {
-        listaAgendamentos.innerHTML = `
-          <div style="text-align: center; padding: 2rem; color: #666;">
-            <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-            <p>Nenhum agendamento para esta data</p>
-          </div>
-        `;
-        return;
-      }
-      
-      listaAgendamentos.innerHTML = agendamentos.map(agendamento => `
-        <div class="item-agendamento" data-id="${agendamento.id}">
-          <div>
-            <strong>${agendamento.paciente_nome}</strong>
-            <div>${formatarHoraAgendamento(agendamento.data_hora)} - ${agendamento.tipo_consulta}</div>
-            <span class="badge ${obterClasseStatus(agendamento.status)}">${formatarStatus(agendamento.status)}</span>
-          </div>
-          <div class="acoes-agendamento">
-            ${agendamento.status === 'pendente' || agendamento.status === 'confirmado' ? `
-              <button class="botao botao-secundaria botao-pequeno" onclick="abrirModalConfirmacao('confirmar', '${agendamento.id}')">
-                <i class="fas fa-check"></i>
-              </button>
-              <button class="botao botao-perigo botao-pequeno" onclick="abrirModalConfirmacao('cancelar', '${agendamento.id}')">
-                <i class="fas fa-times"></i>
-              </button>
-            ` : ''}
-            ${agendamento.status === 'confirmado' ? `
-              <button class="botao botao-primaria botao-pequeno" onclick="abrirModalConfirmacao('concluir', '${agendamento.id}')">
-                <i class="fas fa-check-circle"></i>
-              </button>
-            ` : ''}
-          </div>
-        </div>
-      `).join('');
-    }
-    
+
     function formatarHoraAgendamento(dataHora) {
       const data = new Date(dataHora);
       const horas = String(data.getHours()).padStart(2, '0');
       const minutos = String(data.getMinutes()).padStart(2, '0');
       return `${horas}:${minutos}`;
     }
-    
+
     function formatarStatus(status) {
       const statusMap = {
         'pendente': 'Pendente',
@@ -905,20 +748,133 @@
       };
       return statusMap[status] || status;
     }
-    
+
     function obterClasseStatus(status) {
       const classesMap = {
-        'pendente': 'badge-alerta',
-        'confirmado': 'badge-sucesso',
-        'cancelado': 'badge-perigo',
-        'concluido': 'badge-info'
+        'pendente': 'badge-pendente',
+        'confirmado': 'badge-confirmado',
+        'cancelado': 'badge-cancelado',
+        'concluido': 'badge-concluido'
       };
       return classesMap[status] || '';
     }
-    
+
+    // Funções para carregar dados
+    async function carregarAgendamentos(data) {
+      try {
+        const response = await fetch(`/enfermeiro/agendamentos/listar?date=${formatarDataParaAPI(data)}`);
+        if (!response.ok) throw new Error('Erro ao carregar agendamentos');
+        
+        const dados = await response.json();
+        estado.agendamentos = dados.agendamentos || [];
+        console.log(dados);
+        
+        // Atualizar a exibição
+        elementos.dataAtual.textContent = dados.data;
+        atualizarListaAgendamentos();
+        renderizarCalendario(estado.dataSelecionada.getFullYear(), estado.dataSelecionada.getMonth());
+      } catch (erro) {
+        console.error('Erro:', erro);
+        elementos.listaAgendamentos.innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: #e74c3c;">
+            <i class="fas fa-exclamation-circle"></i> Não foi possível carregar os agendamentos
+          </div>
+        `;
+      }
+    }
+
+    async function buscarPacientes(termo) {
+      try {
+        url = `/buscar-paciente?cpf=${termo}`;
+
+        const response = await fetch(url);
+        if (!response.ok) {
+          const erro = await response.json();
+          throw new Error(erro.message || 'Erro ao buscar pacientes');
+        }
+        
+        const data = await response.json();
+        
+        return [data] || [];
+      } catch (erro) {
+        console.error('Erro:', erro);
+        if (erro.message.includes("Nenhum paciente encontrado")) {
+          elementos.mensagemModal.textContent = 'Nenhum paciente encontrado com este CPF';
+          elementos.mensagemModal.className = 'mensagem-erro';
+          elementos.mensagemModal.style.display = 'block';
+        }
+        return [];
+      }
+    }
+
+    async function carregarHorariosDisponiveis(data) {
+      // Simulação - na prática, você faria uma chamada API para verificar horários disponíveis
+      const horarios = [];
+      const horaInicio = 8;
+      const horaFim = 17;
+      
+      for (let hora = horaInicio; hora <= horaFim; hora++) {
+        horarios.push(`${String(hora).padStart(2, '0')}:00`);
+        if (hora < horaFim) {
+          horarios.push(`${String(hora).padStart(2, '0')}:30`);
+        }
+      }
+      
+      // Limpar select
+      elementos.horarioAgendamento.innerHTML = '<option value="">Selecione...</option>';
+      
+      // Adicionar horários disponíveis
+      horarios.forEach(horario => {
+        const option = document.createElement('option');
+        option.value = horario;
+        option.textContent = horario;
+        elementos.horarioAgendamento.appendChild(option);
+      });
+    }
+
+    // Funções para renderização
+    function atualizarListaAgendamentos() {
+      if (estado.agendamentos.length === 0) {
+        elementos.listaAgendamentos.innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: #666;">
+            <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <p>Nenhum agendamento para esta data</p>
+          </div>
+        `;
+        return;
+      }
+      
+      elementos.listaAgendamentos.innerHTML = estado.agendamentos.map(agendamento => `
+        <div class="item-agendamento" data-id="${agendamento.id}">
+          <div class="info-agendamento">
+            <div class="nome-paciente">${agendamento.paciente_nome}</div>
+            <div class="detalhes-agendamento">
+              ${formatarHoraAgendamento(agendamento.data_hora)} - ${agendamento.tipo_consulta}
+              <span class="badge ${obterClasseStatus(agendamento.status)}">${formatarStatus(agendamento.status)}</span>
+            </div>
+          </div>
+          <div class="acoes-agendamento">
+            ${agendamento.status === 'pendente' || agendamento.status === 'confirmado' ? `
+              <button class="botao botao-sucesso botao-pequeno" onclick="abrirModalConfirmacao('confirmar', '${agendamento.id}')">
+                <i class="fas fa-check"></i>
+              </button>
+              <button class="botao botao-perigo botao-pequeno" onclick="abrirModalConfirmacao('cancelar', '${agendamento.id}')">
+                <i class="fas fa-times"></i>
+              </button>
+            ` : ''}
+            ${agendamento.status === 'confirmado' ? `
+              <button class="botao botao-info botao-pequeno" onclick="abrirModalConfirmacao('concluir', '${agendamento.id}')">
+                <i class="fas fa-check-circle"></i>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
     function renderizarCalendario(ano, mes) {
       // Limpar calendário
-      gradeCalendario.innerHTML = '';
+      elementos.gradeCalendario.innerHTML = '';
       
       // Adicionar cabeçalhos dos dias da semana
       const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -926,7 +882,7 @@
         const divDia = document.createElement('div');
         divDia.className = 'dia-calendario cabecalho';
         divDia.textContent = dia;
-        gradeCalendario.appendChild(divDia);
+        elementos.gradeCalendario.appendChild(divDia);
       });
       
       // Obter primeiro dia do mês e último dia do mês
@@ -942,10 +898,9 @@
       // Adicionar dias do mês anterior (se necessário)
       for (let i = diaSemanaPrimeiroDia - 1; i >= 0; i--) {
         const divDia = document.createElement('div');
-        divDia.className = 'dia-calendario';
+        divDia.className = 'dia-calendario outro-mes';
         divDia.textContent = ultimoDiaMesAnterior - i;
-        divDia.style.color = '#ccc';
-        gradeCalendario.appendChild(divDia);
+        elementos.gradeCalendario.appendChild(divDia);
       }
       
       // Adicionar dias do mês atual
@@ -956,7 +911,7 @@
         
         // Verificar se há agendamentos neste dia
         const dataDia = new Date(ano, mes, dia);
-        const temAgendamento = agendamentos.some(ag => {
+        const temAgendamento = estado.agendamentos.some(ag => {
           const dataAg = new Date(ag.data_hora);
           return dataAg.getDate() === dataDia.getDate() && 
                  dataAg.getMonth() === dataDia.getMonth() && 
@@ -978,21 +933,20 @@
           selecionarDiaCalendario(dia, mes, ano);
         });
         
-        gradeCalendario.appendChild(divDia);
+        elementos.gradeCalendario.appendChild(divDia);
       }
       
       // Adicionar dias do próximo mês (se necessário)
       const diasRestantes = 42 - (diaSemanaPrimeiroDia + ultimoDia.getDate());
       for (let dia = 1; dia <= diasRestantes; dia++) {
         const divDia = document.createElement('div');
-        divDia.className = 'dia-calendario';
+        divDia.className = 'dia-calendario outro-mes';
         divDia.textContent = dia;
-        divDia.style.color = '#ccc';
-        gradeCalendario.appendChild(divDia);
+        elementos.gradeCalendario.appendChild(divDia);
       }
       
       // Atualizar título do calendário
-      mesAnoCalendario.textContent = `${obterNomeMes(mes)} ${ano}`;
+      elementos.mesAnoCalendario.textContent = `${obterNomeMes(mes)} ${ano}`;
     }
     
     function selecionarDiaCalendario(dia, mes, ano) {
@@ -1003,113 +957,86 @@
       // Adicionar seleção ao dia clicado
       const dias = document.querySelectorAll('.dia-calendario');
       const diaSelecionado = Array.from(dias).find(d => 
-        d.textContent === String(dia) && !d.classList.contains('cabecalho') && d.style.color !== 'rgb(204, 204, 204)'
+        d.textContent === String(dia) && !d.classList.contains('cabecalho') && !d.classList.contains('outro-mes')
       );
       
       if (diaSelecionado) {
         diaSelecionado.classList.add('selecionado');
         const dataSelecionada = new Date(ano, mes, dia);
+        estado.dataSelecionada = dataSelecionada;
         carregarAgendamentos(dataSelecionada);
       }
     }
-    
-    function carregarHorariosDisponiveis(data) {
-      // Simulação - na prática, você faria uma chamada API para verificar horários disponíveis
-      const horarios = [];
-      const horaInicio = 8;
-      const horaFim = 17;
-      
-      for (let hora = horaInicio; hora <= horaFim; hora++) {
-        // Adiciona horários de hora em hora e meia em meia hora
-        horarios.push(`${String(hora).padStart(2, '0')}:00`);
-        if (hora < horaFim) {
-          horarios.push(`${String(hora).padStart(2, '0')}:30`);
-        }
-      }
-      
-      // Limpar select
-      horarioAgendamento.innerHTML = '<option value="">Selecione...</option>';
-      
-      // Adicionar horários disponíveis
-      horarios.forEach(horario => {
-        const option = document.createElement('option');
-        option.value = horario;
-        option.textContent = horario;
-        horarioAgendamento.appendChild(option);
-      });
-    }
-    
+
     // Funções para modais
     function abrirModalNovoAgendamento() {
       // Definir data mínima como hoje
       const hoje = new Date();
-      dataAgendamento.min = formatarDataParaAPI(hoje);
-      dataAgendamento.value = formatarDataParaAPI(hoje);
+      elementos.dataAgendamento.min = formatarDataParaAPI(hoje);
+      elementos.dataAgendamento.value = formatarDataParaAPI(hoje);
       
       // Carregar horários disponíveis para hoje
       carregarHorariosDisponiveis(hoje);
       
       // Limpar formulário
-      formularioAgendamento.reset();
-      pacienteId.value = '';
-      pacienteSelecionado = null;
+      elementos.formularioAgendamento.reset();
+      elementos.pacienteId.value = '';
+      estado.pacienteSelecionado = null;
+      elementos.mensagemModal.style.display = 'none';
       
       // Abrir modal
-      modalAgendamento.style.display = 'block';
+      elementos.modalAgendamento.style.display = 'block';
     }
     
     function fecharModalAgendamento() {
-      modalAgendamento.style.display = 'none';
+      elementos.modalAgendamento.style.display = 'none';
     }
     
     function abrirModalConfirmacao(acao, agendamentoId) {
-      agendamentoParaAcao = agendamentoId;
-      
-      const titulo = document.getElementById('tituloModalConfirmacao');
-      const mensagem = document.getElementById('mensagemModalConfirmacao');
+      estado.agendamentoParaAcao = agendamentoId;
+      estado.acaoAtual = acao;
       
       if (acao === 'confirmar') {
-        titulo.textContent = 'Confirmar Agendamento';
-        mensagem.textContent = 'Tem certeza que deseja confirmar este agendamento?';
-        btnConfirmarAcao.className = 'botao botao-secundaria';
-        btnConfirmarAcao.innerHTML = '<i class="fas fa-check"></i> Confirmar';
-        btnConfirmarAcao.onclick = () => atualizarStatusAgendamento('confirmado');
+        elementos.tituloModalConfirmacao.textContent = 'Confirmar Agendamento';
+        elementos.mensagemModalConfirmacao.textContent = 'Tem certeza que deseja confirmar este agendamento?';
+        elementos.btnConfirmarAcao.className = 'botao botao-sucesso';
+        elementos.btnConfirmarAcao.innerHTML = '<i class="fas fa-check"></i> Confirmar';
       } else if (acao === 'cancelar') {
-        titulo.textContent = 'Cancelar Agendamento';
-        mensagem.textContent = 'Tem certeza que deseja cancelar este agendamento?';
-        btnConfirmarAcao.className = 'botao botao-perigo';
-        btnConfirmarAcao.innerHTML = '<i class="fas fa-times"></i> Cancelar';
-        btnConfirmarAcao.onclick = () => atualizarStatusAgendamento('cancelado');
+        elementos.tituloModalConfirmacao.textContent = 'Cancelar Agendamento';
+        elementos.mensagemModalConfirmacao.textContent = 'Tem certeza que deseja cancelar este agendamento?';
+        elementos.btnConfirmarAcao.className = 'botao botao-perigo';
+        elementos.btnConfirmarAcao.innerHTML = '<i class="fas fa-times"></i> Cancelar';
       } else if (acao === 'concluir') {
-        titulo.textContent = 'Concluir Agendamento';
-        mensagem.textContent = 'Tem certeza que deseja marcar este agendamento como concluído?';
-        btnConfirmarAcao.className = 'botao botao-primaria';
-        btnConfirmarAcao.innerHTML = '<i class="fas fa-check-circle"></i> Concluir';
-        btnConfirmarAcao.onclick = () => atualizarStatusAgendamento('concluido');
+        elementos.tituloModalConfirmacao.textContent = 'Concluir Agendamento';
+        elementos.mensagemModalConfirmacao.textContent = 'Tem certeza que deseja marcar este agendamento como concluído?';
+        elementos.btnConfirmarAcao.className = 'botao botao-info';
+        elementos.btnConfirmarAcao.innerHTML = '<i class="fas fa-check-circle"></i> Concluir';
       }
       
-      modalConfirmacao.style.display = 'block';
+      elementos.mensagemConfirmacao.style.display = 'none';
+      elementos.modalConfirmacao.style.display = 'block';
     }
     
     function fecharModalConfirmacao() {
-      modalConfirmacao.style.display = 'none';
-      agendamentoParaAcao = null;
+      elementos.modalConfirmacao.style.display = 'none';
+      estado.agendamentoParaAcao = null;
+      estado.acaoAtual = null;
     }
-    
+
     // Funções para manipulação de agendamentos
     async function criarAgendamento() {
       const dados = {
-        paciente_id: pacienteId.value,
-        tipo_consulta: tipoConsulta.value,
-        data_hora: `${dataAgendamento.value}T${horarioAgendamento.value}:00`,
-        observacoes: observacoes.value
+        paciente_id: elementos.pacienteId.value,
+        tipo_consulta: elementos.tipoConsulta.value,
+        data_hora: new Date(`${elementos.dataAgendamento.value}T${elementos.horarioAgendamento.value}:00Z`).toISOString(),
+        observacoes: elementos.observacoes.value
       };
       
       try {
         // Mostrar indicador de carregamento
-        textoBtnAgendar.style.display = 'none';
-        carregandoBtnAgendar.style.display = 'inline-block';
-        
+        elementos.textoBtnAgendar.style.display = 'none';
+        elementos.carregandoBtnAgendar.style.display = 'inline-block';
+
         const response = await fetch('/enfermeiro/agendamentos', {
           method: 'POST',
           headers: {
@@ -1118,33 +1045,42 @@
           body: JSON.stringify(dados)
         });
         
-        if (!response.ok) throw new Error('Erro ao criar agendamento');
+        if (!response.ok) {
+          const erro = await response.json();
+          throw new Error(erro.message || 'Erro ao criar agendamento');
+        }
         
         const novoAgendamento = await response.json();
         
         // Recarregar agendamentos para a data selecionada
-        const dataSelecionada = new Date(dataAgendamento.value);
-        await carregarAgendamentos(dataSelecionada);
+        await carregarAgendamentos(estado.dataSelecionada);
         
         // Fechar modal e limpar formulário
         fecharModalAgendamento();
-        formularioAgendamento.reset();
+        elementos.formularioAgendamento.reset();
         
         // Mostrar mensagem de sucesso
-        alert('Agendamento criado com sucesso!');
+        elementos.mensagemModal.textContent = 'Agendamento criado com sucesso!';
+        elementos.mensagemModal.className = 'mensagem-sucesso';
+        elementos.mensagemModal.style.display = 'block';
       } catch (erro) {
         console.error('Erro:', erro);
-        alert('Não foi possível criar o agendamento. Verifique os dados e tente novamente.');
+        elementos.mensagemModal.textContent = erro.message || 'Não foi possível criar o agendamento. Verifique os dados e tente novamente.';
+        elementos.mensagemModal.className = 'mensagem-erro';
+        elementos.mensagemModal.style.display = 'block';
       } finally {
         // Restaurar botão
-        textoBtnAgendar.style.display = 'inline';
-        carregandoBtnAgendar.style.display = 'none';
+        elementos.textoBtnAgendar.style.display = 'inline';
+        elementos.carregandoBtnAgendar.style.display = 'none';
       }
     }
     
     async function atualizarStatusAgendamento(novoStatus) {
       try {
-        const response = await fetch(`/enfermeiro/agendamentos/${agendamentoParaAcao}/status`, {
+        elementos.btnConfirmarAcao.disabled = true;
+        elementos.mensagemConfirmacao.style.display = 'none';
+
+        const response = await fetch(`/enfermeiro/agendamentos/${estado.agendamentoParaAcao}/status`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -1152,114 +1088,140 @@
           body: JSON.stringify({ status: novoStatus })
         });
         
-        if (!response.ok) throw new Error('Erro ao atualizar agendamento');
+        if (!response.ok) {
+          const erro = await response.json();
+          throw new Error(erro.message || 'Erro ao atualizar agendamento');
+        }
         
         // Recarregar agendamentos para a data atual
-        await carregarAgendamentos(dataAtual);
+        await carregarAgendamentos(estado.dataSelecionada);
         
         // Fechar modal de confirmação
         fecharModalConfirmacao();
         
         // Mostrar mensagem de sucesso
-        alert('Agendamento atualizado com sucesso!');
+        elementos.mensagemConfirmacao.textContent = 'Agendamento atualizado com sucesso!';
+        elementos.mensagemConfirmacao.className = 'mensagem-sucesso';
+        elementos.mensagemConfirmacao.style.display = 'block';
       } catch (erro) {
         console.error('Erro:', erro);
-        alert('Não foi possível atualizar o agendamento. Tente novamente.');
+        elementos.mensagemConfirmacao.textContent = erro.message || 'Não foi possível atualizar o agendamento. Tente novamente.';
+        elementos.mensagemConfirmacao.className = 'mensagem-erro';
+        elementos.mensagemConfirmacao.style.display = 'block';
+      } finally {
+        elementos.btnConfirmarAcao.disabled = false;
       }
     }
-    
+
     // Event Listeners
     document.addEventListener('DOMContentLoaded', () => {
       // Inicializar calendário
-      renderizarCalendario(dataAtual.getFullYear(), dataAtual.getMonth());
+      renderizarCalendario(estado.dataSelecionada.getFullYear(), estado.dataSelecionada.getMonth());
       
       // Carregar agendamentos para hoje
-      carregarAgendamentos(dataAtual);
+      carregarAgendamentos(estado.dataSelecionada);
       
       // Configurar evento de mudança de mês
-      btnMesAnterior.addEventListener('click', () => {
-        dataAtual.setMonth(dataAtual.getMonth() - 1);
-        renderizarCalendario(dataAtual.getFullYear(), dataAtual.getMonth());
+      elementos.btnMesAnterior.addEventListener('click', () => {
+        estado.dataSelecionada.setMonth(estado.dataSelecionada.getMonth() - 1);
+        renderizarCalendario(estado.dataSelecionada.getFullYear(), estado.dataSelecionada.getMonth());
       });
       
-      btnMesSeguinte.addEventListener('click', () => {
-        dataAtual.setMonth(dataAtual.getMonth() + 1);
-        renderizarCalendario(dataAtual.getFullYear(), dataAtual.getMonth());
+      elementos.btnMesSeguinte.addEventListener('click', () => {
+        estado.dataSelecionada.setMonth(estado.dataSelecionada.getMonth() + 1);
+        renderizarCalendario(estado.dataSelecionada.getFullYear(), estado.dataSelecionada.getMonth());
       });
       
       // Configurar busca de pacientes
-      inputPaciente.addEventListener('input', async (e) => {
+      elementos.inputPaciente.addEventListener('input', async (e) => {
         const termo = e.target.value.trim();
         
-        if (termo.length < 3) {
-          listaPacientes.classList.remove('mostrar');
+        if (termo.length < 3 && !/^\d{11}$/.test(termo)) {
+          elementos.listaPacientes.classList.remove('mostrar');
           return;
         }
         
         const pacientes = await buscarPacientes(termo);
+        console.log(pacientes);
         
-        if (pacientes.length > 0) {
-          listaPacientes.innerHTML = pacientes.map(paciente => `
-            <div class="item-paciente" data-id="${paciente.id}" data-nome="${paciente.nome}">
-              ${paciente.nome} - ${paciente.cns}
+        if (pacientes) {
+          elementos.listaPacientes.innerHTML = pacientes.map(paciente => `
+            <div class="item-paciente" data-id="${paciente.ID}" data-nome="${paciente.Name}" data-cpf="${paciente.CPF || ''}">
+              <div class="nome-paciente-lista">${paciente.Name}</div>
+              <div class="cns-paciente">${paciente.CPF || paciente.CNS || 'Documento não informado'}</div>
             </div>
           `).join('');
           
           // Adicionar eventos de clique aos itens
           document.querySelectorAll('.item-paciente').forEach(item => {
             item.addEventListener('click', () => {
-              pacienteSelecionado = {
+              estado.pacienteSelecionado = {
                 id: item.dataset.id,
-                nome: item.dataset.nome
+                nome: item.dataset.nome,
+                cpf: item.dataset.cpf
               };
               
-              inputPaciente.value = pacienteSelecionado.nome;
-              pacienteId.value = pacienteSelecionado.id;
-              listaPacientes.classList.remove('mostrar');
+              elementos.inputPaciente.value = `${estado.pacienteSelecionado.nome} (${estado.pacienteSelecionado.cpf || 'sem CPF'})`;
+              elementos.pacienteId.value = estado.pacienteSelecionado.id;
+              elementos.listaPacientes.classList.remove('mostrar');
             });
           });
           
-          listaPacientes.classList.add('mostrar');
+          elementos.listaPacientes.classList.add('mostrar');
         } else {
-          listaPacientes.innerHTML = '<div class="item-paciente">Nenhum paciente encontrado</div>';
-          listaPacientes.classList.add('mostrar');
+          elementos.listaPacientes.innerHTML = '<div class="item-paciente">Nenhum paciente encontrado</div>';
+          elementos.listaPacientes.classList.add('mostrar');
         }
       });
       
       // Fechar lista de pacientes ao clicar fora
       document.addEventListener('click', (e) => {
-        if (!inputPaciente.contains(e.target)) {
-          listaPacientes.classList.remove('mostrar');
+        if (!elementos.inputPaciente.contains(e.target) && !elementos.listaPacientes.contains(e.target)) {
+          elementos.listaPacientes.classList.remove('mostrar');
         }
       });
       
       // Configurar mudança de data no formulário
-      dataAgendamento.addEventListener('change', (e) => {
+      elementos.dataAgendamento.addEventListener('change', (e) => {
         const dataSelecionada = new Date(e.target.value);
         carregarHorariosDisponiveis(dataSelecionada);
       });
       
       // Configurar envio do formulário
-      formularioAgendamento.addEventListener('submit', (e) => {
+      elementos.formularioAgendamento.addEventListener('submit', (e) => {
         e.preventDefault();
         criarAgendamento();
+      });
+      
+      // Configurar botão de novo agendamento
+      elementos.btnNovoAgendamento.addEventListener('click', abrirModalNovoAgendamento);
+      
+      // Configurar botão de confirmação de ação
+      elementos.btnConfirmarAcao.addEventListener('click', () => {
+        if (estado.acaoAtual === 'confirmar') {
+          atualizarStatusAgendamento('confirmado');
+        } else if (estado.acaoAtual === 'cancelar') {
+          atualizarStatusAgendamento('cancelado');
+        } else if (estado.acaoAtual === 'concluir') {
+          atualizarStatusAgendamento('concluido');
+        }
       });
     });
     
     // Fechar modais ao clicar no X ou fora
     document.querySelectorAll('.fechar').forEach(btn => {
       btn.addEventListener('click', () => {
-        modalAgendamento.style.display = 'none';
-        modalConfirmacao.style.display = 'none';
+        elementos.modalAgendamento.style.display = 'none';
+        elementos.modalConfirmacao.style.display = 'none';
       });
     });
     
     window.addEventListener('click', (e) => {
-      if (e.target === modalAgendamento) {
-        modalAgendamento.style.display = 'none';
+      if (e.target === elementos.modalAgendamento) {
+        elementos.modalAgendamento.style.display = 'none';
       }
-      if (e.target === modalConfirmacao) {
-        modalConfirmacao.style.display = 'none';
+      if (e.target === elementos.modalConfirmacao) {
+        elementos.modalConfirmacao.style.display = 'none';
       }
     });
   </script>

@@ -1,44 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Agendar Exame - Sistema de Diagnóstico</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      :root {
-        --primaria: #9b59b6;
-        --secundaria: #8e44ad;
-        --perigo: #e74c3c;
-        --aviso: #f39c12;
-        --cinza-claro: #f5f7fa;
-        --cinza-medio: #e0e0e0;
-        --cinza-escuro: #333333;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Exame - Sistema de Saúde</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primaria: #9b59b6;
+      --secundaria: #8e44ad;
+      --perigo: #e74c3c;
+      --aviso: #f39c12;
+      --cinza-claro: #f5f7fa;
+      --cinza-medio: #e0e0e0;
+      --cinza-escuro: #333333;
+    }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Inter", sans-serif;
-      }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
 
-      body {
-        background: rgba(214, 174, 241, 0.15);
-        color: var(--cinza-escuro);
-      }
+    body {
+      background: rgba(214, 174, 241, 0.15);
+      color: var(--cinza-escuro);
+    }
 
-      .container {
-        display: grid;
-        grid-template-columns: 250px 1fr;
-        min-height: 100vh;
-      }
-
-      /* Navegação Superior */
-      .navegacao-superior {
+    .navegacao-superior {
       background: linear-gradient(90deg, var(--primaria), var(--secundaria));
       color: white;
       padding: 0.75rem 1.5rem;
@@ -128,7 +119,7 @@
       width: 20px;
       text-align: center;
     }
-    
+
     .avatar-usuario {
       width: 40px;
       height: 40px;
@@ -138,279 +129,304 @@
       background-color: #f0e5f5;
     }
 
-      /* Conteúdo Principal */
-      .conteudo-principal {
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 0 1.5rem;
-      }
+    .conteudo-principal {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
 
-      .cabecalho {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-      }
+    .cabecalho {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
 
-      .titulo-pagina {
-        font-size: 1.75rem;
-        color: var(--primaria);
-      }
+    .titulo-pagina {
+      font-size: 1.75rem;
+      color: var(--primaria);
+    }
 
-      .botao-voltar {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--primaria);
-        text-decoration: none;
-        font-weight: 500;
-      }
+    .botao-voltar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primaria);
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-      /* Formulário de Agendamento */
-      .container-agendamento {
-        background-color: white;
-        border-radius: 10px;
-        padding: 2rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      }
+    .container-agendamento {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
 
-      .passos-agendamento {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 2rem;
-        position: relative;
-      }
+    .passos-agendamento {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      position: relative;
+    }
 
-      .passo {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        z-index: 1;
-      }
+    .passo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1;
+    }
 
-      .numero-passo {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: var(--cinza-medio);
-        color: #666;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-      }
+    .numero-passo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--cinza-medio);
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
 
-      .passo.ativo .numero-passo {
-        background-color: var(--primaria);
-        color: white;
-      }
+    .passo.ativo .numero-passo {
+      background-color: var(--primaria);
+      color: white;
+    }
 
-      .passo.concluido .numero-passo {
-        background-color: var(--secundaria);
-        color: white;
-      }
+    .passo.concluido .numero-passo {
+      background-color: var(--secundaria);
+      color: white;
+    }
 
-      .titulo-passo {
-        font-size: 0.9rem;
-        font-weight: 500;
-        text-align: center;
-      }
+    .titulo-passo {
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+    }
 
-      .linha-progresso {
-        position: absolute;
-        height: 4px;
-        background-color: var(--cinza-medio);
-        top: 20px;
-        left: 0;
-        right: 0;
-        z-index: 0;
-      }
+    .linha-progresso {
+      position: absolute;
+      height: 4px;
+      background-color: var(--cinza-medio);
+      top: 20px;
+      left: 0;
+      right: 0;
+      z-index: 0;
+    }
 
-      .progresso {
-        height: 100%;
-        background-color: var(--secundaria);
-        width: 33%;
-        transition: width 0.3s;
-      }
+    .progresso {
+      height: 100%;
+      background-color: var(--secundaria);
+      width: 33%;
+      transition: width 0.3s;
+    }
 
-      .formulario-agendamento {
-        display: none;
-      }
+    .formulario-agendamento {
+      display: none;
+    }
 
-      .formulario-agendamento.ativo {
-        display: block;
-      }
+    .formulario-agendamento.ativo {
+      display: block;
+    }
 
-      .grupo-formulario {
-        margin-bottom: 1.5rem;
-      }
+    .grupo-formulario {
+      margin-bottom: 1.5rem;
+    }
 
-      .rotulo-formulario {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-      }
+    .rotulo-formulario {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
 
-      .controle-formulario {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        border: 1px solid var(--cinza-medio);
-        border-radius: 6px;
-        font-size: 1rem;
-      }
+    .controle-formulario {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
 
-      .controle-formulario:focus {
-        outline: none;
-        border-color: var(--primaria);
-        box-shadow: 0 0 0 3px rgba(24, 90, 157, 0.1);
-      }
+    .controle-formulario:focus {
+      outline: none;
+      border-color: var(--primaria);
+      box-shadow: 0 0 0 3px rgba(24, 90, 157, 0.1);
+    }
 
-      .lista-ubs {
-        list-style: none;
-        margin-top: 1rem;
-        border: 1px solid var(--cinza-medio);
-        border-radius: 6px;
-        max-height: 300px;
-        overflow-y: auto;
-      }
+    .lista-ubs {
+      list-style: none;
+      margin-top: 1rem;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 6px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
 
-      .item-ubs {
-        padding: 1rem;
-        border-bottom: 1px solid var(--cinza-medio);
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
+    .item-ubs {
+      padding: 1rem;
+      border-bottom: 1px solid var(--cinza-medio);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-      .item-ubs:last-child {
-        border-bottom: none;
-      }
+    .item-ubs:last-child {
+      border-bottom: none;
+    }
 
-      .item-ubs:hover {
-        background-color: var(--cinza-claro);
-      }
+    .item-ubs:hover {
+      background-color: var(--cinza-claro);
+    }
 
-      .item-ubs.selecionado {
-        background-color: #e3f2fd;
-        border-left: 3px solid var(--primaria);
-      }
+    .item-ubs.selecionado {
+      background-color: #e3f2fd;
+      border-left: 3px solid var(--primaria);
+    }
 
-      .nome-ubs {
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-      }
+    .nome-ubs {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
 
-      .endereco-ubs {
-        font-size: 0.9rem;
-        color: #666;
-      }
+    .endereco-ubs {
+      font-size: 0.9rem;
+      color: #666;
+    }
 
-      .distancia-ubs {
-        font-size: 0.8rem;
-        color: var(--primaria);
-        margin-top: 0.25rem;
-      }
+    .distancia-ubs {
+      font-size: 0.8rem;
+      color: var(--primaria);
+      margin-top: 0.25rem;
+    }
 
-      .horarios-disponiveis {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 0.75rem;
-        margin-top: 1rem;
-      }
+    .horarios-disponiveis {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
 
-      .horario {
-        padding: 0.75rem;
-        text-align: center;
-        border: 1px solid var(--cinza-medio);
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
+    .horario {
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
 
-      .horario:hover {
-        border-color: var(--primaria);
-      }
+    .horario:hover {
+      border-color: var(--primaria);
+    }
 
-      .horario.selecionado {
-        background-color: var(--primaria);
-        color: white;
-        border-color: var(--primaria);
-      }
+    .horario.selecionado {
+      background-color: var(--primaria);
+      color: white;
+      border-color: var(--primaria);
+    }
 
-      .horario.indisponivel {
-        background-color: var(--cinza-claro);
-        color: #999;
-        cursor: not-allowed;
-        text-decoration: line-through;
-      }
+    .horario.indisponivel {
+      background-color: var(--cinza-claro);
+      color: #999;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
 
-      .resumo-agendamento {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-top: 2rem;
-      }
+    .resumo-agendamento {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
 
-      .item-resumo {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.75rem;
-      }
+    .item-resumo {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
 
-      .rotulo-resumo {
-        font-weight: 500;
-      }
+    .rotulo-resumo {
+      font-weight: 500;
+    }
 
-      .valor-resumo {
-        font-weight: 600;
-      }
+    .valor-resumo {
+      font-weight: 600;
+    }
 
-      .botao {
-        display: inline-block;
-        padding: 0.75rem 1.5rem;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: 500;
-        cursor: pointer;
-        border: none;
-        transition: all 0.3s;
-      }
+    .botao {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
 
-      .botao-primario {
-        background-color: var(--primaria);
-        color: white;
-      }
+    .botao-primario {
+      background-color: var(--primaria);
+      color: white;
+    }
 
-      .botao-primario:hover {
-        background-color: #134a80;
-        transform: translateY(-2px);
-      }
+    .botao-primario:hover {
+      background-color: #7d3c98;
+      transform: translateY(-2px);
+    }
 
-      .botao-secundario {
-        background-color: white;
-        color: var(--primaria);
-        border: 1px solid var(--primaria);
-      }
+    .botao-secundario {
+      background-color: white;
+      color: var(--primaria);
+      border: 1px solid var(--primaria);
+    }
 
-      .botao-secundario:hover {
-        background-color: #f0f7ff;
-      }
+    .botao-secundario:hover {
+      background-color: #f0f7ff;
+    }
 
-      .botao-bloco {
-        display: block;
-        width: 100%;
-        text-align: center;
-      }
+    .botao-bloco {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
 
-      .container-botoes {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2rem;
-      }
+    .container-botoes {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
 
-      /* Responsividade */
-      @media (max-width: 768px) {
-        .navegacao-superior {
+    .carregando {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .mensagem-erro {
+      color: #e74c3c;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .mensagem-sucesso {
+      color: #27ae60;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .navegacao-superior {
         padding: 0.75rem 1rem;
       }
 
@@ -428,7 +444,6 @@
         width: 100%;
         overflow-x: auto;
         padding-bottom: 0.5rem;
-        scrollbar-width: thin;
       }
 
       .item-navegacao {
@@ -440,342 +455,460 @@
         margin-left: auto;
       }
 
-        .container {
-          grid-template-columns: 1fr;
-        }
-
-        .barra-lateral {
-          height: auto;
-          position: relative;
-        }
-
-        .conteudo-principal {
-          padding: 1.5rem;
-        }
-
-        .horarios-disponiveis {
-          grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-        }
+      .conteudo-principal {
+        padding: 1.5rem;
       }
-    </style>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-  </head>
-  <body>
-    <nav class="navegacao-superior">
-      <div class="container-navegacao">
-        <div class="logo">Área do Paciente</div>
 
-        <ul class="menu-navegacao">
-          <li class="item-navegacao">
-            <a href="/paciente/dashboard" class="link-navegacao"
-              ><i class="fas fa-home"></i> Início</a
-            >
-          </li>
-          <li class="item-navegacao">
-            <a href="/paciente/agendar" class="link-navegacao ativo"
-              ><i class="fas fa-calendar-check"></i> Agendar</a
-            >
-          </li>
-          <li class="item-navegacao">
-            <a href="/paciente/localizar_ubs" class="link-navegacao"
-              ><i class="fas fa-map-marker-alt"></i> UBS</a
-            >
-          </li>
-          <li class="item-navegacao">
-            <a href="/paciente/historico_exames" class="link-navegacao"
-              ><i class="fas fa-file-medical"></i> Exames</a
-            >
-          </li>
-          <li class="item-navegacao">
-            <a href="/paciente/orientacoes" class="link-navegacao"
-              ><i class="fas fa-comment-medical"></i> Orientações</a
-            >
-          </li>
-          <li class="item-navegacao">
-            <a href="/paciente/notificacoes" class="link-navegacao"
-              ><i class="fas fa-bell"></i> Notificações</a
-            >
-          </li>
-        </ul>
-
-        <div class="info-usuario">
-          <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
-          <span>{{.Paciente.Name}}</span>
-          
-          <div class="menu-usuario">
-            <a href="/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
-            <a href="/configuracoes"><i class="fas fa-cog"></i> Configurações</a>
-            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
-          </div>
+      .horarios-disponiveis {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      }
+      
+      .passos-agendamento {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .linha-progresso {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navegacao-superior">
+    <div class="container-navegacao">
+      <div class="logo">Área do Paciente</div>
+      
+      <ul class="menu-navegacao">
+        <li class="item-navegacao"><a href="/paciente/dashboard" class="link-navegacao"><i class="fas fa-home"></i> Início</a></li>
+        <li class="item-navegacao"><a href="/paciente/agendar" class="link-navegacao ativo"><i class="fas fa-calendar-check"></i> Agendar</a></li>
+        <li class="item-navegacao"><a href="/paciente/localizar_ubs" class="link-navegacao"><i class="fas fa-map-marker-alt"></i> UBS</a></li>
+        <li class="item-navegacao"><a href="/paciente/historico_exames" class="link-navegacao"><i class="fas fa-file-medical"></i> Exames</a></li>
+        <li class="item-navegacao"><a href="/paciente/orientacoes" class="link-navegacao"><i class="fas fa-comment-medical"></i> Orientações</a></li>
+        <li class="item-navegacao"><a href="/paciente/notificacoes" class="link-navegacao"><i class="fas fa-bell"></i> Notificações</a></li>
+      </ul>
+      
+      <div class="info-usuario">
+        <img src="https://cdn-icons-png.flaticon.com/512/15181/15181334.png" class="avatar-usuario" alt="Avatar do usuário">
+        <span id="nomeUsuario">{{.Paciente.Name}}</span>
+        
+        <div class="menu-usuario">
+          <a href="/perfil"><i class="fas fa-user"></i> Meu Perfil</a>
+          <a href="/configuracoes"><i class="fas fa-cog"></i> Configurações</a>
+          <a href="/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
         </div>
       </div>
-    </nav>
+    </div>
+  </nav>
 
-    <!-- Conteúdo Principal -->
-    <main class="conteudo-principal">
-      <div class="cabecalho">
-        <h1 class="titulo-pagina">Agendar Exame</h1>
-        <a href="#" class="botao-voltar">
-          <i class="fas fa-arrow-left"></i> Voltar
-        </a>
+  <main class="conteudo-principal">
+    <div class="cabecalho">
+      <h1 class="titulo-pagina">Agendar Exame</h1>
+      <a href="/paciente/dashboard" class="botao-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar
+      </a>
+    </div>
+
+    <div class="container-agendamento">
+      <div class="passos-agendamento">
+        <div class="passo ativo" data-passo="1">
+          <div class="numero-passo">1</div>
+          <div class="titulo-passo">Tipo de Exame</div>
+        </div>
+        <div class="passo" data-passo="2">
+          <div class="numero-passo">2</div>
+          <div class="titulo-passo">Local e Data</div>
+        </div>
+        <div class="passo" data-passo="3">
+          <div class="numero-passo">3</div>
+          <div class="titulo-passo">Confirmação</div>
+        </div>
+        <div class="linha-progresso">
+          <div class="progresso"></div>
+        </div>
       </div>
 
-      <div class="container-agendamento">
-        <div class="passos-agendamento">
-          <div class="passo ativo" data-passo="1">
-            <div class="numero-passo">1</div>
-            <div class="titulo-passo">Tipo de Exame</div>
-          </div>
-          <div class="passo" data-passo="2">
-            <div class="numero-passo">2</div>
-            <div class="titulo-passo">Local e Data</div>
-          </div>
-          <div class="passo" data-passo="3">
-            <div class="numero-passo">3</div>
-            <div class="titulo-passo">Confirmação</div>
-          </div>
-          <div class="linha-progresso">
-            <div class="progresso"></div>
+      <!-- Passo 1 - Tipo de Exame -->
+      <div class="formulario-agendamento ativo" id="passo1">
+        <input type="hidden" id="tipo-exame" value="preventivo">
+
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Exame disponível:</label>
+          <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 6px;">
+            <p><strong>Preventivo</strong></p>
+            <p>Recomendado para rastreamento do câncer do colo do útero em mulheres de 25 a 64 anos.</p>
           </div>
         </div>
 
-        <!-- Formulário Passo 1 - Tipo de Exame -->
-        <div class="formulario-agendamento ativo" id="passo1">
-          <input type="hidden" id="tipo-exame" value="preventivo" />
-
-          <div class="grupo-formulario">
-            <label class="rotulo-formulario">Exame disponível:</label>
-            <div
-              style="
-                background-color: #f8f9fa;
-                padding: 1rem;
-                border-radius: 6px;
-              "
-            >
-              <p><strong>Preventivo</strong></p>
-              <p>
-                Recomendado para rastreamento do câncer do colo do útero em
-                mulheres de 25 a 64 anos.
-              </p>
-            </div>
-          </div>
-
-          <div class="grupo-formulario">
-            <label class="rotulo-formulario">Orientações para este exame:</label>
-            <div
-              style="
-                background-color: #f8f9fa;
-                padding: 1rem;
-                border-radius: 6px;
-              "
-            >
-              <p>Para realizar o exame preventivo:</p>
-              <ul style="margin-top: 0.5rem; padding-left: 1.5rem">
-                <li>Não estar menstruada</li>
-                <li>Evitar relações sexuais 48h antes</li>
-                <li>Não usar duchas ou medicamentos vaginais</li>
-                <li>Não estar em uso de pomadas ginecológicas</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="container-botoes">
-            <button class="botao botao-secundario" disabled>Voltar</button>
-            <button class="botao botao-primario" onclick="proximoPasso(1)">
-              Próximo
-            </button>
-          </div>
-        </div>
-
-        <!-- Formulário Passo 2 - Local e Data -->
-        <div class="formulario-agendamento" id="passo2">
-          <div class="grupo-formulario">
-            <label for="busca-ubs" class="rotulo-formulario"
-              >Localize a UBS mais próxima:</label
-            >
-            <input
-              type="text"
-              id="busca-ubs"
-              class="controle-formulario"
-              placeholder="Digite seu CEP ou endereço"
-            />
-
-            <ul class="lista-ubs">
-              <li class="item-ubs selecionado">
-                <div class="nome-ubs">UBS Centro de Saúde</div>
-                <div class="endereco-ubs">Rua Principal, 123 - Centro</div>
-                <div class="distancia-ubs">1.2 km de distância</div>
-              </li>
-              <li class="item-ubs">
-                <div class="nome-ubs">UBS Vila Nova</div>
-                <div class="endereco-ubs">Av. das Flores, 456 - Vila Nova</div>
-                <div class="distancia-ubs">2.5 km de distância</div>
-              </li>
-              <li class="item-ubs">
-                <div class="nome-ubs">UBS Jardim das Palmeiras</div>
-                <div class="endereco-ubs">Rua das Acácias, 789 - Jardim</div>
-                <div class="distancia-ubs">3.1 km de distância</div>
-              </li>
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Orientações para este exame:</label>
+          <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 6px;">
+            <p>Para realizar o exame preventivo:</p>
+            <ul style="margin-top: 0.5rem; padding-left: 1.5rem">
+              <li>Não estar menstruada</li>
+              <li>Evitar relações sexuais 48h antes</li>
+              <li>Não usar duchas ou medicamentos vaginais</li>
+              <li>Não estar em uso de pomadas ginecológicas</li>
             </ul>
           </div>
-
-          <div class="grupo-formulario">
-            <label for="data-exame" class="rotulo-formulario">Selecione a data:</label>
-            <input
-              type="date"
-              id="data-exame"
-              class="controle-formulario"
-              min="2023-11-01"
-            />
-          </div>
-
-          <div class="grupo-formulario">
-            <label class="rotulo-formulario">Horários disponíveis:</label>
-            <div class="horarios-disponiveis">
-              <div class="horario">08:00</div>
-              <div class="horario">08:30</div>
-              <div class="horario indisponivel">09:00</div>
-              <div class="horario">09:30</div>
-              <div class="horario">10:00</div>
-              <div class="horario">10:30</div>
-              <div class="horario">11:00</div>
-              <div class="horario indisponivel">11:30</div>
-              <div class="horario">13:00</div>
-              <div class="horario">13:30</div>
-              <div class="horario">14:00</div>
-              <div class="horario">14:30</div>
-              <div class="horario">15:00</div>
-              <div class="horario">15:30</div>
-              <div class="horario">16:00</div>
-            </div>
-          </div>
-
-          <div class="container-botoes">
-            <button class="botao botao-secundario" onclick="passoAnterior(2)">
-              Voltar
-            </button>
-            <button class="botao botao-primario" onclick="proximoPasso(2)">
-              Próximo
-            </button>
-          </div>
         </div>
 
-        <!-- Formulário Passo 3 - Confirmação -->
-        <div class="formulario-agendamento" id="passo3">
-          <h2 style="margin-bottom: 1.5rem; color: var(--primaria)">
-            Confirme seu agendamento
-          </h2>
-
-          <div class="resumo-agendamento">
-            <div class="item-resumo">
-              <span class="rotulo-resumo">Tipo de Exame:</span>
-              <span class="valor-resumo">Preventivo - Colo do Útero</span>
-            </div>
-            <div class="item-resumo">
-              <span class="rotulo-resumo">Unidade de Saúde:</span>
-              <span class="valor-resumo">UBS Centro de Saúde</span>
-            </div>
-            <div class="item-resumo">
-              <span class="rotulo-resumo">Endereço:</span>
-              <span class="valor-resumo">Rua Principal, 123 - Centro</span>
-            </div>
-            <div class="item-resumo">
-              <span class="rotulo-resumo">Data e Horário:</span>
-              <span class="valor-resumo">15/11/2023 às 14:30</span>
-            </div>
-          </div>
-
-          <div class="grupo-formulario" style="margin-top: 1.5rem">
-            <label class="rotulo-formulario">Deseja receber lembretes?</label>
-            <div style="display: flex; gap: 1rem">
-              <label style="display: flex; align-items: center; gap: 0.5rem">
-                <input type="checkbox" /> E-mail
-              </label>
-              <label style="display: flex; align-items: center; gap: 0.5rem">
-                <input type="checkbox" checked /> SMS
-              </label>
-            </div>
-          </div>
-
-          <div class="container-botoes">
-            <button class="botao botao-secundario" onclick="passoAnterior(3)">
-              Voltar
-            </button>
-            <button class="botao botao-primario">Confirmar Agendamento</button>
-          </div>
+        <div class="container-botoes">
+          <button class="botao botao-secundario" disabled>Voltar</button>
+          <button class="botao botao-primario" onclick="proximoPasso(1)">Próximo</button>
         </div>
       </div>
-    </main>
 
-    <script>
-      function proximoPasso(passoAtual) {
-        document
-          .getElementById(`passo${passoAtual}`)
-          .classList.remove("ativo");
-        document
-          .getElementById(`passo${passoAtual + 1}`)
-          .classList.add("ativo");
+      <!-- Passo 2 - Local e Data -->
+      <div class="formulario-agendamento" id="passo2">
+        <div class="grupo-formulario">
+          <label for="busca-ubs" class="rotulo-formulario">Localize a UBS mais próxima:</label>
+          <input type="text" id="busca-ubs" class="controle-formulario" placeholder="Digite seu CEP ou endereço">
+          
+          <ul class="lista-ubs" id="listaUbs">
+            <!-- UBSs serão carregadas via JavaScript -->
+          </ul>
+        </div>
 
-        document
-          .querySelector(`.passo[data-passo="${passoAtual}"]`)
-          .classList.remove("ativo");
-        document
-          .querySelector(`.passo[data-passo="${passoAtual}"]`)
-          .classList.add("concluido");
-        document
-          .querySelector(`.passo[data-passo="${passoAtual + 1}"]`)
-          .classList.add("ativo");
+        <div class="grupo-formulario">
+          <label for="data-exame" class="rotulo-formulario">Selecione a data:</label>
+          <input type="date" id="data-exame" class="controle-formulario">
+        </div>
 
-        document.querySelector(".progresso").style.width = `${
-          (passoAtual / 3) * 100
-        }%`;
+        <div class="grupo-formulario">
+          <label class="rotulo-formulario">Horários disponíveis:</label>
+          <div class="horarios-disponiveis" id="horariosDisponiveis">
+            <!-- Horários serão carregados via JavaScript -->
+          </div>
+        </div>
+
+        <div class="container-botoes">
+          <button class="botao botao-secundario" onclick="passoAnterior(2)">Voltar</button>
+          <button class="botao botao-primario" onclick="proximoPasso(2)">Próximo</button>
+        </div>
+      </div>
+
+      <!-- Passo 3 - Confirmação -->
+      <div class="formulario-agendamento" id="passo3">
+        <h2 style="margin-bottom: 1.5rem; color: var(--primaria)">Confirme seu agendamento</h2>
+
+        <div class="resumo-agendamento">
+          <div class="item-resumo">
+            <span class="rotulo-resumo">Tipo de Exame:</span>
+            <span class="valor-resumo" id="resumo-tipo">Preventivo - Colo do Útero</span>
+          </div>
+          <div class="item-resumo">
+            <span class="rotulo-resumo">Unidade de Saúde:</span>
+            <span class="valor-resumo" id="resumo-ubs"></span>
+          </div>
+          <div class="item-resumo">
+            <span class="rotulo-resumo">Endereço:</span>
+            <span class="valor-resumo" id="resumo-endereco"></span>
+          </div>
+          <div class="item-resumo">
+            <span class="rotulo-resumo">Data e Horário:</span>
+            <span class="valor-resumo" id="resumo-data-hora"></span>
+          </div>
+        </div>
+
+        <div class="grupo-formulario" style="margin-top: 1.5rem">
+          <label class="rotulo-formulario">Deseja receber lembretes?</label>
+          <div style="display: flex; gap: 1rem">
+            <label style="display: flex; align-items: center; gap: 0.5rem">
+              <input type="checkbox" id="lembrete-email"> E-mail
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem">
+              <input type="checkbox" id="lembrete-sms" checked> SMS
+            </label>
+          </div>
+        </div>
+
+        <div class="container-botoes">
+          <button class="botao botao-secundario" onclick="passoAnterior(3)">Voltar</button>
+          <button class="botao botao-primario" id="btnConfirmarAgendamento">
+            Confirmar Agendamento
+            <span id="carregandoConfirmacao" class="carregando" style="display: none;"></span>
+          </button>
+        </div>
+        <div id="mensagemConfirmacao" class="mensagem-sucesso" style="display: none;"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Estado da aplicação
+    const estadoAgendamento = {
+      tipoExame: 'preventivo',
+      ubs: null,
+      data: null,
+      horario: null,
+      pacienteId: null
+    };
+
+    // Elementos DOM
+    const elementos = {
+      listaUbs: document.getElementById('listaUbs'),
+      dataExame: document.getElementById('data-exame'),
+      horariosDisponiveis: document.getElementById('horariosDisponiveis'),
+      btnConfirmar: document.getElementById('btnConfirmarAgendamento'),
+      carregandoConfirmacao: document.getElementById('carregandoConfirmacao'),
+      mensagemConfirmacao: document.getElementById('mensagemConfirmacao'),
+      resumoUbs: document.getElementById('resumo-ubs'),
+      resumoEndereco: document.getElementById('resumo-endereco'),
+      resumoDataHora: document.getElementById('resumo-data-hora')
+    };
+
+    // Funções de navegação
+    function proximoPasso(passoAtual) {
+      document.getElementById(`passo${passoAtual}`).classList.remove("ativo");
+      document.getElementById(`passo${passoAtual + 1}`).classList.add("ativo");
+
+      document.querySelector(`.passo[data-passo="${passoAtual}"]`).classList.remove("ativo");
+      document.querySelector(`.passo[data-passo="${passoAtual}"]`).classList.add("concluido");
+      document.querySelector(`.passo[data-passo="${passoAtual + 1}"]`).classList.add("ativo");
+
+      document.querySelector(".progresso").style.width = `${(passoAtual / 3) * 100}%`;
+      
+      // Atualizar resumo no passo 3
+      if (passoAtual === 2) {
+        atualizarResumoAgendamento();
+      }
+    }
+
+    function passoAnterior(passoAtual) {
+      document.getElementById(`passo${passoAtual}`).classList.remove("ativo");
+      document.getElementById(`passo${passoAtual - 1}`).classList.add("ativo");
+
+      document.querySelector(`.passo[data-passo="${passoAtual}"]`).classList.remove("ativo");
+      document.querySelector(`.passo[data-passo="${passoAtual - 1}"]`).classList.add("ativo");
+      document.querySelector(`.passo[data-passo="${passoAtual - 1}"]`).classList.remove("concluido");
+
+      document.querySelector(".progresso").style.width = `${((passoAtual - 2) / 3) * 100}%`;
+    }
+
+    // Função para carregar UBSs
+    async function carregarUBSs() {
+      try {
+        elementos.listaUbs.innerHTML = '<li class="item-ubs" style="text-align: center; padding: 1.5rem;">Carregando UBSs...</li>';
+        
+        // Simulação - na prática você faria uma chamada API
+        const ubsProximas = await buscarUBSProximas();
+        
+        elementos.listaUbs.innerHTML = '';
+        
+        ubsProximas.forEach(ubs => {
+          const item = document.createElement('li');
+          item.className = 'item-ubs';
+          item.dataset.id = ubs.id;
+          item.innerHTML = `
+            <div class="nome-ubs">${ubs.nome}</div>
+            <div class="endereco-ubs">${ubs.endereco}</div>
+            <div class="distancia-ubs">${ubs.distancia}</div>
+          `;
+          
+          item.addEventListener('click', () => {
+            document.querySelectorAll('.item-ubs').forEach(i => i.classList.remove('selecionado'));
+            item.classList.add('selecionado');
+            estadoAgendamento.ubs = {
+              id: ubs.id,
+              nome: ubs.nome,
+              endereco: ubs.endereco
+            };
+            
+            // Se já tiver data selecionada, carregar horários
+            if (estadoAgendamento.data) {
+              carregarHorariosDisponiveis();
+            }
+          });
+          
+          elementos.listaUbs.appendChild(item);
+        });
+        
+        // Selecionar a primeira UBS por padrão
+        if (ubsProximas.length > 0) {
+          elementos.listaUbs.firstElementChild.click();
+        }
+      } catch (erro) {
+        console.error('Erro ao carregar UBSs:', erro);
+        elementos.listaUbs.innerHTML = '<li class="item-ubs" style="text-align: center; padding: 1.5rem; color: #e74c3c;">Erro ao carregar UBSs. Tente novamente.</li>';
+      }
+    }
+
+    // Função simulada para buscar UBSs próximas
+    async function buscarUBSProximas() {
+      // Simulação - na prática você faria uma chamada API
+      return [
+        {
+          id: '1',
+          nome: 'UBS Centro de Saúde',
+          endereco: 'Rua Principal, 123 - Centro',
+          distancia: '1.2 km de distância'
+        },
+        {
+          id: '2',
+          nome: 'UBS Vila Nova',
+          endereco: 'Av. das Flores, 456 - Vila Nova',
+          distancia: '2.5 km de distância'
+        }
+      ];
+    }
+
+    // Função para carregar horários disponíveis
+    async function carregarHorariosDisponiveis() {
+      if (!estadoAgendamento.ubs || !estadoAgendamento.data) return;
+      
+      elementos.horariosDisponiveis.innerHTML = '<div style="padding: 1rem; text-align: center;">Carregando horários...</div>';
+      
+      try {
+        // Simulação - na prática você faria uma chamada API
+        const horarios = await buscarHorariosDisponiveis(
+          estadoAgendamento.ubs.id, 
+          estadoAgendamento.data
+        );
+        
+        elementos.horariosDisponiveis.innerHTML = '';
+        
+        horarios.disponiveis.forEach(horario => {
+          const divHorario = document.createElement('div');
+          divHorario.className = 'horario';
+          divHorario.textContent = horario;
+          divHorario.addEventListener('click', () => {
+            document.querySelectorAll('.horario').forEach(h => h.classList.remove('selecionado'));
+            divHorario.classList.add('selecionado');
+            estadoAgendamento.horario = horario;
+          });
+          elementos.horariosDisponiveis.appendChild(divHorario);
+        });
+        
+        horarios.indisponiveis.forEach(horario => {
+          const divHorario = document.createElement('div');
+          divHorario.className = 'horario indisponivel';
+          divHorario.textContent = horario;
+          elementos.horariosDisponiveis.appendChild(divHorario);
+        });
+        
+      } catch (erro) {
+        console.error('Erro ao carregar horários:', erro);
+        elementos.horariosDisponiveis.innerHTML = '<div style="padding: 1rem; text-align: center; color: #e74c3c;">Erro ao carregar horários</div>';
+      }
+    }
+
+    // Função simulada para buscar horários disponíveis
+    async function buscarHorariosDisponiveis(ubsId, data) {
+      return {
+        disponiveis: ['08:00', '08:30', '09:30', '10:00', '10:30', '11:00', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00'],
+        indisponiveis: ['09:00', '11:30']
+      };
+    }
+
+    // Função para atualizar resumo do agendamento
+    function atualizarResumoAgendamento() {
+      if (estadoAgendamento.ubs) {
+        elementos.resumoUbs.textContent = estadoAgendamento.ubs.nome;
+        elementos.resumoEndereco.textContent = estadoAgendamento.ubs.endereco;
+      }
+      
+      if (estadoAgendamento.data && estadoAgendamento.horario) {
+        const dataObj = new Date(estadoAgendamento.data);
+        const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+        elementos.resumoDataHora.textContent = `${dataFormatada} às ${estadoAgendamento.horario}`;
+      }
+    }
+
+    // Função para criar o agendamento
+    async function criarAgendamento() {
+      // Validar dados
+      if (!estadoAgendamento.ubs || !estadoAgendamento.data || !estadoAgendamento.horario) {
+        elementos.mensagemConfirmacao.textContent = 'Preencha todos os campos do agendamento';
+        elementos.mensagemConfirmacao.style.display = 'block';
+        elementos.mensagemConfirmacao.className = 'mensagem-erro';
+        return;
       }
 
-      function passoAnterior(passoAtual) {
-        document
-          .getElementById(`passo${passoAtual}`)
-          .classList.remove("ativo");
-        document
-          .getElementById(`passo${passoAtual - 1}`)
-          .classList.add("ativo");
+      // Configurar botão de confirmação
+      elementos.btnConfirmar.disabled = true;
+      elementos.carregandoConfirmacao.style.display = 'inline-block';
+      elementos.mensagemConfirmacao.style.display = 'none';
 
-        document
-          .querySelector(`.passo[data-passo="${passoAtual}"]`)
-          .classList.remove("ativo");
-        document
-          .querySelector(`.passo[data-passo="${passoAtual - 1}"]`)
-          .classList.add("ativo");
-        document
-          .querySelector(`.passo[data-passo="${passoAtual - 1}"]`)
-          .classList.remove("concluido");
-
-        document.querySelector(".progresso").style.width = `${
-          ((passoAtual - 2) / 3) * 100
-        }%`;
+      try {
+        estadoAgendamento.pacienteId = '123e4567-e89b-12d3-a456-426614174000'; // ID fictício
+        
+        // Formatar data e hora para ISO
+        const [hora, minutos] = estadoAgendamento.horario.split(':');
+        const dataAgendamento = new Date(estadoAgendamento.data);
+        dataAgendamento.setHours(hora, minutos, 0, 0);
+        
+        // Dados do agendamento
+        const dadosAgendamento = {
+          paciente_id: estadoAgendamento.pacienteId,
+          tipo_consulta: estadoAgendamento.tipoExame,
+          data_hora: dataAgendamento.toISOString(),
+          observacoes: 'Agendado pelo paciente via sistema'
+        };
+        
+        // Chamar API para criar agendamento
+        const response = await fetch('/paciente/agendamentos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dadosAgendamento)
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erro ao criar agendamento');
+        }
+        
+        const agendamentoCriado = await response.json();
+        
+        // Mostrar mensagem de sucesso
+        elementos.mensagemConfirmacao.textContent = 'Agendamento realizado com sucesso! Você receberá um e-mail de confirmação.';
+        elementos.mensagemConfirmacao.style.display = 'block';
+        elementos.mensagemConfirmacao.className = 'mensagem-sucesso';
+        
+        // Redirecionar após 3 segundos
+        setTimeout(() => {
+          window.location.href = '/paciente/dashboard';
+        }, 3000);
+        
+      } catch (erro) {
+        console.error('Erro ao criar agendamento:', erro);
+        elementos.mensagemConfirmacao.textContent = 'Erro ao criar agendamento. Tente novamente.';
+        elementos.mensagemConfirmacao.style.display = 'block';
+        elementos.mensagemConfirmacao.className = 'mensagem-erro';
+        elementos.btnConfirmar.disabled = false;
+      } finally {
+        elementos.carregandoConfirmacao.style.display = 'none';
       }
+    }
 
-      // Selecionar UBS
-      const itensUbs = document.querySelectorAll(".item-ubs");
-      itensUbs.forEach((item) => {
-        item.addEventListener("click", () => {
-          itensUbs.forEach((i) => i.classList.remove("selecionado"));
-          item.classList.add("selecionado");
-        });
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Configurar data mínima como hoje
+      const hoje = new Date();
+      const dia = String(hoje.getDate()).padStart(2, '0');
+      const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+      const ano = hoje.getFullYear();
+      elementos.dataExame.min = `${ano}-${mes}-${dia}`;
+      
+      // Carregar UBSs
+      await carregarUBSs();
+      
+      // Event listener para mudança de data
+      elementos.dataExame.addEventListener('change', (e) => {
+        estadoAgendamento.data = e.target.value;
+        if (estadoAgendamento.ubs) {
+          carregarHorariosDisponiveis();
+        }
       });
-
-      // Selecionar horário
-      const horarios = document.querySelectorAll(
-        ".horario:not(.indisponivel)"
-      );
-      horarios.forEach((horario) => {
-        horario.addEventListener("click", () => {
-          horarios.forEach((h) => h.classList.remove("selecionado"));
-          horario.classList.add("selecionado");
-        });
+      
+      // Event listener para botão de confirmação
+      elementos.btnConfirmar.addEventListener('click', (e) => {
+        e.preventDefault();
+        criarAgendamento();
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>

@@ -6,7 +6,6 @@ import (
 
 type Paciente struct {
 	BaseUser
-	ID             string    `json:"id" db:"id"`
 	Apelido        string    `json:"apelido" db:"apelido"`
 	NomeMae        string    `json:"mae" db:"nome_mae"`
 	CNS            string    `json:"cns" db:"cns"`
